@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Default">
+      <UniqueIdentifier>{e0f3197b-d67c-4ac9-9c2b-f2dd4fb4e62b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SystemClass">
+      <UniqueIdentifier>{6170693a-16ed-42e4-bf5f-29ee7ec67e92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InputClass">
+      <UniqueIdentifier>{5f430cbf-7ff5-4b91-b373-d61465ca0a2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GraphicsClass">
+      <UniqueIdentifier>{4c246c9e-9e97-4202-976c-ebd06210ee55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debugging">
+      <UniqueIdentifier>{d00c2fe4-1a98-47e1-b031-661cdba45e0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debugging\CPUClass">
+      <UniqueIdentifier>{7fdf2c42-f2b4-42e2-933f-8893905f0b0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debugging\FPSClass">
+      <UniqueIdentifier>{9c2c5e85-746a-4783-9e67-1107adea2c39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debugging\TimerClass">
+      <UniqueIdentifier>{3df7ed79-e5f2-4743-bfb1-8881499d389d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PositionClass">
+      <UniqueIdentifier>{383ce90a-46d7-4511-9780-bc79d489ac21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SoundClass">
+      <UniqueIdentifier>{06399912-871c-4ba6-b921-ce80ecbcc14a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LightShaderClass">
+      <UniqueIdentifier>{5548cfbb-20a6-4db6-b94b-36a54b83308e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h">
+      <Filter>Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Default</Filter>
+    </ClInclude>
+    <ClInclude Include="SpaceshipGame.h">
+      <Filter>Default</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Default</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemClass.h">
+      <Filter>SystemClass</Filter>
+    </ClInclude>
+    <ClInclude Include="InputClass.h">
+      <Filter>InputClass</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsClass.h">
+      <Filter>GraphicsClass</Filter>
+    </ClInclude>
+    <ClInclude Include="CPUClass.h">
+      <Filter>Debugging\CPUClass</Filter>
+    </ClInclude>
+    <ClInclude Include="FPSClass.h">
+      <Filter>Debugging\FPSClass</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerClass.h">
+      <Filter>Debugging\TimerClass</Filter>
+    </ClInclude>
+    <ClInclude Include="PositionClass.h">
+      <Filter>PositionClass</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundClass.h">
+      <Filter>SoundClass</Filter>
+    </ClInclude>
+    <ClInclude Include="DxDefine.h">
+      <Filter>Default</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DClass.h" />
+    <ClInclude Include="FrustumClass.h" />
+    <ClInclude Include="LightClass.h" />
+    <ClInclude Include="LightMapShaderClass.h" />
+    <ClInclude Include="ModelClass.h" />
+    <ClInclude Include="ModelListClass.h" />
+    <ClInclude Include="MultiTextureShaderClass.h" />
+    <ClInclude Include="TextureArrayClass.h" />
+    <ClInclude Include="TextureClass.h" />
+    <ClInclude Include="TextureShaderClass.h" />
+    <ClInclude Include="AlphaMapShaderClass.h" />
+    <ClInclude Include="CameraClass.h" />
+    <ClInclude Include="LightShaderClass.h" />
+    <ClInclude Include="DDSTextureLoader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <Filter>Default</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Default</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemClass.cpp">
+      <Filter>SystemClass</Filter>
+    </ClCompile>
+    <ClCompile Include="InputClass.cpp">
+      <Filter>InputClass</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsClass.cpp">
+      <Filter>GraphicsClass</Filter>
+    </ClCompile>
+    <ClCompile Include="CPUClass.cpp">
+      <Filter>Debugging\CPUClass</Filter>
+    </ClCompile>
+    <ClCompile Include="FPSClass.cpp">
+      <Filter>Debugging\FPSClass</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerClass.cpp">
+      <Filter>Debugging\TimerClass</Filter>
+    </ClCompile>
+    <ClCompile Include="PositionClass.cpp">
+      <Filter>PositionClass</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundClass.cpp">
+      <Filter>SoundClass</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DClass.cpp" />
+    <ClCompile Include="FrustumClass.cpp" />
+    <ClCompile Include="LightClass.cpp" />
+    <ClCompile Include="LightMapShaderClass.cpp" />
+    <ClCompile Include="ModelClass.cpp" />
+    <ClCompile Include="ModelListClass.cpp" />
+    <ClCompile Include="MultiTextureShaderClass.cpp" />
+    <ClCompile Include="TextureArrayClass.cpp" />
+    <ClCompile Include="TextureClass.cpp" />
+    <ClCompile Include="TextureShaderClass.cpp" />
+    <ClCompile Include="AlphaMapShaderClass.cpp" />
+    <ClCompile Include="CameraClass.cpp" />
+    <ClCompile Include="LightShaderClass.cpp" />
+    <ClCompile Include="DDSTextureLoader.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SpaceshipGame.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="SpaceshipGame.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
