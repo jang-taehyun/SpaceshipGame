@@ -80,8 +80,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\SpaceshipGame\SpaceshipGame\DirectXTex;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\SpaceshipGame\SpaceshipGame\DirectXTex\Bin\Desktop_2019_Win10\x64\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\DirectXTex;$(IncludePath)</IncludePath>
+    <LibraryPath>..\DirectXTex\Bin\Desktop_2019_Win10\x64\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
