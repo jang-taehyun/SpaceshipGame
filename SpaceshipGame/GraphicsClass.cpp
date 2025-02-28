@@ -85,6 +85,8 @@ bool GraphicsClass::Initialize(int ScreenWidth, int ScreenHeight, HWND hwnd)
 	{
 		return false;
 	}
+
+	
 	
 	if (!m_MultiTextureShader->Initialize(m_Direct3D->GetDevice(), hwnd))
 	{

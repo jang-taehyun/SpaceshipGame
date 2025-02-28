@@ -5,26 +5,26 @@ ShaderClass::ShaderClass() {}
 ShaderClass::ShaderClass(const ShaderClass& other) {}
 ShaderClass::~ShaderClass() {}
 
-bool ShaderClass::Initialize(ID3D11Device* const Device, const HWND hwnd, const ShaderFileInfo& const info)
+HRESULT ShaderClass::Initialize(ID3D11Device* const Device, const HWND hwnd, const ShaderFileInfo& const info)
 {
 	// 매개 변수 확인 //
 	// Device 확인
 	if (!Device)
 	{
 		MessageBox(hwnd, _T("DirectX 3D device가 없습니다."), _T("DirectX 3D device error"), MB_OK);
-		return false;
+		return E_FAIL;
 	}
 	// window handle 확인
 	if (!hwnd)
 	{
 		MessageBox(hwnd, _T("Window handle이 없습니다."), _T("Window handle error"), MB_OK);
-		return false;
+		return E_FAIL;
 	}
 	// shader info 확인
 	if (!info.vsFileName || !info.psFileName || !info.vsEntryPoint || !info.psEntryPoint)
 	{
-		MessageBox(hwnd, _T("shader info 객체에 nullptr이 존재합니다."), _T("shader info error"), MB_OK);
-		return false;
+		MessageBox(hwnd, _T("shader info 객체 안에 nullptr이 존재합니다."), _T("shader info error"), MB_OK);
+		return E_FAIL;
 	}
 
 	// shader 초기화 //
@@ -36,17 +36,17 @@ void ShaderClass::Shutdown()
 	ShutdownShader();
 }
 
-bool ShaderClass::Render(ID3D11DeviceContext* const DeviceContext, const int& IndexCount, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix, ID3D11ShaderResourceView* const Texture)
+HRESULT ShaderClass::Render(ID3D11DeviceContext* const DeviceContext, const int& IndexCount, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix, const int& TextureNum, ID3D11ShaderResourceView** const TextureArray)
 {
-	if (!SetShaderParameters(DeviceContext, WorldMatrix, ViewMatrix, ProjectionMatrix, Texture))
-		return false;
+	if (FAILED(SetShaderParameters(DeviceContext, WorldMatrix, ViewMatrix, ProjectionMatrix, TextureNum, TextureArray)))
+		return E_FAIL;
 
 	RenderShader(DeviceContext, IndexCount);
 
-	return true;
+	return S_OK;
 }
 
-bool ShaderClass::InitializeShader(ID3D11Device* const Device, const HWND hwnd, const ShaderFileInfo& const info)
+HRESULT ShaderClass::InitializeShader(ID3D11Device* const Device, const HWND hwnd, const ShaderFileInfo& const info)
 {
 	ID3D10Blob* ErrorMessage = nullptr;
 
@@ -63,7 +63,7 @@ bool ShaderClass::InitializeShader(ID3D11Device* const Device, const HWND hwnd, 
 			MessageBox(hwnd, info.vsFileName, _T("vertex shader file이 없습니다."), MB_OK);
 		}
 
-		return false;
+		return E_FAIL;
 	}
 
 	// pixel shader code 컴파일 //
@@ -79,25 +79,25 @@ bool ShaderClass::InitializeShader(ID3D11Device* const Device, const HWND hwnd, 
 			MessageBox(hwnd, info.psFileName, _T("Missing pixel shader file"), MB_OK);
 		}
 
-		return false;
+		return E_FAIL;
 	}
 
 	// vertex shader 생성 //
 	if (FAILED(Device->CreateVertexShader(VertexShaderBuffer->GetBufferPointer(), VertexShaderBuffer->GetBufferSize(), NULL, &m_VertexShader)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// pixel shader 생성 //
 	if (FAILED(Device->CreatePixelShader(PixelShaderBuffer->GetBufferPointer(), PixelShaderBuffer->GetBufferSize(), NULL, &m_PixelShader)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// input layout 생성 //
 	if (FAILED(CreateInputLayout(Device, VertexShaderBuffer, PixelShaderBuffer)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// vertex shader buffer, pixel shader buffer 해제 //
@@ -110,13 +110,16 @@ bool ShaderClass::InitializeShader(ID3D11Device* const Device, const HWND hwnd, 
 	// 행렬 상수 버퍼 생성 //
 	if (FAILED(CreateConstantBuffer(Device, m_MatrixBuffer, sizeof(MatrixBufferType))))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// texture sampler state 생성 //
-	CreateTextureSamplerState(Device, m_SampleState);
+	if (FAILED(CreateTextureSamplerState(Device, m_SampleState)))
+	{
+		return E_FAIL;
+	}
 
-	return true;
+	return S_OK;
 }
 
 HRESULT ShaderClass::CreateInputLayout(ID3D11Device* const Device, ID3D10Blob* const VertexShaderBuffer, ID3D10Blob* const PixelShaderBuffer)
@@ -246,7 +249,7 @@ void ShaderClass::OutputShaderErrorMessage(ID3D10Blob* ErrorMessage, const HWND 
 	MessageBox(hwnd, _T("Error compiling shader."), ShaderFileName, MB_OK);
 }
 
-bool ShaderClass::SetShaderParameters(ID3D11DeviceContext* const DeviceContext, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix,ID3D11ShaderResourceView* const Texture)
+HRESULT ShaderClass::SetShaderParameters(ID3D11DeviceContext* const DeviceContext, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix, const int& TextureNum, ID3D11ShaderResourceView** const TextureArray)
 {
 	// 행렬들을 HLSL에 맞게 변환 //
 	// 행렬들을 transpose 연산하여 shader에서 사용할 수 있도록 한다.
@@ -254,37 +257,43 @@ bool ShaderClass::SetShaderParameters(ID3D11DeviceContext* const DeviceContext, 
 	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixTranspose(ViewMatrix);
 	DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixTranspose(ProjectionMatrix);
 
-	// 상수 버퍼의 내용 업데이트 //
-	// 상수 버퍼의 내용을 CPU가 쓸 수 있도록 잠금
-	D3D11_MAPPED_SUBRESOURCE MappedResource;
-	if (FAILED(DeviceContext->Map(m_MatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource)))
+	// matrix constant buffer의 내용 업데이트 //
+	if (FAILED(UpdateMatrixBuffer(DeviceContext, 0, worldMatrix, viewMatrix, projectionMatrix)))
 	{
-		return false;
+		return E_FAIL;
 	}
-
-	// 상수 버퍼의 데이터에 대한 포인터를 가져온다.
-	MatrixBufferType* DataPtr = (MatrixBufferType*)MappedResource.pData;
-
-	// 상수 버퍼에 데이터(행렬) 복사
-	DataPtr->World = worldMatrix;
-	DataPtr->View = viewMatrix;
-	DataPtr->Projection = projectionMatrix;
-
-	// 상수 버퍼의 잠금을 푼다.
-	DeviceContext->Unmap(m_MatrixBuffer, 0);
-
-	// vertex shader에서 상수 버퍼의 위치 설정
-	// vertex shader의 0번 슬롯에 바인드
-	unsigned int BufferNumber = 0;
-
-	// vertex shader의 상수 버퍼를 업데이트한 것으로 바꾼다.
-	DeviceContext->VSSetConstantBuffers(BufferNumber, 1, &m_MatrixBuffer);
 
 	// pixel shader에서 사용할 shader texture resource(Texture2D) 설정 //
 	// GPU 파이프라인에 텍스처 데이터를 바인드
-	DeviceContext->PSSetShaderResources(0, 1, &Texture);
+	DeviceContext->PSSetShaderResources(0, TextureNum, TextureArray);
 
-	return true;
+	return S_OK;
+}
+
+HRESULT ShaderClass::UpdateMatrixBuffer(ID3D11DeviceContext* const DeviceContext, unsigned int slot, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix)
+{
+	// matrix constant buffer의 내용을 CPU가 쓸 수 있도록 잠금
+	D3D11_MAPPED_SUBRESOURCE MappedResource;
+	if (FAILED(DeviceContext->Map(m_MatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource)))
+	{
+		return E_FAIL;
+	}
+
+	// matrix constant buffer의 데이터에 대한 포인터를 가져온다.
+	MatrixBufferType* DataPtr = (MatrixBufferType*)MappedResource.pData;
+
+	// matrix constant buffer에 데이터(행렬) 복사
+	DataPtr->World = WorldMatrix;
+	DataPtr->View = ViewMatrix;
+	DataPtr->Projection = ProjectionMatrix;
+
+	// matrix constant buffer의 잠금을 푼다.
+	DeviceContext->Unmap(m_MatrixBuffer, 0);
+
+	// vertex shader에서 상수 버퍼의 위치 설정 및 matrix constant buffer의 내용 업데이트
+	DeviceContext->VSSetConstantBuffers(slot, 1, &m_MatrixBuffer);
+
+	return S_OK;
 }
 
 void ShaderClass::RenderShader(ID3D11DeviceContext* const DeviceContext, const int& IndexCount)
