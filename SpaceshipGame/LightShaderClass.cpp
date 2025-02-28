@@ -5,16 +5,6 @@ LightShaderClass::LightShaderClass() {}
 LightShaderClass::LightShaderClass(const LightShaderClass& other) {}
 LightShaderClass::~LightShaderClass() {}
 
-bool LightShaderClass::Initialize(ID3D11Device* Device, HWND hwnd)
-{
-	return InitializeShader(Device, hwnd, _T("../Engine/light.vs"), _T("../Engine/light.ps"));
-}
-
-void LightShaderClass::Shutdown()
-{
-	ShutdownShader();
-}
-
 bool LightShaderClass::Render(ID3D11DeviceContext* DeviceContext, int IndexCount, DirectX::XMMATRIX WorldMatrix, DirectX::XMMATRIX ViewMatrix, DirectX::XMMATRIX ProjectionMatrix, ID3D11ShaderResourceView* Texture, DirectX::XMFLOAT3 LightDirection, DirectX::XMFLOAT4 AmbientColor, DirectX::XMFLOAT4 DiffuseColor, DirectX::XMFLOAT3 CameraPosition, DirectX::XMFLOAT4 SpecularColor, float SpecularPower)
 {
 	if (!SetShaderParameters(DeviceContext, WorldMatrix, ViewMatrix, ProjectionMatrix, Texture, LightDirection, AmbientColor, DiffuseColor, CameraPosition, SpecularColor, SpecularPower))
@@ -27,21 +17,21 @@ bool LightShaderClass::Render(ID3D11DeviceContext* DeviceContext, int IndexCount
 	return true;
 }
 
-bool LightShaderClass::InitializeShader(ID3D11Device* Device, HWND hwnd, const WCHAR* vsFileName, const WCHAR* psFileName)
+bool LightShaderClass::InitializeShader(ID3D11Device* Device, HWND hwnd, const ShaderFileInfo& const info)
 {
 	ID3D10Blob* ErrorMessage = nullptr;
 
 	// vertex shader code 컴파일 //
 	ID3D10Blob* VertexShaderBuffer = nullptr;
-	if (FAILED(D3DCompileFromFile(vsFileName, NULL, NULL, "LightVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &VertexShaderBuffer, &ErrorMessage)))
+	if (FAILED(D3DCompileFromFile(info.vsFileName, NULL, NULL, info.vsEntryPoint, "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &VertexShaderBuffer, &ErrorMessage)))
 	{
 		if (ErrorMessage)
 		{
-			OutputShaderErrorMessage(ErrorMessage, hwnd, vsFileName);
+			OutputShaderErrorMessage(ErrorMessage, hwnd, info.vsFileName);
 		}
 		else
 		{
-			MessageBox(hwnd, vsFileName, _T("Missing Shader File"), MB_OK);
+			MessageBox(hwnd, info.vsFileName, _T("vertex shader file이 없습니다."), MB_OK);
 		}
 
 		return false;
@@ -49,15 +39,15 @@ bool LightShaderClass::InitializeShader(ID3D11Device* Device, HWND hwnd, const W
 
 	// pixel shader code 컴파일 //
 	ID3D10Blob* PixelShaderBuffer = nullptr;
-	if (FAILED(D3DCompileFromFile(psFileName, NULL, NULL, "LightPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &PixelShaderBuffer, &ErrorMessage)))
+	if (FAILED(D3DCompileFromFile(info.psFileName, NULL, NULL, info.psEntryPoint, "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &PixelShaderBuffer, &ErrorMessage)))
 	{
 		if (ErrorMessage)
 		{
-			OutputShaderErrorMessage(ErrorMessage, hwnd, psFileName);
+			OutputShaderErrorMessage(ErrorMessage, hwnd, info.psFileName);
 		}
 		else
 		{
-			MessageBox(hwnd, psFileName, _T("Missing Shader File"), MB_OK);
+			MessageBox(hwnd, info.psFileName, _T("Missing pixel shader file"), MB_OK);
 		}
 
 		return false;
@@ -247,16 +237,6 @@ void LightShaderClass::ShutdownShader()
 	}
 }
 
-void LightShaderClass::OutputShaderErrorMessage(ID3D10Blob* ErrorMessage, HWND hwnd, const WCHAR* ShaderFileName)
-{
-	OutputDebugStringA(reinterpret_cast<const char*>(ErrorMessage->GetBufferPointer()));
-
-	ErrorMessage->Release();
-	ErrorMessage = nullptr;
-
-	MessageBox(hwnd, _T("Error compiling shader."), ShaderFileName, MB_OK);
-}
-
 bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* DeviceContext, DirectX::XMMATRIX WorldMatrix, DirectX::XMMATRIX ViewMatrix, DirectX::XMMATRIX ProjectionMatrix, ID3D11ShaderResourceView* Texture, DirectX::XMFLOAT3 LightDirection, DirectX::XMFLOAT4 AmbientColor, DirectX::XMFLOAT4 DiffuseColor, DirectX::XMFLOAT3 CameraPosition, DirectX::XMFLOAT4 SpecularColor, float SpecularPower)
 {
 	// 행렬들을 HLSL에 맞게 변환 //
@@ -350,20 +330,4 @@ bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* DeviceContext, D
 	DeviceContext->PSSetShaderResources(0, 1, &Texture);
 
 	return true;
-}
-
-void LightShaderClass::RenderShader(ID3D11DeviceContext* DeviceContext, int IndexCount)
-{
-	// vertex input layout 설정 //
-	DeviceContext->IASetInputLayout(m_Layout);
-
-	// vertex shader와 pixel shader 설정 //
-	DeviceContext->VSSetShader(m_VertexShader, NULL, 0);
-	DeviceContext->PSSetShader(m_PixelShader, NULL, 0);
-
-	// pixel shader에서 사용할 sampler state 설정(SamplerState) //
-	DeviceContext->PSSetSamplers(0, 1, &m_SampleState);
-
-	// 렌더링 //
-	DeviceContext->DrawIndexed(IndexCount, 0, 0);
 }

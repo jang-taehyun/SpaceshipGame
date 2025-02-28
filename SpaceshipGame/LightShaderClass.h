@@ -1,21 +1,18 @@
 #pragma once
 
-class LightShaderClass
+#include "ShaderClass.h"
+
+class LightShaderClass : public ShaderClass
 {
 private:
-	struct MatrixBufferType
-	{
-		DirectX::XMMATRIX World;
-		DirectX::XMMATRIX View;
-		DirectX::XMMATRIX Projection;
-	};
-
+	// camera data 구조체 //
 	struct CameraBufferType
 	{
 		DirectX::XMFLOAT3 CameraPosition;
 		float padding;
 	};
 
+	// light data 구조체 //
 	struct LightBufferType
 	{
 		DirectX::XMFLOAT4 AmbientColor;
@@ -26,29 +23,14 @@ private:
 	};
 
 public:
-	LightShaderClass();
-	LightShaderClass(const LightShaderClass&);
-	~LightShaderClass();
-
-	bool Initialize(ID3D11Device*, HWND);
-	void Shutdown();
-	bool Render(ID3D11DeviceContext*, int, DirectX::XMMATRIX, DirectX::XMMATRIX, DirectX::XMMATRIX, ID3D11ShaderResourceView*, DirectX::XMFLOAT3, DirectX::XMFLOAT4, DirectX::XMFLOAT4, DirectX::XMFLOAT3, DirectX::XMFLOAT4, float);
+	bool Render(ID3D11DeviceContext* DeviceContext, int IndexCount, DirectX::XMMATRIX WorldMatrix, DirectX::XMMATRIX ViewMatrix, DirectX::XMMATRIX ProjectionMatrix, ID3D11ShaderResourceView* Texture, DirectX::XMFLOAT3 LightDirection, DirectX::XMFLOAT4 AmbientColor, DirectX::XMFLOAT4 DiffuseColor, DirectX::XMFLOAT3 CameraPosition, DirectX::XMFLOAT4 SpecularColor, float SpecularPower);
 
 private:
-	bool InitializeShader(ID3D11Device*, HWND, const WCHAR*, const WCHAR*);
+	bool InitializeShader(ID3D11Device* Device, HWND hwnd, const ShaderFileInfo& const info);
 	void ShutdownShader();
-	void OutputShaderErrorMessage(ID3D10Blob*, HWND, const WCHAR*);
-
-	bool SetShaderParameters(ID3D11DeviceContext*, DirectX::XMMATRIX, DirectX::XMMATRIX, DirectX::XMMATRIX, ID3D11ShaderResourceView*, DirectX::XMFLOAT3, DirectX::XMFLOAT4, DirectX::XMFLOAT4, DirectX::XMFLOAT3, DirectX::XMFLOAT4, float);
-	void RenderShader(ID3D11DeviceContext*, int);
+	bool SetShaderParameters(ID3D11DeviceContext* DeviceContext, DirectX::XMMATRIX WorldMatrix, DirectX::XMMATRIX ViewMatrix, DirectX::XMMATRIX ProjectionMatrix, ID3D11ShaderResourceView* Texture, DirectX::XMFLOAT3 LightDirection, DirectX::XMFLOAT4 AmbientColor, DirectX::XMFLOAT4 DiffuseColor, DirectX::XMFLOAT3 CameraPosition, DirectX::XMFLOAT4 SpecularColor, float SpecularPower);
 
 private:
-	ID3D11VertexShader* m_VertexShader = nullptr;
-	ID3D11PixelShader* m_PixelShader = nullptr;
-	ID3D11InputLayout* m_Layout = nullptr;
-	ID3D11SamplerState* m_SampleState = nullptr;
-
-	ID3D11Buffer* m_MatrixBuffer = nullptr;
 	ID3D11Buffer* m_LightBuffer = nullptr;
 	ID3D11Buffer* m_CameraBuffer = nullptr;
 };

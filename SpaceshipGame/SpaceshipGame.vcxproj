@@ -171,6 +171,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="PositionClass.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="ShaderClass.h" />
     <ClInclude Include="SoundClass.h" />
     <ClInclude Include="SpaceshipGame.h" />
     <ClInclude Include="SystemClass.h" />
@@ -204,6 +205,7 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PositionClass.cpp" />
+    <ClCompile Include="ShaderClass.cpp" />
     <ClCompile Include="SoundClass.cpp" />
     <ClCompile Include="SystemClass.cpp" />
     <ClCompile Include="TextureArrayClass.cpp" />

@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="리소스 파일">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Default">
       <UniqueIdentifier>{e0f3197b-d67c-4ac9-9c2b-f2dd4fb4e62b}</UniqueIdentifier>
     </Filter>
@@ -35,8 +31,33 @@
     <Filter Include="SoundClass">
       <UniqueIdentifier>{06399912-871c-4ba6-b921-ce80ecbcc14a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="LightShaderClass">
+    <Filter Include="Default\리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ShaderClass">
+      <UniqueIdentifier>{e536d068-4c88-4f1d-99c6-3fa9d3bbbab8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ShaderClass\Child">
+      <UniqueIdentifier>{246bdc41-b515-48db-99f6-c04f6b5df452}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ShaderClass\Child\Texture">
+      <UniqueIdentifier>{6153828e-3be2-4ad7-ad5c-8ba3073caf90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ShaderClass\Child\MultiTexture">
+      <UniqueIdentifier>{dce89d75-8f85-474b-b259-3d00508309dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ShaderClass\Child\Light">
+      <UniqueIdentifier>{6bfa86ff-6908-4896-af68-f30fdf60959d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ShaderClass\Child\LightMap">
       <UniqueIdentifier>{5548cfbb-20a6-4db6-b94b-36a54b83308e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ShaderClass\Child\AlphaMap">
+      <UniqueIdentifier>{17d2158f-07f0-4834-a484-cc078551a8ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ShaderClass\Parent">
+      <UniqueIdentifier>{69cc488c-e683-4a0d-a1c1-ac4cd22af194}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -82,17 +103,30 @@
     <ClInclude Include="D3DClass.h" />
     <ClInclude Include="FrustumClass.h" />
     <ClInclude Include="LightClass.h" />
-    <ClInclude Include="LightMapShaderClass.h" />
     <ClInclude Include="ModelClass.h" />
     <ClInclude Include="ModelListClass.h" />
-    <ClInclude Include="MultiTextureShaderClass.h" />
     <ClInclude Include="TextureArrayClass.h" />
     <ClInclude Include="TextureClass.h" />
-    <ClInclude Include="TextureShaderClass.h" />
-    <ClInclude Include="AlphaMapShaderClass.h" />
     <ClInclude Include="CameraClass.h" />
-    <ClInclude Include="LightShaderClass.h" />
     <ClInclude Include="DDSTextureLoader.h" />
+    <ClInclude Include="ShaderClass.h">
+      <Filter>ShaderClass\Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="AlphaMapShaderClass.h">
+      <Filter>ShaderClass\Child\AlphaMap</Filter>
+    </ClInclude>
+    <ClInclude Include="LightMapShaderClass.h">
+      <Filter>ShaderClass\Child\LightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="LightShaderClass.h">
+      <Filter>ShaderClass\Child\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiTextureShaderClass.h">
+      <Filter>ShaderClass\Child\MultiTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureShaderClass.h">
+      <Filter>ShaderClass\Child\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -128,29 +162,42 @@
     <ClCompile Include="D3DClass.cpp" />
     <ClCompile Include="FrustumClass.cpp" />
     <ClCompile Include="LightClass.cpp" />
-    <ClCompile Include="LightMapShaderClass.cpp" />
     <ClCompile Include="ModelClass.cpp" />
     <ClCompile Include="ModelListClass.cpp" />
-    <ClCompile Include="MultiTextureShaderClass.cpp" />
     <ClCompile Include="TextureArrayClass.cpp" />
     <ClCompile Include="TextureClass.cpp" />
-    <ClCompile Include="TextureShaderClass.cpp" />
-    <ClCompile Include="AlphaMapShaderClass.cpp" />
     <ClCompile Include="CameraClass.cpp" />
-    <ClCompile Include="LightShaderClass.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
+    <ClCompile Include="ShaderClass.cpp">
+      <Filter>ShaderClass\Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="AlphaMapShaderClass.cpp">
+      <Filter>ShaderClass\Child\AlphaMap</Filter>
+    </ClCompile>
+    <ClCompile Include="LightMapShaderClass.cpp">
+      <Filter>ShaderClass\Child\LightMap</Filter>
+    </ClCompile>
+    <ClCompile Include="LightShaderClass.cpp">
+      <Filter>ShaderClass\Child\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiTextureShaderClass.cpp">
+      <Filter>ShaderClass\Child\MultiTexture</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureShaderClass.cpp">
+      <Filter>ShaderClass\Child\Texture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SpaceshipGame.rc">
-      <Filter>리소스 파일</Filter>
+      <Filter>Default\리소스 파일</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
-      <Filter>리소스 파일</Filter>
+      <Filter>Default\리소스 파일</Filter>
     </Image>
     <Image Include="SpaceshipGame.ico">
-      <Filter>리소스 파일</Filter>
+      <Filter>Default\리소스 파일</Filter>
     </Image>
   </ItemGroup>
 </Project>
