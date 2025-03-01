@@ -23,10 +23,10 @@ private:
 
 public:
 	ModelClass();
-	ModelClass(const ModelClass&);
+	ModelClass(const ModelClass& other);
 	~ModelClass();
 
-	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, const char*, const char*);
+	bool Initialize(ID3D11Device* const Device, ID3D11DeviceContext* const DeviceContext, const char* const TextureFileName, const char* const ModelFileName);
 	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, const TCHAR*, const char*);
 	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, const TCHAR*, const TCHAR*, const char*);
 	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, const TCHAR*, const TCHAR*, const TCHAR*, const char*);

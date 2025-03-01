@@ -17,24 +17,19 @@ GraphicsClass::GraphicsClass() {}
 GraphicsClass::GraphicsClass(const GraphicsClass& other) {}
 GraphicsClass::~GraphicsClass() {}
 
-bool GraphicsClass::Initialize(int ScreenWidth, int ScreenHeight, HWND hwnd)
+HRESULT GraphicsClass::Initialize(const int ScreenWidth, const int ScreenHeight, const HWND& hwnd)
 {
 	// Direct3D 객체 생성 및 초기화 //
-	m_Direct3D = new D3DClass;
-	if (!m_Direct3D)
-		return false;
-
-	if (!m_Direct3D->Initialize(ScreenWidth, ScreenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR))
+	if (!D3DClass::GetD3DClassInst(hwnd) && FAILED(D3DClass::GetD3DClassInst(hwnd)->Initialize(ScreenWidth, ScreenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR)))
 	{
 		MessageBox(hwnd, _T("Could not initialize Direct3D"), _T("Error"), MB_OK);
-		return false;
+		return E_FAIL;
 	}
-
 
 	// Camera 객체 생성 및 초기화 //
 	m_Camera = new CameraClass;
 	if (!m_Camera)
-		return false;
+		return E_FAIL;
 
 	m_Camera->SetPosition(0.f, 0.f, -6.f);
 	m_Camera->Render();
@@ -45,9 +40,9 @@ bool GraphicsClass::Initialize(int ScreenWidth, int ScreenHeight, HWND hwnd)
 	// Model 객체 생성 및 초기화(TextureShaderClass를 사용하는 경우) //
 	m_Model = new ModelClass;
 	if (!m_Model)
-		return false;
+		return E_FAIL;
 	
-	if (!m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), _T("../Engine/data/stone01.dds"), _T("../Engine/data/dirt01.dds"), _T("../Engine/data/alpha01.dds"), "../Engine/data/cube.txt"))
+	if (!m_Model->Initialize(D3DClass::GetD3DClassInst(hwnd)->GetDevice(), D3DClass::GetD3DClassInst(hwnd)->GetDeviceContext(), _T("../Engine/data/stone01.dds"), _T("../Engine/data/dirt01.dds"), _T("../Engine/data/alpha01.dds"), "../Engine/data/cube.txt"))
 	{
 		MessageBox(hwnd, _T("Could not initialize the model object"), _T("Erorr"), MB_OK);
 		return false;
@@ -253,13 +248,6 @@ void GraphicsClass::Shutdown()
 		delete m_Camera;
 		m_Camera = nullptr;
 	}
-
-	if (m_Direct3D)
-	{
-		m_Direct3D->Shutdown();
-		delete m_Direct3D;
-		m_Direct3D = nullptr;
-	}
 }
 
 bool GraphicsClass::Frame(int MouseX, int MouseY, int FPS, int CPU, float rotationY)
@@ -315,7 +303,7 @@ bool GraphicsClass::Render()
 	float radius = 1.f;
 	DirectX::XMFLOAT4 Color;
 	bool IsRender;
-	for (int i = 0; i < ModelCount; i++)
+	for (int i = 0; i < ModelCount; ++i)
 	{
 		// 3D object의 정보 가져오기
 		m_ModelList->GetData(i, pos_x, pos_y, pos_z, Color);

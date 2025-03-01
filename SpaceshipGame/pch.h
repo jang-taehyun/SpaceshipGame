@@ -29,7 +29,7 @@
 #define UNICODE
 #include <tchar.h>				// windows header에 있는 자료형 확장
 
-// MY CLASS INCLUDE //
+// DirectX 11 관련 //
 #include "DxDefine.h"
 
 #endif //PCH_H

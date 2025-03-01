@@ -10,7 +10,7 @@ ModelClass::ModelClass() {}
 ModelClass::ModelClass(const ModelClass& other) {}
 ModelClass::~ModelClass() {}
 
-bool ModelClass::Initialize(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const char* TextureFileName, const char* ModelFileName)
+bool ModelClass::Initialize(ID3D11Device* const Device, ID3D11DeviceContext*  const DeviceContext, const char* const TextureFileName, const char* const ModelFileName)
 {
 	if (!LoadModel(ModelFileName))
 	{

@@ -10,9 +10,6 @@
     <Filter Include="InputClass">
       <UniqueIdentifier>{5f430cbf-7ff5-4b91-b373-d61465ca0a2e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GraphicsClass">
-      <UniqueIdentifier>{4c246c9e-9e97-4202-976c-ebd06210ee55}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Debugging">
       <UniqueIdentifier>{d00c2fe4-1a98-47e1-b031-661cdba45e0e}</UniqueIdentifier>
     </Filter>
@@ -35,44 +32,44 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="ShaderClass">
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{80143554-941d-40cb-8afc-f4b624206db8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\D3DClass">
+      <UniqueIdentifier>{266e2735-c2bf-4965-b9b8-a7f7287c74a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\GraphicsClass">
+      <UniqueIdentifier>{4c246c9e-9e97-4202-976c-ebd06210ee55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\ShaderClass">
       <UniqueIdentifier>{e536d068-4c88-4f1d-99c6-3fa9d3bbbab8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ShaderClass\Child">
+    <Filter Include="Graphics\ShaderClass\Child">
       <UniqueIdentifier>{246bdc41-b515-48db-99f6-c04f6b5df452}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ShaderClass\Child\Texture">
+    <Filter Include="Graphics\ShaderClass\Child\Texture">
       <UniqueIdentifier>{6153828e-3be2-4ad7-ad5c-8ba3073caf90}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ShaderClass\Child\MultiTexture">
+    <Filter Include="Graphics\ShaderClass\Child\MultiTexture">
       <UniqueIdentifier>{dce89d75-8f85-474b-b259-3d00508309dd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ShaderClass\Child\Light">
+    <Filter Include="Graphics\ShaderClass\Child\Light">
       <UniqueIdentifier>{6bfa86ff-6908-4896-af68-f30fdf60959d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ShaderClass\Child\LightMap">
+    <Filter Include="Graphics\ShaderClass\Child\LightMap">
       <UniqueIdentifier>{5548cfbb-20a6-4db6-b94b-36a54b83308e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ShaderClass\Child\AlphaMap">
+    <Filter Include="Graphics\ShaderClass\Child\AlphaMap">
       <UniqueIdentifier>{17d2158f-07f0-4834-a484-cc078551a8ea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ShaderClass\Parent">
+    <Filter Include="Graphics\ShaderClass\Parent">
       <UniqueIdentifier>{69cc488c-e683-4a0d-a1c1-ac4cd22af194}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Default\header">
+      <UniqueIdentifier>{4cdff5a3-8c3f-4636-bd3a-5b4c64260d22}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h">
-      <Filter>Default</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>Default</Filter>
-    </ClInclude>
-    <ClInclude Include="SpaceshipGame.h">
-      <Filter>Default</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Default</Filter>
-    </ClInclude>
     <ClInclude Include="SystemClass.h">
       <Filter>SystemClass</Filter>
     </ClInclude>
@@ -80,7 +77,7 @@
       <Filter>InputClass</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsClass.h">
-      <Filter>GraphicsClass</Filter>
+      <Filter>Graphics\GraphicsClass</Filter>
     </ClInclude>
     <ClInclude Include="CPUClass.h">
       <Filter>Debugging\CPUClass</Filter>
@@ -97,10 +94,6 @@
     <ClInclude Include="SoundClass.h">
       <Filter>SoundClass</Filter>
     </ClInclude>
-    <ClInclude Include="DxDefine.h">
-      <Filter>Default</Filter>
-    </ClInclude>
-    <ClInclude Include="D3DClass.h" />
     <ClInclude Include="FrustumClass.h" />
     <ClInclude Include="LightClass.h" />
     <ClInclude Include="ModelClass.h" />
@@ -110,28 +103,43 @@
     <ClInclude Include="CameraClass.h" />
     <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="ShaderClass.h">
-      <Filter>ShaderClass\Parent</Filter>
+      <Filter>Graphics\ShaderClass\Parent</Filter>
     </ClInclude>
     <ClInclude Include="AlphaMapShaderClass.h">
-      <Filter>ShaderClass\Child\AlphaMap</Filter>
+      <Filter>Graphics\ShaderClass\Child\AlphaMap</Filter>
     </ClInclude>
     <ClInclude Include="LightMapShaderClass.h">
-      <Filter>ShaderClass\Child\LightMap</Filter>
+      <Filter>Graphics\ShaderClass\Child\LightMap</Filter>
     </ClInclude>
     <ClInclude Include="LightShaderClass.h">
-      <Filter>ShaderClass\Child\Light</Filter>
+      <Filter>Graphics\ShaderClass\Child\Light</Filter>
     </ClInclude>
     <ClInclude Include="MultiTextureShaderClass.h">
-      <Filter>ShaderClass\Child\MultiTexture</Filter>
+      <Filter>Graphics\ShaderClass\Child\MultiTexture</Filter>
     </ClInclude>
     <ClInclude Include="TextureShaderClass.h">
-      <Filter>ShaderClass\Child\Texture</Filter>
+      <Filter>Graphics\ShaderClass\Child\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DClass.h">
+      <Filter>Graphics\D3DClass</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Default\header</Filter>
+    </ClInclude>
+    <ClInclude Include="DxDefine.h">
+      <Filter>Default\header</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Default\header</Filter>
+    </ClInclude>
+    <ClInclude Include="SpaceshipGame.h">
+      <Filter>Default\header</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Default\header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="pch.cpp">
-      <Filter>Default</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Default</Filter>
     </ClCompile>
@@ -142,7 +150,7 @@
       <Filter>InputClass</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsClass.cpp">
-      <Filter>GraphicsClass</Filter>
+      <Filter>Graphics\GraphicsClass</Filter>
     </ClCompile>
     <ClCompile Include="CPUClass.cpp">
       <Filter>Debugging\CPUClass</Filter>
@@ -159,7 +167,6 @@
     <ClCompile Include="SoundClass.cpp">
       <Filter>SoundClass</Filter>
     </ClCompile>
-    <ClCompile Include="D3DClass.cpp" />
     <ClCompile Include="FrustumClass.cpp" />
     <ClCompile Include="LightClass.cpp" />
     <ClCompile Include="ModelClass.cpp" />
@@ -169,22 +176,28 @@
     <ClCompile Include="CameraClass.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="ShaderClass.cpp">
-      <Filter>ShaderClass\Parent</Filter>
+      <Filter>Graphics\ShaderClass\Parent</Filter>
     </ClCompile>
     <ClCompile Include="AlphaMapShaderClass.cpp">
-      <Filter>ShaderClass\Child\AlphaMap</Filter>
+      <Filter>Graphics\ShaderClass\Child\AlphaMap</Filter>
     </ClCompile>
     <ClCompile Include="LightMapShaderClass.cpp">
-      <Filter>ShaderClass\Child\LightMap</Filter>
+      <Filter>Graphics\ShaderClass\Child\LightMap</Filter>
     </ClCompile>
     <ClCompile Include="LightShaderClass.cpp">
-      <Filter>ShaderClass\Child\Light</Filter>
+      <Filter>Graphics\ShaderClass\Child\Light</Filter>
     </ClCompile>
     <ClCompile Include="MultiTextureShaderClass.cpp">
-      <Filter>ShaderClass\Child\MultiTexture</Filter>
+      <Filter>Graphics\ShaderClass\Child\MultiTexture</Filter>
     </ClCompile>
     <ClCompile Include="TextureShaderClass.cpp">
-      <Filter>ShaderClass\Child\Texture</Filter>
+      <Filter>Graphics\ShaderClass\Child\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DClass.cpp">
+      <Filter>Graphics\D3DClass</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Default\header</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

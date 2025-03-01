@@ -1,29 +1,53 @@
 #pragma once
 
-class D3DClass
+static class D3DClass
 {
-public:
+private:
 	D3DClass();
-	D3DClass(const D3DClass&);
+	D3DClass(const D3DClass& other);
 	~D3DClass();
 
-	bool Initialize(int, int, bool, HWND, bool, float, float);
+public:
+	// singleton 객체 호출 함수
+	inline static D3DClass* GetD3DClassInst(HWND hwnd)
+	{
+		if (!inst)
+		{
+			inst = new D3DClass;
+			MessageBox(hwnd, _T("D3D 객체 할당 성공"), _T("success"), MB_OK);
+		}
+
+		return inst;
+	}
+
+	// D3D 객체 초기화 함수 //
+	HRESULT Initialize(const int& ScreenWidth, const int& ScreenHeight, const bool& VSYNC, const HWND& hwnd, const bool& FullScreen, const float& ScreenDepth, const float& ScreenNear);
+	
+	// D3D 객체 내부 리소스 정리 함수 //
 	void Shutdown();
 
-	// back buffer를 지우는 함수
-	void BeginScene(float, float, float, float);
+	// back buffer를 지우는 함수 //
+	void BeginScene(const float red, const float green, const float blue, const float alpha);
 	
 	// 화면에 back buffer의 내용을 표시하는 함수
 	void EndScene();
 
-	ID3D11Device* GetDevice();
-	ID3D11DeviceContext* GetDeviceContext();
+	// Getter //
 
-	void GetProjectionMatrix(DirectX::XMMATRIX&);
-	void GetWorldMatrix(DirectX::XMMATRIX&);
-	void GetOrthoMatrix(DirectX::XMMATRIX&);
+	inline const ID3D11Device* GetDevice() { return m_Device; }
+	inline const ID3D11DeviceContext* GetDeviceContext() { return m_DeviceContext; }
+	inline void GetVideoCardInfo(char* GraphicCardName, int& Memory)
+	{
+		strcpy_s(GraphicCardName, 128, m_VideoCardDescription);
+		Memory = m_VideoCardMemory;
+	}
 
-	void GetVideoCardInfo(char*, int&);
+	// Setter //
+
+	inline void GetProjectionMatrix(DirectX::XMMATRIX& ProjectionMatrix) { ProjectionMatrix = m_ProjectionMatrix; }
+	inline void GetWorldMatrix(DirectX::XMMATRIX& WorldMatrix) { WorldMatrix = m_WorlMatrix; }
+	inline void GetOrthoMatrix(DirectX::XMMATRIX& OrthoMatrix) { OrthoMatrix = m_OrthoMatrix; }
+
 
 	void TurnDepthBufferOn();
 	void TurnDepthBufferOff();
@@ -31,36 +55,37 @@ public:
 	void TurnOnAlphaBlending();
 	void TurnOffAlphaBlending();
 
-	// DirectX 11 초기화 단계 //
 private:
-	// 1. DirectX Graphics infrastructure(DXGI)를 통해 적절한 디스플레이 모드 찾기 및 적용
-	bool GetRefreshRate(int ScreenWidth, int ScreenHeight, int& Numerator, int & Denominator);
+	// 적절한 디스플레이 모드를 찾는 함수
+	HRESULT GetRefreshRate(const int& ScreenWidth, const int& ScreenHeight, int& Numerator, int & Denominator);
 
-	// 2. Swap chain 설정 및 Swap chain, Device, Device context 생성
-	bool CreateSwapChainDeviceDeviceContext(int ScreenWidth, int ScreenHeight, int Numerator, int Denominator, HWND hwnd, bool FullScreen);
+	// Swap chain 설정 및 Swap chain, Device, Device context 생성하는 함수
+	HRESULT CreateSwapChainDeviceDeviceContext(const int& ScreenWidth, const int& ScreenHeight, const int& Numerator, const int& Denominator, const HWND& hwnd, const bool& FullScreen);
 
-	// 3. Render target view 생성 및 설정
-	bool SetAndCreateRenderTargetView();
+	// Render target view 생성 및 설정하는 함수
+	HRESULT SetAndCreateRenderTargetView();
 
-	// 4. Depth, Stencil 설정
-	bool SetDepthAndStencil(int ScreenWidth, int ScreenHeight);
+	// Depth, Stencil 설정 함수
+	HRESULT SetDepthAndStencil(const int& ScreenWidth, const int& ScreenHeight);
 
-	// 5. Rasterizer 설정
-	bool SetRasterizer();
+	// Rasterizer 설정 함수
+	HRESULT SetRasterizer();
 
-	// 6. 렌더링을 위한 Viewport 설정
-	bool SetViewport(int ScreenWidth, int ScreenHeight);
+	// 렌더링을 위한 Viewport 설정 함수
+	void SetViewport(const int& ScreenWidth, const int& ScreenHeight);
 
-	// 7. Matrix 설정
-	bool SetMatrix(int ScreenWidth, int ScreenHeight, float ScreenDepth, float ScreenNear);
+	// Matrix 설정 함수
+	void SetMatrix(const int& ScreenWidth, const int& ScreenHeight, const float& ScreenDepth, const float& ScreenNear);
 
-	// 8. alpha blending state 설정
-	bool SetAlphaBlendState();
+	// alpha blending state 설정 함수
+	HRESULT SetAlphaBlendState();
 
 	// video card 정보를 GPU로부터 받아오는 함수
-	bool GetVideoCardDescription(IDXGIAdapter* Adapter);
+	HRESULT GetVideoCardDescription(IDXGIAdapter* const Adapter);
 
 private:
+	static D3DClass* inst;
+
 	bool m_VSYNC_Enabled = false;
 
 	// about graphics card
@@ -93,4 +118,3 @@ private:
 	ID3D11BlendState* m_AlphaEnableBlendingState = nullptr;
 	ID3D11BlendState* m_AlphaDisableBlendingState = nullptr;
 };
-
