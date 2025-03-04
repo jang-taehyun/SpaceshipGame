@@ -158,6 +158,8 @@
     <ClInclude Include="D3DClass.h" />
     <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="DxDefine.h" />
+    <ClInclude Include="FontClass.h" />
+    <ClInclude Include="FontShaderClass.h" />
     <ClInclude Include="FPSClass.h" />
     <ClInclude Include="FrustumClass.h" />
     <ClInclude Include="GraphicsClass.h" />
@@ -187,6 +189,8 @@
     <ClCompile Include="CPUClass.cpp" />
     <ClCompile Include="D3DClass.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
+    <ClCompile Include="FontClass.cpp" />
+    <ClCompile Include="FontShaderClass.cpp" />
     <ClCompile Include="FPSClass.cpp" />
     <ClCompile Include="FrustumClass.cpp" />
     <ClCompile Include="GraphicsClass.cpp" />
@@ -219,6 +223,22 @@
   <ItemGroup>
     <Image Include="small.ico" />
     <Image Include="SpaceshipGame.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shader\pixel\alphamap.ps" />
+    <None Include="shader\pixel\color.ps" />
+    <None Include="shader\pixel\font.ps" />
+    <None Include="shader\pixel\light.ps" />
+    <None Include="shader\pixel\lightmap.ps" />
+    <None Include="shader\pixel\multitexture.ps" />
+    <None Include="shader\pixel\texture.ps" />
+    <None Include="shader\vertex\alphamap.vs" />
+    <None Include="shader\vertex\color.vs" />
+    <None Include="shader\vertex\font.vs" />
+    <None Include="shader\vertex\light.vs" />
+    <None Include="shader\vertex\lightmap.vs" />
+    <None Include="shader\vertex\multitexture.vs" />
+    <None Include="shader\vertex\texture.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

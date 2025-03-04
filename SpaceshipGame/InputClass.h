@@ -4,21 +4,26 @@ class InputClass
 {
 public:
 	InputClass();
-	InputClass(const InputClass&);
+	InputClass(const InputClass& other);
 	~InputClass();
 
-	bool Initialize(HINSTANCE, HWND, int, int);
+	HRESULT Initialize(const HINSTANCE& const hinstance, const HWND& const hwnd, const int& const ScreenWidth, const int& const ScreenHeight);
 	void Shutdown();
-	bool Frame();
+	HRESULT Frame();
 
-	bool IsEscapePressed();
-	bool IsLeftArrowPressed();
-	bool IsRightArrowPressed();
-	void GetMouseLocation(int&, int&);
+	// Getter //
+
+	inline bool IsEscapePressed() { return ((m_KeyboardState[DIK_ESCAPE] & 0x80) ? true : false); }
+	inline bool IsLeftArrowPressed() { return ((m_KeyboardState[DIK_LEFTARROW] & 0x80) ? true : false); }
+	inline bool IsRightArrowPressed() { return ((m_KeyboardState[DIK_RIGHTARROW] & 0x80) ? true : false); }
+
+	// Setter //
+
+	inline void GetMouseLocation(int& MouseX, int& MouseY) { MouseX = m_MouseX; MouseY = m_MouseY; }
 
 private:
-	bool ReadKeyboard();
-	bool ReadMouse();
+	HRESULT ReadKeyboard();
+	HRESULT ReadMouse();
 	void ProcessInput();
 
 private:

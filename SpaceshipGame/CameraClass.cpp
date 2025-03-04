@@ -5,30 +5,6 @@ CameraClass::CameraClass() {}
 CameraClass::CameraClass(const CameraClass& other) {}
 CameraClass::~CameraClass() {}
 
-void CameraClass::SetPosition(float x, float y, float z)
-{
-	m_Position.x = x;
-	m_Position.y = y;
-	m_Position.z = z;
-}
-
-void CameraClass::SetRotation(float x, float y, float z)
-{
-	m_Rotation.x = x;
-	m_Rotation.y = y;
-	m_Rotation.z = z;
-}
-
-DirectX::XMFLOAT3 CameraClass::GetPosition()
-{
-	return m_Position;
-}
-
-DirectX::XMFLOAT3 CameraClass::GetRotation()
-{
-	return m_Rotation;
-}
-
 void CameraClass::Render()
 {
 	DirectX::XMFLOAT3 Up, Position, LookAt;
@@ -89,9 +65,4 @@ void CameraClass::Render()
 
 	// lookat vector, up vector, position vector를 통해 view matrix 생성 //
 	m_ViewMatrix = DirectX::XMMatrixLookAtLH(PositionVector, LookAtVector, UpVector);
-}
-
-void CameraClass::GetViewMatrix(DirectX::XMMATRIX& ViewMatrix)
-{
-	ViewMatrix = m_ViewMatrix;
 }

@@ -1,0 +1,38 @@
+// GLOBAL //
+Texture2D ShaderTexture;
+SamplerState SampleType;
+
+cbuffer PixelBuffer
+{
+	float4 PixelColor;
+};
+
+// TYPEDEFS //
+struct PixelInputType
+{
+	float4 position : SV_POSITION;
+	float2 tex : TEXCOORD0;
+};
+
+// pixel shader //
+float4 FontPixelShader(PixelInputType input) : SV_TARGET
+{
+	float4 Color;
+
+	// texture 좌표 위치를 sampler을 사용해 texture에서 pixel 색상을 sampling //
+	Color = ShaderTexture.Sample(SampleType, input.tex);
+
+	// texture의 색상이 검은색이면 투명 처리
+	if(0.f == Color.r)
+	{
+		Color.a = 0.f;
+	}
+	// texture의 색상이 검은색이 아니라면 투명 처리 안함
+	else
+	{
+		Color.rgb = PixelColor.rgb;
+		Color.a = 1.f;
+	}
+
+	return Color;
+}

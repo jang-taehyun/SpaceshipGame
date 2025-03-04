@@ -4,12 +4,15 @@ class FPSClass
 {
 public:
 	FPSClass();
-	FPSClass(const FPSClass&);
+	FPSClass(const FPSClass& other);
 	~FPSClass();
 
 	void Initialize();
 	void Frame();
-	int GetFPS();
+	
+	// Getter //
+
+	inline int GetFPS() { return m_FPS; }
 
 private:
 	int m_FPS = 0;

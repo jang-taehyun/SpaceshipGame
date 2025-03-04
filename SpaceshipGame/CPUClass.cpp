@@ -52,8 +52,3 @@ void CPUClass::Frame()
 		}
 	}
 }
-
-long long CPUClass::GetCPUPercentage()
-{
-	return (m_CanReadCPU ? m_CPUUsage : 0);
-}

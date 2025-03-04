@@ -41,6 +41,51 @@
     <Filter Include="Graphics\GraphicsClass">
       <UniqueIdentifier>{4c246c9e-9e97-4202-976c-ebd06210ee55}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Default\header">
+      <UniqueIdentifier>{4cdff5a3-8c3f-4636-bd3a-5b4c64260d22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CameraClass">
+      <UniqueIdentifier>{6d70804d-61ec-47a6-9770-f8b84460eb0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Default\DDSTextureLoader">
+      <UniqueIdentifier>{ef106198-efe5-4225-98e5-660b8bd5ee8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FrustumClass">
+      <UniqueIdentifier>{cbac6ccf-be28-4f73-9f9b-51c9b43e22fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture">
+      <UniqueIdentifier>{f425539f-e15e-4831-a061-d4cb088eddbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture\TextureClass">
+      <UniqueIdentifier>{b6694b6c-6699-4641-a190-0e899b0bce02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture\TextureArrayClass">
+      <UniqueIdentifier>{821ef8ee-d5de-4200-93c2-d97bd7e1b2f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{b2ab057f-896f-42aa-800e-4d42831064c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\ModelClass">
+      <UniqueIdentifier>{193cacbb-0aa9-481f-9fab-e2a6ec264955}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\ModelListClass">
+      <UniqueIdentifier>{5c9f1d5a-b5c0-4c62-b7a4-c1769a228c9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Light">
+      <UniqueIdentifier>{e3f9a0a2-cb03-4a0d-b1b3-509bf3d96848}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Light\LightClass">
+      <UniqueIdentifier>{5a5d48a0-f55b-4d3a-9c48-d72451b3757a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Shader">
+      <UniqueIdentifier>{3cb280fe-6c0a-49f4-b5f8-76497f04f653}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Shader\VertexShader">
+      <UniqueIdentifier>{195d6403-ca2f-4171-97e3-ef9386624936}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Shader\PixelShader">
+      <UniqueIdentifier>{4cc13100-384c-4da9-8b21-9fc33c37ee45}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Graphics\ShaderClass">
       <UniqueIdentifier>{e536d068-4c88-4f1d-99c6-3fa9d3bbbab8}</UniqueIdentifier>
     </Filter>
@@ -62,11 +107,14 @@
     <Filter Include="Graphics\ShaderClass\Child\AlphaMap">
       <UniqueIdentifier>{17d2158f-07f0-4834-a484-cc078551a8ea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\ShaderClass\Child\FontShader">
+      <UniqueIdentifier>{a6c6b51c-926b-4c81-a5e1-6f39ddbc978a}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Graphics\ShaderClass\Parent">
       <UniqueIdentifier>{69cc488c-e683-4a0d-a1c1-ac4cd22af194}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Default\header">
-      <UniqueIdentifier>{4cdff5a3-8c3f-4636-bd3a-5b4c64260d22}</UniqueIdentifier>
+    <Filter Include="Font">
+      <UniqueIdentifier>{3eb92837-7d3e-4017-acbc-5825d51dc141}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -94,14 +142,6 @@
     <ClInclude Include="SoundClass.h">
       <Filter>SoundClass</Filter>
     </ClInclude>
-    <ClInclude Include="FrustumClass.h" />
-    <ClInclude Include="LightClass.h" />
-    <ClInclude Include="ModelClass.h" />
-    <ClInclude Include="ModelListClass.h" />
-    <ClInclude Include="TextureArrayClass.h" />
-    <ClInclude Include="TextureClass.h" />
-    <ClInclude Include="CameraClass.h" />
-    <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="ShaderClass.h">
       <Filter>Graphics\ShaderClass\Parent</Filter>
     </ClInclude>
@@ -138,6 +178,36 @@
     <ClInclude Include="targetver.h">
       <Filter>Default\header</Filter>
     </ClInclude>
+    <ClInclude Include="CameraClass.h">
+      <Filter>CameraClass</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSTextureLoader.h">
+      <Filter>Default\DDSTextureLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="FrustumClass.h">
+      <Filter>FrustumClass</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureClass.h">
+      <Filter>Texture\TextureClass</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureArrayClass.h">
+      <Filter>Texture\TextureArrayClass</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelClass.h">
+      <Filter>Model\ModelClass</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelListClass.h">
+      <Filter>Model\ModelListClass</Filter>
+    </ClInclude>
+    <ClInclude Include="LightClass.h">
+      <Filter>Light\LightClass</Filter>
+    </ClInclude>
+    <ClInclude Include="FontShaderClass.h">
+      <Filter>Graphics\ShaderClass\Child\FontShader</Filter>
+    </ClInclude>
+    <ClInclude Include="FontClass.h">
+      <Filter>Font</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -167,14 +237,6 @@
     <ClCompile Include="SoundClass.cpp">
       <Filter>SoundClass</Filter>
     </ClCompile>
-    <ClCompile Include="FrustumClass.cpp" />
-    <ClCompile Include="LightClass.cpp" />
-    <ClCompile Include="ModelClass.cpp" />
-    <ClCompile Include="ModelListClass.cpp" />
-    <ClCompile Include="TextureArrayClass.cpp" />
-    <ClCompile Include="TextureClass.cpp" />
-    <ClCompile Include="CameraClass.cpp" />
-    <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="ShaderClass.cpp">
       <Filter>Graphics\ShaderClass\Parent</Filter>
     </ClCompile>
@@ -199,6 +261,36 @@
     <ClCompile Include="pch.cpp">
       <Filter>Default\header</Filter>
     </ClCompile>
+    <ClCompile Include="CameraClass.cpp">
+      <Filter>CameraClass</Filter>
+    </ClCompile>
+    <ClCompile Include="DDSTextureLoader.cpp">
+      <Filter>Default\DDSTextureLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="FrustumClass.cpp">
+      <Filter>FrustumClass</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureClass.cpp">
+      <Filter>Texture\TextureClass</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureArrayClass.cpp">
+      <Filter>Texture\TextureArrayClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelClass.cpp">
+      <Filter>Model\ModelClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelListClass.cpp">
+      <Filter>Model\ModelListClass</Filter>
+    </ClCompile>
+    <ClCompile Include="LightClass.cpp">
+      <Filter>Light\LightClass</Filter>
+    </ClCompile>
+    <ClCompile Include="FontShaderClass.cpp">
+      <Filter>Graphics\ShaderClass\Child\FontShader</Filter>
+    </ClCompile>
+    <ClCompile Include="FontClass.cpp">
+      <Filter>Font</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SpaceshipGame.rc">
@@ -212,5 +304,49 @@
     <Image Include="SpaceshipGame.ico">
       <Filter>Default\리소스 파일</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shader\pixel\alphamap.ps">
+      <Filter>Graphics\Shader\PixelShader</Filter>
+    </None>
+    <None Include="shader\pixel\color.ps">
+      <Filter>Graphics\Shader\PixelShader</Filter>
+    </None>
+    <None Include="shader\pixel\font.ps">
+      <Filter>Graphics\Shader\PixelShader</Filter>
+    </None>
+    <None Include="shader\pixel\light.ps">
+      <Filter>Graphics\Shader\PixelShader</Filter>
+    </None>
+    <None Include="shader\pixel\lightmap.ps">
+      <Filter>Graphics\Shader\PixelShader</Filter>
+    </None>
+    <None Include="shader\pixel\multitexture.ps">
+      <Filter>Graphics\Shader\PixelShader</Filter>
+    </None>
+    <None Include="shader\pixel\texture.ps">
+      <Filter>Graphics\Shader\PixelShader</Filter>
+    </None>
+    <None Include="shader\vertex\alphamap.vs">
+      <Filter>Graphics\Shader\VertexShader</Filter>
+    </None>
+    <None Include="shader\vertex\color.vs">
+      <Filter>Graphics\Shader\VertexShader</Filter>
+    </None>
+    <None Include="shader\vertex\font.vs">
+      <Filter>Graphics\Shader\VertexShader</Filter>
+    </None>
+    <None Include="shader\vertex\light.vs">
+      <Filter>Graphics\Shader\VertexShader</Filter>
+    </None>
+    <None Include="shader\vertex\lightmap.vs">
+      <Filter>Graphics\Shader\VertexShader</Filter>
+    </None>
+    <None Include="shader\vertex\multitexture.vs">
+      <Filter>Graphics\Shader\VertexShader</Filter>
+    </None>
+    <None Include="shader\vertex\texture.vs">
+      <Filter>Graphics\Shader\VertexShader</Filter>
+    </None>
   </ItemGroup>
 </Project>

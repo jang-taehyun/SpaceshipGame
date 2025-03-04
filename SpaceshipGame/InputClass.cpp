@@ -5,7 +5,7 @@ InputClass::InputClass() {}
 InputClass::InputClass(const InputClass& other) {}
 InputClass::~InputClass() {}
 
-bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int ScreenWidth, int ScreenHeight)
+HRESULT InputClass::Initialize(const HINSTANCE& const hinstance, const HWND& const hwnd, const int& const ScreenWidth, const int& const ScreenHeight)
 {
 	// 초기 마우스 위치 설정 //
 	m_ScreenHeight = ScreenHeight;
@@ -17,60 +17,60 @@ bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int ScreenWidth, int
 	result = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_DirectInput, NULL);
 	if (FAILED(result))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// 키보드의 Direct input interface 초기화 //
 	// 키보드의 Direct input interface 초기화
 	if (FAILED(m_DirectInput->CreateDevice(GUID_SysKeyboard, &m_Keyboard, NULL)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// 키보드의 Direct input interface가 수집할 데이터의 포맷(데이터 해석 방법) 설정
 	if (FAILED(m_Keyboard->SetDataFormat(&c_dfDIKeyboard)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// 키보드의 Direct input interface에 대한 Cooperative level 설정
 	if (FAILED(m_Keyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// 키보드의 Direct input에 대한 접근 권한 취득
 	if (FAILED(m_Keyboard->Acquire()))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 
 	// 마우스의 Direct input interface 초기화 //
 	if (FAILED(m_DirectInput->CreateDevice(GUID_SysMouse, &m_Mouse, NULL)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// 마우스의 Direct input interface가 수집할 데이터의 포맷(데이터 해석 방법) 설정
 	if (FAILED(m_Mouse->SetDataFormat(&c_dfDIMouse)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// 마우스의 Direct input interface에 대한 Cooperative level 설정
 	if (FAILED(m_Mouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// 마우스의 Direct input에 대한 접근 권한 취득
 	if (FAILED(m_Mouse->Acquire()))
 	{
-		return false;
+		return E_FAIL;
 	}
 
-	return true;
+	return S_OK;
 }
 
 void InputClass::Shutdown()
@@ -96,60 +96,24 @@ void InputClass::Shutdown()
 	}
 }
 
-bool InputClass::Frame()
+HRESULT InputClass::Frame()
 {
-	if (!ReadKeyboard())
+	if (FAILED(ReadKeyboard()))
 	{
-		return false;
+		return E_FAIL;
 	}
 
-	if (!ReadMouse())
+	if (FAILED(ReadMouse()))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	ProcessInput();
 
-	return true;
+	return S_OK;
 }
 
-bool InputClass::IsEscapePressed()
-{
-	if (m_KeyboardState[DIK_ESCAPE] & 0x80)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-bool InputClass::IsLeftArrowPressed()
-{
-	if (m_KeyboardState[DIK_LEFTARROW] & 0x80)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-bool InputClass::IsRightArrowPressed()
-{
-	if (m_KeyboardState[DIK_RIGHTARROW] & 0x80)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-void InputClass::GetMouseLocation(int& MouseX, int& MouseY)
-{
-	MouseX = m_MouseX;
-	MouseY = m_MouseY;
-}
-
-bool InputClass::ReadKeyboard()
+HRESULT InputClass::ReadKeyboard()
 {
 	HRESULT result;
 
@@ -162,14 +126,14 @@ bool InputClass::ReadKeyboard()
 		}
 		else
 		{
-			return false;
+			return result;
 		}
 	}
 
-	return true;
+	return S_OK;
 }
 
-bool InputClass::ReadMouse()
+HRESULT InputClass::ReadMouse()
 {
 	HRESULT result;
 
@@ -182,11 +146,11 @@ bool InputClass::ReadMouse()
 		}
 		else
 		{
-			return false;
+			return result;
 		}
 	}
 
-	return true;
+	return S_OK;
 }
 
 void InputClass::ProcessInput()

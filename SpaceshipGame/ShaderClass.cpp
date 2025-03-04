@@ -36,7 +36,7 @@ void ShaderClass::Shutdown()
 	ShutdownShader();
 }
 
-HRESULT ShaderClass::Render(ID3D11DeviceContext* const DeviceContext, const int& IndexCount, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix, const int& TextureNum, ID3D11ShaderResourceView** const TextureArray)
+HRESULT ShaderClass::Render(ID3D11DeviceContext* const DeviceContext, const int& const IndexCount, const DirectX::XMMATRIX& const WorldMatrix, const DirectX::XMMATRIX& const ViewMatrix, const DirectX::XMMATRIX& const ProjectionMatrix, const int& const TextureNum, ID3D11ShaderResourceView** const TextureArray)
 {
 	if (FAILED(SetShaderParameters(DeviceContext, WorldMatrix, ViewMatrix, ProjectionMatrix, TextureNum, TextureArray)))
 		return E_FAIL;
@@ -249,7 +249,7 @@ void ShaderClass::OutputShaderErrorMessage(ID3D10Blob* ErrorMessage, const HWND 
 	MessageBox(hwnd, _T("Error compiling shader."), ShaderFileName, MB_OK);
 }
 
-HRESULT ShaderClass::SetShaderParameters(ID3D11DeviceContext* const DeviceContext, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix, const int& TextureNum, ID3D11ShaderResourceView** const TextureArray)
+HRESULT ShaderClass::SetShaderParameters(ID3D11DeviceContext* const DeviceContext, const DirectX::XMMATRIX& const WorldMatrix, const DirectX::XMMATRIX& const ViewMatrix, const DirectX::XMMATRIX&  const ProjectionMatrix, const int& const TextureNum, ID3D11ShaderResourceView** const TextureArray)
 {
 	// 행렬들을 HLSL에 맞게 변환 //
 	// 행렬들을 transpose 연산하여 shader에서 사용할 수 있도록 한다.
@@ -258,6 +258,7 @@ HRESULT ShaderClass::SetShaderParameters(ID3D11DeviceContext* const DeviceContex
 	DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixTranspose(ProjectionMatrix);
 
 	// matrix constant buffer의 내용 업데이트 //
+	// vertex shader에서 matrix constant buffer의 위치 : 0번
 	if (FAILED(UpdateMatrixBuffer(DeviceContext, 0, worldMatrix, viewMatrix, projectionMatrix)))
 	{
 		return E_FAIL;
@@ -270,7 +271,7 @@ HRESULT ShaderClass::SetShaderParameters(ID3D11DeviceContext* const DeviceContex
 	return S_OK;
 }
 
-HRESULT ShaderClass::UpdateMatrixBuffer(ID3D11DeviceContext* const DeviceContext, unsigned int slot, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix)
+HRESULT ShaderClass::UpdateMatrixBuffer(ID3D11DeviceContext* const DeviceContext, unsigned int slot, const DirectX::XMMATRIX& const WorldMatrix, const DirectX::XMMATRIX& const ViewMatrix, const DirectX::XMMATRIX& const ProjectionMatrix)
 {
 	// matrix constant buffer의 내용을 CPU가 쓸 수 있도록 잠금
 	D3D11_MAPPED_SUBRESOURCE MappedResource;

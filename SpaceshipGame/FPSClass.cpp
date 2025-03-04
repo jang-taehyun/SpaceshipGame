@@ -25,8 +25,3 @@ void FPSClass::Frame()
 	}
 }
 
-int FPSClass::GetFPS()
-{
-	return m_FPS;
-}
-

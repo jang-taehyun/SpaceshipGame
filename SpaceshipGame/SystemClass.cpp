@@ -13,7 +13,7 @@ SystemClass::SystemClass() {}
 SystemClass::SystemClass(const SystemClass& other) {}
 SystemClass::~SystemClass() {}
 
-bool SystemClass::Initialize()
+HRESULT SystemClass::Initialize()
 {
 	// 윈도우의 가로, 세로 길이 초기화
 	int ScreenWidth = 0;
@@ -23,63 +23,63 @@ bool SystemClass::Initialize()
 	// 객체 생성 및 초기화
 	m_Input = new InputClass;
 	if (!m_Input)
-		return false;
-	if (!m_Input->Initialize(m_hinstance, m_hwnd, ScreenWidth, ScreenHeight))
+		return E_FAIL;
+	if (FAILED(m_Input->Initialize(m_hinstance, m_hwnd, ScreenWidth, ScreenHeight)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	m_Graphics = new GraphicsClass;
 	if (!m_Graphics)
-		return false;
+		return E_FAIL;
 
-	if (!m_Graphics->Initialize(ScreenWidth, ScreenHeight, m_hwnd))
+	if (FAILED(m_Graphics->Initialize(ScreenWidth, ScreenHeight, m_hwnd)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	m_Sound = new SoundClass;
 	if (!m_Sound)
 	{
-		return false;
+		return E_FAIL;
 	}
 
-	if (!m_Sound->Initialize(m_hwnd))
+	if (FAILED(m_Sound->Initialize(m_hwnd)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	m_FPS = new FPSClass;
 	if (!m_FPS)
 	{
-		return false;
+		return E_FAIL;
 	}
 	m_FPS->Initialize();
 
 	m_CPU = new CPUClass;
 	if (!m_CPU)
 	{
-		return false;
+		return E_FAIL;
 	}
 	m_CPU->Intialize();
 
 	m_Timer = new TimerClass;
 	if (!m_Timer)
 	{
-		return false;
+		return E_FAIL;
 	}
-	if (!m_Timer->Initialize())
+	if (FAILED(m_Timer->Initialize()))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	m_Position = new PositionClass;
 	if (!m_Position)
 	{
-		return false;
+		return E_FAIL;
 	}
 
-	return true;
+	return S_OK;
 }
 
 void SystemClass::Shutdown()
@@ -153,7 +153,7 @@ void SystemClass::Run()
 		// frame 처리
 		else
 		{
-			if (!Frame())
+			if (FAILED(Frame()))
 				break;
 		}
 
@@ -167,7 +167,7 @@ LRESULT SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM 
 	return DefWindowProc(hwnd, umsg, wparam, lparam);
 }
 
-bool SystemClass::Frame()
+HRESULT SystemClass::Frame()
 {
 	int MouseX, MouseY;
 
@@ -175,8 +175,8 @@ bool SystemClass::Frame()
 	m_FPS->Frame();
 	m_CPU->Frame();
 
-	if (!m_Input->Frame())
-		return false;
+	if (FAILED(m_Input->Frame()))
+		return E_FAIL;
 
 	m_Input->GetMouseLocation(MouseX, MouseY);
 

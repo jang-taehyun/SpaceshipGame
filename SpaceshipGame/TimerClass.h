@@ -1,15 +1,16 @@
 #pragma once
+
 class TimerClass
 {
 public:
 	TimerClass();
-	TimerClass(const TimerClass&);
+	TimerClass(const TimerClass& other);
 	~TimerClass();
 
-	bool Initialize();
+	HRESULT Initialize();
 	void Frame();
 
-	float GetTime();
+	inline float GetTime() { return m_FrameTime; }
 
 private:
 	INT64 m_Frequency = 0;

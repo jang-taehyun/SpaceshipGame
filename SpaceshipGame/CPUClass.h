@@ -7,13 +7,15 @@ class CPUClass
 {
 public:
 	CPUClass();
-	CPUClass(const CPUClass&);
+	CPUClass(const CPUClass& other);
 	~CPUClass();
 
 	void Intialize();
 	void Shutdown();
 	void Frame();
-	long long GetCPUPercentage();
+
+	// Getter //
+	inline long long GetCPUPercentage() { return (m_CanReadCPU ? m_CPUUsage : 0); }
 
 private:
 	bool m_CanReadCPU = true;

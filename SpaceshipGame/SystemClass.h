@@ -15,14 +15,14 @@ public:
 	SystemClass(const SystemClass& other);
 	~SystemClass();
 
-	bool Initialize();
+	HRESULT Initialize();
 	void Shutdown();
 	void Run();
 
 	LRESULT CALLBACK MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
 
 private:
-	bool Frame();
+	HRESULT Frame();
 	void InitializeWindows(int& ScreenWidth, int& ScreenHeight);
 	void ShutdownWindows();
 

@@ -5,8 +5,15 @@ SoundClass::SoundClass() {}
 SoundClass::SoundClass(const SoundClass& other) {}
 SoundClass::~SoundClass() {}
 
-bool SoundClass::Initialize(HWND hwnd)
+HRESULT SoundClass::Initialize(const HWND& const hwnd, const SoundInfo& const info)
 {
+	// 파라미터 검사 //
+	if (NULL == hwnd || info.filename == nullptr)
+	{
+		MessageBox(hwnd, _T("file이 없습니다."), _T("Sound error"), MB_OK);
+		return E_FAIL;
+	}
+	
 	// direct sound, primary sound buffer 초기화 //
 	if (!InitializeDirectSound(hwnd))
 	{
@@ -14,7 +21,7 @@ bool SoundClass::Initialize(HWND hwnd)
 	}
 
 	// wav 오디오 파일을 secondary buffer에 load //
-	if (!LoadWaveFile("../Engine/data/sound01.wav", &m_SecondaryBuffer1))
+	if (!LoadWaveFile(info.filename, &m_SecondaryBuffer1))
 	{
 		return false;
 	}
@@ -29,19 +36,19 @@ void SoundClass::Shutdown()
 	ShutdownDirectSound();
 }
 
-bool SoundClass::InitializeDirectSound(HWND hwnd)
+HRESULT SoundClass::InitializeDirectSound(const HWND& const hwnd)
 {
 	// 기본 sound device 초기화 //
 	// 기본 sound device로 쓸 direct sound의 interface 초기화
 	if (FAILED(DirectSoundCreate8(NULL, &m_DirectSound, NULL)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// 기본 sound device의 cooperative level 설정
 	if (FAILED(m_DirectSound->SetCooperativeLevel(hwnd, DSSCL_PRIORITY)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 
@@ -60,7 +67,7 @@ bool SoundClass::InitializeDirectSound(HWND hwnd)
 	// primary sound buffer 생성
 	if (FAILED(m_DirectSound->CreateSoundBuffer(&PrimarySoundBufferDesc, &m_PrimaryBuffer, NULL)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// primary sound buffer의 format 설정
@@ -78,10 +85,10 @@ bool SoundClass::InitializeDirectSound(HWND hwnd)
 	// primary sound buffer의 format을 primary sound buffer에 바인드
 	if (FAILED(m_PrimaryBuffer->SetFormat(&PrimarySoundBufferFormatDesc)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
-	return true;
+	return S_OK;
 }
 
 void SoundClass::ShutdownDirectSound()
@@ -99,7 +106,7 @@ void SoundClass::ShutdownDirectSound()
 	}
 }
 
-bool SoundClass::LoadWaveFile(const char* FileName, IDirectSoundBuffer8** SecondaryBuffer)
+HRESULT SoundClass::LoadWaveFile(const char* const FileName, IDirectSoundBuffer8** const SecondaryBuffer)
 {
 	FILE* FilePtr = nullptr;
 
@@ -107,7 +114,7 @@ bool SoundClass::LoadWaveFile(const char* FileName, IDirectSoundBuffer8** Second
 	int error = fopen_s(&FilePtr, FileName, "rb");
 	if (error)
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// wav 파일의 header를 read 및 check //
@@ -118,56 +125,56 @@ bool SoundClass::LoadWaveFile(const char* FileName, IDirectSoundBuffer8** Second
 	unsigned int count = fread(&WaveFileHeader, sizeof(WaveFileHeader), 1, FilePtr);
 	if (1 != count)
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// wav 파일의 header를 check
 	// Chunk ID가 RIFF인지 확인
 	if (('R' != WaveFileHeader.ChunkID[0]) || ('I' != WaveFileHeader.ChunkID[1]) || ('F' != WaveFileHeader.ChunkID[2]) || ('F' != WaveFileHeader.ChunkID[3]))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// format이 WAVE인지 확인
 	if (('W' != WaveFileHeader.Format[0]) || ('A' != WaveFileHeader.Format[1]) || ('V' != WaveFileHeader.Format[2]) || ('E' != WaveFileHeader.Format[3]))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// sub Chunk ID가 fmt인지 확인
 	if (('f' != WaveFileHeader.SubChunkID[0]) || ('m' != WaveFileHeader.SubChunkID[1]) || ('t' != WaveFileHeader.SubChunkID[2]) || (' ' != WaveFileHeader.SubChunkID[3]))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// audio format이 WAVE_FORMAT_PCM인지 확인
 	if (WAVE_FORMAT_PCM != WaveFileHeader.AudioFormat)
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// wav 파일이 stereo format으로 저장되었는지 확인
 	if (2 != WaveFileHeader.NumberChannels)
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// wav 파일의 sample rate가 44.1 KHz인지 확인
 	if (44100 != WaveFileHeader.SampleRate)
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// wav파일이 16bit foramt으로 저장되었는지 확인
 	if (16 != WaveFileHeader.BitsPerSample)
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// wav 파일의 data chunk header 확인
 	if (('d' != WaveFileHeader.DataChunkID[0]) || ('a' != WaveFileHeader.DataChunkID[1]) || ('t' != WaveFileHeader.DataChunkID[2]) || ('a' != WaveFileHeader.DataChunkID[3]))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// wav 파일의 내용을 저장할 secondary buffer 생성 //
@@ -203,13 +210,13 @@ bool SoundClass::LoadWaveFile(const char* FileName, IDirectSoundBuffer8** Second
 	IDirectSoundBuffer* tempBuffer = nullptr;
 	if (FAILED(m_DirectSound->CreateSoundBuffer(&BufferDesc, &tempBuffer, NULL)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// 임시 sound buffer를 통해 IDirectSoundBuffer8의 interface 얻기
 	if (FAILED(tempBuffer->QueryInterface(IID_IDirectSoundBuffer8, (void**)&(*SecondaryBuffer))))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// 임시 sound buffer 해제
@@ -225,14 +232,14 @@ bool SoundClass::LoadWaveFile(const char* FileName, IDirectSoundBuffer8** Second
 	unsigned char* WaveData = new unsigned char[WaveFileHeader.DataSize];
 	if (!WaveData)
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// wav 파일 데이터를 읽어 임시 메모리에 저장
 	count = fread(WaveData, 1, WaveFileHeader.DataSize, FilePtr);
 	if (WaveFileHeader.DataSize != count)
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// 임시 메모리에 저장된 데이터를 secondary buffer에 복사하기 위해 secondary buffer를 lock
@@ -240,7 +247,7 @@ bool SoundClass::LoadWaveFile(const char* FileName, IDirectSoundBuffer8** Second
 	unsigned long BufferSize = 0;
 	if (FAILED((*SecondaryBuffer)->Lock(0, WaveFileHeader.DataSize, (void**)&BufferPtr, (DWORD*)&BufferSize, NULL, 0, 0)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// 임시 메모리에 저장된 데이터를 secondary buffer에 복사
@@ -249,7 +256,7 @@ bool SoundClass::LoadWaveFile(const char* FileName, IDirectSoundBuffer8** Second
 	// secondary buffer를 unlock
 	if (FAILED((*SecondaryBuffer)->Unlock((void*)BufferPtr, BufferSize, NULL, 0)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 
@@ -257,17 +264,17 @@ bool SoundClass::LoadWaveFile(const char* FileName, IDirectSoundBuffer8** Second
 	error = fclose(FilePtr);
 	if (error)
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// 임시 메모리 해제 //
 	delete[] WaveData;
 	WaveData = nullptr;
 
-	return true;
+	return S_OK;
 }
 
-void SoundClass::ShutdownWaveFile(IDirectSoundBuffer8** SecondaryBuffer)
+void SoundClass::ShutdownWaveFile(IDirectSoundBuffer8** const SecondaryBuffer)
 {
 	if (*SecondaryBuffer)
 	{
@@ -276,28 +283,28 @@ void SoundClass::ShutdownWaveFile(IDirectSoundBuffer8** SecondaryBuffer)
 	}
 }
 
-bool SoundClass::PlayWaveFile()
+HRESULT SoundClass::PlayWaveFile()
 {
 	// audio를 재생할 시작 위치 설정 //
 	// 여기서는 0(secondary buffer의 시작 위치)로 설정
 	// audio를 재생할 시작 위치를 설정하지 않으면 가장 최근에 재생되었던 부분부터 시작함
 	if (FAILED(m_SecondaryBuffer1->SetCurrentPosition(0)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// audio의 volume 지정 //
 	// 여기서는 100%로 지정
 	if (FAILED(m_SecondaryBuffer1->SetVolume(DSBVOLUME_MAX)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// secondary buffer에 저장된 데이터 재생 //
 	if (FAILED(m_SecondaryBuffer1->Play(0, 0, DSBPLAY_LOOPING)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
-	return true;
+	return S_OK;
 }

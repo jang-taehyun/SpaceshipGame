@@ -5,17 +5,7 @@ PositionClass::PositionClass() {}
 PositionClass::PositionClass(const PositionClass& other) {}
 PositionClass::~PositionClass() {}
 
-void PositionClass::SetFrameTime(float time)
-{
-	m_FrameTime = time;
-}
-
-void PositionClass::GetRotation(float& y)
-{
-	y = m_RotationY;
-}
-
-void PositionClass::TurnLeft(bool IsKeyDown)
+void PositionClass::TurnLeft(const bool& const IsKeyDown)
 {
 	if (IsKeyDown)
 	{
@@ -43,7 +33,7 @@ void PositionClass::TurnLeft(bool IsKeyDown)
 	}
 }
 
-void PositionClass::TurnRight(bool IsKeyDown)
+void PositionClass::TurnRight(const bool& const IsKeyDown)
 {
 	if (IsKeyDown)
 	{

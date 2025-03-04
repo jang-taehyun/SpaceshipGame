@@ -7,7 +7,7 @@ D3DClass::D3DClass() {}
 D3DClass::D3DClass(const D3DClass& other) {}
 D3DClass::~D3DClass() {}
 
-HRESULT D3DClass::Initialize(const int& ScreenWidth, const int& ScreenHeight, const bool& VSYNC, const HWND& hwnd, const bool& FullScreen, const float& ScreenDepth, const float& ScreenNear)
+HRESULT D3DClass::Initialize(const int& const ScreenWidth, const int& const ScreenHeight, const bool& const VSYNC, const HWND& const hwnd, const bool& const FullScreen, const float& const ScreenDepth, const float& const ScreenNear)
 {
 	m_VSYNC_Enabled = VSYNC;
 

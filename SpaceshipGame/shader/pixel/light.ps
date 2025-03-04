@@ -1,0 +1,73 @@
+// pixel shader //
+
+// GLOBAL //
+Texture2D ShaderTexture;  // pixel shader에서 사용할 texture 좌표
+SamplerState SampleType;  // texture의 sampling 방식
+
+// 조명 관련 상수 버퍼 //
+cbuffer LightBuffer
+{
+	float4 AmbientColor;	// ambient의 색상
+	float4 DiffuseColor;    // diffuse의 색상
+	float3 LightDirection;  // 빛의 방향 벡터
+	float SpecularPower;	// specular 강도
+	float4 SpecularColor;	// specular color
+};
+
+// TYPEDEFS //
+struct PixelInputType
+{
+	float4 position : SV_POSITION;		// 모니터 상에서 pixel의 위치
+	float2 tex : TEXCOORD0;				// pixel의 texture 좌표
+	float3 normal : NORMAL;				// pixel에 대응하는 normal vector
+	float3 viewDirection : TEXCOORD1;	// view direction
+};
+
+// pixel shader //
+float4 LightPixelShader(PixelInputType input) : SV_TARGET
+{
+	float4 TextureColor;    // texture의 색상
+	float3 LightDir;        // 빛의 방향
+	float LightIntensity;   // 빛의 세기
+	float4 Color;           // 최종 pixel의 색상
+	float4 Specular;		// specular 색상
+
+	// texture 좌표 위치에서 sampler를 사용하여, texture에서 pixel 색상을 sampling
+	TextureColor = ShaderTexture.Sample(SampleType, input.tex);
+
+	// 색상의 기본값을 ambient의 색상으로 설정
+	Color = AmbientColor;
+
+	// specular 색상 초기화
+	Specular = float4(0.f, 0.f, 0.f, 0.f);
+
+	// 빛 방향을 반전
+	LightDir = -LightDirection;
+
+	// 해당 pixel에 비추어 지는 빛의 양(빛의 강도, Light Intensity)을 계산
+	LightIntensity = saturate(dot(input.normal, LightDir));
+
+	// 빛의 양이 0보다 클 때(빛이 비추어 질 때), 주변광(ambient light)까지 적용하여 계산
+	if(LightIntensity > 0.f)
+	{
+		// ambient light 적용
+		Color += (DiffuseColor * LightIntensity);
+
+		// 광원의 색상(DiffuseColor)과 강도(LightIntensity)를 이용해 pixel에 적용될 최종 조명 색상 결정
+		Color = saturate(Color);
+
+		// 강도(LightIntensity), normal vector, 빛 방향(LightDir)를 이용해 reflect vector 계산
+		float3 Reflection = normalize(2 * LightIntensity * input.normal - LightDir);
+
+		// reflect vector, view direction, shininess를 이용해 specular 계산
+		Specular = pow(saturate(dot(Reflection, input.viewDirection)), SpecularPower);
+	}
+
+	// texture pixel과 최종 조명 색상을 곱해 최종 pixel의 색상 결정
+	Color = Color * TextureColor;
+
+	// 최종 pixel의 색상에 specular 적용
+	Color = saturate(Color + Specular);
+
+	return Color;
+}

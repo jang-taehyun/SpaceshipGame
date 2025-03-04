@@ -31,7 +31,7 @@ public:
 	void Shutdown();
 
 	// shader 렌더링 함수 //
-	HRESULT Render(ID3D11DeviceContext* const DeviceContext, const int& IndexCount, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix, const int& TextureNum, ID3D11ShaderResourceView** const TextureArray);
+	virtual HRESULT Render(ID3D11DeviceContext* const DeviceContext, const int& const IndexCount, const DirectX::XMMATRIX& const WorldMatrix, const DirectX::XMMATRIX& const ViewMatrix, const DirectX::XMMATRIX& const ProjectionMatrix, const int& const TextureNum, ID3D11ShaderResourceView** const TextureArray);
 
 protected:
 	// 초기화 관련 함수들 //
@@ -54,10 +54,10 @@ protected:
 	void OutputShaderErrorMessage(ID3D10Blob* ErrorMessage, const HWND hwnd, const TCHAR* ShaderFileName);
 
 	// shader 내부에 들어갈 데이터들 업데이트하는 함수 //
-	HRESULT SetShaderParameters(ID3D11DeviceContext* const DeviceContext, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix, const int& TextureNum, ID3D11ShaderResourceView** const TextureArray);
+	virtual HRESULT SetShaderParameters(ID3D11DeviceContext* const DeviceContext, const DirectX::XMMATRIX& const WorldMatrix, const DirectX::XMMATRIX& const ViewMatrix, const DirectX::XMMATRIX& const ProjectionMatrix, const int& const TextureNum, ID3D11ShaderResourceView** const TextureArray);
 	
 	// Matrix buffer를 업데이트 하는 함수 //
-	HRESULT UpdateMatrixBuffer(ID3D11DeviceContext* const DeviceContext, unsigned int slot, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix);
+	HRESULT UpdateMatrixBuffer(ID3D11DeviceContext* const DeviceContext, unsigned int slot, const DirectX::XMMATRIX& const WorldMatrix, const DirectX::XMMATRIX& const ViewMatrix, const DirectX::XMMATRIX& const ProjectionMatrix);
 
 	// shader로 렌더링 하는 함수 //
 	void RenderShader(ID3D11DeviceContext* const DeviceContext, const int& IndexCount);

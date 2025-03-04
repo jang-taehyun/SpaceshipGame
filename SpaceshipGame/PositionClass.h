@@ -4,14 +4,19 @@ class PositionClass
 {
 public:
 	PositionClass();
-	PositionClass(const PositionClass&);
+	PositionClass(const PositionClass& other);
 	~PositionClass();
 
-	void SetFrameTime(float);
-	void GetRotation(float&);
+	// Getter //
 
-	void TurnLeft(bool);
-	void TurnRight(bool);
+	inline void GetRotation(float& const y) { y = m_RotationY; }
+
+	// Setter //
+
+	inline void SetFrameTime(const float& const time) { m_FrameTime = time; }
+	
+	void TurnLeft(const bool& const IsKeyDown);
+	void TurnRight(const bool& const IsKeyDown);
 
 private:
 	float m_FrameTime = 0.f;

@@ -1,6 +1,6 @@
 #pragma once
 
-static class D3DClass
+class D3DClass
 {
 private:
 	D3DClass();
@@ -21,7 +21,7 @@ public:
 	}
 
 	// D3D 객체 초기화 함수 //
-	HRESULT Initialize(const int& ScreenWidth, const int& ScreenHeight, const bool& VSYNC, const HWND& hwnd, const bool& FullScreen, const float& ScreenDepth, const float& ScreenNear);
+	HRESULT Initialize(const int& const ScreenWidth, const int& const ScreenHeight, const bool& const VSYNC, const HWND& const hwnd, const bool& const FullScreen, const float& const ScreenDepth, const float& const ScreenNear);
 	
 	// D3D 객체 내부 리소스 정리 함수 //
 	void Shutdown();

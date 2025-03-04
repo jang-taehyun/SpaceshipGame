@@ -5,14 +5,14 @@ TimerClass::TimerClass() {}
 TimerClass::TimerClass(const TimerClass& other) {}
 TimerClass::~TimerClass() {}
 
-bool TimerClass::Initialize()
+HRESULT TimerClass::Initialize()
 {
 	// 성능 카운터의 빈도 검색
 	// high performance timer를 지원하는지 확인
 	QueryPerformanceFrequency((LARGE_INTEGER*)&m_Frequency);
 	if (!m_Frequency)
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// 1ms마다 counter에서 tick이 몇 번 일어나는지 계산
@@ -21,7 +21,7 @@ bool TimerClass::Initialize()
 	// 성능 카운터의 현재 값(현재 CPU의 tick)을 가져오기
 	QueryPerformanceCounter((LARGE_INTEGER*)&m_StartTime);
 
-	return true;
+	return S_OK;
 }
 
 void TimerClass::Frame()
@@ -34,9 +34,4 @@ void TimerClass::Frame()
 
 	m_FrameTime = TimeDifference / m_TicksPerMs;
 	m_StartTime = CurrentTime;
-}
-
-float TimerClass::GetTime()
-{
-	return m_FrameTime;
 }

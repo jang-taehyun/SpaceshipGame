@@ -101,15 +101,7 @@ HRESULT LightShaderClass::CreateInputLayout(ID3D11Device* const Device, ID3D10Bl
 
 HRESULT LightShaderClass::SetShaderParameters(ID3D11DeviceContext* const DeviceContext, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix, const int& TextureNum, ID3D11ShaderResourceView** const TextureArray, const DirectX::XMFLOAT3& LightDirection, const DirectX::XMFLOAT4& AmbientColor, const DirectX::XMFLOAT4& DiffuseColor, const DirectX::XMFLOAT3& CameraPosition, const DirectX::XMFLOAT4& SpecularColor, const float& SpecularPower) 
 {
-	// 행렬들을 HLSL에 맞게 변환 //
-	// 행렬들을 transpose 연산하여 shader에서 사용할 수 있도록 한다.
-	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranspose(WorldMatrix);
-	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixTranspose(ViewMatrix);
-	DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixTranspose(ProjectionMatrix);
-
-	// matrix constant buffer의 내용 업데이트 //
-	// vertex shader에서 matrix constant buffer의 위치 : 0번
-	if (FAILED(UpdateMatrixBuffer(DeviceContext, 0, worldMatrix, viewMatrix, projectionMatrix)))
+	if (FAILED(ShaderClass::SetShaderParameters(DeviceContext, WorldMatrix, ViewMatrix, ProjectionMatrix, TextureNum, TextureArray)))
 	{
 		return E_FAIL;
 	}
@@ -127,10 +119,6 @@ HRESULT LightShaderClass::SetShaderParameters(ID3D11DeviceContext* const DeviceC
 	{
 		return E_FAIL;
 	}
-
-	// pixel shader에서 사용할 shader texture resource(Texture2D) 설정 //
-	// GPU 파이프라인에 텍스처 데이터를 바인드
-	DeviceContext->PSSetShaderResources(0, TextureNum, TextureArray);
 
 	return S_OK;
 }
