@@ -23,7 +23,7 @@ public:
 	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, const TCHAR*);
 	void Shutdown();
 
-	ID3D11ShaderResourceView* GetTexture();
+	inline const ID3D11ShaderResourceView* const& GetTexture() { return m_TextureView; }
 
 private:
 	bool LoadTarga(const char*, int&, int&);

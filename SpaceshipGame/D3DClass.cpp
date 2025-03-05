@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "ColorClass.h"
 #include "D3DClass.h"
 
 D3DClass* D3DClass::inst = nullptr;
@@ -7,7 +8,7 @@ D3DClass::D3DClass() {}
 D3DClass::D3DClass(const D3DClass& other) {}
 D3DClass::~D3DClass() {}
 
-HRESULT D3DClass::Initialize(const int& const ScreenWidth, const int& const ScreenHeight, const bool& const VSYNC, const HWND& const hwnd, const bool& const FullScreen, const float& const ScreenDepth, const float& const ScreenNear)
+HRESULT D3DClass::Initialize(const int& ScreenWidth, const int& ScreenHeight, const bool& VSYNC, const HWND& hwnd, const bool& FullScreen, const float& ScreenDepth, const float& ScreenNear)
 {
 	m_VSYNC_Enabled = VSYNC;
 
@@ -121,13 +122,13 @@ void D3DClass::Shutdown()
 	}
 }
 
-void D3DClass::BeginScene(const float red, const float green, const float blue, const float alpha)
+void D3DClass::BeginScene(const ColorClass& color)
 {
 	// back buffer를 지울 색상 설정
-	float color[4] = { red, green, blue, alpha };
+	float background[4] = { color.GetColorRed(), color.GetColorGreen(), color.GetColorBlue(), color.GetColorAlpha() };
 
 	// back buffer 초기화
-	m_DeviceContext->ClearRenderTargetView(m_RenderTargetView, color);
+	m_DeviceContext->ClearRenderTargetView(m_RenderTargetView, background);
 
 	// depth buffer 초기화
 	m_DeviceContext->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH, 1.f, 0);
@@ -473,7 +474,7 @@ HRESULT D3DClass::SetAlphaBlendState()
 	return S_OK;
 }
 
-HRESULT D3DClass::GetVideoCardDescription(IDXGIAdapter* const Adapter)
+HRESULT D3DClass::GetVideoCardDescription(IDXGIAdapter* const& Adapter)
 {
 	DXGI_ADAPTER_DESC AdapterDesc;
 	if (FAILED(Adapter->GetDesc(&AdapterDesc)))

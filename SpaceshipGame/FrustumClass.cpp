@@ -5,7 +5,7 @@ FrustumClass::FrustumClass() {}
 FrustumClass::FrustumClass(const FrustumClass& other) {}
 FrustumClass::~FrustumClass() {}
 
-void FrustumClass::ConstructFrustum(const float ScreenDepth, const DirectX::XMMATRIX& const ProjectionMatrix, const DirectX::XMMATRIX& const ViewMatrix)
+void FrustumClass::ConstructFrustum(const float& ScreenDepth, const DirectX::XMMATRIX& ProjectionMatrix, const DirectX::XMMATRIX& ViewMatrix)
 {
 	// projection matrix를 XMFLOAT4X4 자료형으로 변환 //
 	DirectX::XMFLOAT4X4 projectionMatrix;
@@ -79,7 +79,7 @@ void FrustumClass::ConstructFrustum(const float ScreenDepth, const DirectX::XMMA
     m_planes[5] = DirectX::XMPlaneNormalize(m_planes[5]);
 }
 
-bool FrustumClass::CheckPoint(const float& const x, const float& const y,  const float& const z)
+bool FrustumClass::CheckPoint(const float& x, const float& y,  const float& z)
 {
     // vertex가 viewing frustum 내부에 존재하는지 확인
     for (int i = 0; i < 6; i++)
@@ -91,7 +91,7 @@ bool FrustumClass::CheckPoint(const float& const x, const float& const y,  const
     return true;
 }
 
-bool FrustumClass::CheckCube(const float& const xCenter, const float& const yCenter, const float& const zCenter, const float& const radius)
+bool FrustumClass::CheckCube(const float& xCenter, const float& yCenter, const float& zCenter, const float& radius)
 {
     // 정육면체의 꼭지점 중 하나라도 viewing frustum 내부에 존재하는지 확인
     for (int i = 0; i < 6; i++)
@@ -119,7 +119,7 @@ bool FrustumClass::CheckCube(const float& const xCenter, const float& const yCen
     return true;
 }
 
-bool FrustumClass::CheckSphere(const float& const xCenter, const float& const yCenter, const float& const zCenter, const float& const radius)
+bool FrustumClass::CheckSphere(const float& xCenter, const float& yCenter, const float& zCenter, const float& radius)
 {
     // 구의 중심이 viewing frustum 내부에 있는지 확인
     for (int i = 0; i < 6; i++)
@@ -131,7 +131,7 @@ bool FrustumClass::CheckSphere(const float& const xCenter, const float& const yC
     return true;
 }
 
-bool FrustumClass::CheckRectangle(const float& const xCenter, const float& const yCenter, const float& const zCenter, const float& const xSize, const float& const ySize, const float& const zSize)
+bool FrustumClass::CheckRectangle(const float& xCenter, const float& yCenter, const float& zCenter, const float& xSize, const float& ySize, const float& zSize)
 {
     // 육면체의 꼭지점 중 하나라도 viewing frustum 내부에 존재하는지 확인
     for (int i = 0; i < 6; i++)

@@ -1,13 +1,14 @@
 #pragma once
 
-class TextureClass;
+#include "TextureClass.h"
 
 class FontClass
 {
 private:
 	struct FontType
 	{
-		float left, right;
+		float left;
+		float right;
 		int size;
 	};
 
@@ -19,22 +20,19 @@ private:
 
 public:
 	FontClass();
-	FontClass(const FontClass&);
+	FontClass(const FontClass& other);
 	~FontClass();
 
-	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, const char*, const char*);
-	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, const char*, const TCHAR*);
+	inline const ID3D11ShaderResourceView* const& GetTexture() { return (m_Texture->GetTexture()); }
+
+	HRESULT Initialize(const ID3D11Device* const& Device, const ID3D11DeviceContext* const& DeviceContext, const tstring& FontFileName, const tstring& TextureFileName);
 	void Shutdown();
-
-	ID3D11ShaderResourceView* GetTexture();
-
-	void BuildVertexArray(void*, const char*, float, float);
+	void BuildVertexArray(const void* const& vertices, const tstring& sentence, const float& drawX, const float& drawY);
 
 private:
-	bool LoadFontData(const char*);
+	HRESULT LoadFontData(const tstring& FileName);
+	HRESULT LoadTexture(const ID3D11Device* const& Device, const ID3D11DeviceContext* const& DeviceContext, const tstring& FileName);
 	void ReleaseFontData();
-	bool LoadTexture(ID3D11Device*, ID3D11DeviceContext*, const char*);
-	bool LoadTexture(ID3D11Device*, ID3D11DeviceContext*, const TCHAR*);
 	void ReleaseTexture();
 
 private:

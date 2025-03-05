@@ -34,7 +34,7 @@ bool ModelListClass::Initialize(int numModels)
 		m_ModelInfoList[i].PositionY = (((float)rand() - (float)rand()) / RAND_MAX) * 10.0f;
 		m_ModelInfoList[i].PositionZ = ((((float)rand() - (float)rand()) / RAND_MAX) * 10.0f) + 5.0f;
 	}
-
+	
 	return true;
 }
 

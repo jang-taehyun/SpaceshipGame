@@ -1,5 +1,7 @@
 #pragma once
 
+class ColorClass;
+
 class D3DClass
 {
 private:
@@ -9,7 +11,7 @@ private:
 
 public:
 	// singleton 객체 호출 함수
-	inline static D3DClass* GetD3DClassInst(HWND hwnd)
+	inline static D3DClass* GetD3DClassInst(const HWND& hwnd)
 	{
 		if (!inst)
 		{
@@ -21,21 +23,21 @@ public:
 	}
 
 	// D3D 객체 초기화 함수 //
-	HRESULT Initialize(const int& const ScreenWidth, const int& const ScreenHeight, const bool& const VSYNC, const HWND& const hwnd, const bool& const FullScreen, const float& const ScreenDepth, const float& const ScreenNear);
+	HRESULT Initialize(const int& ScreenWidth, const int& ScreenHeight, const bool& VSYNC, const HWND& hwnd, const bool& FullScreen, const float& ScreenDepth, const float& ScreenNear);
 	
 	// D3D 객체 내부 리소스 정리 함수 //
 	void Shutdown();
 
 	// back buffer를 지우는 함수 //
-	void BeginScene(const float red, const float green, const float blue, const float alpha);
+	void BeginScene(const ColorClass& color);
 	
 	// 화면에 back buffer의 내용을 표시하는 함수
 	void EndScene();
 
 	// Getter //
 
-	inline const ID3D11Device* GetDevice() { return m_Device; }
-	inline const ID3D11DeviceContext* GetDeviceContext() { return m_DeviceContext; }
+	inline ID3D11Device* const& GetDevice() const { return m_Device; }
+	inline ID3D11DeviceContext* const& GetDeviceContext() const { return m_DeviceContext; }
 	inline void GetVideoCardInfo(char* GraphicCardName, int& Memory)
 	{
 		strcpy_s(GraphicCardName, 128, m_VideoCardDescription);
@@ -81,7 +83,7 @@ private:
 	HRESULT SetAlphaBlendState();
 
 	// video card 정보를 GPU로부터 받아오는 함수
-	HRESULT GetVideoCardDescription(IDXGIAdapter* const Adapter);
+	HRESULT GetVideoCardDescription(IDXGIAdapter* const& Adapter);
 
 private:
 	static D3DClass* inst;

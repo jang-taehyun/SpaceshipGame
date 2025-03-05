@@ -3,6 +3,9 @@
 class FontClass;
 class FontShaderClass;
 
+class ColorClass;
+class Position2DClass;
+
 class TextClass
 {
 private:
@@ -15,9 +18,7 @@ private:
 
 		int MaxLength;
 
-		float r;
-		float g;
-		float b;
+		ColorClass Color;
 	};
 
 	struct VertexType
@@ -28,23 +29,20 @@ private:
 
 public:
 	TextClass();
-	TextClass(const TextClass&);
+	TextClass(const TextClass& other);
 	~TextClass();
 
-	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, HWND, int, int, DirectX::XMMATRIX);
+	HRESULT Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const HWND& hwnd, const int& ScreenWidth, const int& ScreenHeight, const DirectX::XMMATRIX& BaseViewMatrix);
 	void Shutdown();
-	bool Render(ID3D11DeviceContext*, DirectX::XMMATRIX, DirectX::XMMATRIX);
+	HRESULT Render(ID3D11DeviceContext* const& DeviceContext, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& OrthoMatrix);
 
-	bool SetMousePosition(int, int, ID3D11DeviceContext*);
-	bool SetFPS(int, ID3D11DeviceContext*);
-	bool SetCPU(int, ID3D11DeviceContext*);
-	bool SetRenderCount(int, ID3D11DeviceContext*);
+	HRESULT SetSentenceAboutInteger(const int& Number, const tstring& Title, const int& SentenceIdx, const Position2DClass& Position, const ColorClass& TextColor, ID3D11DeviceContext* const& DeviceContext);
 
 private:
-	bool InitializeSentence(SentenceType**, int, ID3D11Device*);
-	bool UpdateSentence(SentenceType*, const char*, int, int, float, float, float, ID3D11DeviceContext*);
-	void ReleaseSentence(SentenceType**);
-	bool RenderSentence(ID3D11DeviceContext*, SentenceType*, DirectX::XMMATRIX, DirectX::XMMATRIX);
+	HRESULT InitializeSentence(SentenceType** const& Sentence, const int& MaxLength, ID3D11Device* const& Device);
+	HRESULT UpdateSentence(SentenceType* const& Sentence, const tstring& Text, const Position2DClass& Position, const ColorClass& TextColor, ID3D11DeviceContext* const& DeviceContext);
+	void ReleaseSentence(SentenceType** const& Sentence);
+	HRESULT RenderSentence(ID3D11DeviceContext* const& DeviceContext, const SentenceType* const& Sentence, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& OrthoMatrix);
 
 private:
 	FontClass* m_Font = nullptr;
@@ -52,11 +50,7 @@ private:
 	int m_ScreenWidth = 0;
 	int m_ScreenHeight = 0;
 	
-	SentenceType* m_Sentence1 = nullptr;
-	SentenceType* m_Sentence2 = nullptr;
-	SentenceType* m_Sentence3 = nullptr;
-	SentenceType* m_Sentence4 = nullptr;
-	SentenceType* m_Sentence5 = nullptr;
+	SentenceType* m_Sentence[5] = { 0, };
 
 	DirectX::XMMATRIX m_BaseViewMatrix;
 };

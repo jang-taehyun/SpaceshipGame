@@ -23,7 +23,7 @@ public:
 
 private:
 	HRESULT Frame();
-	void InitializeWindows(int& ScreenWidth, int& ScreenHeight);
+	void InitializeWindows(const int& ScreenWidth, const int& ScreenHeight);
 	void ShutdownWindows();
 
 private:

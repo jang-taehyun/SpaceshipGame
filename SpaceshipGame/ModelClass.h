@@ -9,8 +9,7 @@ private:
 	struct VertexType
 	{
 		DirectX::XMFLOAT3 position;
-		// DirectX::XMFLOAT4 color;			// -> ColorShaderClass를 사용하는 경우
-		DirectX::XMFLOAT2 texture;			// -> TextureShaderClass를 사용하는 경우
+		DirectX::XMFLOAT2 texture;
 		DirectX::XMFLOAT3 normal;
 	};
 

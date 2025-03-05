@@ -5,7 +5,7 @@ PositionClass::PositionClass() {}
 PositionClass::PositionClass(const PositionClass& other) {}
 PositionClass::~PositionClass() {}
 
-void PositionClass::TurnLeft(const bool& const IsKeyDown)
+void PositionClass::TurnLeft(const bool& IsKeyDown)
 {
 	if (IsKeyDown)
 	{
@@ -33,7 +33,7 @@ void PositionClass::TurnLeft(const bool& const IsKeyDown)
 	}
 }
 
-void PositionClass::TurnRight(const bool& const IsKeyDown)
+void PositionClass::TurnRight(const bool& IsKeyDown)
 {
 	if (IsKeyDown)
 	{

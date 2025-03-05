@@ -8,7 +8,6 @@
 #include "PositionClass.h"
 #include "SystemClass.h"
 
-
 SystemClass::SystemClass() {}
 SystemClass::SystemClass(const SystemClass& other) {}
 SystemClass::~SystemClass() {}
@@ -44,7 +43,7 @@ HRESULT SystemClass::Initialize()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_Sound->Initialize(m_hwnd)))
+	if (FAILED(m_Sound->Initialize(m_hwnd, s_info)))
 	{
 		return E_FAIL;
 	}
@@ -193,13 +192,16 @@ HRESULT SystemClass::Frame()
 	m_Position->TurnRight(KeyDown);
 
 	// camera의 회전값을 갱신하여 실제 카메리 위치 반영 //
-	m_Position->GetRotation(rotationY);
+	rotationY = m_Position->GetRotation();
 
 	return m_Graphics->Frame(MouseX, MouseY, m_FPS->GetFPS(), m_CPU->GetCPUPercentage(), rotationY);
 }
 
-void SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)
+void SystemClass::InitializeWindows(const int& ScreenWidth, const int& ScreenHeight)
 {
+	int width = ScreenWidth;
+	int height = ScreenHeight;
+
 	// 외부 pointer를 현재 instance를 가르키도록 한다.
 	ApplicationHandle = this;
 
@@ -226,8 +228,8 @@ void SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)
 	RegisterClassEx(&wc);
 
 	// 모니터의 해상도 가져오기
-	ScreenWidth = GetSystemMetrics(SM_CXSCREEN);
-	ScreenHeight = GetSystemMetrics(SM_CYSCREEN);
+	width = GetSystemMetrics(SM_CXSCREEN);
+	height = GetSystemMetrics(SM_CYSCREEN);
 
 	int PosX = 0, PosY = 0;
 
@@ -239,8 +241,8 @@ void SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)
 		DEVMODE dmScreenSettings;
 		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
 		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
-		dmScreenSettings.dmPelsHeight = (unsigned long)ScreenHeight;
-		dmScreenSettings.dmPelsWidth = (unsigned long)ScreenWidth;
+		dmScreenSettings.dmPelsHeight = (unsigned long)width;
+		dmScreenSettings.dmPelsWidth = (unsigned long)height;
 		dmScreenSettings.dmBitsPerPel = 32;
 		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
@@ -251,17 +253,17 @@ void SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)
 		// 윈도우 모드 //
 		// 모니터 화면 해상도를 800*600으로 지정
 		// 윈도우의 위치 : 정가운데
-		ScreenWidth = 800;
-		ScreenHeight = 600;
+		width = 800;
+		height = 600;
 
-		PosX = (GetSystemMetrics(SM_CXSCREEN) - ScreenWidth) / 2;
-		PosY = (GetSystemMetrics(SM_CYSCREEN) - ScreenHeight) / 2;
+		PosX = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
+		PosY = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
 	}
 
 	// 윈도우 생성 및 handle 가지오기
 	m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
 		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
-		PosX, PosY, ScreenWidth, ScreenHeight, NULL, NULL, m_hinstance, NULL);
+		PosX, PosY, width, height, NULL, NULL, m_hinstance, NULL);
 
 	// 윈도우를 화면에 표시하고 focus를 지정
 	ShowWindow(m_hwnd, SW_SHOW);

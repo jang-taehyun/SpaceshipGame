@@ -5,25 +5,25 @@ SoundClass::SoundClass() {}
 SoundClass::SoundClass(const SoundClass& other) {}
 SoundClass::~SoundClass() {}
 
-HRESULT SoundClass::Initialize(const HWND& const hwnd, const SoundInfo& const info)
+HRESULT SoundClass::Initialize(const HWND& hwnd, const SoundInfo& info)
 {
 	// 파라미터 검사 //
-	if (NULL == hwnd || info.filename == nullptr)
+	if (NULL == hwnd || info.filename == _T(""))
 	{
 		MessageBox(hwnd, _T("file이 없습니다."), _T("Sound error"), MB_OK);
 		return E_FAIL;
 	}
 	
 	// direct sound, primary sound buffer 초기화 //
-	if (!InitializeDirectSound(hwnd))
+	if (FAILED(InitializeDirectSound(hwnd)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// wav 오디오 파일을 secondary buffer에 load //
-	if (!LoadWaveFile(info.filename, &m_SecondaryBuffer1))
+	if (FAILED(LoadWaveFile(info.filename, &m_SecondaryBuffer1)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	return PlayWaveFile();
@@ -36,7 +36,7 @@ void SoundClass::Shutdown()
 	ShutdownDirectSound();
 }
 
-HRESULT SoundClass::InitializeDirectSound(const HWND& const hwnd)
+HRESULT SoundClass::InitializeDirectSound(const HWND& hwnd)
 {
 	// 기본 sound device 초기화 //
 	// 기본 sound device로 쓸 direct sound의 interface 초기화
@@ -106,12 +106,12 @@ void SoundClass::ShutdownDirectSound()
 	}
 }
 
-HRESULT SoundClass::LoadWaveFile(const char* const FileName, IDirectSoundBuffer8** const SecondaryBuffer)
+HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** const& SecondaryBuffer)
 {
 	FILE* FilePtr = nullptr;
 
 	// wav 파일 open //
-	int error = fopen_s(&FilePtr, FileName, "rb");
+	int error = fopen_s(&FilePtr, (char*)FileName.c_str(), "rb");
 	if (error)
 	{
 		return E_FAIL;
@@ -274,7 +274,7 @@ HRESULT SoundClass::LoadWaveFile(const char* const FileName, IDirectSoundBuffer8
 	return S_OK;
 }
 
-void SoundClass::ShutdownWaveFile(IDirectSoundBuffer8** const SecondaryBuffer)
+void SoundClass::ShutdownWaveFile(IDirectSoundBuffer8**& SecondaryBuffer)
 {
 	if (*SecondaryBuffer)
 	{

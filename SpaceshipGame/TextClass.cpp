@@ -1,13 +1,15 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "FontClass.h"
 #include "FontShaderClass.h"
+#include "Position2DClass.h"
+#include "ColorClass.h"
 #include "TextClass.h"
 
 TextClass::TextClass() {}
 TextClass::TextClass(const TextClass& other) {}
 TextClass::~TextClass() {}
 
-bool TextClass::Initialize(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, HWND hwnd, int ScreenWidth, int ScreenHeight, DirectX::XMMATRIX BaseViewMatrix)
+HRESULT TextClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const HWND& hwnd,  const int& ScreenWidth, const int& ScreenHeight, const DirectX::XMMATRIX& BaseViewMatrix)
 {
 	// 화면 해상도, view matrix 초기화 //
 	m_ScreenHeight = ScreenHeight;
@@ -19,12 +21,12 @@ bool TextClass::Initialize(ID3D11Device* Device, ID3D11DeviceContext* DeviceCont
 	m_Font = new FontClass;
 	if (!m_Font)
 	{
-		return false;
+		return E_FAIL;
 	}
 	if (!m_Font->Initialize(Device, DeviceContext, "../Engine/data/font01.txt", "../Engine/data/font01.tga"))
 	{
 		MessageBox(hwnd, _T("Could not initialize the font object"), _T("Error"), MB_OK);
-		return false;
+		return E_FAIL;
 	}
 
 
@@ -32,52 +34,30 @@ bool TextClass::Initialize(ID3D11Device* Device, ID3D11DeviceContext* DeviceCont
 	m_FontShader = new FontShaderClass;
 	if (!m_FontShader)
 	{
-		return false;
+		return E_FAIL;
 	}
 	if (!m_FontShader->Initialize(Device, hwnd))
 	{
 		MessageBox(hwnd, _T("Could not initialize the font shader object"), _T("Error"), MB_OK);
-		return false;
+		return E_FAIL;
 	}
 
 
 	// 출력할 문장 생성 및 초기화 //
-	if (!InitializeSentence(&m_Sentence1, 16, Device))
+	for (int i = 0; i < 5; ++i)
 	{
-		return false;
+		if (FAILED(InitializeSentence(&m_Sentence[i], 16, Device)))
+			return E_FAIL;
 	}
 
-	if (!InitializeSentence(&m_Sentence2, 16, Device))
-	{
-		return false;
-	}
-
-	if (!InitializeSentence(&m_Sentence3, 16, Device))
-	{
-		return false;
-	}
-
-	if (!InitializeSentence(&m_Sentence4, 16, Device))
-	{
-		return false;
-	}
-
-	if (!InitializeSentence(&m_Sentence5, 16, Device))
-	{
-		return false;
-	}
-
-	return true;
+	return S_OK;
 }
 
 void TextClass::Shutdown()
 {
 	// 문장 데이터 release //
-	ReleaseSentence(&m_Sentence5);
-	ReleaseSentence(&m_Sentence4);
-	ReleaseSentence(&m_Sentence3);
-	ReleaseSentence(&m_Sentence2);
-	ReleaseSentence(&m_Sentence1);
+	for(int i=0; i<5; ++i)
+		ReleaseSentence(&m_Sentence[i]);
 
 	// member variable release //
 	if (m_FontShader)
@@ -95,152 +75,39 @@ void TextClass::Shutdown()
 	}
 }
 
-bool TextClass::Render(ID3D11DeviceContext* DeviceContext, DirectX::XMMATRIX WorldMatrix, DirectX::XMMATRIX OrthoMatrix)
+HRESULT TextClass::Render(ID3D11DeviceContext* const& DeviceContext, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& OrthoMatrix)
 {
-	if (!RenderSentence(DeviceContext, m_Sentence1, WorldMatrix, OrthoMatrix))
+	for (int i = 0; i < 5; ++i)
 	{
-		return false;
+		if (FAILED(RenderSentence(DeviceContext, m_Sentence[i], WorldMatrix, OrthoMatrix)))
+		{
+			return E_FAIL;
+		}
 	}
 
-	if (!RenderSentence(DeviceContext, m_Sentence2, WorldMatrix, OrthoMatrix))
-	{
-		return false;
-	}
-
-	if (!RenderSentence(DeviceContext, m_Sentence3, WorldMatrix, OrthoMatrix))
-	{
-		return false;
-	}
-
-	if (!RenderSentence(DeviceContext, m_Sentence4, WorldMatrix, OrthoMatrix))
-	{
-		return false;
-	}
-
-	if (!RenderSentence(DeviceContext, m_Sentence5, WorldMatrix, OrthoMatrix))
-	{
-		return false;
-	}
-
-	return true;
+	return S_OK;
 }
 
-bool TextClass::SetMousePosition(int MouseX, int MouseY, ID3D11DeviceContext* DeviceContext)
+HRESULT TextClass::SetSentenceAboutInteger(const int& Number, const tstring& Title, const int& SentenceIdx, const Position2DClass& Position, const ColorClass& TextColor, ID3D11DeviceContext* const& DeviceContext)
 {
-	char tmpString[16] = { 0, };
-	char MouseString[16] = { 0, };
+	tstring tmp = Title + _T(" ");
+	tmp = tmp + std::to_wstring(Number);
 
-	// 마우스 X 좌표의 delta 값(이동한 거리) 계산 //
-	_itoa_s(MouseX, tmpString, 10);
-
-	strcpy_s(MouseString, "Mouse X: ");
-	strcat_s(MouseString, tmpString);
-
-	if (!UpdateSentence(m_Sentence1, MouseString, 20, 20, 1.f, 1.f, 1.f, DeviceContext))
+	if (FAILED(UpdateSentence(m_Sentence[SentenceIdx], tmp, Position, TextColor, DeviceContext)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
-	// 마우스 Y 좌표의 delta 값(이동한 거리) 계산 //
-	_itoa_s(MouseY, tmpString, 10);
-
-	strcpy_s(MouseString, "Mouse Y: ");
-	strcat_s(MouseString, tmpString);
-
-	if (!UpdateSentence(m_Sentence2, MouseString, 20, 40, 1.f, 1.f, 1.f, DeviceContext))
-	{
-		return false;
-	}
-
-	return true;
+	return S_OK;
 }
 
-bool TextClass::SetFPS(int FPS, ID3D11DeviceContext* DeviceContext)
-{
-	char tempString[16] = { 0, };
-	char FPSString[16] = { 0, };
-	float r = 0.f, g = 0.f, b = 0.f;
-
-	// FPS의 최대치 설정
-	if (FPS > 9999)
-	{
-		FPS = 9999;
-	}
-
-	// integer를 string으로 변환하고 문자열 완성 //
-	_itoa_s(FPS, tempString, 10);
-	strcpy_s(FPSString, "FPS: ");
-	strcat_s(FPSString, tempString);
-
-	// FPS의 값에 따라 문자열의 색상 결정 //
-	if (FPS >= 60)
-	{
-		g = 1.f;
-	}
-	else if (FPS >= 30 && FPS < 60)
-	{
-		r = 1.f;
-		g = 1.f;
-	}
-	else
-	{
-		r = 1.f;
-	}
-
-	// vertex buffer update //
-	if (!UpdateSentence(m_Sentence3, FPSString, 20, 60, r, g, b, DeviceContext))
-	{
-		return false;
-	}
-
-	return true;
-}
-
-bool TextClass::SetCPU(int CPU, ID3D11DeviceContext* DeviceContext)
-{
-	char tempString[16] = { 0, };
-	char CPUString[16] = { 0, };
-
-	// CPU 사용량을 문자열로 변환하고, 문자열 완성 //
-	_itoa_s(CPU, tempString, 10);
-	strcpy_s(CPUString, "CPU: ");
-	strcat_s(CPUString, tempString);
-
-	// vertex buffer update //
-	if (!UpdateSentence(m_Sentence4, CPUString, 20, 80, 1.f, 1.f, 1.f, DeviceContext))
-	{
-		return false;
-	}
-
-	return true;
-}
-
-bool TextClass::SetRenderCount(int renderCount, ID3D11DeviceContext* DeviceContext)
-{
-	char tempString[16] = { 0, };
-	char RenderCountString[16] = { 0, };
-
-	// integer를 string으로 변환하고 문자열 완성 //
-	_itoa_s(renderCount, tempString, 10);
-	strcpy_s(RenderCountString, "RC: ");
-	strcat_s(RenderCountString, tempString);
-
-	// vertex buffer update //
-	if (!UpdateSentence(m_Sentence5, RenderCountString, 20, 100, 1.f, 1.f, 1.f, DeviceContext))
-	{
-		return false;
-	}
-
-	return true;
-}
-
-bool TextClass::InitializeSentence(SentenceType** Sentence, int MaxLength, ID3D11Device* Device)
+HRESULT TextClass::InitializeSentence(SentenceType** const& Sentence, const int& MaxLength, ID3D11Device* const& Device)
 {
 	// sentence object 생성 및 초기화 //
 	*Sentence = new SentenceType;
 	if (!(*Sentence))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	(*Sentence)->VertexBuffer = nullptr;
@@ -254,16 +121,16 @@ bool TextClass::InitializeSentence(SentenceType** Sentence, int MaxLength, ID3D1
 	VertexType* vertices = new VertexType[((*Sentence)->VertexCount)];
 	if (!vertices)
 	{
-		return false;
+		return E_FAIL;
 	}
 	memset(vertices, 0, (sizeof(VertexType) * ((*Sentence)->VertexCount)));
 
 	unsigned long* indices = new unsigned long[((*Sentence)->IndexCount)];
 	if (!indices)
 	{
-		return false;
+		return E_FAIL;
 	}
-	for (int i = 0; i < ((*Sentence)->IndexCount); i++)
+	for (int i = 0; i < ((*Sentence)->IndexCount); ++i)
 	{
 		indices[i] = i;
 	}
@@ -287,7 +154,7 @@ bool TextClass::InitializeSentence(SentenceType** Sentence, int MaxLength, ID3D1
 
 	if (FAILED(Device->CreateBuffer(&VertexBufferDesc, &VertexData, &((*Sentence)->VertexBuffer))))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 
@@ -309,7 +176,7 @@ bool TextClass::InitializeSentence(SentenceType** Sentence, int MaxLength, ID3D1
 
 	if (FAILED(Device->CreateBuffer(&IndexBufferDesc, &IndexData, &((*Sentence)->IndexBuffer))))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 
@@ -320,34 +187,32 @@ bool TextClass::InitializeSentence(SentenceType** Sentence, int MaxLength, ID3D1
 	delete[] vertices;
 	vertices = nullptr;
 
-	return true;
+	return S_OK;
 }
 
-bool TextClass::UpdateSentence(SentenceType* Sentence, const char* Text, int PositionX, int PositionY, float r, float g, float b, ID3D11DeviceContext* DeviceContext)
+HRESULT TextClass::UpdateSentence(SentenceType* const& Sentence, const tstring& Text, const Position2DClass& Position, const ColorClass& TextColor, ID3D11DeviceContext* const& DeviceContext)
 {
 	// 문장 데이터의 색상 지정 //
-	Sentence->r = r;
-	Sentence->g = g;
-	Sentence->b = b;
+	Sentence->Color = TextColor;
 
 	// 문장의 길이 지정 및 검사 //
-	int StringLength = (int)strlen(Text);
+	int StringLength = (int)Text.length();
 	if (StringLength > Sentence->MaxLength)
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// 실제 정점 데이터 입력 //
 	VertexType* vertices = new VertexType[(Sentence->VertexCount)];
 	if (!vertices)
 	{
-		return false;
+		return E_FAIL;
 	}
 	memset(vertices, 0, (sizeof(VertexType) * (Sentence->VertexCount)));
 	
 	// 그려질 polygon의 스크린 x, y 좌표 계산
-	float DrawX = (float)(((m_ScreenWidth / 2) * -1) + PositionX);
-	float DrawY = (float)((m_ScreenHeight / 2) - PositionY);
+	float DrawX = ((float)((m_ScreenWidth / 2) * -1) + Position.GetPositionX());
+	float DrawY = ((float)(m_ScreenHeight / 2) - Position.GetPositionY());
 
 	// 정점 데이터 update
 	m_Font->BuildVertexArray((void*)vertices, Text, DrawX, DrawY);
@@ -357,7 +222,7 @@ bool TextClass::UpdateSentence(SentenceType* Sentence, const char* Text, int Pos
 	D3D11_MAPPED_SUBRESOURCE MappedResource;
 	if (FAILED(DeviceContext->Map(Sentence->VertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	VertexType* VerticesPtr = (VertexType*)MappedResource.pData;
@@ -370,10 +235,10 @@ bool TextClass::UpdateSentence(SentenceType* Sentence, const char* Text, int Pos
 	delete[] vertices;
 	vertices = nullptr;
 
-	return true;
+	return S_OK;
 }
 
-void TextClass::ReleaseSentence(SentenceType** Sentence)
+void TextClass::ReleaseSentence(SentenceType** const& Sentence)
 {
 	if (*Sentence)
 	{
@@ -394,7 +259,7 @@ void TextClass::ReleaseSentence(SentenceType** Sentence)
 	}
 }
 
-bool TextClass::RenderSentence(ID3D11DeviceContext* DeviceContext, SentenceType* Sentence, DirectX::XMMATRIX WorldMatrix, DirectX::XMMATRIX OrthoMatrix)
+HRESULT TextClass::RenderSentence(ID3D11DeviceContext* const& DeviceContext, const SentenceType* const& Sentence, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& OrthoMatrix)
 {
 	// vertex buffer의 stride, offset 지정 //
 	unsigned int stride = sizeof(VertexType);
@@ -408,11 +273,11 @@ bool TextClass::RenderSentence(ID3D11DeviceContext* DeviceContext, SentenceType*
 	DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// 렌더링 //
-	DirectX::XMFLOAT4 PixelColor = DirectX::XMFLOAT4(Sentence->r, Sentence->g, Sentence->b, 1.f);
-	if (!m_FontShader->Render(DeviceContext, Sentence->IndexCount, WorldMatrix, m_BaseViewMatrix, OrthoMatrix, m_Font->GetTexture(), PixelColor))
+	DirectX::XMFLOAT4 PixelColor = DirectX::XMFLOAT4(Sentence->Color.GetColorRed(), Sentence->Color.GetColorGreen(), Sentence->Color.GetColorBlue(), Sentence->Color.GetColorAlpha());
+	if (FAILED(m_FontShader->Render(DeviceContext, Sentence->IndexCount, WorldMatrix, m_BaseViewMatrix, OrthoMatrix, m_Font->GetTexture(), PixelColor)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
-	return true;
+	return S_OK;
 }

@@ -7,19 +7,19 @@ public:
 	InputClass(const InputClass& other);
 	~InputClass();
 
-	HRESULT Initialize(const HINSTANCE& const hinstance, const HWND& const hwnd, const int& const ScreenWidth, const int& const ScreenHeight);
+	HRESULT Initialize(const HINSTANCE& hinstance, const HWND& hwnd, const int& ScreenWidth, const int& ScreenHeight);
 	void Shutdown();
 	HRESULT Frame();
 
 	// Getter //
 
-	inline bool IsEscapePressed() { return ((m_KeyboardState[DIK_ESCAPE] & 0x80) ? true : false); }
-	inline bool IsLeftArrowPressed() { return ((m_KeyboardState[DIK_LEFTARROW] & 0x80) ? true : false); }
-	inline bool IsRightArrowPressed() { return ((m_KeyboardState[DIK_RIGHTARROW] & 0x80) ? true : false); }
+	inline bool IsEscapePressed() const { return ((m_KeyboardState[DIK_ESCAPE] & 0x80) ? true : false); }
+	inline bool IsLeftArrowPressed() const { return ((m_KeyboardState[DIK_LEFTARROW] & 0x80) ? true : false); }
+	inline bool IsRightArrowPressed() const { return ((m_KeyboardState[DIK_RIGHTARROW] & 0x80) ? true : false); }
 
 	// Setter //
 
-	inline void GetMouseLocation(int& MouseX, int& MouseY) { MouseX = m_MouseX; MouseY = m_MouseY; }
+	inline void GetMouseLocation(int& MouseX, int& MouseY) const { MouseX = m_MouseX; MouseY = m_MouseY; }
 
 private:
 	HRESULT ReadKeyboard();

@@ -65,11 +65,6 @@ void TextureClass::Shutdown()
 	}
 }
 
-ID3D11ShaderResourceView* TextureClass::GetTexture()
-{
-	return m_TextureView;
-}
-
 bool TextureClass::LoadTarga(const char* FileName, int& Height, int& Width)
 {
 	// targa 파일을 binary 모드로 열기 //

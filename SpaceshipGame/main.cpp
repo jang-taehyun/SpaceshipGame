@@ -10,7 +10,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	if (!System)
 		return -1;
 
-	if (S_OK == FAILED(System->Initialize()))
+	if (S_OK == System->Initialize())
 		System->Run();
 
 	System->Shutdown();

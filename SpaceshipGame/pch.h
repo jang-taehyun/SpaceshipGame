@@ -22,14 +22,21 @@
 #include <malloc.h>				// dynamic allocate
 #include <memory.h>				// 메모리 관련
 
+// C++ header //
+#include <string>
+
 // direct sound 관련 //
 #include <stdio.h>
 #include <mmsystem.h>
 
 #define UNICODE
+typedef std::basic_string<TCHAR> tstring;
 #include <tchar.h>				// windows header에 있는 자료형 확장
 
 // DirectX 11 관련 //
 #include "DxDefine.h"
+
+// typedef, 데이터 관련 //
+#include "config.h"
 
 #endif //PCH_H

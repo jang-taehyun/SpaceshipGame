@@ -10,7 +10,7 @@ public:
 	HRESULT Initialize();
 	void Frame();
 
-	inline float GetTime() { return m_FrameTime; }
+	inline const float& GetTime() const { return m_FrameTime; }
 
 private:
 	INT64 m_Frequency = 0;

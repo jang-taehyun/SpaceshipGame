@@ -5,7 +5,7 @@ InputClass::InputClass() {}
 InputClass::InputClass(const InputClass& other) {}
 InputClass::~InputClass() {}
 
-HRESULT InputClass::Initialize(const HINSTANCE& const hinstance, const HWND& const hwnd, const int& const ScreenWidth, const int& const ScreenHeight)
+HRESULT InputClass::Initialize(const HINSTANCE& hinstance, const HWND& hwnd, const int& ScreenWidth, const int& ScreenHeight)
 {
 	// 초기 마우스 위치 설정 //
 	m_ScreenHeight = ScreenHeight;

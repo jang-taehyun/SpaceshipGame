@@ -9,14 +9,14 @@ public:
 
 	// Getter //
 
-	inline DirectX::XMFLOAT3 GetPosition() { return m_Position; }
-	inline DirectX::XMFLOAT3 GetRotation() { return m_Rotation; }
-	inline void GetViewMatrix(DirectX::XMMATRIX& ViewMatrix) { ViewMatrix = m_ViewMatrix; }
+	inline const DirectX::XMFLOAT3& GetPosition() const { return m_Position; }
+	inline const DirectX::XMFLOAT3& GetRotation() const { return m_Rotation; }
+	inline void GetViewMatrix(DirectX::XMMATRIX& ViewMatrix) const { ViewMatrix = m_ViewMatrix; }
 
 	// Setter //
 
-	inline void SetPosition(const float x, const float y, const float z) { m_Position.x = x; m_Position.y = y; m_Position.z = z; }
-	inline void SetRotation(const float x, const float y, const float z) { m_Rotation.x = x; m_Rotation.y = y; m_Rotation.z = z; }
+	inline void SetPosition(const float& x, const float& y, const float& z) { m_Position.x = x; m_Position.y = y; m_Position.z = z; }
+	inline void SetRotation(const float& x, const float& y, const float& z) { m_Rotation.x = x; m_Rotation.y = y; m_Rotation.z = z; }
 
 	void Render();
 private:

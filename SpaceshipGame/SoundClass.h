@@ -1,10 +1,5 @@
 #pragma once
 
-typedef struct _info_
-{
-	char* filename = nullptr;
-} SoundInfo;
-
 class SoundClass
 {
 private:
@@ -30,15 +25,15 @@ public:
 	SoundClass(const SoundClass& other);
 	~SoundClass();
 
-	HRESULT Initialize(const HWND& const hwnd, const SoundInfo& const info);
+	HRESULT Initialize(const HWND& hwnd, const SoundInfo& info);
 	void Shutdown();
 
 private:
-	HRESULT InitializeDirectSound(const HWND& const);
+	HRESULT InitializeDirectSound(const HWND& hwnd);
 	void ShutdownDirectSound();
 
-	HRESULT LoadWaveFile(const char* const FileName, IDirectSoundBuffer8** const SecondaryBuffer);
-	void ShutdownWaveFile(IDirectSoundBuffer8** const SecondaryBuffer);
+	HRESULT LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** const& SecondaryBuffer);
+	void ShutdownWaveFile(IDirectSoundBuffer8**& SecondaryBuffer);
 
 	HRESULT PlayWaveFile();
 

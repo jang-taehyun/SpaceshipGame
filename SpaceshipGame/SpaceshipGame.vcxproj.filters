@@ -116,6 +116,15 @@
     <Filter Include="Font">
       <UniqueIdentifier>{3eb92837-7d3e-4017-acbc-5825d51dc141}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TextClass">
+      <UniqueIdentifier>{3484c0b2-5711-4923-aa1c-dc82aabb05b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ColorClass">
+      <UniqueIdentifier>{c18dc73e-7b11-4dc7-8fc8-f1b588077ea0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PositionClass\Position2DClass">
+      <UniqueIdentifier>{31005519-d99b-4479-b5c3-faa00bf4a255}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemClass.h">
@@ -208,6 +217,18 @@
     <ClInclude Include="FontClass.h">
       <Filter>Font</Filter>
     </ClInclude>
+    <ClInclude Include="config.h">
+      <Filter>Default\header</Filter>
+    </ClInclude>
+    <ClInclude Include="TextClass.h">
+      <Filter>TextClass</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorClass.h">
+      <Filter>ColorClass</Filter>
+    </ClInclude>
+    <ClInclude Include="Position2DClass.h">
+      <Filter>PositionClass\Position2DClass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -290,6 +311,15 @@
     </ClCompile>
     <ClCompile Include="FontClass.cpp">
       <Filter>Font</Filter>
+    </ClCompile>
+    <ClCompile Include="TextClass.cpp">
+      <Filter>TextClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorClass.cpp">
+      <Filter>ColorClass</Filter>
+    </ClCompile>
+    <ClCompile Include="Position2DClass.cpp">
+      <Filter>PositionClass\Position2DClass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

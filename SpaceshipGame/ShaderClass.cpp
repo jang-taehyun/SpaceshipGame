@@ -5,7 +5,7 @@ ShaderClass::ShaderClass() {}
 ShaderClass::ShaderClass(const ShaderClass& other) {}
 ShaderClass::~ShaderClass() {}
 
-HRESULT ShaderClass::Initialize(ID3D11Device* const Device, const HWND hwnd, const ShaderFileInfo& const info)
+HRESULT ShaderClass::Initialize(ID3D11Device* const& Device, const HWND& hwnd, const ShaderFileInfo& info)
 {
 	// 매개 변수 확인 //
 	// Device 확인
@@ -21,9 +21,9 @@ HRESULT ShaderClass::Initialize(ID3D11Device* const Device, const HWND hwnd, con
 		return E_FAIL;
 	}
 	// shader info 확인
-	if (!info.vsFileName || !info.psFileName || !info.vsEntryPoint || !info.psEntryPoint)
+	if (info.vsFileName == _T("") || info.psFileName == _T("") || info.vsEntryPoint == _T("") || info.psEntryPoint == _T(""))
 	{
-		MessageBox(hwnd, _T("shader info 객체 안에 nullptr이 존재합니다."), _T("shader info error"), MB_OK);
+		MessageBox(hwnd, _T("shader info 객체 안에 필요한 정보가 없는 것이 있습니다."), _T("shader info error"), MB_OK);
 		return E_FAIL;
 	}
 
@@ -36,7 +36,7 @@ void ShaderClass::Shutdown()
 	ShutdownShader();
 }
 
-HRESULT ShaderClass::Render(ID3D11DeviceContext* const DeviceContext, const int& const IndexCount, const DirectX::XMMATRIX& const WorldMatrix, const DirectX::XMMATRIX& const ViewMatrix, const DirectX::XMMATRIX& const ProjectionMatrix, const int& const TextureNum, ID3D11ShaderResourceView** const TextureArray)
+HRESULT ShaderClass::Render(ID3D11DeviceContext* const& DeviceContext, const int& IndexCount, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix, const int& TextureNum, ID3D11ShaderResourceView** const& TextureArray)
 {
 	if (FAILED(SetShaderParameters(DeviceContext, WorldMatrix, ViewMatrix, ProjectionMatrix, TextureNum, TextureArray)))
 		return E_FAIL;
@@ -46,13 +46,13 @@ HRESULT ShaderClass::Render(ID3D11DeviceContext* const DeviceContext, const int&
 	return S_OK;
 }
 
-HRESULT ShaderClass::InitializeShader(ID3D11Device* const Device, const HWND hwnd, const ShaderFileInfo& const info)
+HRESULT ShaderClass::InitializeShader(ID3D11Device* const& Device, const HWND& hwnd, const ShaderFileInfo& info)
 {
 	ID3D10Blob* ErrorMessage = nullptr;
 
 	// vertex shader code 컴파일 //
 	ID3D10Blob* VertexShaderBuffer = nullptr;
-	if (FAILED(D3DCompileFromFile(info.vsFileName, NULL, NULL, info.vsEntryPoint, "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &VertexShaderBuffer, &ErrorMessage)))
+	if (FAILED(D3DCompileFromFile(info.vsFileName.c_str(), NULL, NULL, (char*)info.vsEntryPoint.c_str(), "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &VertexShaderBuffer, &ErrorMessage)))
 	{
 		if (ErrorMessage)
 		{
@@ -60,7 +60,7 @@ HRESULT ShaderClass::InitializeShader(ID3D11Device* const Device, const HWND hwn
 		}
 		else
 		{
-			MessageBox(hwnd, info.vsFileName, _T("vertex shader file이 없습니다."), MB_OK);
+			MessageBox(hwnd, info.vsFileName.c_str(), _T("vertex shader file이 없습니다."), MB_OK);
 		}
 
 		return E_FAIL;
@@ -68,7 +68,7 @@ HRESULT ShaderClass::InitializeShader(ID3D11Device* const Device, const HWND hwn
 
 	// pixel shader code 컴파일 //
 	ID3D10Blob* PixelShaderBuffer = nullptr;
-	if (FAILED(D3DCompileFromFile(info.psFileName, NULL, NULL, info.psEntryPoint, "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &PixelShaderBuffer, &ErrorMessage)))
+	if (FAILED(D3DCompileFromFile(info.psFileName.c_str(), NULL, NULL, (char*)info.psEntryPoint.c_str(), "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &PixelShaderBuffer, &ErrorMessage)))
 	{
 		if (ErrorMessage)
 		{
@@ -76,7 +76,7 @@ HRESULT ShaderClass::InitializeShader(ID3D11Device* const Device, const HWND hwn
 		}
 		else
 		{
-			MessageBox(hwnd, info.psFileName, _T("Missing pixel shader file"), MB_OK);
+			MessageBox(hwnd, info.psFileName.c_str(), _T("Missing pixel shader file"), MB_OK);
 		}
 
 		return E_FAIL;
@@ -122,7 +122,7 @@ HRESULT ShaderClass::InitializeShader(ID3D11Device* const Device, const HWND hwn
 	return S_OK;
 }
 
-HRESULT ShaderClass::CreateInputLayout(ID3D11Device* const Device, ID3D10Blob* const VertexShaderBuffer, ID3D10Blob* const PixelShaderBuffer)
+HRESULT ShaderClass::CreateInputLayout(ID3D11Device* const& Device, ID3D10Blob* const& VertexShaderBuffer, ID3D10Blob* const& PixelShaderBuffer)
 {
 	D3D11_INPUT_ELEMENT_DESC PolygonLayout[2];
 	memset(PolygonLayout, 0, sizeof(PolygonLayout));
@@ -157,7 +157,7 @@ HRESULT ShaderClass::CreateInputLayout(ID3D11Device* const Device, ID3D10Blob* c
 	return S_OK;
 }
 
-HRESULT ShaderClass::CreateConstantBuffer(ID3D11Device* const Device, ID3D11Buffer*& Buffer, const UINT& BufferSize)
+HRESULT ShaderClass::CreateConstantBuffer(ID3D11Device* const& Device, ID3D11Buffer*& Buffer, const UINT& BufferSize)
 {
 	D3D11_BUFFER_DESC ConstantBufferDesc;
 	memset(&ConstantBufferDesc, 0, sizeof(ConstantBufferDesc));
@@ -179,7 +179,7 @@ HRESULT ShaderClass::CreateConstantBuffer(ID3D11Device* const Device, ID3D11Buff
 	return S_OK;
 }
 
-HRESULT ShaderClass::CreateTextureSamplerState(ID3D11Device* const Device, ID3D11SamplerState*& sampler)
+HRESULT ShaderClass::CreateTextureSamplerState(ID3D11Device* const& Device, ID3D11SamplerState*& sampler)
 {
 	D3D11_SAMPLER_DESC SamplerDesc;
 	memset(&SamplerDesc, 0, sizeof(SamplerDesc));
@@ -239,18 +239,20 @@ void ShaderClass::ShutdownShader()
 	}
 }
 
-void ShaderClass::OutputShaderErrorMessage(ID3D10Blob* ErrorMessage, const HWND hwnd, const TCHAR* ShaderFileName)
+void ShaderClass::OutputShaderErrorMessage(ID3D10Blob*& ErrorMessage, const HWND& hwnd, const tstring& ShaderFileName)
 {
 	OutputDebugStringA(reinterpret_cast<const char*>(ErrorMessage->GetBufferPointer()));
 
 	ErrorMessage->Release();
 	ErrorMessage = nullptr;
 
-	MessageBox(hwnd, _T("Error compiling shader."), ShaderFileName, MB_OK);
+	MessageBox(hwnd, _T("Error compiling shader."), ShaderFileName.c_str(), MB_OK);
 }
 
-HRESULT ShaderClass::SetShaderParameters(ID3D11DeviceContext* const DeviceContext, const DirectX::XMMATRIX& const WorldMatrix, const DirectX::XMMATRIX& const ViewMatrix, const DirectX::XMMATRIX&  const ProjectionMatrix, const int& const TextureNum, ID3D11ShaderResourceView** const TextureArray)
+HRESULT ShaderClass::SetShaderParameters(ID3D11DeviceContext* const& DeviceContext, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix, const int& TextureNum, ID3D11ShaderResourceView** const& TextureArray)
 {
+	unsigned int SlotNum = 0;
+
 	// 행렬들을 HLSL에 맞게 변환 //
 	// 행렬들을 transpose 연산하여 shader에서 사용할 수 있도록 한다.
 	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranspose(WorldMatrix);
@@ -259,7 +261,8 @@ HRESULT ShaderClass::SetShaderParameters(ID3D11DeviceContext* const DeviceContex
 
 	// matrix constant buffer의 내용 업데이트 //
 	// vertex shader에서 matrix constant buffer의 위치 : 0번
-	if (FAILED(UpdateMatrixBuffer(DeviceContext, 0, worldMatrix, viewMatrix, projectionMatrix)))
+	SlotNum = 0;
+	if (FAILED(UpdateMatrixBuffer(DeviceContext, SlotNum, worldMatrix, viewMatrix, projectionMatrix)))
 	{
 		return E_FAIL;
 	}
@@ -271,7 +274,7 @@ HRESULT ShaderClass::SetShaderParameters(ID3D11DeviceContext* const DeviceContex
 	return S_OK;
 }
 
-HRESULT ShaderClass::UpdateMatrixBuffer(ID3D11DeviceContext* const DeviceContext, unsigned int slot, const DirectX::XMMATRIX& const WorldMatrix, const DirectX::XMMATRIX& const ViewMatrix, const DirectX::XMMATRIX& const ProjectionMatrix)
+HRESULT ShaderClass::UpdateMatrixBuffer(ID3D11DeviceContext* const& DeviceContext, unsigned int& slot, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix)
 {
 	// matrix constant buffer의 내용을 CPU가 쓸 수 있도록 잠금
 	D3D11_MAPPED_SUBRESOURCE MappedResource;
@@ -297,7 +300,7 @@ HRESULT ShaderClass::UpdateMatrixBuffer(ID3D11DeviceContext* const DeviceContext
 	return S_OK;
 }
 
-void ShaderClass::RenderShader(ID3D11DeviceContext* const DeviceContext, const int& IndexCount)
+void ShaderClass::RenderShader(ID3D11DeviceContext* const& DeviceContext, const int& IndexCount)
 {
 	// vertex input layout 설정 //
 	DeviceContext->IASetInputLayout(m_Layout);

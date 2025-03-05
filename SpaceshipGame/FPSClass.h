@@ -12,7 +12,7 @@ public:
 	
 	// Getter //
 
-	inline int GetFPS() { return m_FPS; }
+	inline const int& GetFPS() const { return m_FPS; }
 
 private:
 	int m_FPS = 0;

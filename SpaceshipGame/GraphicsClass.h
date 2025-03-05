@@ -25,12 +25,12 @@ public:
 	GraphicsClass(const GraphicsClass& other);
 	~GraphicsClass();
 
-	HRESULT Initialize(const int ScreenWidth, const int ScreenHeight, const HWND& hwnd);
+	HRESULT Initialize(const int& ScreenWidth, const int& ScreenHeight, const HWND& hwnd);
 	void Shutdown();
-	bool Frame(int, int, int, int, float);
+	HRESULT Frame(int, int, int, int, float);
 
 private:
-	bool Render();
+	HRESULT Render();
 
 private:
 	CameraClass* m_Camera = nullptr;

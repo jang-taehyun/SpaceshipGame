@@ -11,16 +11,23 @@
 #include "TextClass.h"
 #include "ModelListClass.h"
 #include "FrustumClass.h"
+#include "ColorClass.h"
 #include "GraphicsClass.h"
 
 GraphicsClass::GraphicsClass() {}
 GraphicsClass::GraphicsClass(const GraphicsClass& other) {}
 GraphicsClass::~GraphicsClass() {}
 
-HRESULT GraphicsClass::Initialize(const int ScreenWidth, const int ScreenHeight, const HWND& hwnd)
+HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeight, const HWND& hwnd)
 {
+	if (!D3DClass::GetD3DClassInst(hwnd))
+	{
+		MessageBox(hwnd, _T("D3D 객체 생성 실패!"), _T("Error"), MB_OK);
+		return E_FAIL;
+	}
+
 	// Direct3D 객체 생성 및 초기화 //
-	if (!D3DClass::GetD3DClassInst(hwnd) && FAILED(D3DClass::GetD3DClassInst(hwnd)->Initialize(ScreenWidth, ScreenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR)))
+	if (FAILED(D3DClass::GetD3DClassInst(hwnd)->Initialize(ScreenWidth, ScreenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR)))
 	{
 		MessageBox(hwnd, _T("Could not initialize Direct3D"), _T("Error"), MB_OK);
 		return E_FAIL;
@@ -55,7 +62,7 @@ HRESULT GraphicsClass::Initialize(const int ScreenWidth, const int ScreenHeight,
 		return false;
 	}
 
-	if (!m_AlphaMapShader->Initialize(m_Direct3D->GetDevice(), hwnd))
+	if (!m_AlphaMapShader->Initialize(D3DClass::GetD3DClassInst(hwnd)->GetDevice(), hwnd))
 	{
 		MessageBox(hwnd, _T("Could not initialize the alpha map shader object"), _T("Erorr"), MB_OK);
 		return false;
@@ -68,7 +75,7 @@ HRESULT GraphicsClass::Initialize(const int ScreenWidth, const int ScreenHeight,
 		return false;
 	}
 
-	if (!m_TextureShader->Initialize(m_Direct3D->GetDevice(), hwnd))
+	if (!m_TextureShader->Initialize(D3DClass::GetD3DClassInst(hwnd)->GetDevice(), hwnd))
 	{
 		MessageBox(hwnd, _T("Could not initialize the texture shader object"), _T("Erorr"), MB_OK);
 		return false;
@@ -83,7 +90,7 @@ HRESULT GraphicsClass::Initialize(const int ScreenWidth, const int ScreenHeight,
 
 	
 	
-	if (!m_MultiTextureShader->Initialize(m_Direct3D->GetDevice(), hwnd))
+	if (!m_MultiTextureShader->Initialize(D3DClass::GetD3DClassInst(hwnd)->GetDevice(), hwnd))
 	{
 		MessageBox(hwnd, _T("Could not initialize the multitexture shader object"), _T("Erorr"), MB_OK);
 		return false;
@@ -96,7 +103,7 @@ HRESULT GraphicsClass::Initialize(const int ScreenWidth, const int ScreenHeight,
 		return false;
 	}
 
-	if (!m_LightShader->Initialize(m_Direct3D->GetDevice(), hwnd))
+	if (!m_LightShader->Initialize(D3DClass::GetD3DClassInst(hwnd)->GetDevice(), hwnd))
 	{
 		MessageBox(hwnd, _T("Could not initialize the light shader object"), _T("Error"), MB_OK);
 		return false;
@@ -121,24 +128,24 @@ HRESULT GraphicsClass::Initialize(const int ScreenWidth, const int ScreenHeight,
 		return false;
 	}
 
-	if (!m_LightMapShader->Initialize(m_Direct3D->GetDevice(), hwnd))
+	if (!m_LightMapShader->Initialize(D3DClass::GetD3DClassInst(hwnd)->GetDevice(), hwnd))
 	{
 		MessageBox(hwnd, _T("Could not initialize the light map shader object"), _T("Error"), MB_OK);
 		return false;
 	}
 
-	// // Text 객체 생성 및 초기화 //
-	// m_Text = new TextClass;
-	// if (!m_Text)
-	// {
-	// 	return false;
-	// }
-	// 
-	// if (!m_Text->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), hwnd, ScreenWidth, ScreenHeight, BaseViewMatrix))
-	// {
-	// 	MessageBox(hwnd, _T("Could not initialize the text object"), _T("Error"), MB_OK);
-	// 	return false;
-	// }
+	// Text 객체 생성 및 초기화 //
+	m_Text = new TextClass;
+	if (!m_Text)
+	{
+		return false;
+	}
+	
+	if (!m_Text->Initialize(D3DClass::GetD3DClassInst(hwnd)->GetDevice(), D3DClass::GetD3DClassInst(hwnd)->GetDeviceContext(), hwnd, ScreenWidth, ScreenHeight, BaseViewMatrix))
+	{
+		MessageBox(hwnd, _T("Could not initialize the text object"), _T("Error"), MB_OK);
+		return false;
+	}
 
 	// model list 객체 생성 및 초기화 //
 	m_ModelList = new ModelListClass;
@@ -178,12 +185,12 @@ void GraphicsClass::Shutdown()
 		m_ModelList = nullptr;
 	}
 
-	// if (m_Text)
-	// {
-	// 	m_Text->Shutdown();
-	// 	delete m_Text;
-	// 	m_Text = nullptr;
-	// }
+	if (m_Text)
+	{
+		m_Text->Shutdown();
+		delete m_Text;
+		m_Text = nullptr;
+	}
 
 	if (m_LightMapShader)
 	{
@@ -221,14 +228,6 @@ void GraphicsClass::Shutdown()
 		m_MultiTextureShader = nullptr;
 	}
 
-	// color shader 객체 해제(ColorShaderClass를 사용하는 경우) //
-	// if (m_ColorShader)
-	// {
-	// 	m_ColorShader->Shutdown();
-	// 	delete m_ColorShader;
-	// 	m_ColorShader = nullptr;
-	// }
-
 	if (m_AlphaMapShader)
 	{
 		m_AlphaMapShader->Shutdown();
@@ -250,47 +249,48 @@ void GraphicsClass::Shutdown()
 	}
 }
 
-bool GraphicsClass::Frame(int MouseX, int MouseY, int FPS, int CPU, float rotationY)
+HRESULT GraphicsClass::Frame(int MouseX, int MouseY, int FPS, int CPU, float rotationY)
 {
 	// camera의 rotation을 update //
 	m_Camera->SetRotation(0.f, rotationY, 0.f);
 
-	// // mouse의 위치 update //
-	// if (!m_Text->SetMousePosition(MouseX, MouseY, m_Direct3D->GetDeviceContext()))
-	// {
-	// 	return false;
-	// }
-	// 
-	// // FPS update //
-	// if (!m_Text->SetFPS(FPS, m_Direct3D->GetDeviceContext()))
-	// {
-	// 	return false;
-	// }
-	// 
-	// // CPU 사용량 update //
-	// if (!m_Text->SetCPU(CPU, m_Direct3D->GetDeviceContext()))
-	// {
-	// 	return false;
-	// }
+	// mouse의 위치 update //
+	if (!m_Text->SetMousePosition(MouseX, MouseY, m_Direct3D->GetDeviceContext()))
+	{
+		return E_FAIL;
+	}
+	
+	// FPS update //
+	if (!m_Text->SetFPS(FPS, m_Direct3D->GetDeviceContext()))
+	{
+		return E_FAIL;
+	}
+	
+	// CPU 사용량 update //
+	if (!m_Text->SetCPU(CPU, m_Direct3D->GetDeviceContext()))
+	{
+		return E_FAIL;
+	}
 
 	// 렌더링
 	return Render();
 }
 
-bool GraphicsClass::Render()
+HRESULT GraphicsClass::Render()
 {
 	// front buffer 초기화 //
-	m_Direct3D->BeginScene(0.f, 0.f, 0.f, 1.f);
+	ColorClass background;
+	D3DClass::GetD3DClassInst(hwnd)->BeginScene(background);
 
 	// 카메라의 위치에 따라 view matrix 생성 //
 	m_Camera->Render();
 
 	// world, view, projection matrix 가져오기 //
 	DirectX::XMMATRIX WorldMatrix, ViewMatrix, ProjectionMatrix, OrthoMatrix;
-	m_Direct3D->GetWorldMatrix(WorldMatrix);
+	D3DClass::GetD3DClassInst(hwnd)->GetWorldMatrix(WorldMatrix);
 	m_Camera->GetViewMatrix(ViewMatrix);
-	m_Direct3D->GetProjectionMatrix(ProjectionMatrix);
-	m_Direct3D->GetOrthoMatrix(OrthoMatrix);
+	D3DClass::GetD3DClassInst(hwnd)->GetProjectionMatrix(ProjectionMatrix);
+	D3DClass::GetD3DClassInst(hwnd)->GetOrthoMatrix(OrthoMatrix);
 
 	// frustum culling을 이용한 rendering //
 	// viewing frustum 생성 및 render count(rendering한 3D object의 개수) 초기화
@@ -318,14 +318,14 @@ bool GraphicsClass::Render()
 			WorldMatrix = DirectX::XMMatrixTranslation(pos_x, pos_y, pos_z);
 
 			// 렌더링
-			m_Model->Render(m_Direct3D->GetDeviceContext());
-			// if (!m_MultiTextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), WorldMatrix, ViewMatrix, ProjectionMatrix, m_Model->GetTextures()))
-			// {
-			// 	return false;
-			// }
-			if (!m_AlphaMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), WorldMatrix, ViewMatrix, ProjectionMatrix, m_Model->GetTextures()))
+			m_Model->Render(D3DClass::GetD3DClassInst(hwnd)->GetDeviceContext());
+			if (FAILED(m_MultiTextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), WorldMatrix, ViewMatrix, ProjectionMatrix, m_Model->GetTextures())))
 			{
-				return false;
+				return E_FAIL;
+			}
+			if (FAILED(m_AlphaMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), WorldMatrix, ViewMatrix, ProjectionMatrix, m_Model->GetTextures())))
+			{
+				return E_FAIL;
 			}
 
 			// world matrix를 원래대로 초기화
@@ -337,39 +337,33 @@ bool GraphicsClass::Render()
 	}
 
 	// 2D 렌더링 //
-	// // depth buffer 비활성화
-	// m_Direct3D->TurnDepthBufferOff();
-	// 
-	// // alpha blend state 활성화
-	// m_Direct3D->TurnOnAlphaBlending();
-	// 
-	// 
-	// // texture shader로 bitmap을 렌더링
-	// if (!m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Bitmap->GetIndexCount(), WorldMatrix, ViewMatrix, OrthoMatrix, m_Bitmap->GetTexture()))
-	// {
-	// 	return false;
-	// }
-	// 
-	// // 렌더링한 3D object의 개수 설정
-	// if (!m_Text->SetRenderCount(RenderCount, m_Direct3D->GetDeviceContext()))
-	// {
-	// 	return false;
-	// }
-	// 
-	// // text 렌더링
-	// if (!m_Text->Render(m_Direct3D->GetDeviceContext(), WorldMatrix, OrthoMatrix))
-	// {
-	// 	return false;
-	// }
-	// 
-	// // alpha blend state 비활성화
-	// m_Direct3D->TurnOffAlphaBlending();
-	// 
-	// // depth buffer 활성화
-	// m_Direct3D->TurnDepthBufferOn();
-	// 
-	// // back buffer에 있는 내용을 화면에 출력 //
-	// m_Direct3D->EndScene();
+	// depth buffer 비활성화
+	D3DClass::GetD3DClassInst(hwnd)->TurnDepthBufferOff();
+	
+	// alpha blend state 활성화
+	D3DClass::GetD3DClassInst(hwnd)->TurnOnAlphaBlending();
+	
+	// 렌더링한 3D object의 개수 설정
+	if (FAILED(m_Text->SetRenderCount(RenderCount, m_Direct3D->GetDeviceContext())))
+	{
+		return E_FAIL;
+	}
+	
+	// text 렌더링
+	if (FAILED(m_Text->Render(D3DClass::GetD3DClassInst(hwnd)->GetDeviceContext(), WorldMatrix, OrthoMatrix)))
+	{
+		return E_FAIL;
+	}
+	
+	// alpha blend state 비활성화
+	m_Direct3D->TurnOffAlphaBlending();
+	
+	// depth buffer 활성화
+	m_Direct3D->TurnDepthBufferOn();
+	
 
-	return true;
+	// back buffer에 있는 내용을 화면에 출력 //
+	m_Direct3D->EndScene();
+
+	return S_OK;
 }

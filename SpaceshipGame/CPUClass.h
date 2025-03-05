@@ -15,7 +15,7 @@ public:
 	void Frame();
 
 	// Getter //
-	inline long long GetCPUPercentage() { return (m_CanReadCPU ? m_CPUUsage : 0); }
+	inline const long long& GetCPUPercentage() const { return (m_CanReadCPU ? m_CPUUsage : 0); }
 
 private:
 	bool m_CanReadCPU = true;

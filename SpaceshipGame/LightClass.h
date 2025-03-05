@@ -9,19 +9,19 @@ public:
 
 	// Getter //
 
-	inline const DirectX::XMFLOAT4& const GetAmbientColor() { return m_AmbientColor; }
-	inline const DirectX::XMFLOAT4& const GetDiffuseColor() { return m_DiffuseColor; }
-	inline const DirectX::XMFLOAT3& const GetDirection() { return m_Direction; }
-	inline const DirectX::XMFLOAT4& const GetSpecularColor() { return m_SpecularColor; }
-	inline const float& const GetSpecularPower() { return m_SpecularPower; }
+	inline const DirectX::XMFLOAT4& GetAmbientColor() const { return m_AmbientColor; }
+	inline const DirectX::XMFLOAT4& GetDiffuseColor() const { return m_DiffuseColor; }
+	inline const DirectX::XMFLOAT3& GetDirection() const { return m_Direction; }
+	inline const DirectX::XMFLOAT4& GetSpecularColor() const { return m_SpecularColor; }
+	inline const float& GetSpecularPower() const { return m_SpecularPower; }
 
 	// Setter //
 
-	inline void SetAmbientColor(const float& const r,  const float& const g, const float& const b, const float& const a) { m_AmbientColor = DirectX::XMFLOAT4(r, g, b, a); }
-	inline void SetDiffuseColor(const float& const r, const float& const g, const float& const b, const float& const a) { m_DiffuseColor = DirectX::XMFLOAT4(r, g, b, a); }
-	inline void SetDirection(const float& const x, const float& const y, const float& const z){ m_Direction = DirectX::XMFLOAT3(x, y, z); }
-	inline void SetSpecularColor(const float& const r, const float& const g, const float& const b, const float& const a) { m_SpecularColor = DirectX::XMFLOAT4(r, g, b, a); }
-	inline void SetSpecularPower(const float& const power) { m_SpecularPower = power; }
+	inline void SetAmbientColor(const float& r, const float& g, const float& b, const float& a) { m_AmbientColor = DirectX::XMFLOAT4(r, g, b, a); }
+	inline void SetDiffuseColor(const float& r, const float& g, const float& b, const float& a) { m_DiffuseColor = DirectX::XMFLOAT4(r, g, b, a); }
+	inline void SetDirection(const float& x, const float& y, const float& z) { m_Direction = DirectX::XMFLOAT3(x, y, z); }
+	inline void SetSpecularColor(const float& r, const float& g, const float& b, const float& a) { m_SpecularColor = DirectX::XMFLOAT4(r, g, b, a); }
+	inline void SetSpecularPower(const float& power) { m_SpecularPower = power; }
 
 private:
 	DirectX::XMFLOAT4 m_AmbientColor = DirectX::XMFLOAT4(0.f, 0.f, 0.f, 0.f);
