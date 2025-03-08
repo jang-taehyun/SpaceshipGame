@@ -15,7 +15,6 @@ class LightShaderClass;
 class LightMapShaderClass;
 class AlphaMapShaderClass;
 class TextClass;
-class ModelListClass;
 class FrustumClass;
 
 class GraphicsClass
@@ -27,22 +26,25 @@ public:
 
 	HRESULT Initialize(const int& ScreenWidth, const int& ScreenHeight, const HWND& hwnd);
 	void Shutdown();
-	HRESULT Frame(int, int, int, int, float);
+	HRESULT Frame(float rotationY, const HWND& hwnd);
 
 private:
-	HRESULT Render();
+	HRESULT Render(const HWND& hwnd);
 
 private:
 	CameraClass* m_Camera = nullptr;
+
 	ModelClass* m_Model = nullptr;
 	TextureShaderClass* m_TextureShader = nullptr;
 	MultiTextureShaderClass* m_MultiTextureShader = nullptr;
+
+	LightClass* m_Light = nullptr;
 	LightShaderClass* m_LightShader = nullptr;
+
 	LightMapShaderClass* m_LightMapShader = nullptr;
 	AlphaMapShaderClass* m_AlphaMapShader = nullptr;
-	LightClass* m_Light = nullptr;
+	
 	TextClass* m_Text = nullptr;
-	ModelListClass* m_ModelList = nullptr;
 	FrustumClass* m_Frustum = nullptr;
 };
 

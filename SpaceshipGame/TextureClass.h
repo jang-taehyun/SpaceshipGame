@@ -1,7 +1,5 @@
 #pragma once
 
-class Image;
-
 class TextureClass
 {
 private:
@@ -16,24 +14,28 @@ private:
 
 public:
 	TextureClass();
-	TextureClass(const TextureClass&);
+	TextureClass(const TextureClass& other);
 	~TextureClass();
 
-	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, const char*);
-	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, const TCHAR*);
+	HRESULT Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& FileName);
+	HRESULT Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<tstring>& FileNames);
 	void Shutdown();
 
-	inline const ID3D11ShaderResourceView* const& GetTexture() { return m_TextureView; }
+	inline ID3D11ShaderResourceView* const& GetTexture(int idx) { return m_TextureView[idx]; }
+	inline std::vector<ID3D11ShaderResourceView*> const& GetTextures() { return m_TextureView; }
 
 private:
-	bool LoadTarga(const char*, int&, int&);
-	bool LoadPNG(const TCHAR*, int&, int&);
+	HRESULT LoadTarga(const tstring& FileName);
+	HRESULT LoadPNG(const tstring& FileName);
+	HRESULT LoadDDS(ID3D11Device* const& Device, const tstring& FileName);
 
-	bool CreateShaderResourceView(ID3D11Device*, ID3D11DeviceContext*, int&, int&, bool);
+	HRESULT CreateShaderResourceView(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext);
 
 private:
 	unsigned char* m_ImageData = nullptr;
-	ID3D11Texture2D* m_Texture = nullptr;
-	ID3D11ShaderResourceView* m_TextureView = nullptr;
+	short m_Height = 0;
+	short m_Width = 0;
+	std::vector<ID3D11Texture2D*> m_Texture;
+	std::vector<ID3D11ShaderResourceView*> m_TextureView;
 };
 

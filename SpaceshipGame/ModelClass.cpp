@@ -1,130 +1,111 @@
 #include "pch.h"
-
-#include "TextureClass.h"
-#include "TextureArrayClass.h"
 #include <fstream>
-
+#include "ModelLoaderClass.h"
 #include "ModelClass.h"
 
 ModelClass::ModelClass() {}
 ModelClass::ModelClass(const ModelClass& other) {}
 ModelClass::~ModelClass() {}
 
-bool ModelClass::Initialize(ID3D11Device* const Device, ID3D11DeviceContext*  const DeviceContext, const char* const TextureFileName, const char* const ModelFileName)
+HRESULT ModelClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& TextureFileName, const tstring& ModelFileName)
 {
-	if (!LoadModel(ModelFileName))
+	m_Loader = new ModelLoaderClass;
+	if (!m_Loader)
 	{
-		return false;
+		return E_FAIL;
 	}
 
-	if (!InitializeBuffers(Device))
+	if (FAILED(LoadModel(ModelFileName)))
 	{
-		return false;
+		return E_FAIL;
+	}
+
+	m_Loader->ReleaseData();
+	m_Loader = nullptr;
+
+	if (FAILED(InitializeBuffers(Device)))
+	{
+		return E_FAIL;
 	}
 
 	return LoadTexture(Device, DeviceContext, TextureFileName);
 }
 
-bool ModelClass::Initialize(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const TCHAR* tTextureFileName, const char* ModelFileName)
+HRESULT ModelClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<tstring>& TextureFileNames, const tstring& ModelFileName)
 {
-	if (!LoadModel(ModelFileName))
+	m_Loader = new ModelLoaderClass;
+	if (!m_Loader)
 	{
-		return false;
+		return E_FAIL;
 	}
 
-	if (!InitializeBuffers(Device))
+	if (FAILED(LoadModel(ModelFileName)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
-	return LoadTexture(Device, DeviceContext, tTextureFileName);
-}
+	m_Loader->ReleaseData();
+	m_Loader = nullptr;
 
-bool ModelClass::Initialize(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const TCHAR* tDefaultTextureFileName, const TCHAR* tColorTextureFileName, const char* ModelFileName)
-{
-	if (!LoadModel(ModelFileName))
+	if (FAILED(InitializeBuffers(Device)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
-	if (!InitializeBuffers(Device))
-	{
-		return false;
-	}
-
-	return LoadTextures(Device, tDefaultTextureFileName, tColorTextureFileName);
-}
-
-bool ModelClass::Initialize(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const TCHAR* tDefaultTextureFileName, const TCHAR* tColorTextureFileName, const TCHAR* tAlphaMapTextureFilename, const char* ModelFileName)
-{
-	if (!LoadModel(ModelFileName))
-	{
-		return false;
-	}
-
-	if (!InitializeBuffers(Device))
-	{
-		return false;
-	}
-
-	return LoadTextures(Device, tDefaultTextureFileName, tColorTextureFileName, tAlphaMapTextureFilename);
+	return LoadTexture(Device, DeviceContext, TextureFileNames);
 }
 
 void ModelClass::Shutdown()
 {
-	ReleaseTexture();
-	ReleaseTextures();
-
 	ShutdownBuffers();
-
+	ReleaseTexture();
 	ReleaseModel();
 }
 
-void ModelClass::Render(ID3D11DeviceContext* DeviceContext)
+void ModelClass::Render(ID3D11DeviceContext* const& DeviceContext)
 {
 	// 렌더링을 위해 그래픽스 파이스라인에 vertex buffer와 index buffer를 설정 //
 	RenderBuffers(DeviceContext);
+
+	// shader를 통해 렌더링
 }
 
-int ModelClass::GetIndexCount()
+HRESULT ModelClass::LoadModel(const tstring& FileName)
 {
-	return m_IndexCount;
+	if (FAILED(m_Loader->LoadModel(FileName)))
+	{
+		return E_FAIL;
+	}
+
+	m_VertexCount = m_Loader->GetPositionCount();
+	m_IndexCount = m_Loader->GetIndexCount();
+	m_Vertices = new VertexType[m_Loader->GetFaceIndex()];
+	if (!m_Vertices)
+	{
+		return E_FAIL;
+	}
+
+	if (FAILED(m_Loader->CopyModelData(m_Vertices)))
+	{
+		return E_FAIL;
+	}
+
+	return S_OK;
 }
 
-ID3D11ShaderResourceView* ModelClass::GetTexture()
-{
-	return m_Texture->GetTexture();
-}
-
-ID3D11ShaderResourceView** ModelClass::GetTextures()
-{
-	return m_TextureArray->GetTextureArray();
-}
-
-bool ModelClass::InitializeBuffers(ID3D11Device* Device)
+HRESULT ModelClass::InitializeBuffers(ID3D11Device* const& Device)
 {
 	// 정점 데이터 설정 //
-	// 정점 배열, 인덱스 배열 생성
-	VertexType* vertices = new VertexType[m_VertexCount];
-	if (!vertices)
+	// vertex의 index 데이터 설정
+	unsigned long* m_Indices = new unsigned long[m_IndexCount];
+	if (!m_Indices)
 	{
-		return false;
+		return E_FAIL;
 	}
 
-	unsigned long* indices = new unsigned long[m_IndexCount];
-	if (!indices)
+	for (int i = 0; i < m_VertexCount; ++i)
 	{
-		return false;
-	}
-
-	// 데이터를 정점 배열, 인덱스 배열로 복사
-	for (int i = 0; i < m_VertexCount; i++)
-	{
-		vertices[i].position = DirectX::XMFLOAT3(m_Model[i].x, m_Model[i].y, m_Model[i].z);
-		vertices[i].texture = DirectX::XMFLOAT2(m_Model[i].tu, m_Model[i].tv);
-		vertices[i].normal = DirectX::XMFLOAT3(m_Model[i].nx, m_Model[i].ny, m_Model[i].nz);
-
-		indices[i] = i;
+		m_Indices[i] = i;
 	}
 
 	// vertex buffer 생성 //
@@ -141,14 +122,14 @@ bool ModelClass::InitializeBuffers(ID3D11Device* Device)
 
 	// 정점 데이터를 가르키는 subresource 생성 및 설정
 	D3D11_SUBRESOURCE_DATA VertexData;
-	VertexData.pSysMem = vertices;
+	VertexData.pSysMem = m_Vertices;
 	VertexData.SysMemPitch = 0;
 	VertexData.SysMemSlicePitch = 0;
 
 	// vertex buffer 생성
 	if (FAILED(Device->CreateBuffer(&VertexBufferDesc, &VertexData, &m_VertexBufer)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// index buffer 생성 //
@@ -165,24 +146,64 @@ bool ModelClass::InitializeBuffers(ID3D11Device* Device)
 
 	// 인덱스 데이터를 가르키는 subresource 생성 및 설정
 	D3D11_SUBRESOURCE_DATA IndexData;
-	IndexData.pSysMem = indices;
+	IndexData.pSysMem = m_Indices;
 	IndexData.SysMemPitch = 0;
 	IndexData.SysMemSlicePitch = 0;
 
 	// index buffer 생성
 	if (FAILED(Device->CreateBuffer(&IndexBufferDesc, &IndexData, &m_IndexBuffer)))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// 정점 데이터, 인덱스 데이터 해제
-	delete[] vertices;
-	vertices = nullptr;
+	delete[] m_Vertices;
+	m_Vertices = nullptr;
 
-	delete[] indices;
-	indices = nullptr;
+	delete[] m_Indices;
+	m_Indices = nullptr;
 
-	return true;
+	return S_OK;
+}
+
+void ModelClass::RenderBuffers(ID3D11DeviceContext* DeviceContext)
+{
+	// offset(오프셋)과 정점 데이터의 stride(단위) 설정 //
+	unsigned int stride = sizeof(VertexType);
+	unsigned int offset = 0;
+
+	// input assembler에서 vertex buffer, index buffer 활성화 //
+	DeviceContext->IASetVertexBuffers(0, 1, &m_VertexBufer, &stride, &offset);
+	DeviceContext->IASetIndexBuffer(m_IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+	// vertex buffer에서 그릴 object의 기본 도형 설정 //
+	DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+HRESULT ModelClass::LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& FileName)
+{
+	// texture object 생성 //
+	m_Texture = new TextureClass;
+	if (!m_Texture)
+	{
+		return E_FAIL;
+	}
+
+	// targa 이미지를 쓰는 경우 //
+	return m_Texture->Initialize(Device, DeviceContext, FileName);
+}
+
+HRESULT ModelClass::LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<tstring>& FileNames)
+{
+	// texture object 생성 //
+	m_Texture = new TextureClass;
+	if (!m_Texture)
+	{
+		return E_FAIL;
+	}
+
+	// targa 이미지를 쓰는 경우 //
+	return m_Texture->Initialize(Device, DeviceContext, FileNames);
 }
 
 void ModelClass::ShutdownBuffers()
@@ -200,76 +221,26 @@ void ModelClass::ShutdownBuffers()
 	}
 }
 
-void ModelClass::RenderBuffers(ID3D11DeviceContext* DeviceContext)
+void ModelClass::ReleaseModel()
 {
-	// offset(오프셋)과 정점 데이터의 stride(단위) 설정 //
-	unsigned int stride = sizeof(VertexType);
-	unsigned int offset = 0;
-
-	// input assembler에서 vertex buffer, index buffer 활성화 //
-	DeviceContext->IASetVertexBuffers(0, 1, &m_VertexBufer, &stride, &offset);
-	DeviceContext->IASetIndexBuffer(m_IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
-	// vertex buffer에서 그릴 object의 기본 도형 설정 //
-	DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-}
-
-bool ModelClass::LoadTexture(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const char* FileName)
-{
-	// texture object 생성 //
-	m_Texture = new TextureClass;
-	if (!m_Texture)
+	if (m_Indices)
 	{
-		return false;
+		delete[] m_Indices;
+		m_Indices = nullptr;
 	}
 
-	// targa 이미지를 쓰는 경우 //
-	return m_Texture->Initialize(Device, DeviceContext, FileName);
-}
-
-bool ModelClass::LoadTexture(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const TCHAR* tFileName)
-{
-	// texture object 생성 //
-	m_Texture = new TextureClass;
-	if (!m_Texture)
+	if (m_Vertices)
 	{
-		return false;
+		delete[] m_Vertices;
+		m_Vertices = nullptr;
 	}
 
-	// targa 이미지를 쓰는 경우 //
-	return m_Texture->Initialize(Device, DeviceContext, tFileName);
-}
-
-bool ModelClass::LoadTextures(ID3D11Device* Device, const TCHAR* tDefaultTextureFileName, const TCHAR* tColorTextureFileName)
-{
-	m_TextureArray = new TextureArrayClass;
-	if (!m_TextureArray)
+	if (m_Loader)
 	{
-		return false;
+		m_Loader->ReleaseData();
+		delete[] m_Loader;
+		m_Loader = nullptr;
 	}
-
-	if (!m_TextureArray->Initialize(Device, tDefaultTextureFileName, tColorTextureFileName))
-	{
-		return false;
-	}
-
-	return true;
-}
-
-bool ModelClass::LoadTextures(ID3D11Device* Device, const TCHAR* tDefaultTextureFileName, const TCHAR* tColorTextureFileName, const TCHAR* tAlphaMapTextureFilename)
-{
-	m_TextureArray = new TextureArrayClass;
-	if (!m_TextureArray)
-	{
-		return false;
-	}
-
-	if (!m_TextureArray->Initialize(Device, tDefaultTextureFileName, tColorTextureFileName, tAlphaMapTextureFilename))
-	{
-		return false;
-	}
-
-	return true;
 }
 
 void ModelClass::ReleaseTexture()
@@ -279,75 +250,5 @@ void ModelClass::ReleaseTexture()
 		m_Texture->Shutdown();
 		delete m_Texture;
 		m_Texture = nullptr;
-	}
-}
-
-void ModelClass::ReleaseTextures()
-{
-	if (m_TextureArray)
-	{
-		m_TextureArray->Shutdown();
-		delete m_TextureArray;
-		m_TextureArray = nullptr;
-	}
-}
-
-bool ModelClass::LoadModel(const char* FileName)
-{
-	std::ifstream FileIn;
-
-	// model file 열기 //
-	FileIn.open(FileName);
-	if (FileIn.fail())
-	{
-		return false;
-	}
-
-	// vertex count의 값까지 file의 내용을 read //
-	char input = 0;
-	FileIn.get(input);
-	while (':' != input)
-		FileIn.get(input);
-
-	// vertex count의 값을 멤버 변수(m_VertexCount)에 복사 //
-	FileIn >> m_VertexCount;
-
-	// index의 수를 정점의 수와 같게 설정 //
-	m_IndexCount = m_VertexCount;
-
-	// 읽어 들인 정점의 개수를 사용해 model을 만들기 //
-	m_Model = new ModelType[m_VertexCount];
-	if (!m_Model)
-	{
-		return false;
-	}
-
-	// 데이터의 시작 부분까지 file을 read
-	FileIn.get(input);
-	while (':' != input)
-		FileIn.get(input);
-	FileIn.get(input);
-	FileIn.get(input);
-
-	// vertex 데이터를 read
-	for (int i = 0; i < m_VertexCount; i++)
-	{
-		FileIn >> m_Model[i].x >> m_Model[i].y >> m_Model[i].z;
-		FileIn >> m_Model[i].tu >> m_Model[i].tv;
-		FileIn >> m_Model[i].nx >> m_Model[i].ny >> m_Model[i].nz;
-	}
-
-	// model file 닫기 //
-	FileIn.close();
-
-	return true;
-}
-
-void ModelClass::ReleaseModel()
-{
-	if (m_Model)
-	{
-		delete[] m_Model;
-		m_Model = nullptr;
 	}
 }

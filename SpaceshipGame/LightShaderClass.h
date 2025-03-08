@@ -28,20 +28,20 @@ private:
 	};
 
 public:
-	HRESULT Render(ID3D11DeviceContext* DeviceContext, int IndexCount, DirectX::XMMATRIX WorldMatrix, DirectX::XMMATRIX ViewMatrix, DirectX::XMMATRIX ProjectionMatrix, const int& TextureNum, ID3D11ShaderResourceView** const TextureArray, DirectX::XMFLOAT3 LightDirection, DirectX::XMFLOAT4 AmbientColor, DirectX::XMFLOAT4 DiffuseColor, DirectX::XMFLOAT3 CameraPosition, DirectX::XMFLOAT4 SpecularColor, float SpecularPower);
+	HRESULT Render(ID3D11DeviceContext* const& DeviceContext, const int& IndexCount, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix, const std::vector<ID3D11ShaderResourceView*>& Textures, const DirectX::XMFLOAT3& LightDirection, const DirectX::XMFLOAT4& AmbientColor, const DirectX::XMFLOAT4& DiffuseColor, const DirectX::XMFLOAT3& CameraPosition, const DirectX::XMFLOAT4& SpecularColor, const float& SpecularPower);
 
 private:
-	HRESULT InitializeShader(ID3D11Device* const Device, const HWND const hwnd, const ShaderFileInfo& const info) override;
+	HRESULT InitializeShader(ID3D11Device* const& Device, const HWND& hwnd, const ShaderFileInfo& info) override;
 	void ShutdownShader() override;
-	HRESULT CreateInputLayout(ID3D11Device* const Device, ID3D10Blob* const VertexShaderBuffer, ID3D10Blob* const PixelShaderBuffer) override;
+	HRESULT CreateInputLayout(ID3D11Device* const& Device, ID3D10Blob* const& VertexShaderBuffer, ID3D10Blob* const& PixelShaderBuffer) override;
 	
-	HRESULT SetShaderParameters(ID3D11DeviceContext* const DeviceContext, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix, const int& TextureNum, ID3D11ShaderResourceView** const TextureArray, const DirectX::XMFLOAT3& LightDirection, const DirectX::XMFLOAT4& AmbientColor, const DirectX::XMFLOAT4& DiffuseColor, const DirectX::XMFLOAT3& CameraPosition, const DirectX::XMFLOAT4& SpecularColor, const float& SpecularPower);
+	HRESULT SetShaderParameters(ID3D11DeviceContext* const& DeviceContext, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix, const std::vector<ID3D11ShaderResourceView*>& Textures, const DirectX::XMFLOAT3& LightDirection, const DirectX::XMFLOAT4& AmbientColor, const DirectX::XMFLOAT4& DiffuseColor, const DirectX::XMFLOAT3& CameraPosition, const DirectX::XMFLOAT4& SpecularColor, const float& SpecularPower);
 
 	// 광원 상수 버퍼의 내용을 업데이트하는 함수 //
-	HRESULT UpdateLightBuffer(ID3D11DeviceContext* const DeviceContext, unsigned int slot, const DirectX::XMFLOAT3& LightDirection, const DirectX::XMFLOAT4& AmbientColor, const DirectX::XMFLOAT4& DiffuseColor, const DirectX::XMFLOAT4& SpecularColor, const float& SpecularPower);
+	HRESULT UpdateLightBuffer(ID3D11DeviceContext* const& DeviceContext, unsigned int& slot, const DirectX::XMFLOAT3& LightDirection, const DirectX::XMFLOAT4& AmbientColor, const DirectX::XMFLOAT4& DiffuseColor, const DirectX::XMFLOAT4& SpecularColor, const float& SpecularPower);
 
 	// 카메라 상수 버퍼의 내용을 업데이트하는 함수 //
-	HRESULT UpdateCameraBuffer(ID3D11DeviceContext* const DeviceContext, unsigned int slot, const DirectX::XMFLOAT3& CameraPosition);
+	HRESULT UpdateCameraBuffer(ID3D11DeviceContext* const& DeviceContext, unsigned int& slot, const DirectX::XMFLOAT3& CameraPosition);
 
 private:
 	ID3D11Buffer* m_LightBuffer = nullptr;

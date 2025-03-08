@@ -5,9 +5,9 @@ LightShaderClass::LightShaderClass() {}
 LightShaderClass::LightShaderClass(const LightShaderClass& other) {}
 LightShaderClass::~LightShaderClass() {}
 
-HRESULT LightShaderClass::Render(ID3D11DeviceContext* DeviceContext, int IndexCount, DirectX::XMMATRIX WorldMatrix, DirectX::XMMATRIX ViewMatrix, DirectX::XMMATRIX ProjectionMatrix, const int& TextureNum, ID3D11ShaderResourceView** const TextureArray, DirectX::XMFLOAT3 LightDirection, DirectX::XMFLOAT4 AmbientColor, DirectX::XMFLOAT4 DiffuseColor, DirectX::XMFLOAT3 CameraPosition, DirectX::XMFLOAT4 SpecularColor, float SpecularPower)
+HRESULT LightShaderClass::Render(ID3D11DeviceContext* const& DeviceContext, const int& IndexCount, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix, const std::vector<ID3D11ShaderResourceView*>& Textures, const DirectX::XMFLOAT3& LightDirection, const DirectX::XMFLOAT4& AmbientColor, const DirectX::XMFLOAT4& DiffuseColor, const DirectX::XMFLOAT3& CameraPosition, const DirectX::XMFLOAT4& SpecularColor, const float& SpecularPower)
 {
-	if (FAILED(SetShaderParameters(DeviceContext, WorldMatrix, ViewMatrix, ProjectionMatrix, TextureNum, TextureArray, LightDirection, AmbientColor, DiffuseColor, CameraPosition, SpecularColor, SpecularPower)))
+	if (FAILED(SetShaderParameters(DeviceContext, WorldMatrix, ViewMatrix, ProjectionMatrix, Textures, LightDirection, AmbientColor, DiffuseColor, CameraPosition, SpecularColor, SpecularPower)))
 	{
 		return E_FAIL;
 	}
@@ -17,7 +17,7 @@ HRESULT LightShaderClass::Render(ID3D11DeviceContext* DeviceContext, int IndexCo
 	return S_OK;
 }
 
-HRESULT LightShaderClass::InitializeShader(ID3D11Device* const Device, HWND hwnd, const ShaderFileInfo& const info)
+HRESULT LightShaderClass::InitializeShader(ID3D11Device* const& Device, const HWND& hwnd, const ShaderFileInfo& info)
 {
 	if (FAILED(ShaderClass::InitializeShader(Device, hwnd, info)))
 	{
@@ -56,7 +56,7 @@ void LightShaderClass::ShutdownShader()
 	ShaderClass::ShutdownShader();
 }
 
-HRESULT LightShaderClass::CreateInputLayout(ID3D11Device* const Device, ID3D10Blob* const VertexShaderBuffer, ID3D10Blob* const PixelShaderBuffer)
+HRESULT LightShaderClass::CreateInputLayout(ID3D11Device* const& Device, ID3D10Blob* const& VertexShaderBuffer, ID3D10Blob* const& PixelShaderBuffer)
 {
 	D3D11_INPUT_ELEMENT_DESC PolygonLayout[3];
 	memset(PolygonLayout, 0, sizeof(PolygonLayout));
@@ -91,7 +91,7 @@ HRESULT LightShaderClass::CreateInputLayout(ID3D11Device* const Device, ID3D10Bl
 	unsigned int ElementsCount = sizeof(PolygonLayout) / sizeof(PolygonLayout[0]);
 
 	// input layout 생성
-	if (FAILED(Device->CreateInputLayout(PolygonLayout, ElementsCount, VertexShaderBuffer->GetBufferPointer(), VertexShaderBuffer->GetBufferSize(), &(GetInputLayout()))))
+	if (FAILED(Device->CreateInputLayout(PolygonLayout, ElementsCount, VertexShaderBuffer->GetBufferPointer(), VertexShaderBuffer->GetBufferSize(), GetInputLayoutPointer())))
 	{
 		return E_FAIL;
 	}
@@ -99,23 +99,27 @@ HRESULT LightShaderClass::CreateInputLayout(ID3D11Device* const Device, ID3D10Bl
 	return S_OK;
 }
 
-HRESULT LightShaderClass::SetShaderParameters(ID3D11DeviceContext* const DeviceContext, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix, const int& TextureNum, ID3D11ShaderResourceView** const TextureArray, const DirectX::XMFLOAT3& LightDirection, const DirectX::XMFLOAT4& AmbientColor, const DirectX::XMFLOAT4& DiffuseColor, const DirectX::XMFLOAT3& CameraPosition, const DirectX::XMFLOAT4& SpecularColor, const float& SpecularPower) 
+HRESULT LightShaderClass::SetShaderParameters(ID3D11DeviceContext* const& DeviceContext, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix, const std::vector<ID3D11ShaderResourceView*>& Textures, const DirectX::XMFLOAT3& LightDirection, const DirectX::XMFLOAT4& AmbientColor, const DirectX::XMFLOAT4& DiffuseColor, const DirectX::XMFLOAT3& CameraPosition, const DirectX::XMFLOAT4& SpecularColor, const float& SpecularPower)
 {
-	if (FAILED(ShaderClass::SetShaderParameters(DeviceContext, WorldMatrix, ViewMatrix, ProjectionMatrix, TextureNum, TextureArray)))
+	unsigned int SlotNum = 0;
+
+	if (FAILED(ShaderClass::SetShaderParameters(DeviceContext, WorldMatrix, ViewMatrix, ProjectionMatrix, Textures)))
 	{
 		return E_FAIL;
 	}
 
 	// 광원 상수 버퍼(light constant buffer)의 내용 업데이트 //
 	// pixel shader에서 광원 상수 버퍼의 위치 : 0번
-	if (FAILED(UpdateLightBuffer(DeviceContext, 0, LightDirection, AmbientColor, DiffuseColor, SpecularColor, SpecularPower)))
+	SlotNum = 0;
+	if (FAILED(UpdateLightBuffer(DeviceContext, SlotNum, LightDirection, AmbientColor, DiffuseColor, SpecularColor, SpecularPower)))
 	{
 		return E_FAIL;
 	}
 
 	// 카메라 동적 상수 버퍼(Camera constant buffer)의 내용 업데이트 //
 	// vertex shader에서 카메라 동적 상수 버퍼의 위치 : 1번
-	if (FAILED(UpdateCameraBuffer(DeviceContext, 1, CameraPosition)))
+	SlotNum = 1;
+	if (FAILED(UpdateCameraBuffer(DeviceContext, SlotNum, CameraPosition)))
 	{
 		return E_FAIL;
 	}
@@ -123,7 +127,7 @@ HRESULT LightShaderClass::SetShaderParameters(ID3D11DeviceContext* const DeviceC
 	return S_OK;
 }
 
-HRESULT LightShaderClass::UpdateLightBuffer(ID3D11DeviceContext* const DeviceContext, unsigned int slot, const DirectX::XMFLOAT3& LightDirection, const DirectX::XMFLOAT4& AmbientColor, const DirectX::XMFLOAT4& DiffuseColor, const DirectX::XMFLOAT4& SpecularColor, const float& SpecularPower)
+HRESULT LightShaderClass::UpdateLightBuffer(ID3D11DeviceContext* const& DeviceContext, unsigned int& slot, const DirectX::XMFLOAT3& LightDirection, const DirectX::XMFLOAT4& AmbientColor, const DirectX::XMFLOAT4& DiffuseColor, const DirectX::XMFLOAT4& SpecularColor, const float& SpecularPower)
 {
 	// 광원 상수 버퍼의 내용을 CPU가 쓸 수 있도록 잠금
 	D3D11_MAPPED_SUBRESOURCE MappedResource;
@@ -151,7 +155,7 @@ HRESULT LightShaderClass::UpdateLightBuffer(ID3D11DeviceContext* const DeviceCon
 	return S_OK;
 }
 
-HRESULT LightShaderClass::UpdateCameraBuffer(ID3D11DeviceContext* const DeviceContext, unsigned int slot, const DirectX::XMFLOAT3& CameraPosition)
+HRESULT LightShaderClass::UpdateCameraBuffer(ID3D11DeviceContext* const& DeviceContext, unsigned int& slot, const DirectX::XMFLOAT3& CameraPosition)
 {
 	// 카메라 동적 상수 버퍼의 내용을 CPU가 쓸 수 있도록 잠금
 	D3D11_MAPPED_SUBRESOURCE MappedResource;

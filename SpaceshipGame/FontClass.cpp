@@ -7,7 +7,7 @@ FontClass::FontClass() {}
 FontClass::FontClass(const FontClass& other) {}
 FontClass::~FontClass() {}
 
-HRESULT FontClass::Initialize(const ID3D11Device* const& Device, const ID3D11DeviceContext* const& DeviceContext, const tstring& FontFileName, const tstring& TextureFileName)
+HRESULT FontClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& FontFileName, const tstring& TextureFileName)
 {
 	if (FAILED(LoadFontData(FontFileName)))
 	{
@@ -129,7 +129,7 @@ void FontClass::ReleaseFontData()
 	}
 }
 
-HRESULT FontClass::LoadTexture(const ID3D11Device* const& Device, const ID3D11DeviceContext* const& DeviceContext, const tstring& FileName)
+HRESULT FontClass::LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& FileName)
 {
 	m_Texture = new TextureClass;
 	if (!m_Texture)

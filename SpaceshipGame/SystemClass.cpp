@@ -15,8 +15,8 @@ SystemClass::~SystemClass() {}
 HRESULT SystemClass::Initialize()
 {
 	// 윈도우의 가로, 세로 길이 초기화
-	int ScreenWidth = 0;
-	int ScreenHeight = 0;
+	int ScreenWidth = WIDTH;
+	int ScreenHeight = HEIGHT;
 	InitializeWindows(ScreenWidth, ScreenHeight);
 
 	// 객체 생성 및 초기화
@@ -158,6 +158,8 @@ void SystemClass::Run()
 
 		if (m_Input->IsEscapePressed())
 			break;
+
+		MessageBox(m_hwnd, _T("1"), _T("1"), MB_OK);
 	}
 }
 
@@ -194,7 +196,7 @@ HRESULT SystemClass::Frame()
 	// camera의 회전값을 갱신하여 실제 카메리 위치 반영 //
 	rotationY = m_Position->GetRotation();
 
-	return m_Graphics->Frame(MouseX, MouseY, m_FPS->GetFPS(), m_CPU->GetCPUPercentage(), rotationY);
+	return m_Graphics->Frame(rotationY, m_hwnd);
 }
 
 void SystemClass::InitializeWindows(const int& ScreenWidth, const int& ScreenHeight)

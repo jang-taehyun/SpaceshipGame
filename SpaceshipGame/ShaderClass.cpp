@@ -36,9 +36,9 @@ void ShaderClass::Shutdown()
 	ShutdownShader();
 }
 
-HRESULT ShaderClass::Render(ID3D11DeviceContext* const& DeviceContext, const int& IndexCount, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix, const int& TextureNum, ID3D11ShaderResourceView** const& TextureArray)
+HRESULT ShaderClass::Render(ID3D11DeviceContext* const& DeviceContext, const int& IndexCount, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix, const std::vector<ID3D11ShaderResourceView*>& Textures)
 {
-	if (FAILED(SetShaderParameters(DeviceContext, WorldMatrix, ViewMatrix, ProjectionMatrix, TextureNum, TextureArray)))
+	if (FAILED(SetShaderParameters(DeviceContext, WorldMatrix, ViewMatrix, ProjectionMatrix, Textures)))
 		return E_FAIL;
 
 	RenderShader(DeviceContext, IndexCount);
@@ -249,7 +249,7 @@ void ShaderClass::OutputShaderErrorMessage(ID3D10Blob*& ErrorMessage, const HWND
 	MessageBox(hwnd, _T("Error compiling shader."), ShaderFileName.c_str(), MB_OK);
 }
 
-HRESULT ShaderClass::SetShaderParameters(ID3D11DeviceContext* const& DeviceContext, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix, const int& TextureNum, ID3D11ShaderResourceView** const& TextureArray)
+HRESULT ShaderClass::SetShaderParameters(ID3D11DeviceContext* const& DeviceContext, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix, const std::vector<ID3D11ShaderResourceView*>& Textures)
 {
 	unsigned int SlotNum = 0;
 
@@ -269,7 +269,7 @@ HRESULT ShaderClass::SetShaderParameters(ID3D11DeviceContext* const& DeviceConte
 
 	// pixel shader에서 사용할 shader texture resource(Texture2D) 설정 //
 	// GPU 파이프라인에 텍스처 데이터를 바인드
-	DeviceContext->PSSetShaderResources(0, TextureNum, TextureArray);
+	DeviceContext->PSSetShaderResources(0, Textures.size(), Textures.data());
 
 	return S_OK;
 }

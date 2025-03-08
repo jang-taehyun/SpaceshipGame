@@ -2,7 +2,6 @@
 #include "FontClass.h"
 #include "FontShaderClass.h"
 #include "Position2DClass.h"
-#include "ColorClass.h"
 #include "TextClass.h"
 
 TextClass::TextClass() {}
@@ -23,12 +22,11 @@ HRESULT TextClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* 
 	{
 		return E_FAIL;
 	}
-	if (!m_Font->Initialize(Device, DeviceContext, "../Engine/data/font01.txt", "../Engine/data/font01.tga"))
+	if (FAILED(m_Font->Initialize(Device, DeviceContext, FontFileName, FontTextureFileName)))
 	{
 		MessageBox(hwnd, _T("Could not initialize the font object"), _T("Error"), MB_OK);
 		return E_FAIL;
 	}
-
 
 	// font shader object 생성 및 초기화 //
 	m_FontShader = new FontShaderClass;
@@ -36,12 +34,11 @@ HRESULT TextClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* 
 	{
 		return E_FAIL;
 	}
-	if (!m_FontShader->Initialize(Device, hwnd))
+	if (FAILED(m_FontShader->Initialize(Device, hwnd, FontShaderInfo)))
 	{
 		MessageBox(hwnd, _T("Could not initialize the font shader object"), _T("Error"), MB_OK);
 		return E_FAIL;
 	}
-
 
 	// 출력할 문장 생성 및 초기화 //
 	for (int i = 0; i < 5; ++i)
@@ -274,7 +271,7 @@ HRESULT TextClass::RenderSentence(ID3D11DeviceContext* const& DeviceContext, con
 
 	// 렌더링 //
 	DirectX::XMFLOAT4 PixelColor = DirectX::XMFLOAT4(Sentence->Color.GetColorRed(), Sentence->Color.GetColorGreen(), Sentence->Color.GetColorBlue(), Sentence->Color.GetColorAlpha());
-	if (FAILED(m_FontShader->Render(DeviceContext, Sentence->IndexCount, WorldMatrix, m_BaseViewMatrix, OrthoMatrix, m_Font->GetTexture(), PixelColor)))
+	if (FAILED(m_FontShader->Render(DeviceContext, Sentence->IndexCount, WorldMatrix, m_BaseViewMatrix, OrthoMatrix, m_Font->GetTextureArray(), PixelColor)))
 	{
 		return E_FAIL;
 	}

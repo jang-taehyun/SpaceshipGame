@@ -1,9 +1,9 @@
 #pragma once
 
+#include "ColorClass.h"
+
 class FontClass;
 class FontShaderClass;
-
-class ColorClass;
 class Position2DClass;
 
 class TextClass

@@ -17,23 +17,38 @@ HRESULT D3DClass::Initialize(const int& ScreenWidth, const int& ScreenHeight, co
 
 	// 1. DirectX Graphics Infrastructure(DXGI)를 통해 적절한 디스플레이 모드 찾기 및 적용
 	if (FAILED(GetRefreshRate(ScreenWidth, ScreenHeight, Numerator, Denominator)))
+	{
+		MessageBox(hwnd, _T("D3D 객체 초기화 1"), _T("Error"), MB_OK);
 		return E_FAIL;
+	}
 
 	// 2. Swap chain 설정 및 Swap chain, Device, Device context 생성
 	if (FAILED(CreateSwapChainDeviceDeviceContext(ScreenWidth, ScreenHeight, Numerator, Denominator, hwnd, FullScreen)))
+	{
+		MessageBox(hwnd, _T("D3D 객체 초기화 2"), _T("Error"), MB_OK);
 		return E_FAIL;
+	}
 
 	// 3. Render target view 생성 및 설정
 	if (FAILED(SetAndCreateRenderTargetView()))
+	{
+		MessageBox(hwnd, _T("D3D 객체 초기화 3"), _T("Error"), MB_OK);
 		return E_FAIL;
+	}
 
 	// 4. Depth Stencil buffer 생성
 	if (FAILED(SetDepthAndStencil(ScreenWidth, ScreenHeight)))
+	{
+		MessageBox(hwnd, _T("D3D 객체 초기화 4"), _T("Error"), MB_OK);
 		return E_FAIL;
+	}
 
 	// 5. Rasterizer 설정
 	if (FAILED(SetRasterizer()))
+	{
+		MessageBox(hwnd, _T("D3D 객체 초기화 5"), _T("Error"), MB_OK);
 		return E_FAIL;
+	}
 	
 	// 6. 렌더링을 위한 Viewport 설정
 	SetViewport(ScreenWidth, ScreenHeight);
@@ -43,7 +58,10 @@ HRESULT D3DClass::Initialize(const int& ScreenWidth, const int& ScreenHeight, co
 
 	// 8. alpha blending state 설정
 	if (FAILED(SetAlphaBlendState()))
+	{
+		MessageBox(hwnd, _T("D3D 객체 초기화 6"), _T("Error"), MB_OK);
 		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -313,9 +331,9 @@ HRESULT D3DClass::SetDepthAndStencil(const int& ScreenWidth, const int& ScreenHe
 	D3D11_DEPTH_STENCIL_DESC DepthStencilDesc;
 	D3D11_DEPTH_STENCIL_VIEW_DESC DepthStencilViewDesc;
 	
-	memset(&DepthBufferDesc, 0, sizeof(D3D11_TEXTURE2D_DESC));
-	memset(&DepthStencilDesc, 0, sizeof(D3D11_DEPTH_STENCIL_DESC));
-	memset(&DepthStencilViewDesc, 0, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
+	memset(&DepthBufferDesc, 0, sizeof(DepthBufferDesc));
+	memset(&DepthStencilDesc, 0, sizeof(DepthStencilDesc));
+	memset(&DepthStencilViewDesc, 0, sizeof(DepthStencilViewDesc));
 
 	// depth buffer 설정
 	DepthBufferDesc.Width = ScreenWidth;
@@ -332,7 +350,10 @@ HRESULT D3DClass::SetDepthAndStencil(const int& ScreenWidth, const int& ScreenHe
 
 	// depth buffer를 texture 형식으로 생성
 	if (FAILED(m_Device->CreateTexture2D(&DepthBufferDesc, NULL, &m_DepthStencilBuffer)))
+	{
+		HRESULT res = m_Device->CreateTexture2D(&DepthBufferDesc, NULL, &m_DepthStencilBuffer);
 		return E_FAIL;
+	}
 
 	// depth stencil state 설정(depth buffer를 활성화한 depth stencil state)
 	DepthStencilDesc.DepthEnable = true;

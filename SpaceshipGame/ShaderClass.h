@@ -23,10 +23,9 @@ public:
 	void Shutdown();
 
 	// shader 렌더링 함수 //
-	virtual HRESULT Render(ID3D11DeviceContext* const& DeviceContext, const int& IndexCount, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix, const int& TextureNum, ID3D11ShaderResourceView** const& TextureArray);
+	virtual HRESULT Render(ID3D11DeviceContext* const& DeviceContext, const int& IndexCount, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix, const std::vector<ID3D11ShaderResourceView*>& Textures);
 
 protected:
-	// 초기화 관련 함수들 //
 	// shader 컴파일 및 생성 함수
 	virtual HRESULT InitializeShader(ID3D11Device* const& Device, const HWND& hwnd, const ShaderFileInfo& info);
 
@@ -46,7 +45,7 @@ protected:
 	void OutputShaderErrorMessage(ID3D10Blob*& ErrorMessage, const HWND& hwnd, const tstring& ShaderFileName);
 
 	// shader 내부에 들어갈 데이터들 업데이트하는 함수 //
-	virtual HRESULT SetShaderParameters(ID3D11DeviceContext* const& DeviceContext, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix, const int& TextureNum, ID3D11ShaderResourceView** const& TextureArray);
+	virtual HRESULT SetShaderParameters(ID3D11DeviceContext* const& DeviceContext, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix, const std::vector<ID3D11ShaderResourceView*>& Textures);
 	
 	// Matrix buffer를 업데이트 하는 함수 //
 	HRESULT UpdateMatrixBuffer(ID3D11DeviceContext* const& DeviceContext, unsigned int& slot, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix);
@@ -54,7 +53,8 @@ protected:
 	// shader로 렌더링 하는 함수 //
 	void RenderShader(ID3D11DeviceContext* const& DeviceContext, const int& IndexCount);
 
-	inline ID3D11InputLayout* const& GetInputLayout() const { return m_Layout; }
+	inline ID3D11InputLayout* const& GetInputLayout() { return m_Layout; }
+	inline ID3D11InputLayout** GetInputLayoutPointer() { return &m_Layout; }
 
 private:
 	ID3D11VertexShader* m_VertexShader = nullptr;

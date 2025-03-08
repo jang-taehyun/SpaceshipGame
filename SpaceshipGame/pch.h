@@ -24,6 +24,7 @@
 
 // C++ header //
 #include <string>
+#include <vector>
 
 // direct sound 관련 //
 #include <stdio.h>

@@ -170,7 +170,7 @@
     <ClInclude Include="LightMapShaderClass.h" />
     <ClInclude Include="LightShaderClass.h" />
     <ClInclude Include="ModelClass.h" />
-    <ClInclude Include="ModelListClass.h" />
+    <ClInclude Include="ModelLoaderClass.h" />
     <ClInclude Include="MultiTextureShaderClass.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Position2DClass.h" />
@@ -182,7 +182,6 @@
     <ClInclude Include="SystemClass.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TextClass.h" />
-    <ClInclude Include="TextureArrayClass.h" />
     <ClInclude Include="TextureClass.h" />
     <ClInclude Include="TextureShaderClass.h" />
     <ClInclude Include="TimerClass.h" />
@@ -204,7 +203,7 @@
     <ClCompile Include="LightMapShaderClass.cpp" />
     <ClCompile Include="LightShaderClass.cpp" />
     <ClCompile Include="ModelClass.cpp" />
-    <ClCompile Include="ModelListClass.cpp" />
+    <ClCompile Include="ModelLoaderClass.cpp" />
     <ClCompile Include="MultiTextureShaderClass.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -219,7 +218,6 @@
     <ClCompile Include="SoundClass.cpp" />
     <ClCompile Include="SystemClass.cpp" />
     <ClCompile Include="TextClass.cpp" />
-    <ClCompile Include="TextureArrayClass.cpp" />
     <ClCompile Include="TextureClass.cpp" />
     <ClCompile Include="TextureShaderClass.cpp" />
     <ClCompile Include="TimerClass.cpp" />

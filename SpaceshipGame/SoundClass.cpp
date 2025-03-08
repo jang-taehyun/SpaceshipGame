@@ -5,7 +5,7 @@ SoundClass::SoundClass() {}
 SoundClass::SoundClass(const SoundClass& other) {}
 SoundClass::~SoundClass() {}
 
-HRESULT SoundClass::Initialize(const HWND& hwnd, const SoundInfo& info)
+HRESULT SoundClass::Initialize(const HWND& hwnd, const SoundFileInfo& info)
 {
 	// 파라미터 검사 //
 	if (NULL == hwnd || info.filename == _T(""))
@@ -122,7 +122,7 @@ HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** 
 	memset(&WaveFileHeader, 0, sizeof(WaveFileHeader));
 
 	// wav 파일의 header를 read
-	unsigned int count = fread(&WaveFileHeader, sizeof(WaveFileHeader), 1, FilePtr);
+	size_t count = fread(&WaveFileHeader, sizeof(WaveFileHeader), 1, FilePtr);
 	if (1 != count)
 	{
 		return E_FAIL;
@@ -274,7 +274,7 @@ HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** 
 	return S_OK;
 }
 
-void SoundClass::ShutdownWaveFile(IDirectSoundBuffer8**& SecondaryBuffer)
+void SoundClass::ShutdownWaveFile(IDirectSoundBuffer8** const& SecondaryBuffer)
 {
 	if (*SecondaryBuffer)
 	{

@@ -25,7 +25,7 @@ public:
 	SoundClass(const SoundClass& other);
 	~SoundClass();
 
-	HRESULT Initialize(const HWND& hwnd, const SoundInfo& info);
+	HRESULT Initialize(const HWND& hwnd, const SoundFileInfo& info);
 	void Shutdown();
 
 private:
@@ -33,7 +33,7 @@ private:
 	void ShutdownDirectSound();
 
 	HRESULT LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** const& SecondaryBuffer);
-	void ShutdownWaveFile(IDirectSoundBuffer8**& SecondaryBuffer);
+	void ShutdownWaveFile(IDirectSoundBuffer8** const& SecondaryBuffer);
 
 	HRESULT PlayWaveFile();
 

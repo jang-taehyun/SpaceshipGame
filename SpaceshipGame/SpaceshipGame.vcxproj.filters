@@ -59,17 +59,11 @@
     <Filter Include="Texture\TextureClass">
       <UniqueIdentifier>{b6694b6c-6699-4641-a190-0e899b0bce02}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Texture\TextureArrayClass">
-      <UniqueIdentifier>{821ef8ee-d5de-4200-93c2-d97bd7e1b2f2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Model">
       <UniqueIdentifier>{b2ab057f-896f-42aa-800e-4d42831064c2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Model\ModelClass">
       <UniqueIdentifier>{193cacbb-0aa9-481f-9fab-e2a6ec264955}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model\ModelListClass">
-      <UniqueIdentifier>{5c9f1d5a-b5c0-4c62-b7a4-c1769a228c9a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Light">
       <UniqueIdentifier>{e3f9a0a2-cb03-4a0d-b1b3-509bf3d96848}</UniqueIdentifier>
@@ -124,6 +118,9 @@
     </Filter>
     <Filter Include="PositionClass\Position2DClass">
       <UniqueIdentifier>{31005519-d99b-4479-b5c3-faa00bf4a255}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\ModelLoader">
+      <UniqueIdentifier>{a5c131e5-8b8c-46f0-873b-3408bbc4697b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -199,14 +196,8 @@
     <ClInclude Include="TextureClass.h">
       <Filter>Texture\TextureClass</Filter>
     </ClInclude>
-    <ClInclude Include="TextureArrayClass.h">
-      <Filter>Texture\TextureArrayClass</Filter>
-    </ClInclude>
     <ClInclude Include="ModelClass.h">
       <Filter>Model\ModelClass</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelListClass.h">
-      <Filter>Model\ModelListClass</Filter>
     </ClInclude>
     <ClInclude Include="LightClass.h">
       <Filter>Light\LightClass</Filter>
@@ -228,6 +219,9 @@
     </ClInclude>
     <ClInclude Include="Position2DClass.h">
       <Filter>PositionClass\Position2DClass</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelLoaderClass.h">
+      <Filter>Model\ModelLoader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -294,14 +288,8 @@
     <ClCompile Include="TextureClass.cpp">
       <Filter>Texture\TextureClass</Filter>
     </ClCompile>
-    <ClCompile Include="TextureArrayClass.cpp">
-      <Filter>Texture\TextureArrayClass</Filter>
-    </ClCompile>
     <ClCompile Include="ModelClass.cpp">
       <Filter>Model\ModelClass</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelListClass.cpp">
-      <Filter>Model\ModelListClass</Filter>
     </ClCompile>
     <ClCompile Include="LightClass.cpp">
       <Filter>Light\LightClass</Filter>
@@ -320,6 +308,9 @@
     </ClCompile>
     <ClCompile Include="Position2DClass.cpp">
       <Filter>PositionClass\Position2DClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelLoaderClass.cpp">
+      <Filter>Model\ModelLoader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
