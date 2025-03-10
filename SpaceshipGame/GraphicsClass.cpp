@@ -36,7 +36,7 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 	m_Camera = new CameraClass;
 	if (!m_Camera)
 		return E_FAIL;
-	m_Camera->SetPosition(0.f, 0.f, -6.f);
+	m_Camera->SetPosition(0.f, 0.f, -0.00005f);
 	m_Camera->Render();
 	DirectX::XMMATRIX BaseViewMatrix;
 	m_Camera->GetViewMatrix(BaseViewMatrix);
@@ -248,14 +248,18 @@ HRESULT GraphicsClass::Render(const HWND& hwnd)
 
 	// 렌더링
 	m_Model->Render(D3DClass::GetD3DClassInst(hwnd)->GetDeviceContext());
-	if (FAILED(m_MultiTextureShader->Render(D3DClass::GetD3DClassInst(hwnd)->GetDeviceContext(), m_Model->GetIndexCount(), WorldMatrix, ViewMatrix, ProjectionMatrix, m_Model->GetTextureArray())))
+	if (FAILED(m_TextureShader->Render(D3DClass::GetD3DClassInst(hwnd)->GetDeviceContext(), m_Model->GetIndexCount(), WorldMatrix, ViewMatrix, ProjectionMatrix, m_Model->GetTextureArray())))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_AlphaMapShader->Render(D3DClass::GetD3DClassInst(hwnd)->GetDeviceContext(), m_Model->GetIndexCount(), WorldMatrix, ViewMatrix, ProjectionMatrix, m_Model->GetTextureArray())))
-	{
-		return E_FAIL;
-	}
+	// if (FAILED(m_MultiTextureShader->Render(D3DClass::GetD3DClassInst(hwnd)->GetDeviceContext(), m_Model->GetIndexCount(), WorldMatrix, ViewMatrix, ProjectionMatrix, m_Model->GetTextureArray())))
+	// {
+	// 	return E_FAIL;
+	// }
+	// if (FAILED(m_AlphaMapShader->Render(D3DClass::GetD3DClassInst(hwnd)->GetDeviceContext(), m_Model->GetIndexCount(), WorldMatrix, ViewMatrix, ProjectionMatrix, m_Model->GetTextureArray())))
+	// {
+	// 	return E_FAIL;
+	// }
 
 	// 2D 렌더링 //
 	// depth buffer 비활성화

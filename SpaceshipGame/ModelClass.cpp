@@ -66,8 +66,6 @@ void ModelClass::Render(ID3D11DeviceContext* const& DeviceContext)
 {
 	// 렌더링을 위해 그래픽스 파이스라인에 vertex buffer와 index buffer를 설정 //
 	RenderBuffers(DeviceContext);
-
-	// shader를 통해 렌더링
 }
 
 HRESULT ModelClass::LoadModel(const tstring& FileName)
