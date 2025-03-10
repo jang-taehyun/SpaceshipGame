@@ -24,17 +24,17 @@ private:
 	// 3D model의 face 관련(triangle)
 	typedef struct _face_type_triangle_
 	{
-		int vIndex1, vIndex2, vIndex3;
-		int tIndex1, tIndex2, tIndex3;
-		int nIndex1, nIndex2, nIndex3;
+		int vIndex[3];
+		int tIndex[3];
+		int nIndex[3];
 	} FaceTypeTraingle;
 
 	// 3D model의 face 관련(polygon)
 	typedef struct _face_type_polygon_
 	{
-		int vIndex1, vIndex2, vIndex3, vIndex4;
-		int tIndex1, tIndex2, tIndex3, tIndex4;
-		int nIndex1, nIndex2, nIndex3, nIndex4;
+		int vIndex[4];
+		int tIndex[4];
+		int nIndex[4];
 	} FaceTypePolygon;
 
 public:
@@ -48,7 +48,6 @@ public:
 	
 	inline const int GetPositionCount() const { return m_PositionCount; }
 	inline const int GetIndexCount() const { return m_IndexCount; }
-	inline const int GetFaceIndex() const { return m_FaceIndex; }
 
 private:
 	HRESULT ReadModelData(const tstring& FileName);

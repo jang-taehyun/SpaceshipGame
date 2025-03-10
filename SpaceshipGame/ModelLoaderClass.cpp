@@ -51,6 +51,7 @@ HRESULT ModelLoaderClass::LoadModel(const tstring& FileName)
 			return E_FAIL;
 		}
 
+		m_FaceCount *= 2;
 		m_PositionCount = m_FaceCount * 3;
 		m_IndexCount = m_PositionCount;
 	}
@@ -264,9 +265,9 @@ HRESULT ModelLoaderClass::LoadDataStructuresInTriangle(const tstring& FileName)
 			m_FileIn.get(input);
 
 			// 왼손 좌표계로 바꾸기 위해 face 데이터를 거꾸로 읽기 //
-			m_FileIn >> m_TraingleFaces[m_FaceIndex].vIndex3 >> tmp >> m_TraingleFaces[m_FaceIndex].tIndex3 >> tmp >> m_TraingleFaces[m_FaceIndex].nIndex3;
-			m_FileIn >> m_TraingleFaces[m_FaceIndex].vIndex2 >> tmp >> m_TraingleFaces[m_FaceIndex].tIndex2 >> tmp >> m_TraingleFaces[m_FaceIndex].nIndex2;
-			m_FileIn >> m_TraingleFaces[m_FaceIndex].vIndex1 >> tmp >> m_TraingleFaces[m_FaceIndex].tIndex1 >> tmp >> m_TraingleFaces[m_FaceIndex].nIndex1;
+			m_FileIn >> m_TraingleFaces[m_FaceIndex].vIndex[2] >> tmp >> m_TraingleFaces[m_FaceIndex].tIndex[2] >> tmp >> m_TraingleFaces[m_FaceIndex].nIndex[2];
+			m_FileIn >> m_TraingleFaces[m_FaceIndex].vIndex[1] >> tmp >> m_TraingleFaces[m_FaceIndex].tIndex[1] >> tmp >> m_TraingleFaces[m_FaceIndex].nIndex[1];
+			m_FileIn >> m_TraingleFaces[m_FaceIndex].vIndex[0] >> tmp >> m_TraingleFaces[m_FaceIndex].tIndex[0] >> tmp >> m_TraingleFaces[m_FaceIndex].nIndex[0];
 
 			m_FaceIndex++;
 		}
@@ -360,10 +361,10 @@ HRESULT ModelLoaderClass::LoadDataStructuresInPolygon(const tstring& FileName)
 			m_FileIn.get(input);
 
 			// 왼손 좌표계로 바꾸기 위해 face 데이터를 거꾸로 읽기 //
-			m_FileIn >> m_PolygonFaces[m_FaceIndex].vIndex4 >> tmp >> m_PolygonFaces[m_FaceIndex].tIndex4 >> tmp >> m_PolygonFaces[m_FaceIndex].nIndex4;
-			m_FileIn >> m_PolygonFaces[m_FaceIndex].vIndex3 >> tmp >> m_PolygonFaces[m_FaceIndex].tIndex3 >> tmp >> m_PolygonFaces[m_FaceIndex].nIndex3;
-			m_FileIn >> m_PolygonFaces[m_FaceIndex].vIndex2 >> tmp >> m_PolygonFaces[m_FaceIndex].tIndex2 >> tmp >> m_PolygonFaces[m_FaceIndex].nIndex2;
-			m_FileIn >> m_PolygonFaces[m_FaceIndex].vIndex1 >> tmp >> m_PolygonFaces[m_FaceIndex].tIndex1 >> tmp >> m_PolygonFaces[m_FaceIndex].nIndex1;
+			m_FileIn >> m_PolygonFaces[m_FaceIndex].vIndex[3] >> tmp >> m_PolygonFaces[m_FaceIndex].tIndex[3] >> tmp >> m_PolygonFaces[m_FaceIndex].nIndex[3];
+			m_FileIn >> m_PolygonFaces[m_FaceIndex].vIndex[2] >> tmp >> m_PolygonFaces[m_FaceIndex].tIndex[2] >> tmp >> m_PolygonFaces[m_FaceIndex].nIndex[2];
+			m_FileIn >> m_PolygonFaces[m_FaceIndex].vIndex[1] >> tmp >> m_PolygonFaces[m_FaceIndex].tIndex[1] >> tmp >> m_PolygonFaces[m_FaceIndex].nIndex[1];
+			m_FileIn >> m_PolygonFaces[m_FaceIndex].vIndex[0] >> tmp >> m_PolygonFaces[m_FaceIndex].tIndex[0] >> tmp >> m_PolygonFaces[m_FaceIndex].nIndex[0];
 
 			m_FaceIndex++;
 		}
@@ -386,26 +387,15 @@ HRESULT ModelLoaderClass::CopyModelDataInTriangle(VertexType* const& storage)
 	// 모든 face를 반복하여 각 면의 3개의 정점을 storage에 복사 //
 	for (int i = 0; i < m_FaceIndex; i++)
 	{
-		vIndex = m_TraingleFaces[i].vIndex1 - 1;
-		tIndex = m_TraingleFaces[i].tIndex1 - 1;
-		nIndex = m_TraingleFaces[i].nIndex1 - 1;
-		storage->position = DirectX::XMFLOAT3(m_Positions[vIndex].x, m_Positions[vIndex].y, m_Positions[vIndex].z);
-		storage->texture = DirectX::XMFLOAT2(m_TexCoords[tIndex].u, m_TexCoords[tIndex].v);
-		storage->normal = DirectX::XMFLOAT3(m_Normals[nIndex].x, m_Normals[nIndex].y, m_Normals[nIndex].z);
-
-		vIndex = m_TraingleFaces[i].vIndex2 - 1;
-		tIndex = m_TraingleFaces[i].tIndex2 - 1;
-		nIndex = m_TraingleFaces[i].nIndex2 - 1;
-		storage->position = DirectX::XMFLOAT3(m_Positions[vIndex].x, m_Positions[vIndex].y, m_Positions[vIndex].z);
-		storage->texture = DirectX::XMFLOAT2(m_TexCoords[tIndex].u, m_TexCoords[tIndex].v);
-		storage->normal = DirectX::XMFLOAT3(m_Normals[nIndex].x, m_Normals[nIndex].y, m_Normals[nIndex].z);
-
-		vIndex = m_TraingleFaces[i].vIndex3 - 1;
-		tIndex = m_TraingleFaces[i].tIndex3 - 1;
-		nIndex = m_TraingleFaces[i].nIndex3 - 1;
-		storage->position = DirectX::XMFLOAT3(m_Positions[vIndex].x, m_Positions[vIndex].y, m_Positions[vIndex].z);
-		storage->texture = DirectX::XMFLOAT2(m_TexCoords[tIndex].u, m_TexCoords[tIndex].v);
-		storage->normal = DirectX::XMFLOAT3(m_Normals[nIndex].x, m_Normals[nIndex].y, m_Normals[nIndex].z);
+		for (int j = 0; j < 3; ++j)
+		{
+			vIndex = m_TraingleFaces[i].vIndex[j] - 1;
+			tIndex = m_TraingleFaces[i].tIndex[j] - 1;
+			nIndex = m_TraingleFaces[i].nIndex[j] - 1;
+			storage[i * 3 + j].position = DirectX::XMFLOAT3(m_Positions[vIndex].x, m_Positions[vIndex].y, m_Positions[vIndex].z);
+			storage[i * 3 + j].texture = DirectX::XMFLOAT2(m_TexCoords[tIndex].u, m_TexCoords[tIndex].v);
+			storage[i * 3 + j].normal = DirectX::XMFLOAT3(m_Normals[nIndex].x, m_Normals[nIndex].y, m_Normals[nIndex].z);
+		}
 	}
 
 	return S_OK;
@@ -421,48 +411,48 @@ HRESULT ModelLoaderClass::CopyModelDataInPolygon(VertexType* const& storage)
 	for (int i = 0; i < m_FaceIndex; i++)
 	{
 		// 1, 2, 3번 vertex 데이터 //
-		vIndex = m_PolygonFaces[i].vIndex1 - 1;
-		tIndex = m_PolygonFaces[i].tIndex1 - 1;
-		nIndex = m_PolygonFaces[i].nIndex1 - 1;
-		storage->position = DirectX::XMFLOAT3(m_Positions[vIndex].x, m_Positions[vIndex].y, m_Positions[vIndex].z);
-		storage->texture = DirectX::XMFLOAT2(m_TexCoords[tIndex].u, m_TexCoords[tIndex].v);
-		storage->normal = DirectX::XMFLOAT3(m_Normals[nIndex].x, m_Normals[nIndex].y, m_Normals[nIndex].z);
+		vIndex = m_PolygonFaces[i].vIndex[0] - 1;
+		tIndex = m_PolygonFaces[i].tIndex[0] - 1;
+		nIndex = m_PolygonFaces[i].nIndex[0] - 1;
+		storage[i * 6].position = DirectX::XMFLOAT3(m_Positions[vIndex].x, m_Positions[vIndex].y, m_Positions[vIndex].z);
+		storage[i * 6].texture = DirectX::XMFLOAT2(m_TexCoords[tIndex].u, m_TexCoords[tIndex].v);
+		storage[i * 6].normal = DirectX::XMFLOAT3(m_Normals[nIndex].x, m_Normals[nIndex].y, m_Normals[nIndex].z);
 
-		vIndex = m_PolygonFaces[i].vIndex2 - 1;
-		tIndex = m_PolygonFaces[i].tIndex2 - 1;
-		nIndex = m_PolygonFaces[i].nIndex2 - 1;
-		storage->position = DirectX::XMFLOAT3(m_Positions[vIndex].x, m_Positions[vIndex].y, m_Positions[vIndex].z);
-		storage->texture = DirectX::XMFLOAT2(m_TexCoords[tIndex].u, m_TexCoords[tIndex].v);
-		storage->normal = DirectX::XMFLOAT3(m_Normals[nIndex].x, m_Normals[nIndex].y, m_Normals[nIndex].z);
+		vIndex = m_PolygonFaces[i].vIndex[1] - 1;
+		tIndex = m_PolygonFaces[i].tIndex[1] - 1;
+		nIndex = m_PolygonFaces[i].nIndex[1] - 1;
+		storage[i * 6 + 1].position = DirectX::XMFLOAT3(m_Positions[vIndex].x, m_Positions[vIndex].y, m_Positions[vIndex].z);
+		storage[i * 6 + 1].texture = DirectX::XMFLOAT2(m_TexCoords[tIndex].u, m_TexCoords[tIndex].v);
+		storage[i * 6 + 1].normal = DirectX::XMFLOAT3(m_Normals[nIndex].x, m_Normals[nIndex].y, m_Normals[nIndex].z);
 
-		vIndex = m_PolygonFaces[i].vIndex3 - 1;
-		tIndex = m_PolygonFaces[i].tIndex3 - 1;
-		nIndex = m_PolygonFaces[i].nIndex3 - 1;
-		storage->position = DirectX::XMFLOAT3(m_Positions[vIndex].x, m_Positions[vIndex].y, m_Positions[vIndex].z);
-		storage->texture = DirectX::XMFLOAT2(m_TexCoords[tIndex].u, m_TexCoords[tIndex].v);
-		storage->normal = DirectX::XMFLOAT3(m_Normals[nIndex].x, m_Normals[nIndex].y, m_Normals[nIndex].z);
+		vIndex = m_PolygonFaces[i].vIndex[2] - 1;
+		tIndex = m_PolygonFaces[i].tIndex[2] - 1;
+		nIndex = m_PolygonFaces[i].nIndex[2] - 1;
+		storage[i * 6 + 2].position = DirectX::XMFLOAT3(m_Positions[vIndex].x, m_Positions[vIndex].y, m_Positions[vIndex].z);
+		storage[i * 6 + 2].texture = DirectX::XMFLOAT2(m_TexCoords[tIndex].u, m_TexCoords[tIndex].v);
+		storage[i * 6 + 2].normal = DirectX::XMFLOAT3(m_Normals[nIndex].x, m_Normals[nIndex].y, m_Normals[nIndex].z);
 
 		// 1, 3, 4번 vertex 데이터 //
-		vIndex = m_PolygonFaces[i].vIndex1 - 1;
-		tIndex = m_PolygonFaces[i].tIndex1 - 1;
-		nIndex = m_PolygonFaces[i].nIndex1 - 1;
-		storage->position = DirectX::XMFLOAT3(m_Positions[vIndex].x, m_Positions[vIndex].y, m_Positions[vIndex].z);
-		storage->texture = DirectX::XMFLOAT2(m_TexCoords[tIndex].u, m_TexCoords[tIndex].v);
-		storage->normal = DirectX::XMFLOAT3(m_Normals[nIndex].x, m_Normals[nIndex].y, m_Normals[nIndex].z);
+		vIndex = m_PolygonFaces[i].vIndex[0] - 1;
+		tIndex = m_PolygonFaces[i].tIndex[0] - 1;
+		nIndex = m_PolygonFaces[i].nIndex[0] - 1;
+		storage[i * 6 + 3].position = DirectX::XMFLOAT3(m_Positions[vIndex].x, m_Positions[vIndex].y, m_Positions[vIndex].z);
+		storage[i * 6 + 3].texture = DirectX::XMFLOAT2(m_TexCoords[tIndex].u, m_TexCoords[tIndex].v);
+		storage[i * 6 + 3].normal = DirectX::XMFLOAT3(m_Normals[nIndex].x, m_Normals[nIndex].y, m_Normals[nIndex].z);
 
-		vIndex = m_PolygonFaces[i].vIndex3 - 1;
-		tIndex = m_PolygonFaces[i].tIndex3 - 1;
-		nIndex = m_PolygonFaces[i].nIndex3 - 1;
-		storage->position = DirectX::XMFLOAT3(m_Positions[vIndex].x, m_Positions[vIndex].y, m_Positions[vIndex].z);
-		storage->texture = DirectX::XMFLOAT2(m_TexCoords[tIndex].u, m_TexCoords[tIndex].v);
-		storage->normal = DirectX::XMFLOAT3(m_Normals[nIndex].x, m_Normals[nIndex].y, m_Normals[nIndex].z);
+		vIndex = m_PolygonFaces[i].vIndex[2] - 1;
+		tIndex = m_PolygonFaces[i].tIndex[2] - 1;
+		nIndex = m_PolygonFaces[i].nIndex[2] - 1;
+		storage[i * 6 + 4].position = DirectX::XMFLOAT3(m_Positions[vIndex].x, m_Positions[vIndex].y, m_Positions[vIndex].z);
+		storage[i * 6 + 4].texture = DirectX::XMFLOAT2(m_TexCoords[tIndex].u, m_TexCoords[tIndex].v);
+		storage[i * 6 + 4].normal = DirectX::XMFLOAT3(m_Normals[nIndex].x, m_Normals[nIndex].y, m_Normals[nIndex].z);
 
-		vIndex = m_PolygonFaces[i].vIndex4 - 1;
-		tIndex = m_PolygonFaces[i].tIndex4 - 1;
-		nIndex = m_PolygonFaces[i].nIndex4 - 1;
-		storage->position = DirectX::XMFLOAT3(m_Positions[vIndex].x, m_Positions[vIndex].y, m_Positions[vIndex].z);
-		storage->texture = DirectX::XMFLOAT2(m_TexCoords[tIndex].u, m_TexCoords[tIndex].v);
-		storage->normal = DirectX::XMFLOAT3(m_Normals[nIndex].x, m_Normals[nIndex].y, m_Normals[nIndex].z);
+		vIndex = m_PolygonFaces[i].vIndex[3] - 1;
+		tIndex = m_PolygonFaces[i].tIndex[3] - 1;
+		nIndex = m_PolygonFaces[i].nIndex[3] - 1;
+		storage[i * 6 + 5].position = DirectX::XMFLOAT3(m_Positions[vIndex].x, m_Positions[vIndex].y, m_Positions[vIndex].z);
+		storage[i * 6 + 5].texture = DirectX::XMFLOAT2(m_TexCoords[tIndex].u, m_TexCoords[tIndex].v);
+		storage[i * 6 + 5].normal = DirectX::XMFLOAT3(m_Normals[nIndex].x, m_Normals[nIndex].y, m_Normals[nIndex].z);
 	}
 
 	return S_OK;

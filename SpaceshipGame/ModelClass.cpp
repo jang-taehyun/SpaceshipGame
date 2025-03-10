@@ -79,8 +79,15 @@ HRESULT ModelClass::LoadModel(const tstring& FileName)
 
 	m_VertexCount = m_Loader->GetPositionCount();
 	m_IndexCount = m_Loader->GetIndexCount();
-	m_Vertices = new VertexType[m_Loader->GetFaceIndex()];
+
+	m_Vertices = new VertexType[m_VertexCount];
+	m_Indices = new unsigned long[m_IndexCount];
+
 	if (!m_Vertices)
+	{
+		return E_FAIL;
+	}
+	if (!m_Indices)
 	{
 		return E_FAIL;
 	}
@@ -97,12 +104,6 @@ HRESULT ModelClass::InitializeBuffers(ID3D11Device* const& Device)
 {
 	// 정점 데이터 설정 //
 	// vertex의 index 데이터 설정
-	unsigned long* m_Indices = new unsigned long[m_IndexCount];
-	if (!m_Indices)
-	{
-		return E_FAIL;
-	}
-
 	for (int i = 0; i < m_VertexCount; ++i)
 	{
 		m_Indices[i] = i;

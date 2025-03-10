@@ -18,12 +18,12 @@ HRESULT TextureClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContex
 	}
 
 	// 파일의 확장자 추출
-	if (FileName.find('.') == std::string::npos)
+	if (FileName.rfind('.') == std::string::npos)
 	{
 		return E_FAIL;
 	}
 
-	DotIdx = FileName.find('.');
+	DotIdx = FileName.rfind('.');
 	Extension = FileName.substr(DotIdx + (size_t)1);
 
 	// 파일의 확장자에 따라 이미지 로드 함수를 호출해 메모리에 이미지 데이터 로드
@@ -63,12 +63,12 @@ HRESULT TextureClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContex
 		}
 
 		// 파일의 확장자 추출
-		if (FileNames[i].find('.') == std::string::npos)
+		if (FileNames[i].rfind('.') == std::string::npos)
 		{
 			return E_FAIL;
 		}
 
-		DotIdx = FileNames[i].find('.');
+		DotIdx = FileNames[i].rfind('.');
 		Extension = FileNames[i].substr(DotIdx + (size_t)1);
 
 		// 파일의 확장자에 따라 이미지 로드 함수를 호출해 메모리에 이미지 데이터 로드
@@ -139,7 +139,9 @@ HRESULT TextureClass::LoadTarga(const tstring& FileName)
 {
 	// targa 파일을 binary 모드로 열기 //
 	FILE* FilePtr = nullptr;
-	if (fopen_s(&FilePtr, (char*)FileName.c_str(), "rb"))
+	std::string convert;
+	convert.assign(FileName.begin(), FileName.end());
+	if (fopen_s(&FilePtr, convert.c_str(), "rb"))
 	{
 		return E_FAIL;
 	}

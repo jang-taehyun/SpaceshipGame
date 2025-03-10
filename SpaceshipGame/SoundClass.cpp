@@ -109,9 +109,11 @@ void SoundClass::ShutdownDirectSound()
 HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** const& SecondaryBuffer)
 {
 	FILE* FilePtr = nullptr;
+	std::string convert;
 
 	// wav ÆÄÀÏ open //
-	int error = fopen_s(&FilePtr, (char*)FileName.c_str(), "rb");
+	convert.assign(FileName.begin(), FileName.end());
+	int error = fopen_s(&FilePtr, convert.c_str(), "rb");
 	if (error)
 	{
 		return E_FAIL;

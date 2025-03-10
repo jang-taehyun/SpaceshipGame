@@ -158,8 +158,6 @@ void SystemClass::Run()
 
 		if (m_Input->IsEscapePressed())
 			break;
-
-		MessageBox(m_hwnd, _T("1"), _T("1"), MB_OK);
 	}
 }
 

@@ -49,10 +49,12 @@ HRESULT ShaderClass::Render(ID3D11DeviceContext* const& DeviceContext, const int
 HRESULT ShaderClass::InitializeShader(ID3D11Device* const& Device, const HWND& hwnd, const ShaderFileInfo& info)
 {
 	ID3D10Blob* ErrorMessage = nullptr;
+	std::string convert;
 
 	// vertex shader code 컴파일 //
 	ID3D10Blob* VertexShaderBuffer = nullptr;
-	if (FAILED(D3DCompileFromFile(info.vsFileName.c_str(), NULL, NULL, (char*)info.vsEntryPoint.c_str(), "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &VertexShaderBuffer, &ErrorMessage)))
+	convert.assign(info.vsEntryPoint.begin(), info.vsEntryPoint.end());
+	if (FAILED(D3DCompileFromFile(info.vsFileName.c_str(), NULL, NULL, convert.c_str(), "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &VertexShaderBuffer, &ErrorMessage)))
 	{
 		if (ErrorMessage)
 		{
@@ -68,7 +70,8 @@ HRESULT ShaderClass::InitializeShader(ID3D11Device* const& Device, const HWND& h
 
 	// pixel shader code 컴파일 //
 	ID3D10Blob* PixelShaderBuffer = nullptr;
-	if (FAILED(D3DCompileFromFile(info.psFileName.c_str(), NULL, NULL, (char*)info.psEntryPoint.c_str(), "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &PixelShaderBuffer, &ErrorMessage)))
+	convert.assign(info.psEntryPoint.begin(), info.psEntryPoint.end());
+	if (FAILED(D3DCompileFromFile(info.psFileName.c_str(), NULL, NULL, convert.c_str(), "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &PixelShaderBuffer, &ErrorMessage)))
 	{
 		if (ErrorMessage)
 		{

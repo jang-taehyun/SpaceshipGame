@@ -142,7 +142,7 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 		return E_FAIL;
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void GraphicsClass::Shutdown()
