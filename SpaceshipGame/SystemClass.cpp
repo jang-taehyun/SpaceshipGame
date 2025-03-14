@@ -194,7 +194,7 @@ HRESULT SystemClass::Frame()
 	// camera의 회전값을 갱신하여 실제 카메리 위치 반영 //
 	rotationY = m_Position->GetRotation();
 
-	return m_Graphics->Frame(rotationY, m_hwnd);
+	return m_Graphics->Frame(rotationY);
 }
 
 void SystemClass::InitializeWindows(const int& ScreenWidth, const int& ScreenHeight)

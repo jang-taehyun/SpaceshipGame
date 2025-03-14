@@ -11,13 +11,10 @@ private:
 
 public:
 	// singleton 객체 호출 함수
-	inline static D3DClass* GetD3DClassInst(const HWND& hwnd)
+	inline static D3DClass* GetD3DClassInst()
 	{
 		if (!inst)
-		{
 			inst = new D3DClass;
-			MessageBox(hwnd, _T("D3D 객체 할당 성공"), _T("success"), MB_OK);
-		}
 
 		return inst;
 	}

@@ -27,10 +27,10 @@ public:
 
 	HRESULT Initialize(const int& ScreenWidth, const int& ScreenHeight, const HWND& hwnd);
 	void Shutdown();
-	HRESULT Frame(float rotationY, const HWND& hwnd);
+	HRESULT Frame(float rotationY);
 
 private:
-	HRESULT Render(const HWND& hwnd);
+	HRESULT Render();
 
 private:
 	CameraClass* m_Camera = nullptr;
