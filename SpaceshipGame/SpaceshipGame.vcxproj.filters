@@ -122,6 +122,12 @@
     <Filter Include="Model\ModelLoader">
       <UniqueIdentifier>{a5c131e5-8b8c-46f0-873b-3408bbc4697b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Default\IMGUI">
+      <UniqueIdentifier>{4a3437eb-cf9d-42ee-b819-8249105bb63f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debugging\IMGUIClass">
+      <UniqueIdentifier>{9769faa4-fe27-4ad5-9210-4d7a9cb01ff2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemClass.h">
@@ -223,6 +229,36 @@
     <ClInclude Include="ModelLoaderClass.h">
       <Filter>Model\ModelLoader</Filter>
     </ClInclude>
+    <ClInclude Include="IMGUI\imconfig.h">
+      <Filter>Default\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="IMGUI\imgui.h">
+      <Filter>Default\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="IMGUI\imgui_impl_dx11.h">
+      <Filter>Default\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="IMGUI\imgui_impl_win32.h">
+      <Filter>Default\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="IMGUI\imgui_internal.h">
+      <Filter>Default\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="IMGUI\imstb_rectpack.h">
+      <Filter>Default\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="IMGUI\imstb_textedit.h">
+      <Filter>Default\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="IMGUI\imstb_truetype.h">
+      <Filter>Default\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="IMGUI\pch.h">
+      <Filter>Default\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="IMGUIClass.h">
+      <Filter>Debugging\IMGUIClass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -311,6 +347,27 @@
     </ClCompile>
     <ClCompile Include="ModelLoaderClass.cpp">
       <Filter>Model\ModelLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="IMGUI\imgui.cpp">
+      <Filter>Default\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="IMGUI\imgui_draw.cpp">
+      <Filter>Default\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="IMGUI\imgui_impl_dx11.cpp">
+      <Filter>Default\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="IMGUI\imgui_impl_win32.cpp">
+      <Filter>Default\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="IMGUI\imgui_tables.cpp">
+      <Filter>Default\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="IMGUI\imgui_widgets.cpp">
+      <Filter>Default\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="IMGUIClass.cpp">
+      <Filter>Debugging\IMGUIClass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

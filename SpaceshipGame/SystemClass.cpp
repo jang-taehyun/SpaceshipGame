@@ -253,8 +253,8 @@ void SystemClass::InitializeWindows(const int& ScreenWidth, const int& ScreenHei
 		// 윈도우 모드 //
 		// 모니터 화면 해상도를 800*600으로 지정
 		// 윈도우의 위치 : 정가운데
-		width = 800;
-		height = 600;
+		width = WIDTH;
+		height = HEIGHT;
 
 		PosX = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
 		PosY = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
@@ -289,8 +289,14 @@ void SystemClass::ShutdownWindows()
 	ApplicationHandle = NULL;
 }
 
+// IMGUI WndProcHandler
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
+
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, umessage, wparam, lparam))
+		return true;
+
 	switch (umessage)
 	{
 	case WM_DESTROY:

@@ -11,6 +11,7 @@
 #include "TextClass.h"
 #include "FrustumClass.h"
 #include "ColorClass.h"
+#include "IMGUIClass.h"
 #include "GraphicsClass.h"
 
 GraphicsClass::GraphicsClass() {}
@@ -142,11 +143,29 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 		return E_FAIL;
 	}
 
+	// IMGUI 세팅 //
+	m_IMGUI = new IMGUIClass;
+	if (!m_IMGUI)
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_IMGUI->Initialize(hwnd, D3DClass::GetD3DClassInst(hwnd)->GetDevice(), D3DClass::GetD3DClassInst(hwnd)->GetDeviceContext())))
+	{
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
 void GraphicsClass::Shutdown()
 {
+	if (m_IMGUI)
+	{
+		m_IMGUI->Shutdown();
+		delete m_IMGUI;
+		m_IMGUI = nullptr;
+	}
+
 	if (m_Frustum)
 	{
 		delete m_Frustum;
@@ -286,6 +305,12 @@ HRESULT GraphicsClass::Render(const HWND& hwnd)
 	// depth buffer 활성화
 	D3DClass::GetD3DClassInst(hwnd)->TurnDepthBufferOn();
 	
+
+	// IMGUI 렌더링
+	if (FAILED(m_IMGUI->Render()))
+	{
+		return E_FAIL;
+	}
 
 	// back buffer에 있는 내용을 화면에 출력 //
 	D3DClass::GetD3DClassInst(hwnd)->EndScene();

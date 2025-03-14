@@ -16,6 +16,7 @@ class LightMapShaderClass;
 class AlphaMapShaderClass;
 class TextClass;
 class FrustumClass;
+class IMGUIClass;
 
 class GraphicsClass
 {
@@ -46,5 +47,6 @@ private:
 	
 	TextClass* m_Text = nullptr;
 	FrustumClass* m_Frustum = nullptr;
+	IMGUIClass* m_IMGUI = nullptr;
 };
 
