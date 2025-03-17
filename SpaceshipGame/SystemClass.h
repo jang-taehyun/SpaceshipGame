@@ -10,10 +10,19 @@ class PositionClass;
 
 class SystemClass
 {
-public:
+private:
 	SystemClass();
 	SystemClass(const SystemClass& other);
 	~SystemClass();
+
+public:
+	static inline SystemClass* const& GetSystemInst()
+	{
+		if (!inst)
+			inst = new SystemClass;
+
+		return inst;
+	}
 
 	HRESULT Initialize();
 	void Shutdown();
@@ -21,12 +30,18 @@ public:
 
 	LRESULT CALLBACK MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
 
+	inline const FPSClass* const& GetFPS() const { return m_FPS; }
+	inline const CPUClass* const& GetCPU() const { return m_CPU; }
+	inline const TimerClass* const& GetTimer() const { return m_Timer; }
+
 private:
 	HRESULT Frame();
 	void InitializeWindows(const int& ScreenWidth, const int& ScreenHeight);
 	void ShutdownWindows();
 
 private:
+	static SystemClass* inst;
+
 	LPCWSTR m_applicationName = _T("");
 	HINSTANCE m_hinstance = 0;
 	HWND m_hwnd = 0;

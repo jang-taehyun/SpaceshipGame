@@ -11,7 +11,7 @@ private:
 
 public:
 	// singleton 객체 호출 함수
-	inline static D3DClass* GetD3DClassInst()
+	inline static D3DClass* const& GetD3DClassInst()
 	{
 		if (!inst)
 			inst = new D3DClass;

@@ -5,6 +5,8 @@
 #include "IMGUI/imgui_impl_dx11.h"
 #include "IMGUI/imgui_impl_win32.h"
 
+struct ImVec2;
+
 class IMGUIClass
 {
 public:
@@ -15,6 +17,9 @@ public:
 	HRESULT Initialize(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeivceContext);
 	void Shutdown();
 	HRESULT Render();
+
+private:
+	HRESULT SetUI();
 
 private:
 	ImVec2 m_WindowsSize;

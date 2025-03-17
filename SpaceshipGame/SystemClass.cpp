@@ -8,6 +8,8 @@
 #include "PositionClass.h"
 #include "SystemClass.h"
 
+SystemClass* SystemClass::inst = nullptr;
+
 SystemClass::SystemClass() {}
 SystemClass::SystemClass(const SystemClass& other) {}
 SystemClass::~SystemClass() {}
@@ -130,6 +132,12 @@ void SystemClass::Shutdown()
 	}
 
 	ShutdownWindows();
+
+	if (inst)
+	{
+		delete inst;
+		inst = nullptr;
+	}
 }
 
 void SystemClass::Run()
@@ -295,7 +303,7 @@ extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT umessage, WPARAM w
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, umessage, wparam, lparam))
-		return true;
+		return S_OK;
 
 	switch (umessage)
 	{
