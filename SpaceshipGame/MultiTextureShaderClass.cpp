@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "DDSTextureLoader.h"
 #include "MultiTextureShaderClass.h"
 
 MultiTextureShaderClass::MultiTextureShaderClass() {}

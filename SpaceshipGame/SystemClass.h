@@ -18,10 +18,9 @@ private:
 public:
 	static inline SystemClass* const& GetSystemInst()
 	{
-		if (!inst)
-			inst = new SystemClass;
+		static SystemClass inst;
 
-		return inst;
+		return &inst;
 	}
 
 	HRESULT Initialize();
@@ -40,8 +39,6 @@ private:
 	void ShutdownWindows();
 
 private:
-	static SystemClass* inst;
-
 	LPCWSTR m_applicationName = _T("");
 	HINSTANCE m_hinstance = 0;
 	HWND m_hwnd = 0;

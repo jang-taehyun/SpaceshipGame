@@ -1,5 +1,7 @@
 #pragma once
 
+#include "PositionClass.h"
+
 class CameraClass
 {
 public:
@@ -7,21 +9,22 @@ public:
 	CameraClass(const CameraClass& other);
 	~CameraClass();
 
+	HRESULT Initialize();
+
 	// Getter //
 
-	inline const DirectX::XMFLOAT3& GetPosition() const { return m_Position; }
-	inline const DirectX::XMFLOAT3& GetRotation() const { return m_Rotation; }
+	inline const DirectX::XMFLOAT4& GetPosition() const { return m_Position->GetPosition(); }
+	inline const DirectX::XMFLOAT4& GetRotation() const { return m_Position->GetRotation(); }
 	inline void GetViewMatrix(DirectX::XMMATRIX& ViewMatrix) const { ViewMatrix = m_ViewMatrix; }
 
 	// Setter //
 
-	inline void SetPosition(const float& x, const float& y, const float& z) { m_Position.x = x; m_Position.y = y; m_Position.z = z; }
-	inline void SetRotation(const float& x, const float& y, const float& z) { m_Rotation.x = x; m_Rotation.y = y; m_Rotation.z = z; }
+	inline void SetPosition(const float& x, const float& y, const float& z) { m_Position->SetPosition(x, y, z); }
+	inline void SetRotation(const float& x, const float& y, const float& z) { m_Position->SetRotation(x, y, z); }
 
 	void Render();
 private:
-	DirectX::XMFLOAT3 m_Position = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
-	DirectX::XMFLOAT3 m_Rotation = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
+	PositionClass* m_Position = nullptr;
 	DirectX::XMMATRIX m_ViewMatrix = DirectX::XMMATRIX();
 };
 

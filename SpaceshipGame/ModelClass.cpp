@@ -1,5 +1,4 @@
 #include "pch.h"
-#include <fstream>
 #include "ModelLoaderClass.h"
 #include "ModelClass.h"
 
@@ -9,6 +8,17 @@ ModelClass::~ModelClass() {}
 
 HRESULT ModelClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& TextureFileName, const tstring& ModelFileName)
 {
+	DirectX::XMFLOAT4 position = { 0.f, 0.f, 0.f, 1.f };
+	DirectX::XMFLOAT4 rotation = { 0.f, 0.f, 0.f, 1.f };
+	DirectX::XMFLOAT4 scaling = { 1.f, 1.f, 1.f, 1.f };
+
+	m_Position = new PositionClass;
+	if (!m_Position)
+	{
+		return E_FAIL;
+	}
+	m_Position->Initialize(position, rotation, scaling);
+
 	m_Loader = new ModelLoaderClass;
 	if (!m_Loader)
 	{
@@ -21,6 +31,7 @@ HRESULT ModelClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext*
 	}
 
 	m_Loader->ReleaseData();
+	delete m_Loader;
 	m_Loader = nullptr;
 
 	if (FAILED(InitializeBuffers(Device)))
@@ -33,6 +44,17 @@ HRESULT ModelClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext*
 
 HRESULT ModelClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<tstring>& TextureFileNames, const tstring& ModelFileName)
 {
+	DirectX::XMFLOAT4 position = { 0.f, 0.f, 0.f, 1.f };
+	DirectX::XMFLOAT4 rotation = { 1.f, 0.f, 0.f, 1.f };
+	DirectX::XMFLOAT4 scaling = { 0.05f, 0.05f, 0.05f, 1.f };
+
+	m_Position = new PositionClass;
+	if (!m_Position)
+	{
+		return E_FAIL;
+	}
+	m_Position->Initialize(position, rotation, scaling);
+
 	m_Loader = new ModelLoaderClass;
 	if (!m_Loader)
 	{
@@ -45,6 +67,7 @@ HRESULT ModelClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext*
 	}
 
 	m_Loader->ReleaseData();
+	delete m_Loader;
 	m_Loader = nullptr;
 
 	if (FAILED(InitializeBuffers(Device)))
@@ -60,6 +83,7 @@ void ModelClass::Shutdown()
 	ShutdownBuffers();
 	ReleaseTexture();
 	ReleaseModel();
+	ShutdownPosition();
 }
 
 void ModelClass::Render(ID3D11DeviceContext* const& DeviceContext)
@@ -239,6 +263,15 @@ void ModelClass::ReleaseModel()
 		m_Loader->ReleaseData();
 		delete[] m_Loader;
 		m_Loader = nullptr;
+	}
+}
+
+void ModelClass::ShutdownPosition()
+{
+	if (m_Position)
+	{
+		delete m_Position;
+		m_Position = nullptr;
 	}
 }
 

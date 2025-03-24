@@ -1,5 +1,4 @@
 #include "pch.h"
-#include <fstream>
 #include "ModelLoaderClass.h"
 
 ModelLoaderClass::ModelLoaderClass() {}

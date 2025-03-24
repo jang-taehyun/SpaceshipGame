@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TextureClass.h"
+#include "PositionClass.h"
 
 class ModelLoaderClass;
 
@@ -20,6 +21,8 @@ public:
 	inline const ID3D11ShaderResourceView* const& GetTexture(const int idx = 0) { return m_Texture->GetTexture(idx); }
 	inline const std::vector< ID3D11ShaderResourceView*>& GetTextureArray() { return m_Texture->GetTextures(); }
 
+	inline const DirectX::XMMATRIX& GetAffineMatrix() const { return m_Position->GetAffine(); }
+
 private:
 	HRESULT LoadModel(const tstring& FileName);
 	HRESULT InitializeBuffers(ID3D11Device* const& Device);
@@ -32,6 +35,7 @@ private:
 	void ShutdownBuffers();
 	void ReleaseTexture();
 	void ReleaseModel();
+	void ShutdownPosition();
 
 private:
 	ID3D11Buffer* m_VertexBufer = nullptr;
@@ -46,4 +50,6 @@ private:
 	ModelLoaderClass* m_Loader = nullptr;
 	
 	TextureClass* m_Texture = nullptr;
+
+	PositionClass* m_Position = nullptr;
 };

@@ -193,9 +193,6 @@
     <ClInclude Include="CameraClass.h">
       <Filter>CameraClass</Filter>
     </ClInclude>
-    <ClInclude Include="DDSTextureLoader.h">
-      <Filter>Default\DDSTextureLoader</Filter>
-    </ClInclude>
     <ClInclude Include="FrustumClass.h">
       <Filter>FrustumClass</Filter>
     </ClInclude>
@@ -259,6 +256,12 @@
     <ClInclude Include="IMGUIClass.h">
       <Filter>Debugging\IMGUIClass</Filter>
     </ClInclude>
+    <ClInclude Include="DDSTextureLoader\DDSTextureLoader.h">
+      <Filter>Default\DDSTextureLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSTextureLoader\pch.h">
+      <Filter>Default\DDSTextureLoader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -315,9 +318,6 @@
     <ClCompile Include="CameraClass.cpp">
       <Filter>CameraClass</Filter>
     </ClCompile>
-    <ClCompile Include="DDSTextureLoader.cpp">
-      <Filter>Default\DDSTextureLoader</Filter>
-    </ClCompile>
     <ClCompile Include="FrustumClass.cpp">
       <Filter>FrustumClass</Filter>
     </ClCompile>
@@ -368,6 +368,9 @@
     </ClCompile>
     <ClCompile Include="IMGUIClass.cpp">
       <Filter>Debugging\IMGUIClass</Filter>
+    </ClCompile>
+    <ClCompile Include="DDSTextureLoader\DDSTextureLoader.cpp">
+      <Filter>Default\DDSTextureLoader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

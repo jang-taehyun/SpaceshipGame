@@ -1,4 +1,5 @@
 #include "pch.h"
+#include <fstream>
 #include "SoundClass.h"
 
 SoundClass::SoundClass() {}
@@ -108,13 +109,11 @@ void SoundClass::ShutdownDirectSound()
 
 HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** const& SecondaryBuffer)
 {
-	FILE* FilePtr = nullptr;
-	std::string convert;
+	std::ifstream FileIn;
 
 	// wav 파일 open //
-	convert.assign(FileName.begin(), FileName.end());
-	int error = fopen_s(&FilePtr, convert.c_str(), "rb");
-	if (error)
+	FileIn.open(FileName, std::ios::binary);
+	if (FileIn.fail())
 	{
 		return E_FAIL;
 	}
@@ -124,8 +123,9 @@ HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** 
 	memset(&WaveFileHeader, 0, sizeof(WaveFileHeader));
 
 	// wav 파일의 header를 read
-	size_t count = fread(&WaveFileHeader, sizeof(WaveFileHeader), 1, FilePtr);
-	if (1 != count)
+	FileIn.read((char*)&WaveFileHeader, sizeof(WaveFileHeader));
+	size_t count = FileIn.gcount();
+	if (sizeof(WaveFileHeader) != count)
 	{
 		return E_FAIL;
 	}
@@ -227,9 +227,6 @@ HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** 
 
 
 	// secondary buffer에 wav 파일의 데이터 복사 //
-	// wav 파일 데이터를 읽을 시작점 찾기
-	fseek(FilePtr, sizeof(WaveHeaderType), SEEK_SET);
-
 	// wav 파일 데이터를 저장할 임시 메모리 생성
 	unsigned char* WaveData = new unsigned char[WaveFileHeader.DataSize];
 	if (!WaveData)
@@ -238,7 +235,8 @@ HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** 
 	}
 
 	// wav 파일 데이터를 읽어 임시 메모리에 저장
-	count = fread(WaveData, 1, WaveFileHeader.DataSize, FilePtr);
+	FileIn.read((char*)WaveData, WaveFileHeader.DataSize);
+	count = FileIn.gcount();
 	if (WaveFileHeader.DataSize != count)
 	{
 		return E_FAIL;
@@ -263,11 +261,7 @@ HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** 
 
 
 	// wav 파일 닫기 //
-	error = fclose(FilePtr);
-	if (error)
-	{
-		return E_FAIL;
-	}
+	FileIn.close();
 
 	// 임시 메모리 해제 //
 	delete[] WaveData;

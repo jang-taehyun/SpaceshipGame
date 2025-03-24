@@ -272,7 +272,7 @@ HRESULT ShaderClass::SetShaderParameters(ID3D11DeviceContext* const& DeviceConte
 
 	// pixel shader에서 사용할 shader texture resource(Texture2D) 설정 //
 	// GPU 파이프라인에 텍스처 데이터를 바인드
-	DeviceContext->PSSetShaderResources(0, Textures.size(), Textures.data());
+	DeviceContext->PSSetShaderResources(0, (UINT)Textures.size(), Textures.data());
 
 	return S_OK;
 }

@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "DDSTextureLoader.h"
+#include "DDSTextureLoader/DDSTextureLoader.h"
 #include "TextureClass.h"
 
 TextureClass::TextureClass() {}

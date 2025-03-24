@@ -1,5 +1,7 @@
 #pragma once
 
+#include <fstream>
+
 class ModelLoaderClass
 {
 private:

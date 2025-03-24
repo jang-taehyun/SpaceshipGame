@@ -43,6 +43,6 @@ private:
 	float red = 0.f;
 	float green = 0.f;
 	float blue = 0.f;
-	float alpha = 1.f;
+	float alpha = 0.5f;
 };
 

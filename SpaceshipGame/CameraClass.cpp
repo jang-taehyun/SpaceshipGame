@@ -5,9 +5,25 @@ CameraClass::CameraClass() {}
 CameraClass::CameraClass(const CameraClass& other) {}
 CameraClass::~CameraClass() {}
 
+HRESULT CameraClass::Initialize()
+{
+	DirectX::XMFLOAT4 position = { 10.f, 1.f, -0.5f, 1.f };
+	DirectX::XMFLOAT4 rotation = { 0.f, -90.f, 0.f, 1.f };
+	DirectX::XMFLOAT4 scaling = { 1.f, 1.f, 1.f, 1.f };
+
+	m_Position = new PositionClass;
+	if (!m_Position)
+	{
+		return E_FAIL;
+	}
+	m_Position->Initialize(position, rotation, scaling);
+
+	return S_OK;
+}
+
 void CameraClass::Render()
 {
-	DirectX::XMFLOAT3 Up, Position, LookAt;
+	DirectX::XMFLOAT4 Up, Position, LookAt;
 	DirectX::XMVECTOR UpVector, PositionVector, LookAtVector;
 	float yaw, pitch, roll;
 	DirectX::XMMATRIX RotationMatrix;
@@ -21,14 +37,14 @@ void CameraClass::Render()
 	Up.z = 0.f;
 
 	// XMVECTOR 구조체에 저장
-	UpVector = DirectX::XMLoadFloat3(&Up);
+	UpVector = DirectX::XMLoadFloat4(&Up);
 
 	// position vector 설정(3D 월드에서 카메라의 위치 설정) //
 	// vector에 값 설정
-	Position = m_Position;
+	Position = m_Position->GetPosition();
 
 	// XMVECTOR 구조체에 저장
-	PositionVector = DirectX::XMLoadFloat3(&m_Position);
+	PositionVector = DirectX::XMLoadFloat4(&Position);
 
 	// lookat vector 설정(카메라가 바라보고 있는 방향 설정) //
 	// vector에 값 설정
@@ -37,18 +53,14 @@ void CameraClass::Render()
 	LookAt.z = 1.f;
 
 	// XMVECTOR 구조체에 저장
-	LookAtVector = DirectX::XMLoadFloat3(&LookAt);
+	LookAtVector = DirectX::XMLoadFloat4(&LookAt);
 
 	
 	// 회전 행렬 생성 //
 	// yaw, pitch, roll의 회전값을 라디안 단위로 설정 //
-	pitch = DirectX::XMConvertToRadians(m_Rotation.x);
-	yaw = DirectX::XMConvertToRadians(m_Rotation.y);
-	roll = DirectX::XMConvertToRadians(m_Rotation.z);
-
-	// pitch = m_Rotation.x * 0.0174532925f;
-	// yaw = m_Rotation.y * 0.0174532925f;
-	// roll = m_Rotation.z * 0.0174532925f;
+	pitch = DirectX::XMConvertToRadians(m_Position->GetRotation().x);
+	yaw = DirectX::XMConvertToRadians(m_Position->GetRotation().y);
+	roll = DirectX::XMConvertToRadians(m_Position->GetRotation().z);
 
 	// 회전 행렬 생성
 	RotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll);

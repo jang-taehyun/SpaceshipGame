@@ -2,9 +2,9 @@
 
 // FPS, CPU, Timer 관련 //
 #include "SystemClass.h"
-#include "TimerClass.h"
 #include "FPSClass.h"
 #include "CPUClass.h"
+#include "CameraClass.h"
 
 #include "IMGUIClass.h"
 
@@ -40,7 +40,6 @@ HRESULT IMGUIClass::Initialize(const HWND& hwnd, ID3D11Device* const& Device, ID
 		m_WindowsPosition[i] = ImVec2(cur.x, cur.y);
 		cur.y += (m_WindowsSize.y + 10.f);
 	}
-	
 
 	return S_OK;
 }
@@ -52,14 +51,14 @@ void IMGUIClass::Shutdown()
 	ImGui::DestroyContext();
 }
 
-HRESULT IMGUIClass::Render()
+HRESULT IMGUIClass::Render(const CameraClass* const& camera)
 {
 	// IMGUI 렌더링 준비 //
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	SetUI();
+	SetUI(camera);
 
 	// 렌더링
 	ImGui::Render();
@@ -68,24 +67,27 @@ HRESULT IMGUIClass::Render()
 	return S_OK;
 }
 
-HRESULT IMGUIClass::SetUI()
+HRESULT IMGUIClass::SetUI(const CameraClass* const& camera)
+{
+	SetFPSCPUUsage();
+	SetCameraInfo(camera);
+
+	return S_OK;
+}
+
+void IMGUIClass::SetFPSCPUUsage()
 {
 	ImVec2 pos, size;
 	bool IsPress = false;
 	std::string tmp;
-	
-	// 1번 창 //
+
+	// FPS, CPU 사용량 UI //
 	ImGui::SetNextWindowPos(m_WindowsPosition[0], ImGuiCond_Appearing);
-	ImGui::Begin(u8"FPS, CPU, Timer", NULL);
+	ImGui::Begin(u8"FPS, CPU", NULL);
 	ImGui::SetWindowSize(m_WindowsSize, ImGuiCond_Once);
 
 	pos = ImGui::GetWindowPos();
 	size = ImGui::GetWindowSize();
-
-	tmp = std::to_string(SystemClass::GetSystemInst()->GetTimer()->GetTime());
-	ImGui::Text(u8"Timer : ");
-	ImGui::SameLine(ImGui::GetTextLineHeight(), 110.f);
-	ImGui::Text(tmp.c_str());
 
 	tmp = std::to_string(SystemClass::GetSystemInst()->GetFPS()->GetFPS());
 	ImGui::Text(u8"FPS : ");
@@ -96,74 +98,43 @@ HRESULT IMGUIClass::SetUI()
 	ImGui::Text(u8"CPU : ", tmp);
 	ImGui::SameLine(ImGui::GetTextLineHeight(), 110.f);
 	ImGui::Text(tmp.c_str());
+	IsPress = ImGui::Button("test");
 
 	ImGui::End();
+}
 
+void IMGUIClass::SetCameraInfo(const CameraClass* const& camera)
+{
+	ImVec2 pos, size;
+	bool IsPress = false;
+	std::string tmp;
 
-	// 2번 창 //
+	// 카메라 위치, 회전 UI //
 	ImGui::SetNextWindowPos(m_WindowsPosition[1], ImGuiCond_Appearing);
-	ImGui::Begin(u8"테스트2");
+	ImGui::Begin(u8"카메라 위치, 회전값", NULL);
 	ImGui::SetWindowSize(m_WindowsSize, ImGuiCond_Once);
 
 	pos = ImGui::GetWindowPos();
 	size = ImGui::GetWindowSize();
 
-	tmp = std::to_string(pos.x);
-	ImGui::Text(u8"현재 X 좌표 : ");
-	ImGui::SameLine(ImGui::GetTextLineHeight(), 110.f);
+	ImGui::Text(u8"카메라 위치(x, y, z)");
+	tmp = std::to_string(camera->GetPosition().x);
+	ImGui::Text(tmp.c_str());
+	tmp = std::to_string(camera->GetPosition().y);
+	ImGui::Text(tmp.c_str());
+	tmp = std::to_string(camera->GetPosition().z);
 	ImGui::Text(tmp.c_str());
 
-	tmp = std::to_string(pos.y);
-	ImGui::Text(u8"현재 Y 좌표 : ");
-	ImGui::SameLine(ImGui::GetTextLineHeight(), 110.f);
+
+	ImGui::Text(u8"카메라 회전(x, y, z) : ");
+	tmp = std::to_string(camera->GetRotation().x);
+	ImGui::Text(tmp.c_str());
+	tmp = std::to_string(camera->GetRotation().y);
+	ImGui::Text(tmp.c_str());
+	tmp = std::to_string(camera->GetRotation().z);
 	ImGui::Text(tmp.c_str());
 
-	tmp = std::to_string(size.x);
-	ImGui::Text(u8"현재 Width 크기 : ", tmp);
-	ImGui::SameLine(ImGui::GetTextLineHeight(), 110.f);
-	ImGui::Text(tmp.c_str());
+	IsPress = ImGui::Button("test");
 
-	tmp = std::to_string(size.y);
-	ImGui::Text(u8"현재 Height 크기 : ", tmp);
-	ImGui::SameLine(ImGui::GetTextLineHeight(), 110.f);
-	ImGui::Text(tmp.c_str());
-
-	IsPress = ImGui::Button("test2");
 	ImGui::End();
-
-
-	// 3번 창 //
-	ImGui::SetNextWindowPos(m_WindowsPosition[2], ImGuiCond_Appearing);
-	ImGui::Begin(u8"테스트3");
-	ImGui::SetWindowSize(m_WindowsSize, ImGuiCond_Once);
-
-	pos = ImGui::GetWindowPos();
-	size = ImGui::GetWindowSize();
-
-	tmp = std::to_string(pos.x);
-	ImGui::Text(u8"현재 X 좌표 : ");
-	ImGui::SameLine(ImGui::GetTextLineHeight(), 110.f);
-	ImGui::Text(tmp.c_str());
-	
-	tmp = std::to_string(pos.y);
-	ImGui::Text(u8"현재 Y 좌표 : ");
-	ImGui::SameLine(ImGui::GetTextLineHeight(), 110.f);
-	ImGui::Text(tmp.c_str());
-
-	tmp = std::to_string(size.x);
-	ImGui::Text(u8"현재 Width 크기 : ", tmp);
-	ImGui::SameLine(ImGui::GetTextLineHeight(), 110.f);
-	ImGui::Text(tmp.c_str());
-
-	tmp = std::to_string(size.y);
-	ImGui::Text(u8"현재 Height 크기 : ", tmp);
-	ImGui::SameLine(ImGui::GetTextLineHeight(), 110.f);
-	ImGui::Text(tmp.c_str());
-
-	IsPress = ImGui::Button("test3");
-	ImGui::End();
-
-	
-
-	return S_OK;
 }

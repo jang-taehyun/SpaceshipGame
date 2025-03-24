@@ -5,7 +5,7 @@
 #include "IMGUI/imgui_impl_dx11.h"
 #include "IMGUI/imgui_impl_win32.h"
 
-struct ImVec2;
+class CameraClass;
 
 class IMGUIClass
 {
@@ -16,10 +16,12 @@ public:
 
 	HRESULT Initialize(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeivceContext);
 	void Shutdown();
-	HRESULT Render();
+	HRESULT Render(const CameraClass* const& camera);
 
 private:
-	HRESULT SetUI();
+	HRESULT SetUI(const CameraClass* const& camera);
+	void SetFPSCPUUsage();
+	void SetCameraInfo(const CameraClass* const& camera);
 
 private:
 	ImVec2 m_WindowsSize;

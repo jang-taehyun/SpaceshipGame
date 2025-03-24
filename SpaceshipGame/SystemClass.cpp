@@ -8,7 +8,7 @@
 #include "PositionClass.h"
 #include "SystemClass.h"
 
-SystemClass* SystemClass::inst = nullptr;
+// SystemClass* SystemClass::inst = nullptr;
 
 SystemClass::SystemClass() {}
 SystemClass::SystemClass(const SystemClass& other) {}
@@ -132,12 +132,6 @@ void SystemClass::Shutdown()
 	}
 
 	ShutdownWindows();
-
-	if (inst)
-	{
-		delete inst;
-		inst = nullptr;
-	}
 }
 
 void SystemClass::Run()
@@ -176,16 +170,12 @@ LRESULT SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM 
 
 HRESULT SystemClass::Frame()
 {
-	int MouseX, MouseY;
-
 	m_Timer->Frame();
 	m_FPS->Frame();
 	m_CPU->Frame();
 
 	if (FAILED(m_Input->Frame()))
 		return E_FAIL;
-
-	m_Input->GetMouseLocation(MouseX, MouseY);
 
 	float rotationY = 0.f;
 	bool KeyDown = false;
@@ -194,13 +184,13 @@ HRESULT SystemClass::Frame()
 	m_Position->SetFrameTime(m_Timer->GetTime());
 
 	KeyDown = m_Input->IsLeftArrowPressed();
-	m_Position->TurnLeft(KeyDown);
+	m_Position->ChangeRotation(RotationState::ROTATE_LEFT, KeyDown);
 
 	KeyDown = m_Input->IsRightArrowPressed();
-	m_Position->TurnRight(KeyDown);
+	m_Position->ChangeRotation(RotationState::ROTATE_RIGHT, KeyDown);
 
-	// camera의 회전값을 갱신하여 실제 카메리 위치 반영 //
-	rotationY = m_Position->GetRotation();
+	// camera의 회전값을 갱신하여 실제 카메라  반영 //
+	rotationY = m_Position->GetRotation().y;
 
 	return m_Graphics->Frame(rotationY);
 }

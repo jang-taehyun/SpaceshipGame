@@ -31,7 +31,10 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 	m_Camera = new CameraClass;
 	if (!m_Camera)
 		return E_FAIL;
-	m_Camera->SetPosition(0.f, 0.f, -0.00005f);
+	if (FAILED(m_Camera->Initialize()))
+	{
+		return E_FAIL;
+	}
 	m_Camera->Render();
 	DirectX::XMMATRIX BaseViewMatrix;
 	m_Camera->GetViewMatrix(BaseViewMatrix);
@@ -251,6 +254,7 @@ HRESULT GraphicsClass::Render()
 	// world, view, projection matrix 가져오기 //
 	DirectX::XMMATRIX WorldMatrix, ViewMatrix, ProjectionMatrix, OrthoMatrix;
 	D3DClass::GetD3DClassInst()->GetWorldMatrix(WorldMatrix);
+	WorldMatrix = m_Model->GetAffineMatrix();
 	m_Camera->GetViewMatrix(ViewMatrix);
 	D3DClass::GetD3DClassInst()->GetProjectionMatrix(ProjectionMatrix);
 	D3DClass::GetD3DClassInst()->GetOrthoMatrix(OrthoMatrix);
@@ -265,14 +269,6 @@ HRESULT GraphicsClass::Render()
 	{
 		return E_FAIL;
 	}
-	// if (FAILED(m_MultiTextureShader->Render(D3DClass::GetD3DClassInst(hwnd)->GetDeviceContext(), m_Model->GetIndexCount(), WorldMatrix, ViewMatrix, ProjectionMatrix, m_Model->GetTextureArray())))
-	// {
-	// 	return E_FAIL;
-	// }
-	// if (FAILED(m_AlphaMapShader->Render(D3DClass::GetD3DClassInst(hwnd)->GetDeviceContext(), m_Model->GetIndexCount(), WorldMatrix, ViewMatrix, ProjectionMatrix, m_Model->GetTextureArray())))
-	// {
-	// 	return E_FAIL;
-	// }
 
 	// 2D 렌더링 //
 	// depth buffer 비활성화
@@ -280,12 +276,6 @@ HRESULT GraphicsClass::Render()
 	
 	// alpha blend state 활성화
 	D3DClass::GetD3DClassInst()->TurnOnAlphaBlending();
-	
-	// 렌더링한 3D object의 개수 설정
-	// if (FAILED(m_Text->SetRenderCount(RenderCount, m_Direct3D->GetDeviceContext())))
-	// {
-	// 	return E_FAIL;
-	// }
 	
 	// text 렌더링
 	if (FAILED(m_Text->Render(D3DClass::GetD3DClassInst()->GetDeviceContext(), WorldMatrix, OrthoMatrix)))
@@ -301,7 +291,7 @@ HRESULT GraphicsClass::Render()
 	
 
 	// IMGUI 렌더링
-	if (FAILED(m_IMGUI->Render()))
+	if (FAILED(m_IMGUI->Render(m_Camera)))
 	{
 		return E_FAIL;
 	}

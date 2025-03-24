@@ -25,6 +25,18 @@ typedef struct _vertex_type_
 	DirectX::XMFLOAT3 normal;
 } VertexType;
 
+// position 관련
+enum class MoveState
+{
+	MOVE_FORWARD, MOVE_BACKWARD, MOVE_RIGHT, MOVE_LEFT,
+};
+
+// rotation 관련
+enum class RotationState
+{
+	ROTATE_UP, ROTATE_DOWN, ROTATE_RIGHT, ROTATE_LEFT,
+};
+
 // ------------------------ //
 
 // data //

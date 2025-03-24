@@ -13,10 +13,9 @@ public:
 	// singleton 객체 호출 함수
 	inline static D3DClass* const& GetD3DClassInst()
 	{
-		if (!inst)
-			inst = new D3DClass;
+		static D3DClass inst;
 
-		return inst;
+		return &inst;
 	}
 
 	// D3D 객체 초기화 함수 //
@@ -83,8 +82,6 @@ private:
 	HRESULT GetVideoCardDescription(IDXGIAdapter* const& Adapter);
 
 private:
-	static D3DClass* inst;
-
 	bool m_VSYNC_Enabled = false;
 
 	// about graphics card

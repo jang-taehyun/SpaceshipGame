@@ -158,7 +158,8 @@
     <ClInclude Include="config.h" />
     <ClInclude Include="CPUClass.h" />
     <ClInclude Include="D3DClass.h" />
-    <ClInclude Include="DDSTextureLoader.h" />
+    <ClInclude Include="DDSTextureLoader\DDSTextureLoader.h" />
+    <ClInclude Include="DDSTextureLoader\pch.h" />
     <ClInclude Include="DxDefine.h" />
     <ClInclude Include="FontClass.h" />
     <ClInclude Include="FontShaderClass.h" />
@@ -202,7 +203,7 @@
     <ClCompile Include="ColorClass.cpp" />
     <ClCompile Include="CPUClass.cpp" />
     <ClCompile Include="D3DClass.cpp" />
-    <ClCompile Include="DDSTextureLoader.cpp" />
+    <ClCompile Include="DDSTextureLoader\DDSTextureLoader.cpp" />
     <ClCompile Include="FontClass.cpp" />
     <ClCompile Include="FontShaderClass.cpp" />
     <ClCompile Include="FPSClass.cpp" />
