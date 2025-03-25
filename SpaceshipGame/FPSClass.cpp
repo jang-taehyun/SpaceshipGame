@@ -1,14 +1,50 @@
 #include "pch.h"
 #include "FPSClass.h"
 
-FPSClass::FPSClass() {}
-FPSClass::FPSClass(const FPSClass& other) {}
-FPSClass::~FPSClass() {}
-
-void FPSClass::Initialize()
+FPSClass::FPSClass()
 {
+	ErrorContent e;
+	HRESULT result = S_OK;
+
+	// 에러 메세지 초기화 //
+	e.title = _T("FPSClass Constructor");
+
+	if (IsInitailize)
+	{
+		e.contents = _T("이미 FPSClass 인스턴스가 존재합니다.");
+		e.errorCode = E_FAIL;
+
+		throw e;
+	}
+
+	result = Initialize();
+	if (FAILED(result))
+	{
+		e.contents = _T("FPSClass 초기화 실패");
+		e.errorCode = result;
+		throw e;
+	}
+
+	IsInitailize = true;
+}
+
+FPSClass::~FPSClass()
+{
+	IsInitailize = false;
+}
+
+HRESULT FPSClass::Initialize()
+{
+	ErrorContent e;
+	HRESULT result = S_OK;
+
+	// 에러 메세지 초기화 //
+	e.title = _T("FPSClass Initialize()");
+
 	// 시작 시간를 현재 시간으로 지정
 	m_StartTime = timeGetTime();
+
+	return result;
 }
 
 void FPSClass::Frame()

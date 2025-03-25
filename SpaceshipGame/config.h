@@ -2,6 +2,14 @@
 
 // -------- typedef -------- //
 
+// Error 관련
+typedef struct _error_content_
+{
+	tstring title;
+	tstring contents;
+	HRESULT errorCode = S_OK;
+} ErrorContent;
+
 // shader 파일 관련
 typedef struct _shader_file_info_
 {

@@ -68,9 +68,6 @@
     <Filter Include="Light">
       <UniqueIdentifier>{e3f9a0a2-cb03-4a0d-b1b3-509bf3d96848}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Light\LightClass">
-      <UniqueIdentifier>{5a5d48a0-f55b-4d3a-9c48-d72451b3757a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Graphics\Shader">
       <UniqueIdentifier>{3cb280fe-6c0a-49f4-b5f8-76497f04f653}</UniqueIdentifier>
     </Filter>
@@ -202,9 +199,6 @@
     <ClInclude Include="ModelClass.h">
       <Filter>Model\ModelClass</Filter>
     </ClInclude>
-    <ClInclude Include="LightClass.h">
-      <Filter>Light\LightClass</Filter>
-    </ClInclude>
     <ClInclude Include="FontShaderClass.h">
       <Filter>Graphics\ShaderClass\Child\FontShader</Filter>
     </ClInclude>
@@ -261,6 +255,9 @@
     </ClInclude>
     <ClInclude Include="DDSTextureLoader\pch.h">
       <Filter>Default\DDSTextureLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="LightClass.h">
+      <Filter>Light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -327,9 +324,6 @@
     <ClCompile Include="ModelClass.cpp">
       <Filter>Model\ModelClass</Filter>
     </ClCompile>
-    <ClCompile Include="LightClass.cpp">
-      <Filter>Light\LightClass</Filter>
-    </ClCompile>
     <ClCompile Include="FontShaderClass.cpp">
       <Filter>Graphics\ShaderClass\Child\FontShader</Filter>
     </ClCompile>
@@ -371,6 +365,9 @@
     </ClCompile>
     <ClCompile Include="DDSTextureLoader\DDSTextureLoader.cpp">
       <Filter>Default\DDSTextureLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="LightClass.cpp">
+      <Filter>Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

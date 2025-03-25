@@ -23,6 +23,7 @@ public:
 	inline void SetRotation(const float& x, const float& y, const float& z) { m_Position->SetRotation(x, y, z); }
 
 	void Render();
+
 private:
 	PositionClass* m_Position = nullptr;
 	DirectX::XMMATRIX m_ViewMatrix = DirectX::XMMATRIX();

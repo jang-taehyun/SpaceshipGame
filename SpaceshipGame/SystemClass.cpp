@@ -8,70 +8,100 @@
 #include "PositionClass.h"
 #include "SystemClass.h"
 
-// SystemClass* SystemClass::inst = nullptr;
+SystemClass::SystemClass()
+{
+	ErrorContent e;
+	HRESULT result = S_OK;
 
-SystemClass::SystemClass() {}
-SystemClass::SystemClass(const SystemClass& other) {}
-SystemClass::~SystemClass() {}
+	// 에러 메세지 초기화 //
+	e.title = _T("SystemClass Constructor");
+
+	if (IsInitialize)
+	{
+		e.contents = _T("이미 SystemClass 인스턴스가 존재합니다.");
+		e.errorCode = E_FAIL;
+		throw e;
+	}
+
+	result = Initialize();
+	if (FAILED(result))
+	{
+		Shutdown();
+
+		e.contents = _T("SystemClass 초기화 실패");
+		e.errorCode = result;
+		throw e;
+	}
+
+	IsInitialize = true;
+}
+
+SystemClass::~SystemClass()
+{
+	Shutdown();
+	IsInitialize = false;
+}
 
 HRESULT SystemClass::Initialize()
 {
-	// 윈도우의 가로, 세로 길이 초기화
+	ErrorContent e;
+	HRESULT result = S_OK;
 	int ScreenWidth = WIDTH;
 	int ScreenHeight = HEIGHT;
+
+	// 에러 메세지 초기화 //
+	e.title = _T("SystemClass Initialize()");
+
+	// 윈도우의 가로, 세로 길이 초기화
 	InitializeWindows(ScreenWidth, ScreenHeight);
 
-	// 객체 생성 및 초기화
-	m_Input = new InputClass;
+	// 객체 생성 및 초기화 //
+	m_Input = new InputClass(m_hinstance, m_hwnd, ScreenWidth, ScreenHeight);
 	if (!m_Input)
-		return E_FAIL;
-	if (FAILED(m_Input->Initialize(m_hinstance, m_hwnd, ScreenWidth, ScreenHeight)))
 	{
-		return E_FAIL;
+		e.contents = _T("InputClass 인스턴스 생성 실패");
+		e.errorCode = E_FAIL;
+		throw e;
 	}
 
-	m_Graphics = new GraphicsClass;
+	m_Graphics = new GraphicsClass(ScreenWidth, ScreenHeight, m_hwnd);
 	if (!m_Graphics)
-		return E_FAIL;
-
-	if (FAILED(m_Graphics->Initialize(ScreenWidth, ScreenHeight, m_hwnd)))
 	{
-		return E_FAIL;
+		e.contents = _T("GraphicsClass 인스턴스 생성 실패");
+		e.errorCode = E_FAIL;
+		throw e;
 	}
 
-	m_Sound = new SoundClass;
+	m_Sound = new SoundClass(m_hwnd, s_info);
 	if (!m_Sound)
 	{
-		return E_FAIL;
-	}
-
-	if (FAILED(m_Sound->Initialize(m_hwnd, s_info)))
-	{
-		return E_FAIL;
+		e.contents = _T("SoundClass 인스턴스 생성 실패");
+		e.errorCode = E_FAIL;
+		throw e;
 	}
 
 	m_FPS = new FPSClass;
 	if (!m_FPS)
 	{
-		return E_FAIL;
+		e.contents = _T("FPSClass 인스턴스 생성 실패");
+		e.errorCode = E_FAIL;
+		throw e;
 	}
-	m_FPS->Initialize();
 
 	m_CPU = new CPUClass;
 	if (!m_CPU)
 	{
-		return E_FAIL;
+		e.contents = _T("CPUClass 인스턴스 생성 실패");
+		e.errorCode = E_FAIL;
+		throw e;
 	}
-	m_CPU->Intialize();
 
 	m_Timer = new TimerClass;
 	if (!m_Timer)
 	{
-		return E_FAIL;
-	}
-	if (FAILED(m_Timer->Initialize()))
-	{
-		return E_FAIL;
+		e.contents = _T("TimerClass 인스턴스 생성 실패");
+		e.errorCode = E_FAIL;
+		throw e;
 	}
 
 	m_Position = new PositionClass;
@@ -80,7 +110,7 @@ HRESULT SystemClass::Initialize()
 		return E_FAIL;
 	}
 
-	return S_OK;
+	return result;
 }
 
 void SystemClass::Shutdown()
@@ -99,7 +129,6 @@ void SystemClass::Shutdown()
 
 	if (m_CPU)
 	{
-		m_CPU->Shutdown();
 		delete m_CPU;
 		m_CPU = nullptr;
 	}
@@ -112,21 +141,18 @@ void SystemClass::Shutdown()
 
 	if (m_Sound)
 	{
-		m_Sound->Shutdown();
 		delete m_Sound;
 		m_Sound = nullptr;
 	}
 
 	if (m_Graphics)
 	{
-		m_Graphics->Shutdown();
 		delete m_Graphics;
 		m_Graphics = nullptr;
 	}
 
 	if (m_Input)
 	{
-		m_Input->Shutdown();
 		delete m_Input;
 		m_Input = nullptr;
 	}
@@ -136,8 +162,14 @@ void SystemClass::Shutdown()
 
 void SystemClass::Run()
 {
-	// 메세지 구조체 생성 및 초기화
+	ErrorContent e;
+	HRESULT result = S_OK;
 	MSG msg;
+
+	// 에러 메세지 초기화 //
+	e.title = _T("SystemClass Run()");
+
+	// 메세지 구조체 초기화 //
 	memset(&msg, 0, sizeof(MSG));
 
 	while (1)
@@ -154,8 +186,13 @@ void SystemClass::Run()
 		// frame 처리
 		else
 		{
-			if (FAILED(Frame()))
-				break;
+			result = Frame();
+			if (FAILED(result))
+			{
+				e.contents = _T("Frame() 처리 실패");
+				e.errorCode = result;
+				throw e;
+			}
 		}
 
 		if (m_Input->IsEscapePressed())
@@ -170,35 +207,66 @@ LRESULT SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM 
 
 HRESULT SystemClass::Frame()
 {
+	ErrorContent e;
+	HRESULT result = S_OK;
+	float rotationY = 0.f;
+	bool KeyDown = false;
+
+	// 에러 메세지 초기화 //
+	e.title = _T("SystemClass Frame()");
+
+	// Timer, FPS, CPU, Input의 Frame() 진행 //
 	m_Timer->Frame();
 	m_FPS->Frame();
 	m_CPU->Frame();
 
-	if (FAILED(m_Input->Frame()))
-		return E_FAIL;
-
-	float rotationY = 0.f;
-	bool KeyDown = false;
+	result = m_Input->Frame();
+	if (FAILED(result))
+	{
+		e.contents = _T("Input의 Frame() 진행 실패");
+		e.errorCode = result;
+		throw e;
+	}
 
 	// position 객체의 frame time 갱신 및 키보드 상태 확인 //
 	m_Position->SetFrameTime(m_Timer->GetTime());
 
 	KeyDown = m_Input->IsLeftArrowPressed();
-	m_Position->ChangeRotation(RotationState::ROTATE_LEFT, KeyDown);
+	result = m_Position->ChangeRotation(RotationState::ROTATE_LEFT, KeyDown);
+	if (FAILED(result))
+	{
+		e.contents = _T("키보드 상태 확인(LEFT) 실패");
+		e.errorCode = result;
+		throw e;
+	}
 
 	KeyDown = m_Input->IsRightArrowPressed();
-	m_Position->ChangeRotation(RotationState::ROTATE_RIGHT, KeyDown);
+	result = m_Position->ChangeRotation(RotationState::ROTATE_RIGHT, KeyDown);
+	if (FAILED(result))
+	{
+		e.contents = _T("키보드 상태 확인(RIGHT) 진행 실패");
+		e.errorCode = result;
+		throw e;
+	}
 
 	// camera의 회전값을 갱신하여 실제 카메라  반영 //
 	rotationY = m_Position->GetRotation().y;
 
-	return m_Graphics->Frame(rotationY);
+	// Graphics의 Frame() 진행 //
+	result = m_Graphics->Frame(rotationY);
+	if (FAILED(result))
+	{
+		e.contents = _T("Graphics의 Frame() 진행 실패");
+		e.errorCode = result;
+		throw e;
+	}
+
+	return result;
 }
 
-void SystemClass::InitializeWindows(const int& ScreenWidth, const int& ScreenHeight)
+void SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)
 {
-	int width = ScreenWidth;
-	int height = ScreenHeight;
+	int width = 0, height = 0, PosX = 0, PosY = 0;
 
 	// 외부 pointer를 현재 instance를 가르키도록 한다.
 	ApplicationHandle = this;
@@ -226,10 +294,10 @@ void SystemClass::InitializeWindows(const int& ScreenWidth, const int& ScreenHei
 	RegisterClassEx(&wc);
 
 	// 모니터의 해상도 가져오기
-	width = GetSystemMetrics(SM_CXSCREEN);
-	height = GetSystemMetrics(SM_CYSCREEN);
-
-	int PosX = 0, PosY = 0;
+	ScreenWidth = GetSystemMetrics(SM_CXSCREEN);
+	ScreenHeight = GetSystemMetrics(SM_CYSCREEN);
+	width = ScreenWidth;
+	height = ScreenHeight;
 
 	if (FULL_SCREEN)
 	{
@@ -239,8 +307,8 @@ void SystemClass::InitializeWindows(const int& ScreenWidth, const int& ScreenHei
 		DEVMODE dmScreenSettings;
 		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
 		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
-		dmScreenSettings.dmPelsHeight = (unsigned long)width;
-		dmScreenSettings.dmPelsWidth = (unsigned long)height;
+		dmScreenSettings.dmPelsHeight = (unsigned long)height;
+		dmScreenSettings.dmPelsWidth = (unsigned long)width;
 		dmScreenSettings.dmBitsPerPel = 32;
 		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
@@ -293,7 +361,7 @@ extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT umessage, WPARAM w
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, umessage, wparam, lparam))
-		return S_OK;
+		return 0;
 
 	switch (umessage)
 	{

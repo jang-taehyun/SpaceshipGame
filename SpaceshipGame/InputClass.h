@@ -3,12 +3,9 @@
 class InputClass
 {
 public:
-	InputClass();
-	InputClass(const InputClass& other);
+	InputClass(const HINSTANCE& hinstance, const HWND& hwnd, const int& ScreenWidth, const int& ScreenHeight);
 	~InputClass();
-
-	HRESULT Initialize(const HINSTANCE& hinstance, const HWND& hwnd, const int& ScreenWidth, const int& ScreenHeight);
-	void Shutdown();
+	
 	HRESULT Frame();
 
 	// Getter //
@@ -22,11 +19,16 @@ public:
 	inline void GetMouseLocation(int& MouseX, int& MouseY) const { MouseX = m_MouseX; MouseY = m_MouseY; }
 
 private:
+	HRESULT Initialize(const HINSTANCE& hinstance, const HWND& hwnd, const int& ScreenWidth, const int& ScreenHeight);
+	void Shutdown();
+
 	HRESULT ReadKeyboard();
 	HRESULT ReadMouse();
 	void ProcessInput();
 
 private:
+	static bool IsInitailize;
+
 	IDirectInput8* m_DirectInput = nullptr;
 	IDirectInputDevice8* m_Keyboard = nullptr;
 	IDirectInputDevice8* m_Mouse = nullptr;
@@ -38,4 +40,10 @@ private:
 	int m_ScreenHeight = 0;
 	int m_MouseX = 0;
 	int m_MouseY = 0;
+
+public:
+	InputClass() = delete;
+	InputClass(const InputClass& other) = delete;
 };
+
+bool InputClass::IsInitailize = false;

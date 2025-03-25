@@ -1,18 +1,53 @@
 #include "pch.h"
 #include "TimerClass.h"
 
-TimerClass::TimerClass() {}
-TimerClass::TimerClass(const TimerClass& other) {}
-TimerClass::~TimerClass() {}
+TimerClass::TimerClass()
+{
+	ErrorContent e;
+	HRESULT result = S_OK;
+
+	// 에러 메세지 초기화 //
+	e.title = _T("TimerClass Constructor");
+
+	if (IsInitialize)
+	{
+		e.contents = _T("이미 TimerClass 인스턴스가 존재합니다.");
+		e.errorCode = E_FAIL;
+		throw e;
+	}
+
+	result = Initialize();
+	if (FAILED(result))
+	{
+		e.contents = _T("TimerClass 초기화 실패");
+		e.errorCode = result;
+		throw e;
+	}
+
+	IsInitialize = true;
+}
+
+TimerClass::~TimerClass()
+{
+	IsInitialize = false;
+}
 
 HRESULT TimerClass::Initialize()
 {
+	ErrorContent e;
+	HRESULT result = S_OK;
+
+	// 에러 메세지 초기화 //
+	e.title = _T("TimerClass Initialize()");
+
 	// 성능 카운터의 빈도 검색
 	// high performance timer를 지원하는지 확인
 	QueryPerformanceFrequency((LARGE_INTEGER*)&m_Frequency);
 	if (!m_Frequency)
 	{
-		return E_FAIL;
+		e.contents = _T("high performance timer를 지원하지 않습니다.");
+		e.errorCode = E_FAIL;
+		throw e;
 	}
 
 	// 1ms마다 counter에서 tick이 몇 번 일어나는지 계산
@@ -21,7 +56,7 @@ HRESULT TimerClass::Initialize()
 	// 성능 카운터의 현재 값(현재 CPU의 tick)을 가져오기
 	QueryPerformanceCounter((LARGE_INTEGER*)&m_StartTime);
 
-	return S_OK;
+	return result;
 }
 
 void TimerClass::Frame()

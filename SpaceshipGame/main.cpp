@@ -1,4 +1,5 @@
 ﻿#include "pch.h"
+#include <iostream>
 #include "SystemClass.h"
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
@@ -6,10 +7,20 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	_In_ LPWSTR lpCmdLine,
 	_In_ int nCmdShow)
 {
-	if (S_OK == SystemClass::GetSystemInst()->Initialize())
-		SystemClass::GetSystemInst()->Run();
+	try
+	{
+		SystemClass system;
+		OutputDebugString(_T("SystemClass created success!"));
+		system.Run();
+	}
+	catch (ErrorContent e)
+	{
+		OutputDebugString(e.title.c_str());
+		OutputDebugString(e.contents.c_str());
+		OutputDebugString(std::to_wstring(e.errorCode).c_str());
+	}
 
-	SystemClass::GetSystemInst()->Shutdown();
+	
 
 	return 0;
 }

@@ -10,21 +10,10 @@ class PositionClass;
 
 class SystemClass
 {
-private:
-	SystemClass();
-	SystemClass(const SystemClass& other);
-	~SystemClass();
-
 public:
-	static inline SystemClass* const& GetSystemInst()
-	{
-		static SystemClass inst;
-
-		return &inst;
-	}
-
-	HRESULT Initialize();
-	void Shutdown();
+	SystemClass();
+	~SystemClass();
+	
 	void Run();
 
 	LRESULT CALLBACK MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
@@ -34,11 +23,16 @@ public:
 	inline const TimerClass* const& GetTimer() const { return m_Timer; }
 
 private:
+	HRESULT Initialize();
+	void Shutdown();
+
 	HRESULT Frame();
-	void InitializeWindows(const int& ScreenWidth, const int& ScreenHeight);
+	void InitializeWindows(int& ScreenWidth, int& ScreenHeight);
 	void ShutdownWindows();
 
 private:
+	static bool IsInitialize;
+
 	LPCWSTR m_applicationName = _T("");
 	HINSTANCE m_hinstance = 0;
 	HWND m_hwnd = 0;
@@ -52,6 +46,9 @@ private:
 	TimerClass* m_Timer = nullptr;
 
 	PositionClass* m_Position = nullptr;
+
+public:
+	SystemClass(const SystemClass& other) = delete;
 };
 
 // 윈도우 종료 또는 닫히는 메세지 처리
@@ -59,3 +56,5 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM 
 
 // 외부 포인터
 static SystemClass* ApplicationHandle = nullptr;
+
+bool SystemClass::IsInitialize = false;

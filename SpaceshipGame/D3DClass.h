@@ -4,25 +4,11 @@ class ColorClass;
 
 class D3DClass
 {
-private:
-	D3DClass();
-	D3DClass(const D3DClass& other);
+public:
+	D3DClass(const int& ScreenWidth, const int& ScreenHeight, const bool& VSYNC, const HWND& hwnd, const bool& FullScreen, const float& ScreenDepth, const float& ScreenNear);
 	~D3DClass();
 
-public:
-	// singleton 객체 호출 함수
-	inline static D3DClass* const& GetD3DClassInst()
-	{
-		static D3DClass inst;
-
-		return &inst;
-	}
-
-	// D3D 객체 초기화 함수 //
-	HRESULT Initialize(const int& ScreenWidth, const int& ScreenHeight, const bool& VSYNC, const HWND& hwnd, const bool& FullScreen, const float& ScreenDepth, const float& ScreenNear);
 	
-	// D3D 객체 내부 리소스 정리 함수 //
-	void Shutdown();
 
 	// back buffer를 지우는 함수 //
 	void BeginScene(const ColorClass& color);
@@ -54,6 +40,12 @@ public:
 	void TurnOffAlphaBlending();
 
 private:
+	// D3D 객체 초기화 함수 //
+	HRESULT Initialize(const int& ScreenWidth, const int& ScreenHeight, const bool& VSYNC, const HWND& hwnd, const bool& FullScreen, const float& ScreenDepth, const float& ScreenNear);
+
+	// D3D 객체 내부 리소스 정리 함수 //
+	void Shutdown();
+
 	// 적절한 디스플레이 모드를 찾는 함수
 	HRESULT GetRefreshRate(const int& ScreenWidth, const int& ScreenHeight, int& Numerator, int & Denominator);
 
@@ -82,6 +74,8 @@ private:
 	HRESULT GetVideoCardDescription(IDXGIAdapter* const& Adapter);
 
 private:
+	static bool IsInitialize;
+
 	bool m_VSYNC_Enabled = false;
 
 	// about graphics card
@@ -113,4 +107,10 @@ private:
 	// alpha blending
 	ID3D11BlendState* m_AlphaEnableBlendingState = nullptr;
 	ID3D11BlendState* m_AlphaDisableBlendingState = nullptr;
+
+public:
+	D3DClass() = delete;
+	D3DClass(const D3DClass& other) = delete;
 };
+
+bool D3DClass::IsInitialize = false;

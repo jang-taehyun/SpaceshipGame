@@ -1,22 +1,56 @@
 #include "pch.h"
 
 // FPS, CPU, Timer 관련 //
-#include "SystemClass.h"
 #include "FPSClass.h"
 #include "CPUClass.h"
 #include "CameraClass.h"
 
 #include "IMGUIClass.h"
 
-IMGUIClass::IMGUIClass() {}
-IMGUIClass::IMGUIClass(const IMGUIClass& other) {}
-IMGUIClass::~IMGUIClass() {}
+IMGUIClass::IMGUIClass(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeivceContext)
+{
+	ErrorContent e;
+	HRESULT result = S_OK;
+
+	// 에러 메세지 초기화 //
+	e.title = _T("IMGUIClass Constructor");
+
+	if (IsInitialize)
+	{
+		e.contents = _T("이미 IMGUIClass 인스턴스가 존재합니다.");
+		e.errorCode = E_FAIL;
+		throw e;
+	}
+
+	result = Initialize(hwnd, Device, DeivceContext);
+	if (FAILED(result))
+	{
+		Shutdown();
+
+		e.contents = _T("IMGUIClass 초기화 실패");
+		e.errorCode = result;
+		throw e;
+	}
+
+	IsInitialize = true;
+}
+
+IMGUIClass::~IMGUIClass()
+{
+	Shutdown();
+	IsInitialize = false;
+}
 
 HRESULT IMGUIClass::Initialize(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeivceContext)
 {
+	ErrorContent e;
+	HRESULT result = S_OK;
 	ImVec2 cur;
 	float adder = 30.f;
 	m_WindowsCount = 3;
+
+	// 에러 메세지 초기화 //
+	e.title = _T("IMGUIClass Initialize()");
 
 	// IMGUI 초기화 //
 	IMGUI_CHECKVERSION();
@@ -41,7 +75,7 @@ HRESULT IMGUIClass::Initialize(const HWND& hwnd, ID3D11Device* const& Device, ID
 		cur.y += (m_WindowsSize.y + 10.f);
 	}
 
-	return S_OK;
+	return result;
 }
 
 void IMGUIClass::Shutdown()
@@ -51,31 +85,27 @@ void IMGUIClass::Shutdown()
 	ImGui::DestroyContext();
 }
 
-HRESULT IMGUIClass::Render(const CameraClass* const& camera)
+void IMGUIClass::Render(const CameraClass* const& camera, const int& fps, const int& cpu_usage)
 {
 	// IMGUI 렌더링 준비 //
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	SetUI(camera);
+	SetUI(camera, fps, cpu_usage);
 
 	// 렌더링
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-
-	return S_OK;
 }
 
-HRESULT IMGUIClass::SetUI(const CameraClass* const& camera)
+void IMGUIClass::SetUI(const CameraClass* const& camera, const int& fps, const int& cpu_usage)
 {
-	SetFPSCPUUsage();
+	SetFPSCPUUsage(fps, cpu_usage);
 	SetCameraInfo(camera);
-
-	return S_OK;
 }
 
-void IMGUIClass::SetFPSCPUUsage()
+void IMGUIClass::SetFPSCPUUsage(const int& fps, const int& cpu_usage)
 {
 	ImVec2 pos, size;
 	bool IsPress = false;
@@ -89,12 +119,12 @@ void IMGUIClass::SetFPSCPUUsage()
 	pos = ImGui::GetWindowPos();
 	size = ImGui::GetWindowSize();
 
-	tmp = std::to_string(SystemClass::GetSystemInst()->GetFPS()->GetFPS());
+	tmp = std::to_string(fps);
 	ImGui::Text(u8"FPS : ");
 	ImGui::SameLine(ImGui::GetTextLineHeight(), 110.f);
 	ImGui::Text(tmp.c_str());
 
-	tmp = std::to_string(SystemClass::GetSystemInst()->GetCPU()->GetCPUPercentage());
+	tmp = std::to_string(cpu_usage);
 	ImGui::Text(u8"CPU : ", tmp);
 	ImGui::SameLine(ImGui::GetTextLineHeight(), 110.f);
 	ImGui::Text(tmp.c_str());

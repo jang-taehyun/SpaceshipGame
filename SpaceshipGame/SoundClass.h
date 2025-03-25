@@ -21,14 +21,13 @@ private:
 	};
 
 public:
-	SoundClass();
-	SoundClass(const SoundClass& other);
+	SoundClass(const HWND& hwnd, const SoundFileInfo& info);
 	~SoundClass();
 
+private:
 	HRESULT Initialize(const HWND& hwnd, const SoundFileInfo& info);
 	void Shutdown();
 
-private:
 	HRESULT InitializeDirectSound(const HWND& hwnd);
 	void ShutdownDirectSound();
 
@@ -38,7 +37,15 @@ private:
 	HRESULT PlayWaveFile();
 
 private:
+	static bool IsInitailize;
+	
 	IDirectSound8* m_DirectSound = nullptr;
 	IDirectSoundBuffer* m_PrimaryBuffer = nullptr;
 	IDirectSoundBuffer8* m_SecondaryBuffer1 = nullptr;
+
+public:
+	SoundClass() = delete;
+	SoundClass(const SoundClass& other) = delete;
 };
+
+bool SoundClass::IsInitailize = false;

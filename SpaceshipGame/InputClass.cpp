@@ -1,76 +1,137 @@
 #include "pch.h"
 #include "InputClass.h"
 
-InputClass::InputClass() {}
-InputClass::InputClass(const InputClass& other) {}
-InputClass::~InputClass() {}
+InputClass::InputClass(const HINSTANCE& hinstance, const HWND& hwnd, const int& ScreenWidth, const int& ScreenHeight)
+{
+	ErrorContent e;
+	HRESULT result = S_OK;
+
+	// 에러 메세지 초기화 //
+	e.title = _T("InputClass Constructor");
+	
+	if (IsInitailize)
+	{
+		e.contents = _T("이미 InputClass 인스턴스가 존재합니다.");
+		e.errorCode = E_FAIL;
+
+		throw e;
+	}
+
+	result = Initialize(hinstance, hwnd, ScreenWidth, ScreenHeight);
+	if (FAILED(result))
+	{
+		Shutdown();
+
+		e.contents = _T("InputClass 초기화 실패");
+		e.errorCode = result;
+		throw e;
+	}
+
+	IsInitailize = true;
+}
+
+InputClass::~InputClass()
+{
+	Shutdown();
+	IsInitailize = false;
+}
 
 HRESULT InputClass::Initialize(const HINSTANCE& hinstance, const HWND& hwnd, const int& ScreenWidth, const int& ScreenHeight)
 {
+	ErrorContent e;
+	HRESULT result = S_OK;
+
+	// 에러 메세지 초기화 //
+	e.title = _T("InputClass Initailize()");
+
 	// 초기 마우스 위치 설정 //
 	m_ScreenHeight = ScreenHeight;
 	m_ScreenWidth = ScreenWidth;
-
-	HRESULT result;
 
 	// Direct input interface 초기화 //
 	result = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_DirectInput, NULL);
 	if (FAILED(result))
 	{
-		return E_FAIL;
+		e.contents = _T("Direct input interface 생성 실패");
+		e.errorCode = result;
+		throw e;
 	}
 
 	// 키보드의 Direct input interface 초기화 //
 	// 키보드의 Direct input interface 초기화
-	if (FAILED(m_DirectInput->CreateDevice(GUID_SysKeyboard, &m_Keyboard, NULL)))
+	result = m_DirectInput->CreateDevice(GUID_SysKeyboard, &m_Keyboard, NULL);
+	if (FAILED(result))
 	{
-		return E_FAIL;
+		e.contents = _T("키보드의 Direct input interface 초기화 실패");
+		e.errorCode = result;
+		throw e;
 	}
 
 	// 키보드의 Direct input interface가 수집할 데이터의 포맷(데이터 해석 방법) 설정
-	if (FAILED(m_Keyboard->SetDataFormat(&c_dfDIKeyboard)))
+	result = m_Keyboard->SetDataFormat(&c_dfDIKeyboard);
+	if (FAILED(result))
 	{
-		return E_FAIL;
+		e.contents = _T("키보드의 Direct input interface가 수집할 데이터의 포맷(데이터 해석 방법) 설정 실패");
+		e.errorCode = result;
+		throw e;
 	}
 
 	// 키보드의 Direct input interface에 대한 Cooperative level 설정
-	if (FAILED(m_Keyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE)))
+	result = m_Keyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
+	if (FAILED(result))
 	{
-		return E_FAIL;
+		e.contents = _T("키보드의 Direct input interface에 대한 Cooperative level 설정 실패");
+		e.errorCode = result;
+		throw e;
 	}
 
 	// 키보드의 Direct input에 대한 접근 권한 취득
-	if (FAILED(m_Keyboard->Acquire()))
+	result = m_Keyboard->Acquire();
+	if (FAILED(result))
 	{
-		return E_FAIL;
+		e.contents = _T("키보드의 Direct input에 대한 접근 권한 취득 실패");
+		e.errorCode = result;
+		throw e;
 	}
 
 
 	// 마우스의 Direct input interface 초기화 //
-	if (FAILED(m_DirectInput->CreateDevice(GUID_SysMouse, &m_Mouse, NULL)))
+	result = m_DirectInput->CreateDevice(GUID_SysMouse, &m_Mouse, NULL);
+	if (FAILED(result))
 	{
-		return E_FAIL;
+		e.contents = _T("마우스의 Direct input interface 초기화 실패");
+		e.errorCode = result;
+		throw e;
 	}
 
 	// 마우스의 Direct input interface가 수집할 데이터의 포맷(데이터 해석 방법) 설정
-	if (FAILED(m_Mouse->SetDataFormat(&c_dfDIMouse)))
+	result = m_Mouse->SetDataFormat(&c_dfDIMouse);
+	if (FAILED(result))
 	{
-		return E_FAIL;
+		e.contents = _T("마우스의 Direct input interface 초기화 실패");
+		e.errorCode = result;
+		throw e;
 	}
 
 	// 마우스의 Direct input interface에 대한 Cooperative level 설정
-	if (FAILED(m_Mouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE)))
+	result = m_Mouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+	if (FAILED(result))
 	{
-		return E_FAIL;
+		e.contents = _T("마우스의 Direct input interface에 대한 Cooperative level 설정 실패");
+		e.errorCode = result;
+		throw e;
 	}
 
 	// 마우스의 Direct input에 대한 접근 권한 취득
-	if (FAILED(m_Mouse->Acquire()))
+	result = m_Mouse->Acquire();
+	if (FAILED(result))
 	{
-		return E_FAIL;
+		e.contents = _T("마우스의 Direct input에 대한 접근 권한 취득 실패");
+		e.errorCode = result;
+		throw e;
 	}
 
-	return S_OK;
+	return result;
 }
 
 void InputClass::Shutdown()
@@ -98,25 +159,44 @@ void InputClass::Shutdown()
 
 HRESULT InputClass::Frame()
 {
-	if (FAILED(ReadKeyboard()))
+	ErrorContent e;
+	HRESULT result = S_OK;
+
+	// 에러 메세지 초기화 //
+	e.title = _T("InputClass Frame()");
+
+	// 키보드의 상태 읽기 //
+	result = ReadKeyboard();
+	if (FAILED(result))
 	{
-		return E_FAIL;
+		e.contents = _T("키보드의 상태 읽기 실패");
+		e.errorCode = result;
+		throw e;
 	}
 
-	if (FAILED(ReadMouse()))
+	// 마우스의 상태 읽기 //
+	result = ReadMouse();
+	if (FAILED(result))
 	{
-		return E_FAIL;
+		e.contents = _T("마우스의 상태 읽기 실패");
+		e.errorCode = result;
+		throw e;
 	}
 
 	ProcessInput();
 
-	return S_OK;
+	return result;
 }
 
 HRESULT InputClass::ReadKeyboard()
 {
+	ErrorContent e;
 	HRESULT result;
 
+	// 에러 메세지 초기화 //
+	e.title = _T("InputClass ReadKeyboard()");
+
+	// 키보드의 상태 가져오기 //
 	result = m_Keyboard->GetDeviceState(sizeof(m_KeyboardState), (LPVOID)&m_KeyboardState);
 	if (FAILED(result))
 	{
@@ -126,7 +206,9 @@ HRESULT InputClass::ReadKeyboard()
 		}
 		else
 		{
-			return result;
+			e.contents = _T("키보드의 상태 가져오기 실패");
+			e.errorCode = result;
+			throw e;
 		}
 	}
 
@@ -136,7 +218,12 @@ HRESULT InputClass::ReadKeyboard()
 HRESULT InputClass::ReadMouse()
 {
 	HRESULT result;
+	ErrorContent e;
 
+	// 에러 메세지 초기화 //
+	e.title = _T("InputClass ReadMouse()");
+
+	// 마우스의 상태 가져오기 //
 	result = m_Mouse->GetDeviceState(sizeof(m_MouseState), (LPVOID)&m_MouseState);
 	if (FAILED(result))
 	{
@@ -146,7 +233,9 @@ HRESULT InputClass::ReadMouse()
 		}
 		else
 		{
-			return result;
+			e.contents = _T("마우스의 상태 가져오기 실패");
+			e.errorCode = result;
+			throw e;
 		}
 	}
 
