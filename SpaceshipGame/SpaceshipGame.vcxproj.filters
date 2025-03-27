@@ -110,9 +110,6 @@
     <Filter Include="ColorClass">
       <UniqueIdentifier>{c18dc73e-7b11-4dc7-8fc8-f1b588077ea0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Model\ModelLoader">
-      <UniqueIdentifier>{a5c131e5-8b8c-46f0-873b-3408bbc4697b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Default\IMGUI">
       <UniqueIdentifier>{4a3437eb-cf9d-42ee-b819-8249105bb63f}</UniqueIdentifier>
     </Filter>
@@ -213,9 +210,6 @@
     </ClInclude>
     <ClInclude Include="Position2DClass.h">
       <Filter>TransformClass\Position2DClass</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelLoaderClass.h">
-      <Filter>Model\ModelLoader</Filter>
     </ClInclude>
     <ClInclude Include="IMGUI\imconfig.h">
       <Filter>Default\IMGUI</Filter>
@@ -335,9 +329,6 @@
     </ClCompile>
     <ClCompile Include="Position2DClass.cpp">
       <Filter>TransformClass\Position2DClass</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelLoaderClass.cpp">
-      <Filter>Model\ModelLoader</Filter>
     </ClCompile>
     <ClCompile Include="IMGUI\imgui.cpp">
       <Filter>Default\IMGUI</Filter>

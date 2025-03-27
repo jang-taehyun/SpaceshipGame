@@ -53,6 +53,8 @@ HRESULT D3DClass::Initialize(const int& ScreenWidth, const int& ScreenHeight, co
 	result = GetRefreshRate(ScreenWidth, ScreenHeight, Numerator, Denominator);
 	if (FAILED(result))
 	{
+		Shutdown();
+
 		e.contents = _T("적절한 디스플레이 모드 찾기 및 적용 실패");
 		e.errorCode = result;
 		throw e;
@@ -62,6 +64,8 @@ HRESULT D3DClass::Initialize(const int& ScreenWidth, const int& ScreenHeight, co
 	result = CreateSwapChainDeviceDeviceContext(ScreenWidth, ScreenHeight, Numerator, Denominator, hwnd, FullScreen);
 	if (FAILED(result))
 	{
+		Shutdown();
+
 		e.contents = _T("Swap chain 설정 및 Swap chain, Device, Device context 생성 실패");
 		e.errorCode = result;
 		throw e;
@@ -71,6 +75,8 @@ HRESULT D3DClass::Initialize(const int& ScreenWidth, const int& ScreenHeight, co
 	result = SetAndCreateRenderTargetView();
 	if (FAILED(result))
 	{
+		Shutdown();
+
 		e.contents = _T("Render target view 생성 및 설정 실패");
 		e.errorCode = result;
 		throw e;
@@ -80,6 +86,8 @@ HRESULT D3DClass::Initialize(const int& ScreenWidth, const int& ScreenHeight, co
 	result = SetDepthAndStencil(ScreenWidth, ScreenHeight);
 	if (FAILED(result))
 	{
+		Shutdown();
+
 		e.contents = _T("Depth Stencil buffer 생성 실패");
 		e.errorCode = result;
 		throw e;
@@ -89,6 +97,8 @@ HRESULT D3DClass::Initialize(const int& ScreenWidth, const int& ScreenHeight, co
 	result = SetRasterizer();
 	if (FAILED(result))
 	{
+		Shutdown();
+
 		e.contents = _T("Rasterizer 설정 실패");
 		e.errorCode = result;
 		throw e;
@@ -104,6 +114,8 @@ HRESULT D3DClass::Initialize(const int& ScreenWidth, const int& ScreenHeight, co
 	result = SetAlphaBlendState();
 	if (FAILED(result))
 	{
+		Shutdown();
+
 		e.contents = _T("alpha blending state 설정 실패");
 		e.errorCode = result;
 		throw e;
@@ -253,6 +265,8 @@ HRESULT D3DClass::GetRefreshRate(const int& ScreenWidth, const int& ScreenHeight
 	result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&Factory);
 	if (FAILED(result))
 	{
+		Shutdown();
+
 		e.contents = _T("DXGI factory 생성 실패");
 		e.errorCode = result;
 		throw e;
@@ -263,6 +277,8 @@ HRESULT D3DClass::GetRefreshRate(const int& ScreenWidth, const int& ScreenHeight
 	result = Factory->EnumAdapters(0, &Adapter);
 	if (FAILED(result))
 	{
+		Shutdown();
+
 		e.contents = _T("기본 그래픽카드 조회 실패");
 		e.errorCode = result;
 		throw e;
@@ -272,6 +288,8 @@ HRESULT D3DClass::GetRefreshRate(const int& ScreenWidth, const int& ScreenHeight
 	result = Adapter->EnumOutputs(0, &AdapterOutput);
 	if (FAILED(result))
 	{
+		Shutdown();
+
 		e.contents = _T("기본 모니터 조회 실패");
 		e.errorCode = result;
 		throw e;
@@ -281,6 +299,8 @@ HRESULT D3DClass::GetRefreshRate(const int& ScreenWidth, const int& ScreenHeight
 	result = AdapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &ModeCount, NULL);
 	if (FAILED(result))
 	{
+		Shutdown();
+
 		e.contents = _T("DXGI_FORMAT_R8G8B8A8_UNORM 표시 형식에 맞는 모드 수 조회 실패");
 		e.errorCode = result;
 		throw e;
@@ -290,13 +310,17 @@ HRESULT D3DClass::GetRefreshRate(const int& ScreenWidth, const int& ScreenHeight
 	DisplayModeList = new DXGI_MODE_DESC[ModeCount];
 	if (!DisplayModeList)
 	{
-		e.contents = _T("display mode의 정보를 담은 배열 생성 실패");
+		Shutdown();
+
+		e.contents = _T("display mode의 정보를 담을 배열 생성 실패");
 		e.errorCode = E_FAIL;
 		throw e;
 	}
 	result = AdapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &ModeCount, DisplayModeList);
 	if (FAILED(result))
 	{
+		Shutdown();
+
 		e.contents = _T("디스플레이 모드에 대한 모든 조합 조회 실패");
 		e.errorCode = result;
 		throw e;
@@ -316,6 +340,8 @@ HRESULT D3DClass::GetRefreshRate(const int& ScreenWidth, const int& ScreenHeight
 	result = GetVideoCardDescription(Adapter);
 	if (FAILED(result))
 	{
+		Shutdown();
+
 		e.contents = _T("그래픽카드 정보 가져오기 실패");
 		e.errorCode = result;
 		throw e;
@@ -397,6 +423,8 @@ HRESULT D3DClass::CreateSwapChainDeviceDeviceContext(const int& ScreenWidth, con
 	result = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &FeatureLevel, 1, D3D11_SDK_VERSION, &SwapChainDesc, &m_SwapChain, &m_Device, NULL, &m_DeviceContext);
 	if (FAILED(result))
 	{
+		Shutdown();
+
 		e.contents = _T("swap chain, device, device context 생성 실패");
 		e.errorCode = result;
 		throw e;
@@ -418,6 +446,8 @@ HRESULT D3DClass::SetAndCreateRenderTargetView()
 	result = m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&BackBufferPtr);
 	if (FAILED(result))
 	{
+		Shutdown();
+
 		e.contents = _T("back buffer의 pointer 가져오기 실패");
 		e.errorCode = result;
 		throw e;
@@ -427,6 +457,8 @@ HRESULT D3DClass::SetAndCreateRenderTargetView()
 	result = m_Device->CreateRenderTargetView(BackBufferPtr, NULL, &m_RenderTargetView);
 	if (FAILED(result))
 	{
+		Shutdown();
+
 		e.contents = _T("render target view 생성, render target view가 back buffer를 가르키도록 설정 실패");
 		e.errorCode = result;
 		throw e;
@@ -471,6 +503,8 @@ HRESULT D3DClass::SetDepthAndStencil(const int& ScreenWidth, const int& ScreenHe
 	result = m_Device->CreateTexture2D(&DepthBufferDesc, NULL, &m_DepthStencilBuffer);
 	if (FAILED(result))
 	{
+		Shutdown();
+
 		e.contents = _T("depth buffer 생성 실패");
 		e.errorCode = result;
 		throw e;
@@ -501,6 +535,8 @@ HRESULT D3DClass::SetDepthAndStencil(const int& ScreenWidth, const int& ScreenHe
 	result = m_Device->CreateDepthStencilState(&DepthStencilDesc, &m_DepthStencilState);
 	if (FAILED(result))
 	{
+		Shutdown();
+
 		e.contents = _T("depth stencil state 생성(depth buffer를 활성화한 depth stencil state) 실패");
 		e.errorCode = result;
 		throw e;
@@ -513,6 +549,8 @@ HRESULT D3DClass::SetDepthAndStencil(const int& ScreenWidth, const int& ScreenHe
 	result = m_Device->CreateDepthStencilState(&DepthStencilDesc, &m_DepthDisabledStencilState);
 	if (FAILED(result))
 	{
+		Shutdown();
+
 		e.contents = _T("depth stencil state 생성(depth buffer를 비활성화한 depth stencil state) 실패");
 		e.errorCode = result;
 		throw e;
@@ -530,6 +568,8 @@ HRESULT D3DClass::SetDepthAndStencil(const int& ScreenWidth, const int& ScreenHe
 	result = m_Device->CreateDepthStencilView(m_DepthStencilBuffer, &DepthStencilViewDesc, &m_DepthStencilView);
 	if (FAILED(result))
 	{
+		Shutdown();
+
 		e.contents = _T("depth stencil view 생성 실패");
 		e.errorCode = result;
 		throw e;
@@ -634,6 +674,8 @@ HRESULT D3DClass::SetAlphaBlendState()
 	result = m_Device->CreateBlendState(&AlphaBlendStateDesc, &m_AlphaEnableBlendingState);
 	if (FAILED(result))
 	{
+		Shutdown();
+
 		e.contents = _T("alpha blend state 생성(blend 활성화) 실패");
 		e.errorCode = result;
 		throw e;
@@ -644,6 +686,8 @@ HRESULT D3DClass::SetAlphaBlendState()
 	result = m_Device->CreateBlendState(&AlphaBlendStateDesc, &m_AlphaDisableBlendingState);
 	if (FAILED(result))
 	{
+		Shutdown();
+
 		e.contents = _T("alpha blend state 생성(blend 비활성화) 실패");
 		e.errorCode = result;
 		throw e;
@@ -666,6 +710,8 @@ HRESULT D3DClass::GetVideoCardDescription(IDXGIAdapter* const& Adapter)
 	result = Adapter->GetDesc(&AdapterDesc);
 	if (FAILED(result))
 	{
+		Shutdown();
+
 		e.contents = _T("그래픽카드의 정보 가져오기 실패");
 		e.errorCode = result;
 		throw e;
@@ -678,6 +724,8 @@ HRESULT D3DClass::GetVideoCardDescription(IDXGIAdapter* const& Adapter)
 	StringLength = 0;
 	if (wcstombs_s(&StringLength, m_VideoCardDescription, 128, AdapterDesc.Description, 128))
 	{
+		Shutdown();
+
 		e.contents = _T("그래픽카드 정보 복사 실패");
 		e.errorCode = E_FAIL;
 		throw e;
