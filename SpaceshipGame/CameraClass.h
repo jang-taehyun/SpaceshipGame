@@ -1,25 +1,29 @@
 #pragma once
 
-#include "PositionClass.h"
+class TransformClass;
 
 class CameraClass
 {
 public:
 	CameraClass();
-	CameraClass(const CameraClass& other);
 	~CameraClass();
-
-	HRESULT Initialize();
 
 	// Getter //
 
-	inline PositionClass* const& GetTransformObject() const { return m_Position; }
+	inline TransformClass* const& GetTransformObject() const { return m_Transform; }
 	inline void GetViewMatrix(DirectX::XMMATRIX& ViewMatrix) const { ViewMatrix = m_ViewMatrix; }
 
 	void Render();
 
 private:
-	PositionClass* m_Position = nullptr;
+	HRESULT Initialize();
+	void Shutdown();
+
+private:
+	TransformClass* m_Transform = nullptr;
 	DirectX::XMMATRIX m_ViewMatrix = DirectX::XMMATRIX();
+
+public:
+	CameraClass(const CameraClass& other) = delete;
 };
 

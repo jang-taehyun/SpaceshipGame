@@ -4,6 +4,7 @@
 #include "FPSClass.h"
 #include "CPUClass.h"
 #include "CameraClass.h"
+#include "TransformClass.h"
 
 #include "IMGUIClass.h"
 

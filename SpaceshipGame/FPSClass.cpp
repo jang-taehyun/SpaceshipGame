@@ -51,7 +51,7 @@ HRESULT FPSClass::Initialize()
 
 void FPSClass::Frame()
 {
-	m_Count++;
+	++m_Count;
 
 	// 1초가 지나면 m_FPS 변수에 현재 frame 값을 저장
 	if (timeGetTime() >= (m_StartTime + 1000))

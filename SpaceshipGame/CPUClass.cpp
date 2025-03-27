@@ -21,13 +21,7 @@ CPUClass::CPUClass()
 
 	result = Initialize();
 	if (FAILED(result))
-	{
 		Shutdown();
-
-		e.contents = _T("CPUClass 초기화 실패");
-		e.errorCode = result;
-		throw e;
-	}
 
 	IsInitialize = true;
 }
@@ -47,24 +41,25 @@ HRESULT CPUClass::Initialize()
 	// 에러 메세지 초기화 //
 	e.title = _T("CPUClass Initialize()");
 
-	// CPU 사용량을 polling할 query object 생성
+	// CPU 사용량을 polling할 query object 생성 //
 	// 만약 query object 생성에 실패했다면, OS의 권한때문에 기능을 사용할 수 없음
 	Status = PdhOpenQuery(NULL, 0, &m_QueryHandle);
 	if (ERROR_SUCCESS != Status)
 	{
-		e.contents = _T("CPU 사용량을 polling할 query object 생성 실패");
-		e.errorCode = E_FAIL;
-		throw e;
+		PdhCloseQuery(m_QueryHandle);
+		return E_FAIL;
 	}
 
-	// 시스템의 모든 CPU를 polling하도록 query object를 설정
+	// 시스템의 모든 CPU를 polling하도록 query object를 설정 //
 	Status = PdhAddCounter(m_QueryHandle, TEXT("\\Process(_Total)\\% processor time"), 0, &m_CounterHandle);
 	if (ERROR_SUCCESS != Status)
 	{
-		m_CanReadCPU = false;
+		PdhCloseQuery(m_QueryHandle);
+		return E_FAIL;
 	}
 
 	m_LastSampleTime = GetTickCount64();
+	m_CanReadCPU = true;
 
 	return result;
 }

@@ -14,11 +14,12 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	catch (ErrorContent e)
 	{
 		OutputDebugString(e.title.c_str());
+		OutputDebugString(_T("\n"));
 		OutputDebugString(e.contents.c_str());
+		OutputDebugString(_T("\n"));
 		OutputDebugString(std::to_wstring(e.errorCode).c_str());
+		OutputDebugString(_T("\n"));
 	}
-
-	
 
 	return 0;
 }

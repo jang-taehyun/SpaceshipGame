@@ -1,81 +1,166 @@
 #include "pch.h"
-#include "ModelLoaderClass.h"
+#include <fstream>
 #include "ModelClass.h"
 
-ModelClass::ModelClass() {}
-ModelClass::ModelClass(const ModelClass& other) {}
-ModelClass::~ModelClass() {}
-
-HRESULT ModelClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& TextureFileName, const tstring& ModelFileName)
+ModelClass::ModelClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& TextureFileName, const tstring& ModelFileName)
 {
-	DirectX::XMFLOAT4 position = { 0.f, 0.f, 0.f, 1.f };
-	DirectX::XMFLOAT4 rotation = { 0.f, 0.f, 0.f, 1.f };
-	DirectX::XMFLOAT4 scaling = { 1.f, 1.f, 1.f, 1.f };
+	ErrorContent e;
+	HRESULT result = S_OK;
 
-	m_Position = new PositionClass;
-	if (!m_Position)
+	// 에러 메세지 초기화 //
+	e.title = _T("ModelClass constructor");
+
+	result = Initialize(position, rotation, scaling, Device, DeviceContext, TextureFileName, ModelFileName);
+	if (FAILED(result))
 	{
-		return E_FAIL;
+		Shutdown();
+
+		e.contents = _T("ModelClass 초기화 실패");
+		e.errorCode = result;
+		throw e;
 	}
-	m_Position->Initialize(position, rotation, scaling);
-
-	m_Loader = new ModelLoaderClass;
-	if (!m_Loader)
-	{
-		return E_FAIL;
-	}
-
-	if (FAILED(LoadModel(ModelFileName)))
-	{
-		return E_FAIL;
-	}
-
-	m_Loader->ReleaseData();
-	delete m_Loader;
-	m_Loader = nullptr;
-
-	if (FAILED(InitializeBuffers(Device)))
-	{
-		return E_FAIL;
-	}
-
-	return LoadTexture(Device, DeviceContext, TextureFileName);
 }
 
-HRESULT ModelClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<tstring>& TextureFileNames, const tstring& ModelFileName)
+ModelClass::ModelClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<tstring>& TextureFileNames, const tstring& ModelFileName)
 {
-	DirectX::XMFLOAT4 position = { 0.f, 0.f, 0.f, 1.f };
-	DirectX::XMFLOAT4 rotation = { 1.f, 0.f, 0.f, 1.f };
-	DirectX::XMFLOAT4 scaling = { 0.05f, 0.05f, 0.05f, 1.f };
+	ErrorContent e;
+	HRESULT result = S_OK;
 
-	m_Position = new PositionClass;
-	if (!m_Position)
+	// 에러 메세지 초기화 //
+	e.title = _T("ModelClass constructor");
+
+	result = Initialize(position, rotation, scaling, Device, DeviceContext, TextureFileNames, ModelFileName);
+	if (FAILED(result))
 	{
-		return E_FAIL;
-	}
-	m_Position->Initialize(position, rotation, scaling);
+		Shutdown();
 
-	m_Loader = new ModelLoaderClass;
-	if (!m_Loader)
+		e.contents = _T("ModelClass 초기화 실패");
+		e.errorCode = result;
+		throw e;
+	}
+}
+
+ModelClass::~ModelClass()
+{
+	Shutdown();
+}
+
+HRESULT ModelClass::Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& TextureFileName, const tstring& ModelFileName)
+{
+	ErrorContent e;
+	HRESULT result = S_OK;
+
+	DirectX::XMFLOAT4 Position = { 0.f, 0.f, 0.f, 1.f };
+	DirectX::XMFLOAT4 Rotation = { 1.f, 0.f, 0.f, 1.f };
+	DirectX::XMFLOAT4 Scaling = { 0.05f, 0.05f, 0.05f, 1.f };
+
+	// 에러 메세지 초기화 //
+	e.title = _T("ModelClass Initialize()");
+
+	// transform 인스턴스 생성 //
+	m_Transform = new TransformClass(Position, Rotation, Scaling);
+	if(!m_Transform)
 	{
-		return E_FAIL;
+		Shutdown();
+
+		e.contents = _T("transform 인스턴스 생성 실패");
+		e.errorCode = result;
+		throw e;
 	}
 
-	if (FAILED(LoadModel(ModelFileName)))
+	// model load //
+	result = LoadModel(ModelFileName);
+	if (FAILED(result))
 	{
-		return E_FAIL;
+		Shutdown();
+
+		e.contents = _T("model load 실패");
+		e.errorCode = result;
+		throw e;
 	}
 
-	m_Loader->ReleaseData();
-	delete m_Loader;
-	m_Loader = nullptr;
-
-	if (FAILED(InitializeBuffers(Device)))
+	// vertex buffer, index buffer 생성 및 초기화 //
+	result = InitializeBuffers(Device);
+	if (FAILED(result))
 	{
-		return E_FAIL;
+		Shutdown();
+
+		e.contents = _T("vertex buffer, index buffer 생성 및 초기화 실패");
+		e.errorCode = result;
+		throw e;
 	}
 
-	return LoadTexture(Device, DeviceContext, TextureFileNames);
+	// texture load //
+	result = LoadTexture(Device, DeviceContext, TextureFileName);
+	if (FAILED(result))
+	{
+		Shutdown();
+
+		e.contents = _T("texture load 실패");
+		e.errorCode = result;
+		throw e;
+	}
+
+	return result;
+}
+
+HRESULT ModelClass::Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<tstring>& TextureFileNames, const tstring& ModelFileName)
+{
+	ErrorContent e;
+	HRESULT result = S_OK;
+
+	DirectX::XMFLOAT4 Position = { 0.f, 0.f, 0.f, 1.f };
+	DirectX::XMFLOAT4 Rotation = { 1.f, 0.f, 0.f, 1.f };
+	DirectX::XMFLOAT4 Scaling = { 0.05f, 0.05f, 0.05f, 1.f };
+
+	// 에러 메세지 초기화 //
+	e.title = _T("ModelClass Initialize()");
+
+	// transform 인스턴스 생성 //
+	m_Transform = new TransformClass(Position, Rotation, Scaling);
+	if (!m_Transform)
+	{
+		Shutdown();
+
+		e.contents = _T("transform 인스턴스 생성 실패");
+		e.errorCode = result;
+		throw e;
+	}
+
+	// model load //
+	result = LoadModel(ModelFileName);
+	if (FAILED(result))
+	{
+		Shutdown();
+
+		e.contents = _T("model load 실패");
+		e.errorCode = result;
+		throw e;
+	}
+
+	// vertex buffer, index buffer 생성 및 초기화 //
+	result = InitializeBuffers(Device);
+	if (FAILED(result))
+	{
+		Shutdown();
+
+		e.contents = _T("vertex buffer, index buffer 생성 및 초기화 실패");
+		e.errorCode = result;
+		throw e;
+	}
+
+	// texture load //
+	result = LoadTexture(Device, DeviceContext, TextureFileNames);
+	if (FAILED(result))
+	{
+		Shutdown();
+
+		e.contents = _T("texture load 실패");
+		e.errorCode = result;
+		throw e;
+	}
+
+	return result;
 }
 
 void ModelClass::Shutdown()
@@ -94,47 +179,117 @@ void ModelClass::Render(ID3D11DeviceContext* const& DeviceContext)
 
 HRESULT ModelClass::LoadModel(const tstring& FileName)
 {
-	if (FAILED(m_Loader->LoadModel(FileName)))
+	ErrorContent e;
+	HRESULT result = S_OK;
+	std::ifstream FileIn;
+	char input = 0;
+
+	// 에러 메세지 초기화 //
+	e.title = _T("ModelClass LoadModel()");
+
+	// model file 열기 //
+	FileIn.open(FileName);
+	if (FileIn.fail())
 	{
-		return E_FAIL;
+		Shutdown();
+
+		e.contents = _T("model file 열기 실패");
+		e.errorCode = result;
+		throw e;
 	}
 
-	m_VertexCount = m_Loader->GetPositionCount();
-	m_IndexCount = m_Loader->GetIndexCount();
+	// vertex count의 값까지 file의 내용을 read //
+	FileIn.get(input);
+	while (':' != input)
+		FileIn.get(input);
 
-	m_Vertices = new VertexType[m_VertexCount];
-	m_Indices = new unsigned long[m_IndexCount];
+	// vertex count의 값을 멤버 변수(m_VertexCount)에 복사 //
+	FileIn >> m_VertexCount;
 
-	if (!m_Vertices)
+	// index의 수를 정점의 수와 같게 설정 //
+	m_IndexCount = m_VertexCount;
+
+	// 읽어 들인 정점의 개수를 사용해 model을 만들기 //
+	m_Model = new ModelType[m_VertexCount];
+	if(!m_Model)
 	{
-		return E_FAIL;
-	}
-	if (!m_Indices)
-	{
-		return E_FAIL;
+		Shutdown();
+
+		e.contents = _T("model 데이터 생성 실패");
+		e.errorCode = E_FAIL;
+		throw e;
 	}
 
-	if (FAILED(m_Loader->CopyModelData(m_Vertices)))
+	// 데이터의 시작 부분까지 file을 read
+	FileIn.get(input);
+	while (':' != input)
+		FileIn.get(input);
+	FileIn.get(input);
+	FileIn.get(input);
+
+	// vertex 데이터를 read
+	for (int i = 0; i < m_VertexCount; i++)
 	{
-		return E_FAIL;
+		FileIn >> m_Model[i].x >> m_Model[i].y >> m_Model[i].z;
+		FileIn >> m_Model[i].tu >> m_Model[i].tv;
+		FileIn >> m_Model[i].nx >> m_Model[i].ny >> m_Model[i].nz;
 	}
 
-	return S_OK;
+	// model file 닫기 //
+	FileIn.close();
+
+	return result;
 }
 
 HRESULT ModelClass::InitializeBuffers(ID3D11Device* const& Device)
 {
+	ErrorContent e;
+	HRESULT result = S_OK;
+	VertexType* vertices = nullptr;			// 정점 데이터
+	unsigned long* indices = nullptr;		// 인덱스 데이터
+	D3D11_BUFFER_DESC VertexBufferDesc;		// vertex buffer의 설정 정보
+	D3D11_SUBRESOURCE_DATA VertexData;		// 정점 데이터를 가르키는 subresource 설정 정보
+	D3D11_BUFFER_DESC IndexBufferDesc;		// index buffer의 설정 정보
+	D3D11_SUBRESOURCE_DATA IndexData;		// 인덱스 데이터를 가르키는 subresource 설정 정보
+
+	// 에러 메세지 및 구조체 초기화 //
+	e.title = _T("ModelClass InitializeBuffers()");
+	memset(&VertexBufferDesc, 0, sizeof(VertexBufferDesc));
+	memset(&IndexBufferDesc, 0, sizeof(IndexBufferDesc));
+
 	// 정점 데이터 설정 //
-	// vertex의 index 데이터 설정
-	for (int i = 0; i < m_VertexCount; ++i)
+	// 정점 배열, 인덱스 배열 생성
+	vertices = new VertexType[m_VertexCount];
+	if (!vertices)
 	{
-		m_Indices[i] = i;
+		Shutdown();
+
+		e.contents = _T("정점 배열 생성 실패");
+		e.errorCode = E_FAIL;
+		throw e;
+	}
+
+	indices = new unsigned long[m_IndexCount];
+	if (!indices)
+	{
+		Shutdown();
+
+		e.contents = _T("인덱스 배열 생성 실패");
+		e.errorCode = E_FAIL;
+		throw e;
+	}
+
+	// 데이터를 정점 배열, 인덱스 배열로 복사
+	for (int i = 0; i < m_VertexCount; i++)
+	{
+		vertices[i].position = DirectX::XMFLOAT3(m_Model[i].x, m_Model[i].y, m_Model[i].z);
+		vertices[i].texture = DirectX::XMFLOAT2(m_Model[i].tu, m_Model[i].tv);
+		vertices[i].normal = DirectX::XMFLOAT3(m_Model[i].nx, m_Model[i].ny, m_Model[i].nz);
+
+		indices[i] = i;
 	}
 
 	// vertex buffer 생성 //
-	D3D11_BUFFER_DESC VertexBufferDesc;
-	memset(&VertexBufferDesc, 0, sizeof(VertexBufferDesc));
-
 	// vertex buffer 설정
 	VertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	VertexBufferDesc.ByteWidth = sizeof(VertexType) * m_VertexCount;
@@ -144,21 +299,22 @@ HRESULT ModelClass::InitializeBuffers(ID3D11Device* const& Device)
 	VertexBufferDesc.StructureByteStride = 0;
 
 	// 정점 데이터를 가르키는 subresource 생성 및 설정
-	D3D11_SUBRESOURCE_DATA VertexData;
-	VertexData.pSysMem = m_Vertices;
+	VertexData.pSysMem = vertices;
 	VertexData.SysMemPitch = 0;
 	VertexData.SysMemSlicePitch = 0;
 
 	// vertex buffer 생성
-	if (FAILED(Device->CreateBuffer(&VertexBufferDesc, &VertexData, &m_VertexBufer)))
+	result = Device->CreateBuffer(&VertexBufferDesc, &VertexData, &m_VertexBufer);
+	if (FAILED(result))
 	{
-		return E_FAIL;
+		Shutdown();
+
+		e.contents = _T("vertex buffer 생성 실패");
+		e.errorCode = result;
+		throw e;
 	}
 
 	// index buffer 생성 //
-	D3D11_BUFFER_DESC IndexBufferDesc;
-	memset(&IndexBufferDesc, 0, sizeof(IndexBufferDesc));
-
 	// index buffer 설정
 	IndexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	IndexBufferDesc.ByteWidth = sizeof(unsigned long) * m_IndexCount;
@@ -168,28 +324,32 @@ HRESULT ModelClass::InitializeBuffers(ID3D11Device* const& Device)
 	IndexBufferDesc.StructureByteStride = 0;
 
 	// 인덱스 데이터를 가르키는 subresource 생성 및 설정
-	D3D11_SUBRESOURCE_DATA IndexData;
-	IndexData.pSysMem = m_Indices;
+	IndexData.pSysMem = indices;
 	IndexData.SysMemPitch = 0;
 	IndexData.SysMemSlicePitch = 0;
 
 	// index buffer 생성
-	if (FAILED(Device->CreateBuffer(&IndexBufferDesc, &IndexData, &m_IndexBuffer)))
+	result = Device->CreateBuffer(&IndexBufferDesc, &IndexData, &m_IndexBuffer);
+	if (FAILED(result))
 	{
-		return E_FAIL;
+		Shutdown();
+
+		e.contents = _T("index buffer 생성 실패");
+		e.errorCode = result;
+		throw e;
 	}
 
 	// 정점 데이터, 인덱스 데이터 해제
-	delete[] m_Vertices;
-	m_Vertices = nullptr;
+	delete[] vertices;
+	vertices = nullptr;
 
-	delete[] m_Indices;
-	m_Indices = nullptr;
+	delete[] indices;
+	indices = nullptr;
 
 	return S_OK;
 }
 
-void ModelClass::RenderBuffers(ID3D11DeviceContext* DeviceContext)
+void ModelClass::RenderBuffers(ID3D11DeviceContext* const& DeviceContext)
 {
 	// offset(오프셋)과 정점 데이터의 stride(단위) 설정 //
 	unsigned int stride = sizeof(VertexType);
@@ -205,28 +365,68 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext* DeviceContext)
 
 HRESULT ModelClass::LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& FileName)
 {
+	ErrorContent e;
+	HRESULT result = S_OK;
+
+	// 에러 메세지 초기화 //
+	e.title = _T("ModelClass LoadTexture()");
+
 	// texture object 생성 //
 	m_Texture = new TextureClass;
 	if (!m_Texture)
 	{
-		return E_FAIL;
+		Shutdown();
+
+		e.contents = _T("texture 인스턴스 생성 실패");
+		e.errorCode = result;
+		throw e;
 	}
 
-	// targa 이미지를 쓰는 경우 //
-	return m_Texture->Initialize(Device, DeviceContext, FileName);
+	// texture 객체 초기화 //
+	result = m_Texture->Initialize(Device, DeviceContext, FileName);
+	if (FAILED(result))
+	{
+		Shutdown();
+
+		e.contents = _T("texture 객체 초기화 실패");
+		e.errorCode = result;
+		throw e;
+	}
+	
+	return result;
 }
 
 HRESULT ModelClass::LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<tstring>& FileNames)
 {
+	ErrorContent e;
+	HRESULT result = S_OK;
+
+	// 에러 메세지 초기화 //
+	e.title = _T("ModelClass LoadTexture()");
+
 	// texture object 생성 //
 	m_Texture = new TextureClass;
 	if (!m_Texture)
 	{
-		return E_FAIL;
+		Shutdown();
+
+		e.contents = _T("texture 인스턴스 생성 실패");
+		e.errorCode = result;
+		throw e;
 	}
 
-	// targa 이미지를 쓰는 경우 //
-	return m_Texture->Initialize(Device, DeviceContext, FileNames);
+	// texture 객체 초기화 //
+	result = m_Texture->Initialize(Device, DeviceContext, FileNames);
+	if (FAILED(result))
+	{
+		Shutdown();
+
+		e.contents = _T("texture 객체 초기화 실패");
+		e.errorCode = result;
+		throw e;
+	}
+
+	return result;
 }
 
 void ModelClass::ShutdownBuffers()
@@ -246,32 +446,19 @@ void ModelClass::ShutdownBuffers()
 
 void ModelClass::ReleaseModel()
 {
-	if (m_Indices)
+	if (m_Model)
 	{
-		delete[] m_Indices;
-		m_Indices = nullptr;
-	}
-
-	if (m_Vertices)
-	{
-		delete[] m_Vertices;
-		m_Vertices = nullptr;
-	}
-
-	if (m_Loader)
-	{
-		m_Loader->ReleaseData();
-		delete[] m_Loader;
-		m_Loader = nullptr;
+		delete[] m_Model;
+		m_Model = nullptr;
 	}
 }
 
 void ModelClass::ShutdownPosition()
 {
-	if (m_Position)
+	if (m_Transform)
 	{
-		delete m_Position;
-		m_Position = nullptr;
+		delete m_Transform;
+		m_Transform = nullptr;
 	}
 }
 

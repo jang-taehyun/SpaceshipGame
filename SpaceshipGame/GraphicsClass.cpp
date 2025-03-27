@@ -75,10 +75,10 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 	// Camera 객체 생성 및 초기화 //
 	m_Camera = new CameraClass;
 	if (!m_Camera)
-		return E_FAIL;
-	if (FAILED(m_Camera->Initialize()))
 	{
-		return E_FAIL;
+		e.contents = _T("CameraClass 인스턴스 생성 실패");
+		e.errorCode = E_FAIL;
+		throw e;
 	}
 	m_Camera->Render();
 	m_Camera->GetViewMatrix(BaseViewMatrix);

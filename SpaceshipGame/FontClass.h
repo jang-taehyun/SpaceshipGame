@@ -24,7 +24,7 @@ public:
 	~FontClass();
 
 	inline const ID3D11ShaderResourceView* const& GetTexture(const int idx) const { return (m_Texture->GetTexture(idx)); }
-	inline const std::vector< ID3D11ShaderResourceView*>& GetTextureArray() const { return m_Texture->GetTextures(); }
+	inline const std::vector<ID3D11ShaderResourceView*>& GetTextureArray() const { return m_Texture->GetTextures(); }
 
 	HRESULT Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& FontFileName, const tstring& TextureFileName);
 	void Shutdown();

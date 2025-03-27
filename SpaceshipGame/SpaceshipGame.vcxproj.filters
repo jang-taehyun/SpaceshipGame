@@ -22,9 +22,6 @@
     <Filter Include="Debugging\TimerClass">
       <UniqueIdentifier>{3df7ed79-e5f2-4743-bfb1-8881499d389d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="PositionClass">
-      <UniqueIdentifier>{383ce90a-46d7-4511-9780-bc79d489ac21}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SoundClass">
       <UniqueIdentifier>{06399912-871c-4ba6-b921-ce80ecbcc14a}</UniqueIdentifier>
     </Filter>
@@ -113,9 +110,6 @@
     <Filter Include="ColorClass">
       <UniqueIdentifier>{c18dc73e-7b11-4dc7-8fc8-f1b588077ea0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="PositionClass\Position2DClass">
-      <UniqueIdentifier>{31005519-d99b-4479-b5c3-faa00bf4a255}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Model\ModelLoader">
       <UniqueIdentifier>{a5c131e5-8b8c-46f0-873b-3408bbc4697b}</UniqueIdentifier>
     </Filter>
@@ -124,6 +118,12 @@
     </Filter>
     <Filter Include="Debugging\IMGUIClass">
       <UniqueIdentifier>{9769faa4-fe27-4ad5-9210-4d7a9cb01ff2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TransformClass">
+      <UniqueIdentifier>{383ce90a-46d7-4511-9780-bc79d489ac21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TransformClass\Position2DClass">
+      <UniqueIdentifier>{31005519-d99b-4479-b5c3-faa00bf4a255}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -144,9 +144,6 @@
     </ClInclude>
     <ClInclude Include="TimerClass.h">
       <Filter>Debugging\TimerClass</Filter>
-    </ClInclude>
-    <ClInclude Include="PositionClass.h">
-      <Filter>PositionClass</Filter>
     </ClInclude>
     <ClInclude Include="SoundClass.h">
       <Filter>SoundClass</Filter>
@@ -215,7 +212,7 @@
       <Filter>ColorClass</Filter>
     </ClInclude>
     <ClInclude Include="Position2DClass.h">
-      <Filter>PositionClass\Position2DClass</Filter>
+      <Filter>TransformClass\Position2DClass</Filter>
     </ClInclude>
     <ClInclude Include="ModelLoaderClass.h">
       <Filter>Model\ModelLoader</Filter>
@@ -259,6 +256,9 @@
     <ClInclude Include="LightClass.h">
       <Filter>Light</Filter>
     </ClInclude>
+    <ClInclude Include="TransformClass.h">
+      <Filter>TransformClass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -281,9 +281,6 @@
     </ClCompile>
     <ClCompile Include="TimerClass.cpp">
       <Filter>Debugging\TimerClass</Filter>
-    </ClCompile>
-    <ClCompile Include="PositionClass.cpp">
-      <Filter>PositionClass</Filter>
     </ClCompile>
     <ClCompile Include="SoundClass.cpp">
       <Filter>SoundClass</Filter>
@@ -337,7 +334,7 @@
       <Filter>ColorClass</Filter>
     </ClCompile>
     <ClCompile Include="Position2DClass.cpp">
-      <Filter>PositionClass\Position2DClass</Filter>
+      <Filter>TransformClass\Position2DClass</Filter>
     </ClCompile>
     <ClCompile Include="ModelLoaderClass.cpp">
       <Filter>Model\ModelLoader</Filter>
@@ -368,6 +365,9 @@
     </ClCompile>
     <ClCompile Include="LightClass.cpp">
       <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformClass.cpp">
+      <Filter>TransformClass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

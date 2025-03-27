@@ -5,7 +5,6 @@
 #include "FPSClass.h"
 #include "CPUClass.h"
 #include "TimerClass.h"
-#include "PositionClass.h"
 #include "SystemClass.h"
 
 bool SystemClass::IsInitialize = false;
@@ -106,23 +105,11 @@ HRESULT SystemClass::Initialize()
 		throw e;
 	}
 
-	m_Position = new PositionClass;
-	if (!m_Position)
-	{
-		return E_FAIL;
-	}
-
 	return result;
 }
 
 void SystemClass::Shutdown()
 {
-	if (m_Position)
-	{
-		delete m_Position;
-		m_Position = nullptr;
-	}
-
 	if (m_Timer)
 	{
 		delete m_Timer;

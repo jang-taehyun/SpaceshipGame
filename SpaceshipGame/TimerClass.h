@@ -8,7 +8,7 @@ public:
 
 	void Frame();
 
-	inline const float& GetTime() const { return m_FrameTime; }
+	inline const float& GetTime() const { return (m_Frequency ? m_FrameTime : -1.f); }
 
 private:
 	HRESULT Initialize();

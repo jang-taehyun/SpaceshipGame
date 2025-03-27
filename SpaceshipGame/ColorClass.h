@@ -4,7 +4,6 @@ class ColorClass
 {
 public:
 	ColorClass();
-	ColorClass(const ColorClass& other);
 	~ColorClass();
 
 	// ---- Getter ---- //
@@ -44,5 +43,8 @@ private:
 	float green = 0.f;
 	float blue = 0.f;
 	float alpha = 0.5f;
+
+public:
+	ColorClass(const ColorClass& other) = delete;
 };
 

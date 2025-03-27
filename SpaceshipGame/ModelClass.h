@@ -1,33 +1,49 @@
 #pragma once
 
 #include "TextureClass.h"
-#include "PositionClass.h"
+#include "TransformClass.h"
 
 class ModelLoaderClass;
 
 class ModelClass
 {
+private:
+	struct VertexType
+	{
+		DirectX::XMFLOAT3 position;
+		DirectX::XMFLOAT2 texture;
+		DirectX::XMFLOAT3 normal;
+	};
+
+	struct ModelType
+	{
+		float x, y, z;
+		float tu, tv;
+		float nx, ny, nz;
+	};
+
 public:
-	ModelClass();
-	ModelClass(const ModelClass& other);
+	ModelClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& TextureFileName, const tstring& ModelFileName);
+	ModelClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<tstring>& TextureFileNames, const tstring& ModelFileName);
 	~ModelClass();
 
-	HRESULT Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& TextureFileName, const tstring& ModelFileName);
-	HRESULT Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<tstring>& TextureFileNames, const tstring& ModelFileName);
-	void Shutdown();
 	void Render(ID3D11DeviceContext* const& DeviceContext);
 
 	inline const int& GetIndexCount() const { return m_IndexCount; }
 	inline const ID3D11ShaderResourceView* const& GetTexture(const int idx = 0) { return m_Texture->GetTexture(idx); }
-	inline const std::vector< ID3D11ShaderResourceView*>& GetTextureArray() { return m_Texture->GetTextures(); }
+	inline const std::vector<ID3D11ShaderResourceView*>& GetTextureArray() { return m_Texture->GetTextures(); }
 
-	inline const DirectX::XMMATRIX& GetAffineMatrix() const { return m_Position->GetAffine(); }
+	inline const DirectX::XMMATRIX& GetAffineMatrix() const { return m_Transform->GetAffine(); }
 
 private:
+	HRESULT Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& TextureFileName, const tstring& ModelFileName);
+	HRESULT Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<tstring>& TextureFileNames, const tstring& ModelFileName);
+	void Shutdown();
+
 	HRESULT LoadModel(const tstring& FileName);
 	HRESULT InitializeBuffers(ID3D11Device* const& Device);
 
-	void RenderBuffers(ID3D11DeviceContext*);
+	void RenderBuffers(ID3D11DeviceContext* const& DeviceContext);
 
 	HRESULT LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& FileName);
 	HRESULT LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<tstring>& FileNames);
@@ -44,12 +60,12 @@ private:
 	int m_VertexCount = 0;
 	int m_IndexCount = 0;
 
-	VertexType* m_Vertices = nullptr;
-	unsigned long* m_Indices = nullptr;
-
-	ModelLoaderClass* m_Loader = nullptr;
-	
+	ModelType* m_Model = nullptr;
 	TextureClass* m_Texture = nullptr;
 
-	PositionClass* m_Position = nullptr;
+	TransformClass* m_Transform = nullptr;
+
+public:
+	ModelClass() = delete;
+	ModelClass(const ModelClass& other) = delete;
 };

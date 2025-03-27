@@ -1,24 +1,49 @@
 #include "pch.h"
+#include "TransformClass.h"
 #include "CameraClass.h"
 
-CameraClass::CameraClass() {}
-CameraClass::CameraClass(const CameraClass& other) {}
-CameraClass::~CameraClass() {}
+CameraClass::CameraClass()
+{
+	Initialize();
+}
+
+CameraClass::~CameraClass()
+{
+	Shutdown();
+}
 
 HRESULT CameraClass::Initialize()
 {
+	ErrorContent e;
+	HRESULT result = S_OK;
+
+	// 에러 메세지 초기화 //
+	e.title = _T("CameraClass Initialize()");
+
 	DirectX::XMFLOAT4 position = { 10.f, 1.f, -0.5f, 1.f };
 	DirectX::XMFLOAT4 rotation = { 0.f, -90.f, 0.f, 1.f };
 	DirectX::XMFLOAT4 scaling = { 1.f, 1.f, 1.f, 1.f };
 
-	m_Position = new PositionClass;
-	if (!m_Position)
+	m_Transform = new TransformClass(position, rotation, scaling);
+	if (!m_Transform)
 	{
-		return E_FAIL;
-	}
-	m_Position->Initialize(position, rotation, scaling);
+		Shutdown();
 
-	return S_OK;
+		e.contents = _T("TransformClass 인스턴스 생성 실패");
+		e.errorCode = E_FAIL;
+		throw e;
+	}
+
+	return result;
+}
+
+void CameraClass::Shutdown()
+{
+	if (m_Transform)
+	{
+		delete m_Transform;
+		m_Transform = nullptr;
+	}
 }
 
 void CameraClass::Render()
@@ -41,7 +66,7 @@ void CameraClass::Render()
 
 	// position vector 설정(3D 월드에서 카메라의 위치 설정) //
 	// vector에 값 설정
-	Position = m_Position->GetPosition();
+	Position = m_Transform->GetPosition();
 
 	// XMVECTOR 구조체에 저장
 	PositionVector = DirectX::XMLoadFloat4(&Position);
@@ -58,9 +83,9 @@ void CameraClass::Render()
 	
 	// 회전 행렬 생성 //
 	// yaw, pitch, roll의 회전값을 라디안 단위로 설정 //
-	pitch = DirectX::XMConvertToRadians(m_Position->GetRotation().x);
-	yaw = DirectX::XMConvertToRadians(m_Position->GetRotation().y);
-	roll = DirectX::XMConvertToRadians(m_Position->GetRotation().z);
+	pitch = DirectX::XMConvertToRadians(m_Transform->GetRotation().x);
+	yaw = DirectX::XMConvertToRadians(m_Transform->GetRotation().y);
+	roll = DirectX::XMConvertToRadians(m_Transform->GetRotation().z);
 
 	// 회전 행렬 생성
 	RotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll);

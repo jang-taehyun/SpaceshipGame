@@ -21,7 +21,7 @@ private:
 private:
 	static bool IsInitialize;
 
-	bool m_CanReadCPU = true;
+	bool m_CanReadCPU = false;
 	HQUERY m_QueryHandle = 0;
 	HCOUNTER m_CounterHandle = 0;
 	unsigned long long m_LastSampleTime = 0;

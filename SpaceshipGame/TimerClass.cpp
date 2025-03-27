@@ -21,9 +21,8 @@ TimerClass::TimerClass()
 	result = Initialize();
 	if (FAILED(result))
 	{
-		e.contents = _T("TimerClass 초기화 실패");
+		e.contents = _T("TimerClass 초기화 실패, ") + e.contents;
 		e.errorCode = result;
-		throw e;
 	}
 
 	IsInitialize = true;
@@ -48,8 +47,7 @@ HRESULT TimerClass::Initialize()
 	if (!m_Frequency)
 	{
 		e.contents = _T("high performance timer를 지원하지 않습니다.");
-		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 
 	// 1ms마다 counter에서 tick이 몇 번 일어나는지 계산
@@ -65,10 +63,13 @@ void TimerClass::Frame()
 {
 	INT64 CurrentTime = 0;
 
-	// 매 루프마다 시간 차이를 계산해서 frame 간의 시간 간격을 알아내고, m_Frame에 저장
-	QueryPerformanceCounter((LARGE_INTEGER*)&CurrentTime);
-	float TimeDifference = (float)(CurrentTime - m_StartTime);
+	if (m_Frequency)
+	{
+		// 매 루프마다 시간 차이를 계산해서 frame 간의 시간 간격을 알아내고, m_Frame에 저장
+		QueryPerformanceCounter((LARGE_INTEGER*)&CurrentTime);
+		float TimeDifference = (float)(CurrentTime - m_StartTime);
 
-	m_FrameTime = TimeDifference / m_TicksPerMs;
-	m_StartTime = CurrentTime;
+		m_FrameTime = TimeDifference / m_TicksPerMs;
+		m_StartTime = CurrentTime;
+	}
 }

@@ -185,7 +185,6 @@
     <ClInclude Include="MultiTextureShaderClass.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Position2DClass.h" />
-    <ClInclude Include="PositionClass.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ShaderClass.h" />
     <ClInclude Include="SoundClass.h" />
@@ -196,6 +195,7 @@
     <ClInclude Include="TextureClass.h" />
     <ClInclude Include="TextureShaderClass.h" />
     <ClInclude Include="TimerClass.h" />
+    <ClInclude Include="TransformClass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AlphaMapShaderClass.cpp" />
@@ -231,7 +231,6 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Position2DClass.cpp" />
-    <ClCompile Include="PositionClass.cpp" />
     <ClCompile Include="ShaderClass.cpp" />
     <ClCompile Include="SoundClass.cpp" />
     <ClCompile Include="SystemClass.cpp" />
@@ -239,6 +238,7 @@
     <ClCompile Include="TextureClass.cpp" />
     <ClCompile Include="TextureShaderClass.cpp" />
     <ClCompile Include="TimerClass.cpp" />
+    <ClCompile Include="TransformClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SpaceshipGame.rc" />
