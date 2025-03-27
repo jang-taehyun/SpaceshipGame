@@ -1,6 +1,10 @@
 #pragma once
 
-struct ImVec2;
+// IMGUI ฐüทร //
+#include "IMGUI/imgui.h"
+#include "IMGUI/imgui_impl_dx11.h"
+#include "IMGUI/imgui_impl_win32.h"
+
 class CameraClass;
 
 class IMGUIClass

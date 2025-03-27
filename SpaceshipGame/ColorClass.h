@@ -3,9 +3,9 @@
 class ColorClass
 {
 public:
-	ColorClass() = default;
-	ColorClass(const ColorClass& other);
-	ColorClass(const float&& r, const float&& g = 0.f, const float&& b = 0.f, const float&& a = 1.f);
+	explicit ColorClass() = default;
+	explicit ColorClass(const ColorClass& other);
+	explicit ColorClass(const float&& r, const float&& g = 0.f, const float&& b = 0.f, const float&& a = 1.f);
 	~ColorClass();
 
 	// ---- Getter ---- //

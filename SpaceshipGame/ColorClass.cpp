@@ -1,14 +1,12 @@
 #include "pch.h"
 #include "ColorClass.h"
 
-ColorClass::ColorClass() {}
-
 ColorClass::ColorClass(const ColorClass& other)
 {
 	*this = other;
 }
 
-ColorClass::ColorClass(const float&& r, const float&& g = 0.f, const float&& b = 0.f, const float&& a = 1.f)
+ColorClass::ColorClass(const float&& r, const float&& g, const float&& b, const float&& a)
 {
 	red = r;
 	green = g;

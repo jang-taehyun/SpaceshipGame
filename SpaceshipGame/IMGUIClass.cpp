@@ -1,10 +1,5 @@
 #include "pch.h"
 
-// IMGUI 관련 //
-#include "IMGUI/imgui.h"
-#include "IMGUI/imgui_impl_dx11.h"
-#include "IMGUI/imgui_impl_win32.h"
-
 // FPS, CPU, Timer 관련 //
 #include "FPSClass.h"
 #include "CPUClass.h"
