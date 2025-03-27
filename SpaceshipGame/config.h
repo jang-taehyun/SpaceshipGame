@@ -54,7 +54,7 @@ const SoundFileInfo s_info = { _T("./data/sound01.wav") };
 const tstring FontFileName = _T("./data/font01.txt");
 const tstring FontTextureFileName = _T("./data/font01.tga");
 
-const tstring CubeModelFileName = _T("./data/cat.obj");
+const tstring CubeModelFileName = _T("./data/cat.txt");
 const std::vector<tstring> CubeTextureFileNames =
 {
 	_T("./data/cat.png")

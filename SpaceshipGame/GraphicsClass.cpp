@@ -58,6 +58,9 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 {
 	ErrorContent e;
 	HRESULT result = S_OK;
+	DirectX::XMFLOAT4 Position = { 0.f, 0.f, 0.f, 1.f };
+	DirectX::XMFLOAT4 Rotation = { 1.f, 0.f, 0.f, 1.f };
+	DirectX::XMFLOAT4 Scaling = { 0.05f, 0.05f, 0.05f, 1.f };
 	DirectX::XMMATRIX BaseViewMatrix;
 
 	// 에러 메세지 초기화 //
@@ -84,14 +87,9 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 	m_Camera->GetViewMatrix(BaseViewMatrix);
 
 	// Model 객체 생성 및 초기화 //
-	m_Model = new ModelClass;
+	m_Model = new ModelClass(Position, Rotation, Scaling, m_D3D->GetDevice(), m_D3D->GetDeviceContext(), CubeTextureFileNames, CubeModelFileName);
 	if (!m_Model)
 		return E_FAIL;
-	if (FAILED(m_Model->Initialize(m_D3D->GetDevice(), m_D3D->GetDeviceContext(), CubeTextureFileNames, CubeModelFileName)))
-	{
-		MessageBox(hwnd, _T("Could not initialize the model object"), _T("Erorr"), MB_OK);
-		return E_FAIL;
-	}
 
 	// alpha map shader 객체 생성 및 초기화 //
 	m_AlphaMapShader = new AlphaMapShaderClass;
@@ -262,7 +260,6 @@ void GraphicsClass::Shutdown()
 
 	if (m_Model)
 	{
-		m_Model->Shutdown();
 		delete m_Model;
 		m_Model = nullptr;
 	}
