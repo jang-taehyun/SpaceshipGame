@@ -24,6 +24,3 @@ private:
 public:
 	TimerClass(const TimerClass& other) = delete;
 };
-
-bool TimerClass::IsInitialize = false;
-

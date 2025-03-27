@@ -8,8 +8,6 @@ public:
 	D3DClass(const int& ScreenWidth, const int& ScreenHeight, const bool& VSYNC, const HWND& hwnd, const bool& FullScreen, const float& ScreenDepth, const float& ScreenNear);
 	~D3DClass();
 
-	
-
 	// back buffer를 지우는 함수 //
 	void BeginScene(const ColorClass& color);
 	
@@ -112,5 +110,3 @@ public:
 	D3DClass() = delete;
 	D3DClass(const D3DClass& other) = delete;
 };
-
-bool D3DClass::IsInitialize = false;

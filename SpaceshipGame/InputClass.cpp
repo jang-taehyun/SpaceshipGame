@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "InputClass.h"
 
+bool InputClass::IsInitailize = false;
+
 InputClass::InputClass(const HINSTANCE& hinstance, const HWND& hwnd, const int& ScreenWidth, const int& ScreenHeight)
 {
 	ErrorContent e;

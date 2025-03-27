@@ -19,18 +19,20 @@ class TextClass;
 class FrustumClass;
 class IMGUIClass;
 
+class InputClass;
+
 class GraphicsClass
 {
 public:
 	GraphicsClass(const int& ScreenWidth, const int& ScreenHeight, const HWND& hwnd);
 	~GraphicsClass();
 
-	HRESULT Frame(float rotationY);
+	HRESULT Frame(const InputClass* const& input, const float& frame, const int& fps, const int& cpu_usage);
 
 private:
 	HRESULT Initialize(const int& ScreenWidth, const int& ScreenHeight, const HWND& hwnd);
 	void Shutdown();
-	HRESULT Render();
+	HRESULT Render(const int& fps, const int& cpu_usage);
 
 private:
 	static bool IsInitialize;
@@ -57,5 +59,3 @@ public:
 	GraphicsClass() = delete;
 	GraphicsClass(const GraphicsClass& other) = delete;
 };
-
-bool GraphicsClass::IsInitialize = false;

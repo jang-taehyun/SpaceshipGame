@@ -8,6 +8,8 @@
 #include "PositionClass.h"
 #include "SystemClass.h"
 
+bool SystemClass::IsInitialize = false;
+
 SystemClass::SystemClass()
 {
 	ErrorContent e;
@@ -209,8 +211,6 @@ HRESULT SystemClass::Frame()
 {
 	ErrorContent e;
 	HRESULT result = S_OK;
-	float rotationY = 0.f;
-	bool KeyDown = false;
 
 	// 에러 메세지 초기화 //
 	e.title = _T("SystemClass Frame()");
@@ -228,32 +228,8 @@ HRESULT SystemClass::Frame()
 		throw e;
 	}
 
-	// position 객체의 frame time 갱신 및 키보드 상태 확인 //
-	m_Position->SetFrameTime(m_Timer->GetTime());
-
-	KeyDown = m_Input->IsLeftArrowPressed();
-	result = m_Position->ChangeRotation(RotationState::ROTATE_LEFT, KeyDown);
-	if (FAILED(result))
-	{
-		e.contents = _T("키보드 상태 확인(LEFT) 실패");
-		e.errorCode = result;
-		throw e;
-	}
-
-	KeyDown = m_Input->IsRightArrowPressed();
-	result = m_Position->ChangeRotation(RotationState::ROTATE_RIGHT, KeyDown);
-	if (FAILED(result))
-	{
-		e.contents = _T("키보드 상태 확인(RIGHT) 진행 실패");
-		e.errorCode = result;
-		throw e;
-	}
-
-	// camera의 회전값을 갱신하여 실제 카메라  반영 //
-	rotationY = m_Position->GetRotation().y;
-
 	// Graphics의 Frame() 진행 //
-	result = m_Graphics->Frame(rotationY);
+	result = m_Graphics->Frame(m_Input, m_Timer->GetTime(), m_FPS->GetFPS(), m_CPU->GetCPUPercentage());
 	if (FAILED(result))
 	{
 		e.contents = _T("Graphics의 Frame() 진행 실패");
@@ -293,14 +269,14 @@ void SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)
 
 	RegisterClassEx(&wc);
 
-	// 모니터의 해상도 가져오기
-	ScreenWidth = GetSystemMetrics(SM_CXSCREEN);
-	ScreenHeight = GetSystemMetrics(SM_CYSCREEN);
-	width = ScreenWidth;
-	height = ScreenHeight;
-
 	if (FULL_SCREEN)
 	{
+		// 모니터의 해상도 가져오기
+		ScreenWidth = GetSystemMetrics(SM_CXSCREEN);
+		ScreenHeight = GetSystemMetrics(SM_CYSCREEN);
+		width = ScreenWidth;
+		height = ScreenHeight;
+
 		// 풀스크린 모드 //
 		// 모니터 화면 해상도를 desktop 해상도로 지정
 		// 색상 : 32bit
@@ -319,8 +295,10 @@ void SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)
 		// 윈도우 모드 //
 		// 모니터 화면 해상도를 800*600으로 지정
 		// 윈도우의 위치 : 정가운데
-		width = WIDTH;
-		height = HEIGHT;
+		ScreenWidth = WIDTH;
+		ScreenHeight = HEIGHT;
+		width = ScreenWidth;
+		height = ScreenHeight;
 
 		PosX = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
 		PosY = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;

@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "FPSClass.h"
 
+bool FPSClass::IsInitailize = false;
+
 FPSClass::FPSClass()
 {
 	ErrorContent e;

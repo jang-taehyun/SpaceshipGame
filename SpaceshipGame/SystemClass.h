@@ -56,5 +56,3 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM 
 
 // 외부 포인터
 static SystemClass* ApplicationHandle = nullptr;
-
-bool SystemClass::IsInitialize = false;

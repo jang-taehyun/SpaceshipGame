@@ -34,5 +34,3 @@ public:
 	IMGUIClass() = delete;
 	IMGUIClass(const IMGUIClass& other) = delete;
 };
-
-bool IMGUIClass::IsInitialize = false;

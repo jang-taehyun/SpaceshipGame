@@ -45,5 +45,3 @@ public:
 	InputClass() = delete;
 	InputClass(const InputClass& other) = delete;
 };
-
-bool InputClass::IsInitailize = false;

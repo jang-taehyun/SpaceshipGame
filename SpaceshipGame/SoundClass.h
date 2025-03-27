@@ -47,5 +47,3 @@ public:
 	SoundClass() = delete;
 	SoundClass(const SoundClass& other) = delete;
 };
-
-bool SoundClass::IsInitailize = false;

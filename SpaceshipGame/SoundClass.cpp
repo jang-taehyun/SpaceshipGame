@@ -2,6 +2,8 @@
 #include <fstream>
 #include "SoundClass.h"
 
+bool SoundClass::IsInitailize = false;
+
 SoundClass::SoundClass(const HWND& hwnd, const SoundFileInfo& info)
 {
 	ErrorContent e;

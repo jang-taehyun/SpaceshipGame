@@ -18,6 +18,7 @@ public:
 	inline const DirectX::XMFLOAT4& GetRotation() const { return m_Rotation; }
 
 	// Setter //
+
 	inline void SetPosition(const DirectX::XMFLOAT4& pos) { m_Position = pos; }
 	inline void SetPosition(const float& x, const float& y, const float& z) { m_Position = DirectX::XMFLOAT4(x, y, z, 1.f); }
 	inline void SetRotation(const DirectX::XMFLOAT4& rot) { m_Rotation = rot; }

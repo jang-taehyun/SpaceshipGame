@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "TimerClass.h"
 
+bool TimerClass::IsInitialize = false;
+
 TimerClass::TimerClass()
 {
 	ErrorContent e;

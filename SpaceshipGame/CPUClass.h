@@ -30,5 +30,3 @@ private:
 public:
 	CPUClass(const CPUClass& other) = delete;
 };
-
-bool CPUClass::IsInitialize = false;

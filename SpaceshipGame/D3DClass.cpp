@@ -2,6 +2,8 @@
 #include "ColorClass.h"
 #include "D3DClass.h"
 
+bool D3DClass::IsInitialize = false;
+
 D3DClass::D3DClass(const int& ScreenWidth, const int& ScreenHeight, const bool& VSYNC, const HWND& hwnd, const bool& FullScreen, const float& ScreenDepth, const float& ScreenNear)
 {
 	ErrorContent e;

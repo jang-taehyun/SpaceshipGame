@@ -25,5 +25,3 @@ private:
 public:
 	FPSClass(const FPSClass& other) = delete;
 };
-
-bool FPSClass::IsInitailize = false;

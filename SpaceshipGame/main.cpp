@@ -1,5 +1,4 @@
 ﻿#include "pch.h"
-#include <iostream>
 #include "SystemClass.h"
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
@@ -10,7 +9,6 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	try
 	{
 		SystemClass system;
-		OutputDebugString(_T("SystemClass created success!"));
 		system.Run();
 	}
 	catch (ErrorContent e)

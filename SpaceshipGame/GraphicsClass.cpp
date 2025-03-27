@@ -12,7 +12,12 @@
 #include "FrustumClass.h"
 #include "ColorClass.h"
 #include "IMGUIClass.h"
+
+#include "InputClass.h"
+
 #include "GraphicsClass.h"
+
+bool GraphicsClass::IsInitialize = false;
 
 GraphicsClass::GraphicsClass(const int& ScreenWidth, const int& ScreenHeight, const HWND& hwnd)
 {
@@ -269,19 +274,38 @@ void GraphicsClass::Shutdown()
 	}
 }
 
-HRESULT GraphicsClass::Frame(float rotationY)
+HRESULT GraphicsClass::Frame(const InputClass* const& input, const float& frame, const int& fps, const int& cpu_usage)
 {
 	ErrorContent e;
 	HRESULT result = S_OK;
+	bool KeyDown = false;
 
 	// 에러 메세지 초기화 //
 	e.title = _T("GraphicsClass Frame()");
 
-	// camera의 rotation을 update //
-	m_Camera->SetRotation(0.f, rotationY, 0.f);
+	// camera 객체의 frame time 갱신 및 keyboard, mouse의 input에 따라 camera 객체의 transform 변경 //
+	m_Camera->GetTransformObject()->SetFrameTime(frame);
+
+	KeyDown = input->IsLeftArrowPressed();
+	result = m_Camera->GetTransformObject()->ChangeRotation(RotationState::ROTATE_LEFT, KeyDown);
+	if (FAILED(result))
+	{
+		e.contents = _T("camera 객체의 transform 변경(LEFT) 실패");
+		e.errorCode = result;
+		throw e;
+	}
+
+	KeyDown = input->IsRightArrowPressed();
+	result = m_Camera->GetTransformObject()->ChangeRotation(RotationState::ROTATE_RIGHT, KeyDown);
+	if (FAILED(result))
+	{
+		e.contents = _T("camera 객체의 transform 변경(RIGHT) 진행 실패");
+		e.errorCode = result;
+		throw e;
+	}
 
 	// 렌더링 //
-	result = Render();
+	result = Render(fps, cpu_usage);
 	if (FAILED(result))
 	{
 		e.contents = _T("Frame() 처리 실패");
@@ -292,7 +316,7 @@ HRESULT GraphicsClass::Frame(float rotationY)
 	return result;
 }
 
-HRESULT GraphicsClass::Render()
+HRESULT GraphicsClass::Render(const int& fps, const int& cpu_usage)
 {
 	ErrorContent e;
 	HRESULT result = S_OK;
@@ -326,7 +350,7 @@ HRESULT GraphicsClass::Render()
 	// viewing frustum 생성 및 render count(rendering한 3D object의 개수) 초기화
 	m_Frustum->ConstructFrustum(SCREEN_DEPTH, ProjectionMatrix, ViewMatrix);
 
-	// 렌더링
+	// 렌더링 //
 	m_Model->Render(m_D3D->GetDeviceContext());
 	result = m_TextureShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), WorldMatrix, ViewMatrix, ProjectionMatrix, m_Model->GetTextureArray());
 	if (FAILED(result))
@@ -359,13 +383,7 @@ HRESULT GraphicsClass::Render()
 	m_D3D->TurnDepthBufferOn();
 	
 	// IMGUI 렌더링
-	result = m_IMGUI->Render(m_Camera);
-	if (FAILED(result))
-	{
-		e.contents = _T("IMGUI 렌더링 실패");
-		e.errorCode = result;
-		throw e;
-	}
+	m_IMGUI->Render(m_Camera, fps, cpu_usage);
 
 	// back buffer에 있는 내용을 화면에 출력 //
 	m_D3D->EndScene();

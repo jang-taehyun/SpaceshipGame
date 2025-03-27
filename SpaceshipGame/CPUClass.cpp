@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "CPUClass.h"
 
+bool CPUClass::IsInitialize = false;
+
 CPUClass::CPUClass()
 {
 	ErrorContent e;

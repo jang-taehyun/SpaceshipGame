@@ -7,6 +7,8 @@
 
 #include "IMGUIClass.h"
 
+bool IMGUIClass::IsInitialize = false;
+
 IMGUIClass::IMGUIClass(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeivceContext)
 {
 	ErrorContent e;
@@ -148,20 +150,20 @@ void IMGUIClass::SetCameraInfo(const CameraClass* const& camera)
 	size = ImGui::GetWindowSize();
 
 	ImGui::Text(u8"카메라 위치(x, y, z)");
-	tmp = std::to_string(camera->GetPosition().x);
+	tmp = std::to_string(camera->GetTransformObject()->GetPosition().x);
 	ImGui::Text(tmp.c_str());
-	tmp = std::to_string(camera->GetPosition().y);
+	tmp = std::to_string(camera->GetTransformObject()->GetPosition().y);
 	ImGui::Text(tmp.c_str());
-	tmp = std::to_string(camera->GetPosition().z);
+	tmp = std::to_string(camera->GetTransformObject()->GetPosition().z);
 	ImGui::Text(tmp.c_str());
 
 
 	ImGui::Text(u8"카메라 회전(x, y, z) : ");
-	tmp = std::to_string(camera->GetRotation().x);
+	tmp = std::to_string(camera->GetTransformObject()->GetRotation().x);
 	ImGui::Text(tmp.c_str());
-	tmp = std::to_string(camera->GetRotation().y);
+	tmp = std::to_string(camera->GetTransformObject()->GetRotation().y);
 	ImGui::Text(tmp.c_str());
-	tmp = std::to_string(camera->GetRotation().z);
+	tmp = std::to_string(camera->GetTransformObject()->GetRotation().z);
 	ImGui::Text(tmp.c_str());
 
 	IsPress = ImGui::Button("test");
