@@ -13,7 +13,7 @@ public:
 	inline const int& GetFPS() const { return m_FPS; }
 
 private:
-	HRESULT Initialize();
+	void Initialize();
 
 private:
 	static bool IsInitailize;

@@ -3,10 +3,10 @@
 #include "SoundClass.h"
 
 bool SoundClass::IsInitailize = false;
+static ErrorContent e;
 
 SoundClass::SoundClass(const HWND& hwnd, const SoundFileInfo& info)
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
@@ -16,7 +16,6 @@ SoundClass::SoundClass(const HWND& hwnd, const SoundFileInfo& info)
 	{
 		e.contents = _T("이미 SoundClass 인스턴스가 존재합니다.");
 		e.errorCode = E_FAIL;
-
 		throw e;
 	}
 
@@ -24,9 +23,6 @@ SoundClass::SoundClass(const HWND& hwnd, const SoundFileInfo& info)
 	if (FAILED(result))
 	{
 		Shutdown();
-
-		e.contents = _T("SoundClass 초기화 실패");
-		e.errorCode = result;
 		throw e;
 	}
 
@@ -41,7 +37,6 @@ SoundClass::~SoundClass()
 
 HRESULT SoundClass::Initialize(const HWND& hwnd, const SoundFileInfo& info)
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
@@ -52,35 +47,23 @@ HRESULT SoundClass::Initialize(const HWND& hwnd, const SoundFileInfo& info)
 	{
 		e.contents = _T("윈도우 핸들 or 지정된 file이 없습니다.");
 		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 	
 	// direct sound, primary sound buffer 초기화 //
 	result = InitializeDirectSound(hwnd);
 	if (FAILED(result))
-	{
-		e.contents = _T("direct sound, primary sound buffer 초기화 실패");
-		e.errorCode = result;
-		throw e;
-	}
+		return result;
 
 	// wav 오디오 파일을 secondary buffer에 load //
 	result = LoadWaveFile(info.filename, &m_SecondaryBuffer1);
 	if (FAILED(result))
-	{
-		e.contents = _T("wav 오디오 파일을 secondary buffer에 load 실패");
-		e.errorCode = result;
-		throw e;
-	}
+		return result;
 
 	// sound 재생 //
 	result = PlayWaveFile();
 	if (FAILED(result))
-	{
-		e.contents = _T("sound 재생 실패");
-		e.errorCode = result;
-		throw e;
-	}
+		return result;
 
 	return result;
 }
@@ -93,11 +76,14 @@ void SoundClass::Shutdown()
 
 HRESULT SoundClass::InitializeDirectSound(const HWND& hwnd)
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
+	DSBUFFERDESC PrimarySoundBufferDesc;		// primary sound buffer 설정 정보
+	WAVEFORMATEX PrimarySoundBufferFormatDesc;	// primary soudn buffer의 format 설정 정보
 
-	// 에러 메세지 초기화 //
+	// 에러 메세지 및 구조체 초기화 //
 	e.title = _T("SoundClass InitializeDirectSound()");
+	memset(&PrimarySoundBufferDesc, 0, sizeof(PrimarySoundBufferDesc));
+	memset(&PrimarySoundBufferFormatDesc, 0, sizeof(PrimarySoundBufferFormatDesc));
 
 	// 기본 sound device 초기화 //
 	// 기본 sound device로 쓸 direct sound의 interface 초기화
@@ -106,7 +92,7 @@ HRESULT SoundClass::InitializeDirectSound(const HWND& hwnd)
 	{
 		e.contents = _T("기본 sound device로 쓸 direct sound의 interface 초기화 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 	// 기본 sound device의 cooperative level 설정
@@ -115,14 +101,11 @@ HRESULT SoundClass::InitializeDirectSound(const HWND& hwnd)
 	{
 		e.contents = _T("기본 sound device의 cooperative level 설정 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 
 	// primary sound buffer 생성 및 초기화 //
-	DSBUFFERDESC PrimarySoundBufferDesc;
-	memset(&PrimarySoundBufferDesc, 0, sizeof(PrimarySoundBufferDesc));
-
 	// primary sound buffer 설정
 	PrimarySoundBufferDesc.dwSize = sizeof(PrimarySoundBufferDesc);
 	PrimarySoundBufferDesc.dwFlags = DSBCAPS_PRIMARYBUFFER | DSBCAPS_CTRLVOLUME;
@@ -137,13 +120,10 @@ HRESULT SoundClass::InitializeDirectSound(const HWND& hwnd)
 	{
 		e.contents = _T("primary sound buffer 생성 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 	// primary sound buffer의 format 설정
-	WAVEFORMATEX PrimarySoundBufferFormatDesc;
-	memset(&PrimarySoundBufferFormatDesc, 0, sizeof(PrimarySoundBufferFormatDesc));
-
 	PrimarySoundBufferFormatDesc.wFormatTag = WAVE_FORMAT_PCM;
 	PrimarySoundBufferFormatDesc.nSamplesPerSec = 44100;
 	PrimarySoundBufferFormatDesc.wBitsPerSample = 16;
@@ -158,7 +138,7 @@ HRESULT SoundClass::InitializeDirectSound(const HWND& hwnd)
 	{
 		e.contents = _T("primary sound buffer의 format을 primary sound buffer에 바인드 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 	return result;
@@ -181,19 +161,21 @@ void SoundClass::ShutdownDirectSound()
 
 HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** const& SecondaryBuffer)
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 	std::ifstream FileIn;
-	WaveHeaderType WaveFileHeader;
-	WAVEFORMATEX WaveFormat;
-	DSBUFFERDESC BufferDesc;
+	WaveHeaderType WaveFileHeader;					// wave 파일 헤더 정보
+	WAVEFORMATEX WaveFormat;						// secondary buffer의 format 설정 정보
+	DSBUFFERDESC BufferDesc;						// secondary buffer 설정 정보
 	IDirectSoundBuffer* tempBuffer = nullptr;
 	unsigned char* WaveData = nullptr;
 	unsigned char* BufferPtr = nullptr;
 	unsigned long BufferSize = 0;
 
-	// 에러 메세지 초기화 //
+	// 에러 메세지 및 구조체 초기화 //
 	e.title = _T("SoundClass LoadWaveFile()");
+	memset(&WaveFileHeader, 0, sizeof(WaveFileHeader));
+	memset(&WaveFormat, 0, sizeof(WaveFormat));
+	memset(&BufferDesc, 0, sizeof(BufferDesc));
 
 	// wav 파일 open //
 	FileIn.open(FileName, std::ios::binary);
@@ -201,20 +183,18 @@ HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** 
 	{
 		e.contents = _T("wav 파일 open 실패");
 		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 
 	// wav 파일의 header를 read 및 check //
-	memset(&WaveFileHeader, 0, sizeof(WaveFileHeader));
-
 	// wav 파일의 header를 read
 	FileIn.read((char*)&WaveFileHeader, sizeof(WaveFileHeader));
 	size_t count = FileIn.gcount();
 	if (sizeof(WaveFileHeader) != count)
 	{
-		e.contents = _T("wav 파일의 header를 read 실패");
+		e.contents = _T("wav 파일의 header를 읽기 실패");
 		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 
 	// wav 파일의 header를 check
@@ -223,7 +203,7 @@ HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** 
 	{
 		e.contents = _T("Chunk ID가 RIFF이 아닙니다.");
 		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 
 	// format이 WAVE인지 확인
@@ -231,7 +211,7 @@ HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** 
 	{
 		e.contents = _T("format이 WAVE이 아닙니다.");
 		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 
 	// sub Chunk ID가 fmt인지 확인
@@ -239,7 +219,7 @@ HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** 
 	{
 		e.contents = _T("sub Chunk ID가 fmt이 아닙니다.");
 		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 
 	// audio format이 WAVE_FORMAT_PCM인지 확인
@@ -247,7 +227,7 @@ HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** 
 	{
 		e.contents = _T("audio format이 WAVE_FORMAT_PCM가 아닙니다.");
 		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 
 	// wav 파일이 stereo format으로 저장되었는지 확인
@@ -255,7 +235,7 @@ HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** 
 	{
 		e.contents = _T("wav 파일이 stereo format이 아닙니다.");
 		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 
 	// wav 파일의 sample rate가 44.1 KHz인지 확인
@@ -263,7 +243,7 @@ HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** 
 	{
 		e.contents = _T("sample rate이 44.1 KHz가 아닙니다.");
 		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 
 	// wav파일이 16bit foramt으로 저장되었는지 확인
@@ -271,7 +251,7 @@ HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** 
 	{
 		e.contents = _T("wav파일이 16bit foramt이 아닙니다.");
 		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 
 	// wav 파일의 data chunk header 확인
@@ -279,12 +259,10 @@ HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** 
 	{
 		e.contents = _T("Data chuck ID가 data가 아닙니다.");
 		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 
 	// wav 파일의 내용을 저장할 secondary buffer 생성 //
-	memset(&WaveFormat, 0, sizeof(WaveFormat));
-
 	// secondary buffer에 들어갈 데이터의 format(데이터 형식) 지정
 	WaveFormat.wFormatTag = WAVE_FORMAT_PCM;
 	WaveFormat.nSamplesPerSec = 44100;
@@ -295,8 +273,6 @@ HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** 
 	WaveFormat.cbSize = 0;
 
 	// secondary buffer 설정
-	memset(&BufferDesc, 0, sizeof(BufferDesc));
-
 	BufferDesc.dwSize = sizeof(BufferDesc);
 	BufferDesc.dwFlags = DSBCAPS_CTRLVOLUME;
 	BufferDesc.dwBufferBytes = WaveFileHeader.DataSize;
@@ -315,16 +291,22 @@ HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** 
 	{
 		e.contents = _T("임시 sound buffer 생성 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 	// 임시 sound buffer를 통해 IDirectSoundBuffer8의 interface 얻기
 	result = tempBuffer->QueryInterface(IID_IDirectSoundBuffer8, (void**)&(*SecondaryBuffer));
 	if (FAILED(result))
 	{
+		if (tempBuffer)
+		{
+			tempBuffer->Release();
+			tempBuffer = nullptr;
+		}
+
 		e.contents = _T("임시 sound buffer를 통해 IDirectSoundBuffer8의 interface 얻기 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 	// 임시 sound buffer 해제
@@ -339,7 +321,7 @@ HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** 
 	{
 		e.contents = _T("wav 파일 데이터를 저장할 임시 메모리 생성 실패");
 		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 
 	// wav 파일 데이터를 읽어 임시 메모리에 저장
@@ -347,18 +329,30 @@ HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** 
 	count = FileIn.gcount();
 	if (WaveFileHeader.DataSize != count)
 	{
+		if (WaveData)
+		{
+			delete[] WaveData;
+			WaveData = nullptr;
+		}
+
 		e.contents = _T("wav 파일 데이터를 읽어 임시 메모리에 저장 실패");
 		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 
 	// 임시 메모리에 저장된 데이터를 secondary buffer에 복사하기 위해 secondary buffer를 lock
 	result = (*SecondaryBuffer)->Lock(0, WaveFileHeader.DataSize, (void**)&BufferPtr, (DWORD*)&BufferSize, NULL, 0, 0);
 	if (FAILED(result))
 	{
+		if (WaveData)
+		{
+			delete[] WaveData;
+			WaveData = nullptr;
+		}
+
 		e.contents = _T("secondary buffer를 lock 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 	// 임시 메모리에 저장된 데이터를 secondary buffer에 복사
@@ -368,9 +362,15 @@ HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** 
 	result = (*SecondaryBuffer)->Unlock((void*)BufferPtr, BufferSize, NULL, 0);
 	if (FAILED(result))
 	{
+		if (WaveData)
+		{
+			delete[] WaveData;
+			WaveData = nullptr;
+		}
+
 		e.contents = _T("secondary buffer를 unlock 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 
@@ -395,7 +395,6 @@ void SoundClass::ShutdownWaveFile(IDirectSoundBuffer8** const& SecondaryBuffer)
 
 HRESULT SoundClass::PlayWaveFile()
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
@@ -409,7 +408,7 @@ HRESULT SoundClass::PlayWaveFile()
 	{
 		e.contents = _T("audio를 재생할 시작 위치 설정 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 	// audio의 volume 지정 //
@@ -419,7 +418,7 @@ HRESULT SoundClass::PlayWaveFile()
 	{
 		e.contents = _T("audio의 volume 지정 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 	// secondary buffer에 저장된 데이터 재생 //
@@ -428,7 +427,7 @@ HRESULT SoundClass::PlayWaveFile()
 	{
 		e.contents = _T("secondary buffer에 저장된 데이터 재생 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 	return result;

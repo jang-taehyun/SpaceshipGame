@@ -2,12 +2,10 @@
 #include "TimerClass.h"
 
 bool TimerClass::IsInitialize = false;
+static ErrorContent e;
 
 TimerClass::TimerClass()
 {
-	ErrorContent e;
-	HRESULT result = S_OK;
-
 	// 에러 메세지 초기화 //
 	e.title = _T("TimerClass Constructor");
 
@@ -18,13 +16,7 @@ TimerClass::TimerClass()
 		throw e;
 	}
 
-	result = Initialize();
-	if (FAILED(result))
-	{
-		e.contents = _T("TimerClass 초기화 실패, ") + e.contents;
-		e.errorCode = result;
-	}
-
+	Initialize();
 	IsInitialize = true;
 }
 
@@ -33,11 +25,8 @@ TimerClass::~TimerClass()
 	IsInitialize = false;
 }
 
-HRESULT TimerClass::Initialize()
+void TimerClass::Initialize()
 {
-	ErrorContent e;
-	HRESULT result = S_OK;
-
 	// 에러 메세지 초기화 //
 	e.title = _T("TimerClass Initialize()");
 
@@ -47,7 +36,7 @@ HRESULT TimerClass::Initialize()
 	if (!m_Frequency)
 	{
 		e.contents = _T("high performance timer를 지원하지 않습니다.");
-		return E_FAIL;
+		return;
 	}
 
 	// 1ms마다 counter에서 tick이 몇 번 일어나는지 계산
@@ -55,8 +44,6 @@ HRESULT TimerClass::Initialize()
 
 	// 성능 카운터의 현재 값(현재 CPU의 tick)을 가져오기
 	QueryPerformanceCounter((LARGE_INTEGER*)&m_StartTime);
-
-	return result;
 }
 
 void TimerClass::Frame()

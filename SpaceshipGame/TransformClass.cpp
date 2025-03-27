@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "TransformClass.h"
 
+static ErrorContent e;
+
 TransformClass::TransformClass()
 {
 	DirectX::XMFLOAT4 position = { 0.f, 0.f, 0.f, 1.f };
@@ -52,7 +54,6 @@ void TransformClass::Initialize(const DirectX::XMFLOAT4& position, const DirectX
 
 HRESULT TransformClass::ChangePosition(const MoveState& state, const bool& IsKeyDown)
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
@@ -70,6 +71,7 @@ HRESULT TransformClass::ChangePosition(const MoveState& state, const bool& IsKey
 		break;
 	default:
 		e.contents = _T("예상치 못한 동작입니다.");
+		e.errorCode = E_FAIL;
 		return E_FAIL;
 		break;
 	}
@@ -81,7 +83,6 @@ HRESULT TransformClass::ChangePosition(const MoveState& state, const bool& IsKey
 
 HRESULT TransformClass::ChangeRotation(const RotationState& state, const bool& IsMouseMove)
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
@@ -101,6 +102,7 @@ HRESULT TransformClass::ChangeRotation(const RotationState& state, const bool& I
 		break;
 	default:
 		e.contents = _T("예상치 못한 동작입니다.");
+		e.errorCode = E_FAIL;
 		return E_FAIL;
 		break;
 	}

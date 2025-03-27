@@ -3,7 +3,9 @@
 class ColorClass
 {
 public:
-	ColorClass();
+	ColorClass() = default;
+	ColorClass(const ColorClass& other);
+	ColorClass(const float&& r, const float&& g = 0.f, const float&& b = 0.f, const float&& a = 1.f);
 	~ColorClass();
 
 	// ---- Getter ---- //
@@ -43,8 +45,5 @@ private:
 	float green = 0.f;
 	float blue = 0.f;
 	float alpha = 0.5f;
-
-public:
-	ColorClass(const ColorClass& other) = delete;
 };
 

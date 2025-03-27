@@ -2,9 +2,10 @@
 #include <fstream>
 #include "ModelClass.h"
 
+static ErrorContent e;
+
 ModelClass::ModelClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& TextureFileName, const tstring& ModelFileName)
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
@@ -14,16 +15,12 @@ ModelClass::ModelClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT
 	if (FAILED(result))
 	{
 		Shutdown();
-
-		e.contents = _T("ModelClass 초기화 실패");
-		e.errorCode = result;
 		throw e;
 	}
 }
 
 ModelClass::ModelClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<tstring>& TextureFileNames, const tstring& ModelFileName)
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
@@ -33,9 +30,6 @@ ModelClass::ModelClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT
 	if (FAILED(result))
 	{
 		Shutdown();
-
-		e.contents = _T("ModelClass 초기화 실패");
-		e.errorCode = result;
 		throw e;
 	}
 }
@@ -47,7 +41,6 @@ ModelClass::~ModelClass()
 
 HRESULT ModelClass::Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& TextureFileName, const tstring& ModelFileName)
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
@@ -57,44 +50,36 @@ HRESULT ModelClass::Initialize(const DirectX::XMFLOAT4& position, const DirectX:
 	m_Transform = new TransformClass(position, rotation, scaling);
 	if(!m_Transform)
 	{
-		Shutdown();
-
 		e.contents = _T("transform 인스턴스 생성 실패");
-		e.errorCode = result;
-		throw e;
+		e.errorCode = E_FAIL;
+		return E_FAIL;
 	}
 
 	// model load //
 	result = LoadModel(ModelFileName);
 	if (FAILED(result))
 	{
-		Shutdown();
-
 		e.contents = _T("model load 실패");
-		e.errorCode = result;
-		throw e;
+		e.errorCode = E_FAIL;
+		return E_FAIL;
 	}
 
 	// vertex buffer, index buffer 생성 및 초기화 //
 	result = InitializeBuffers(Device);
 	if (FAILED(result))
 	{
-		Shutdown();
-
 		e.contents = _T("vertex buffer, index buffer 생성 및 초기화 실패");
-		e.errorCode = result;
-		throw e;
+		e.errorCode = E_FAIL;
+		return E_FAIL;
 	}
 
 	// texture load //
 	result = LoadTexture(Device, DeviceContext, TextureFileName);
 	if (FAILED(result))
 	{
-		Shutdown();
-
 		e.contents = _T("texture load 실패");
-		e.errorCode = result;
-		throw e;
+		e.errorCode = E_FAIL;
+		return E_FAIL;
 	}
 
 	return result;
@@ -102,7 +87,6 @@ HRESULT ModelClass::Initialize(const DirectX::XMFLOAT4& position, const DirectX:
 
 HRESULT ModelClass::Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<tstring>& TextureFileNames, const tstring& ModelFileName)
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
@@ -112,44 +96,36 @@ HRESULT ModelClass::Initialize(const DirectX::XMFLOAT4& position, const DirectX:
 	m_Transform = new TransformClass(position, rotation, scaling);
 	if (!m_Transform)
 	{
-		Shutdown();
-
 		e.contents = _T("transform 인스턴스 생성 실패");
-		e.errorCode = result;
-		throw e;
+		e.errorCode = E_FAIL;
+		return E_FAIL;
 	}
 
 	// model load //
 	result = LoadModel(ModelFileName);
 	if (FAILED(result))
 	{
-		Shutdown();
-
 		e.contents = _T("model load 실패");
-		e.errorCode = result;
-		throw e;
+		e.errorCode = E_FAIL;
+		return E_FAIL;
 	}
 
 	// vertex buffer, index buffer 생성 및 초기화 //
 	result = InitializeBuffers(Device);
 	if (FAILED(result))
 	{
-		Shutdown();
-
 		e.contents = _T("vertex buffer, index buffer 생성 및 초기화 실패");
-		e.errorCode = result;
-		throw e;
+		e.errorCode = E_FAIL;
+		return E_FAIL;
 	}
 
 	// texture load //
 	result = LoadTexture(Device, DeviceContext, TextureFileNames);
 	if (FAILED(result))
 	{
-		Shutdown();
-
 		e.contents = _T("texture load 실패");
-		e.errorCode = result;
-		throw e;
+		e.errorCode = E_FAIL;
+		return E_FAIL;
 	}
 
 	return result;
@@ -171,7 +147,6 @@ void ModelClass::Render(ID3D11DeviceContext* const& DeviceContext)
 
 HRESULT ModelClass::LoadModel(const tstring& FileName)
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 	std::ifstream FileIn;
 	char input = 0;
@@ -183,11 +158,9 @@ HRESULT ModelClass::LoadModel(const tstring& FileName)
 	FileIn.open(FileName);
 	if (FileIn.fail())
 	{
-		Shutdown();
-
 		e.contents = _T("model file 열기 실패");
-		e.errorCode = result;
-		throw e;
+		e.errorCode = E_FAIL;
+		return E_FAIL;
 	}
 
 	// vertex count의 값까지 file의 내용을 read //
@@ -205,11 +178,9 @@ HRESULT ModelClass::LoadModel(const tstring& FileName)
 	m_Model = new ModelType[m_VertexCount];
 	if(!m_Model)
 	{
-		Shutdown();
-
 		e.contents = _T("model 데이터 생성 실패");
 		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 
 	// 데이터의 시작 부분까지 file을 read
@@ -235,7 +206,6 @@ HRESULT ModelClass::LoadModel(const tstring& FileName)
 
 HRESULT ModelClass::InitializeBuffers(ID3D11Device* const& Device)
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 	VertexType* vertices = nullptr;			// 정점 데이터
 	unsigned long* indices = nullptr;		// 인덱스 데이터
@@ -254,21 +224,23 @@ HRESULT ModelClass::InitializeBuffers(ID3D11Device* const& Device)
 	vertices = new VertexType[m_VertexCount];
 	if (!vertices)
 	{
-		Shutdown();
-
 		e.contents = _T("정점 배열 생성 실패");
 		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 
 	indices = new unsigned long[m_IndexCount];
 	if (!indices)
 	{
-		Shutdown();
+		if (vertices)
+		{
+			delete[] vertices;
+			vertices = nullptr;
+		}
 
 		e.contents = _T("인덱스 배열 생성 실패");
 		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 
 	// 데이터를 정점 배열, 인덱스 배열로 복사
@@ -299,11 +271,20 @@ HRESULT ModelClass::InitializeBuffers(ID3D11Device* const& Device)
 	result = Device->CreateBuffer(&VertexBufferDesc, &VertexData, &m_VertexBufer);
 	if (FAILED(result))
 	{
-		Shutdown();
+		if (indices)
+		{
+			delete[] indices;
+			indices = nullptr;
+		}
+		if (vertices)
+		{
+			delete[] vertices;
+			vertices = nullptr;
+		}
 
 		e.contents = _T("vertex buffer 생성 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 	// index buffer 생성 //
@@ -324,11 +305,20 @@ HRESULT ModelClass::InitializeBuffers(ID3D11Device* const& Device)
 	result = Device->CreateBuffer(&IndexBufferDesc, &IndexData, &m_IndexBuffer);
 	if (FAILED(result))
 	{
-		Shutdown();
+		if (indices)
+		{
+			delete[] indices;
+			indices = nullptr;
+		}
+		if (vertices)
+		{
+			delete[] vertices;
+			vertices = nullptr;
+		}
 
 		e.contents = _T("index buffer 생성 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 	// 정점 데이터, 인덱스 데이터 해제
@@ -338,7 +328,7 @@ HRESULT ModelClass::InitializeBuffers(ID3D11Device* const& Device)
 	delete[] indices;
 	indices = nullptr;
 
-	return S_OK;
+	return result;
 }
 
 void ModelClass::RenderBuffers(ID3D11DeviceContext* const& DeviceContext)
@@ -357,7 +347,6 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext* const& DeviceContext)
 
 HRESULT ModelClass::LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& FileName)
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
@@ -367,22 +356,18 @@ HRESULT ModelClass::LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext
 	m_Texture = new TextureClass;
 	if (!m_Texture)
 	{
-		Shutdown();
-
 		e.contents = _T("texture 인스턴스 생성 실패");
-		e.errorCode = result;
-		throw e;
+		e.errorCode = E_FAIL;
+		return E_FAIL;
 	}
 
 	// texture 객체 초기화 //
 	result = m_Texture->Initialize(Device, DeviceContext, FileName);
 	if (FAILED(result))
 	{
-		Shutdown();
-
 		e.contents = _T("texture 객체 초기화 실패");
-		e.errorCode = result;
-		throw e;
+		e.errorCode = E_FAIL;
+		return E_FAIL;
 	}
 	
 	return result;
@@ -390,7 +375,6 @@ HRESULT ModelClass::LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext
 
 HRESULT ModelClass::LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<tstring>& FileNames)
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
@@ -400,22 +384,18 @@ HRESULT ModelClass::LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext
 	m_Texture = new TextureClass;
 	if (!m_Texture)
 	{
-		Shutdown();
-
 		e.contents = _T("texture 인스턴스 생성 실패");
-		e.errorCode = result;
-		throw e;
+		e.errorCode = E_FAIL;
+		return E_FAIL;
 	}
 
 	// texture 객체 초기화 //
 	result = m_Texture->Initialize(Device, DeviceContext, FileNames);
 	if (FAILED(result))
 	{
-		Shutdown();
-
 		e.contents = _T("texture 객체 초기화 실패");
-		e.errorCode = result;
-		throw e;
+		e.errorCode = E_FAIL;
+		return E_FAIL;
 	}
 
 	return result;

@@ -2,9 +2,18 @@
 #include "TransformClass.h"
 #include "CameraClass.h"
 
-CameraClass::CameraClass()
+static ErrorContent e;
+
+CameraClass::CameraClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling)
 {
-	Initialize();
+	HRESULT result = S_OK;
+
+	result = Initialize(position, rotation, scaling);
+	if (FAILED(result))
+	{
+		Shutdown();
+		throw e;
+	}
 }
 
 CameraClass::~CameraClass()
@@ -12,26 +21,19 @@ CameraClass::~CameraClass()
 	Shutdown();
 }
 
-HRESULT CameraClass::Initialize()
+HRESULT CameraClass::Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling)
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
 	e.title = _T("CameraClass Initialize()");
 
-	DirectX::XMFLOAT4 position = { 10.f, 1.f, -0.5f, 1.f };
-	DirectX::XMFLOAT4 rotation = { 0.f, -90.f, 0.f, 1.f };
-	DirectX::XMFLOAT4 scaling = { 1.f, 1.f, 1.f, 1.f };
-
 	m_Transform = new TransformClass(position, rotation, scaling);
 	if (!m_Transform)
 	{
-		Shutdown();
-
 		e.contents = _T("TransformClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 
 	return result;

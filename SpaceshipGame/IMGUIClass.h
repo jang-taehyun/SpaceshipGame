@@ -1,10 +1,6 @@
 #pragma once
 
-// IMGUI ฐüทร //
-#include "IMGUI/imgui.h"
-#include "IMGUI/imgui_impl_dx11.h"
-#include "IMGUI/imgui_impl_win32.h"
-
+struct ImVec2;
 class CameraClass;
 
 class IMGUIClass
@@ -16,7 +12,7 @@ public:
 	void Render(const CameraClass* const& camera, const int& fps, const int& cpu_usage);
 
 private:
-	HRESULT Initialize(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeivceContext);
+	void Initialize(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeivceContext);
 	void Shutdown();
 
 	void SetUI(const CameraClass* const& camera, const int& fps, const int& cpu_usage);

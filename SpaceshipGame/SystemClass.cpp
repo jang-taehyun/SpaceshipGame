@@ -8,10 +8,10 @@
 #include "SystemClass.h"
 
 bool SystemClass::IsInitialize = false;
+static ErrorContent e;
 
 SystemClass::SystemClass()
-{
-	ErrorContent e;
+{	
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
@@ -28,9 +28,6 @@ SystemClass::SystemClass()
 	if (FAILED(result))
 	{
 		Shutdown();
-
-		e.contents = _T("SystemClass 초기화 실패");
-		e.errorCode = result;
 		throw e;
 	}
 
@@ -45,7 +42,6 @@ SystemClass::~SystemClass()
 
 HRESULT SystemClass::Initialize()
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 	int ScreenWidth = WIDTH;
 	int ScreenHeight = HEIGHT;
@@ -62,7 +58,7 @@ HRESULT SystemClass::Initialize()
 	{
 		e.contents = _T("InputClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 
 	m_Graphics = new GraphicsClass(ScreenWidth, ScreenHeight, m_hwnd);
@@ -70,7 +66,7 @@ HRESULT SystemClass::Initialize()
 	{
 		e.contents = _T("GraphicsClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 
 	m_Sound = new SoundClass(m_hwnd, s_info);
@@ -78,7 +74,7 @@ HRESULT SystemClass::Initialize()
 	{
 		e.contents = _T("SoundClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 
 	m_FPS = new FPSClass;
@@ -86,7 +82,7 @@ HRESULT SystemClass::Initialize()
 	{
 		e.contents = _T("FPSClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 
 	m_CPU = new CPUClass;
@@ -94,7 +90,7 @@ HRESULT SystemClass::Initialize()
 	{
 		e.contents = _T("CPUClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 
 	m_Timer = new TimerClass;
@@ -102,7 +98,7 @@ HRESULT SystemClass::Initialize()
 	{
 		e.contents = _T("TimerClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 
 	return result;
@@ -151,7 +147,6 @@ void SystemClass::Shutdown()
 
 void SystemClass::Run()
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 	MSG msg;
 
@@ -180,7 +175,7 @@ void SystemClass::Run()
 			{
 				e.contents = _T("Frame() 처리 실패");
 				e.errorCode = result;
-				throw e;
+				return;
 			}
 		}
 
@@ -196,7 +191,6 @@ LRESULT SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM 
 
 HRESULT SystemClass::Frame()
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
@@ -209,20 +203,12 @@ HRESULT SystemClass::Frame()
 
 	result = m_Input->Frame();
 	if (FAILED(result))
-	{
-		e.contents = _T("Input의 Frame() 진행 실패");
-		e.errorCode = result;
-		throw e;
-	}
+		return result;
 
 	// Graphics의 Frame() 진행 //
 	result = m_Graphics->Frame(m_Input, m_Timer->GetTime(), m_FPS->GetFPS(), m_CPU->GetCPUPercentage());
 	if (FAILED(result))
-	{
-		e.contents = _T("Graphics의 Frame() 진행 실패");
-		e.errorCode = result;
-		throw e;
-	}
+		return result;
 
 	return result;
 }

@@ -2,10 +2,10 @@
 #include "CPUClass.h"
 
 bool CPUClass::IsInitialize = false;
+static ErrorContent e;
 
 CPUClass::CPUClass()
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
@@ -15,7 +15,6 @@ CPUClass::CPUClass()
 	{
 		e.contents = _T("이미 CPUClass 인스턴스가 존재합니다.");
 		e.errorCode = E_FAIL;
-
 		throw e;
 	}
 
@@ -34,7 +33,6 @@ CPUClass::~CPUClass()
 
 HRESULT CPUClass::Initialize()
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 	PDH_STATUS Status;
 
@@ -46,7 +44,8 @@ HRESULT CPUClass::Initialize()
 	Status = PdhOpenQuery(NULL, 0, &m_QueryHandle);
 	if (ERROR_SUCCESS != Status)
 	{
-		PdhCloseQuery(m_QueryHandle);
+		e.contents = _T("CPU 사용량을 polling할 query object 생성 실패");
+		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
 
@@ -54,7 +53,8 @@ HRESULT CPUClass::Initialize()
 	Status = PdhAddCounter(m_QueryHandle, TEXT("\\Process(_Total)\\% processor time"), 0, &m_CounterHandle);
 	if (ERROR_SUCCESS != Status)
 	{
-		PdhCloseQuery(m_QueryHandle);
+		e.contents = _T("시스템의 모든 CPU를 polling하도록 query object를 설정 실패");
+		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
 

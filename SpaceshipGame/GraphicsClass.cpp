@@ -18,10 +18,10 @@
 #include "GraphicsClass.h"
 
 bool GraphicsClass::IsInitialize = false;
+static ErrorContent e;
 
 GraphicsClass::GraphicsClass(const int& ScreenWidth, const int& ScreenHeight, const HWND& hwnd)
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
@@ -31,7 +31,6 @@ GraphicsClass::GraphicsClass(const int& ScreenWidth, const int& ScreenHeight, co
 	{
 		e.contents = _T("이미 GraphicsClass 인스턴스가 존재합니다.");
 		e.errorCode = E_FAIL;
-
 		throw e;
 	}
 
@@ -39,9 +38,6 @@ GraphicsClass::GraphicsClass(const int& ScreenWidth, const int& ScreenHeight, co
 	if (FAILED(result))
 	{
 		Shutdown();
-
-		e.contents = _T("GraphicsClass 초기화 실패");
-		e.errorCode = result;
 		throw e;
 	}
 
@@ -56,11 +52,11 @@ GraphicsClass::~GraphicsClass()
 
 HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeight, const HWND& hwnd)
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
-	DirectX::XMFLOAT4 Position = { 0.f, 0.f, 0.f, 1.f };
-	DirectX::XMFLOAT4 Rotation = { 1.f, 0.f, 0.f, 1.f };
-	DirectX::XMFLOAT4 Scaling = { 0.05f, 0.05f, 0.05f, 1.f };
+	float ScalingFactor = 0.5f;
+	DirectX::XMFLOAT4 Position = { 10.f, 1.f, -0.5f, 1.f };
+	DirectX::XMFLOAT4 Rotation = { 0.f, -90.f, 0.f, 1.f };
+	DirectX::XMFLOAT4 Scaling = { 1.f, 1.f, 1.f, 1.f };
 	DirectX::XMMATRIX BaseViewMatrix;
 
 	// 에러 메세지 초기화 //
@@ -72,24 +68,31 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 	{
 		e.contents = _T("D3DClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
-		throw e;
+		return E_FAIL;
 	}
 
 	// Camera 객체 생성 및 초기화 //
-	m_Camera = new CameraClass;
+	m_Camera = new CameraClass(Position, Rotation, Scaling);
 	if (!m_Camera)
 	{
 		e.contents = _T("CameraClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
-		throw e;
+		return result;
 	}
 	m_Camera->Render();
-	m_Camera->GetViewMatrix(BaseViewMatrix);
+	BaseViewMatrix = m_Camera->GetViewMatrix();
 
 	// Model 객체 생성 및 초기화 //
+	Position = { 0.f, 0.f, 0.f, 1.f };
+	Rotation = { 0.f, 0.f, 0.f, 1.f };
+	Scaling = { ScalingFactor, ScalingFactor, ScalingFactor, 1.f };
 	m_Model = new ModelClass(Position, Rotation, Scaling, m_D3D->GetDevice(), m_D3D->GetDeviceContext(), CubeTextureFileNames, CubeModelFileName);
 	if (!m_Model)
-		return E_FAIL;
+	{
+		e.contents = _T("Model 인스턴스 생성 실패");
+		e.errorCode = E_FAIL;
+		return result;
+	}
 
 	// alpha map shader 객체 생성 및 초기화 //
 	m_AlphaMapShader = new AlphaMapShaderClass;
@@ -188,7 +191,7 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 	{
 		e.contents = _T("IMGUIClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
-		throw e;
+		return result;
 	}
 
 	return result;
@@ -273,7 +276,6 @@ void GraphicsClass::Shutdown()
 
 HRESULT GraphicsClass::Frame(const InputClass* const& input, const float& frame, const int& fps, const int& cpu_usage)
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 	bool KeyDown = false;
 
@@ -289,7 +291,7 @@ HRESULT GraphicsClass::Frame(const InputClass* const& input, const float& frame,
 	{
 		e.contents = _T("camera 객체의 transform 변경(LEFT) 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 	KeyDown = input->IsRightArrowPressed();
@@ -298,7 +300,7 @@ HRESULT GraphicsClass::Frame(const InputClass* const& input, const float& frame,
 	{
 		e.contents = _T("camera 객체의 transform 변경(RIGHT) 진행 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 	// 렌더링 //
@@ -307,7 +309,7 @@ HRESULT GraphicsClass::Frame(const InputClass* const& input, const float& frame,
 	{
 		e.contents = _T("Frame() 처리 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 	return result;
@@ -335,7 +337,7 @@ HRESULT GraphicsClass::Render(const int& fps, const int& cpu_usage)
 	WorldMatrix = m_Model->GetAffineMatrix();
 
 	// view matrix
-	m_Camera->GetViewMatrix(ViewMatrix);
+	ViewMatrix = m_Camera->GetViewMatrix();
 
 	// projection matrix
 	m_D3D->GetProjectionMatrix(ProjectionMatrix);
@@ -354,7 +356,7 @@ HRESULT GraphicsClass::Render(const int& fps, const int& cpu_usage)
 	{
 		e.contents = _T("Model 렌더링 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 	// 2D 렌더링 //
@@ -370,7 +372,7 @@ HRESULT GraphicsClass::Render(const int& fps, const int& cpu_usage)
 	{
 		e.contents = _T("text 렌더링 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 	
 	// alpha blend state 비활성화

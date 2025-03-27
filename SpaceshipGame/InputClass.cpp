@@ -2,10 +2,10 @@
 #include "InputClass.h"
 
 bool InputClass::IsInitailize = false;
+static ErrorContent e;
 
 InputClass::InputClass(const HINSTANCE& hinstance, const HWND& hwnd, const int& ScreenWidth, const int& ScreenHeight)
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
@@ -15,7 +15,6 @@ InputClass::InputClass(const HINSTANCE& hinstance, const HWND& hwnd, const int& 
 	{
 		e.contents = _T("이미 InputClass 인스턴스가 존재합니다.");
 		e.errorCode = E_FAIL;
-
 		throw e;
 	}
 
@@ -40,7 +39,6 @@ InputClass::~InputClass()
 
 HRESULT InputClass::Initialize(const HINSTANCE& hinstance, const HWND& hwnd, const int& ScreenWidth, const int& ScreenHeight)
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
@@ -56,7 +54,7 @@ HRESULT InputClass::Initialize(const HINSTANCE& hinstance, const HWND& hwnd, con
 	{
 		e.contents = _T("Direct input interface 생성 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 	// 키보드의 Direct input interface 초기화 //
@@ -66,7 +64,7 @@ HRESULT InputClass::Initialize(const HINSTANCE& hinstance, const HWND& hwnd, con
 	{
 		e.contents = _T("키보드의 Direct input interface 초기화 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 	// 키보드의 Direct input interface가 수집할 데이터의 포맷(데이터 해석 방법) 설정
@@ -75,7 +73,7 @@ HRESULT InputClass::Initialize(const HINSTANCE& hinstance, const HWND& hwnd, con
 	{
 		e.contents = _T("키보드의 Direct input interface가 수집할 데이터의 포맷(데이터 해석 방법) 설정 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 	// 키보드의 Direct input interface에 대한 Cooperative level 설정
@@ -84,7 +82,7 @@ HRESULT InputClass::Initialize(const HINSTANCE& hinstance, const HWND& hwnd, con
 	{
 		e.contents = _T("키보드의 Direct input interface에 대한 Cooperative level 설정 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 	// 키보드의 Direct input에 대한 접근 권한 취득
@@ -93,7 +91,7 @@ HRESULT InputClass::Initialize(const HINSTANCE& hinstance, const HWND& hwnd, con
 	{
 		e.contents = _T("키보드의 Direct input에 대한 접근 권한 취득 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 
@@ -103,7 +101,7 @@ HRESULT InputClass::Initialize(const HINSTANCE& hinstance, const HWND& hwnd, con
 	{
 		e.contents = _T("마우스의 Direct input interface 초기화 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 	// 마우스의 Direct input interface가 수집할 데이터의 포맷(데이터 해석 방법) 설정
@@ -112,7 +110,7 @@ HRESULT InputClass::Initialize(const HINSTANCE& hinstance, const HWND& hwnd, con
 	{
 		e.contents = _T("마우스의 Direct input interface 초기화 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 	// 마우스의 Direct input interface에 대한 Cooperative level 설정
@@ -121,7 +119,7 @@ HRESULT InputClass::Initialize(const HINSTANCE& hinstance, const HWND& hwnd, con
 	{
 		e.contents = _T("마우스의 Direct input interface에 대한 Cooperative level 설정 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 	// 마우스의 Direct input에 대한 접근 권한 취득
@@ -130,7 +128,7 @@ HRESULT InputClass::Initialize(const HINSTANCE& hinstance, const HWND& hwnd, con
 	{
 		e.contents = _T("마우스의 Direct input에 대한 접근 권한 취득 실패");
 		e.errorCode = result;
-		throw e;
+		return result;
 	}
 
 	return result;
@@ -161,7 +159,6 @@ void InputClass::Shutdown()
 
 HRESULT InputClass::Frame()
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
@@ -170,20 +167,12 @@ HRESULT InputClass::Frame()
 	// 키보드의 상태 읽기 //
 	result = ReadKeyboard();
 	if (FAILED(result))
-	{
-		e.contents = _T("키보드의 상태 읽기 실패");
-		e.errorCode = result;
-		throw e;
-	}
+		return result;
 
 	// 마우스의 상태 읽기 //
 	result = ReadMouse();
 	if (FAILED(result))
-	{
-		e.contents = _T("마우스의 상태 읽기 실패");
-		e.errorCode = result;
-		throw e;
-	}
+		return result;
 
 	ProcessInput();
 
@@ -192,8 +181,7 @@ HRESULT InputClass::Frame()
 
 HRESULT InputClass::ReadKeyboard()
 {
-	ErrorContent e;
-	HRESULT result;
+	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
 	e.title = _T("InputClass ReadKeyboard()");
@@ -210,17 +198,16 @@ HRESULT InputClass::ReadKeyboard()
 		{
 			e.contents = _T("키보드의 상태 가져오기 실패");
 			e.errorCode = result;
-			throw e;
+			return result;
 		}
 	}
 
-	return S_OK;
+	return result;
 }
 
 HRESULT InputClass::ReadMouse()
 {
-	HRESULT result;
-	ErrorContent e;
+	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
 	e.title = _T("InputClass ReadMouse()");
@@ -237,11 +224,11 @@ HRESULT InputClass::ReadMouse()
 		{
 			e.contents = _T("마우스의 상태 가져오기 실패");
 			e.errorCode = result;
-			throw e;
+			return result;
 		}
 	}
 
-	return S_OK;
+	return result;
 }
 
 void InputClass::ProcessInput()

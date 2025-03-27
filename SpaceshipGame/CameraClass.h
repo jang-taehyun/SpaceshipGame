@@ -5,18 +5,18 @@ class TransformClass;
 class CameraClass
 {
 public:
-	CameraClass();
+	CameraClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling);
 	~CameraClass();
 
 	// Getter //
 
 	inline TransformClass* const& GetTransformObject() const { return m_Transform; }
-	inline void GetViewMatrix(DirectX::XMMATRIX& ViewMatrix) const { ViewMatrix = m_ViewMatrix; }
+	inline const DirectX::XMMATRIX& GetViewMatrix() const { return m_ViewMatrix; }
 
 	void Render();
 
 private:
-	HRESULT Initialize();
+	HRESULT Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling);
 	void Shutdown();
 
 private:
@@ -24,6 +24,7 @@ private:
 	DirectX::XMMATRIX m_ViewMatrix = DirectX::XMMATRIX();
 
 public:
+	CameraClass() = delete;
 	CameraClass(const CameraClass& other) = delete;
 };
 

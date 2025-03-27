@@ -1,5 +1,10 @@
 #include "pch.h"
 
+// IMGUI 관련 //
+#include "IMGUI/imgui.h"
+#include "IMGUI/imgui_impl_dx11.h"
+#include "IMGUI/imgui_impl_win32.h"
+
 // FPS, CPU, Timer 관련 //
 #include "FPSClass.h"
 #include "CPUClass.h"
@@ -9,10 +14,10 @@
 #include "IMGUIClass.h"
 
 bool IMGUIClass::IsInitialize = false;
+static ErrorContent e;
 
 IMGUIClass::IMGUIClass(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeivceContext)
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
@@ -25,16 +30,7 @@ IMGUIClass::IMGUIClass(const HWND& hwnd, ID3D11Device* const& Device, ID3D11Devi
 		throw e;
 	}
 
-	result = Initialize(hwnd, Device, DeivceContext);
-	if (FAILED(result))
-	{
-		Shutdown();
-
-		e.contents = _T("IMGUIClass 초기화 실패");
-		e.errorCode = result;
-		throw e;
-	}
-
+	Initialize(hwnd, Device, DeivceContext);
 	IsInitialize = true;
 }
 
@@ -44,10 +40,8 @@ IMGUIClass::~IMGUIClass()
 	IsInitialize = false;
 }
 
-HRESULT IMGUIClass::Initialize(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeivceContext)
+void IMGUIClass::Initialize(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeivceContext)
 {
-	ErrorContent e;
-	HRESULT result = S_OK;
 	ImVec2 cur;
 	float adder = 30.f;
 	m_WindowsCount = 3;
@@ -77,8 +71,6 @@ HRESULT IMGUIClass::Initialize(const HWND& hwnd, ID3D11Device* const& Device, ID
 		m_WindowsPosition[i] = ImVec2(cur.x, cur.y);
 		cur.y += (m_WindowsSize.y + 10.f);
 	}
-
-	return result;
 }
 
 void IMGUIClass::Shutdown()

@@ -54,10 +54,10 @@ const SoundFileInfo s_info = { _T("./data/sound01.wav") };
 const tstring FontFileName = _T("./data/font01.txt");
 const tstring FontTextureFileName = _T("./data/font01.tga");
 
-const tstring CubeModelFileName = _T("./data/cat.txt");
+const tstring CubeModelFileName = _T("./data/aircraft.txt");
 const std::vector<tstring> CubeTextureFileNames =
 {
-	_T("./data/cat.png")
+	_T("./data/aircraft.jpg")
 };
 
 const ShaderFileInfo AlphaMapShaderInfo =
