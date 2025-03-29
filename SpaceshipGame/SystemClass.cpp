@@ -286,6 +286,9 @@ void SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)
 	ShowWindow(m_hwnd, SW_SHOW);
 	SetForegroundWindow(m_hwnd);
 	SetFocus(m_hwnd);
+
+	// 마우스 커서 위치를 중앙으로 초기화 //
+	SetCursorPos(GetSystemMetrics(SM_CXSCREEN) / 2, GetSystemMetrics(SM_CYSCREEN) / 2);
 }
 
 void SystemClass::ShutdownWindows()

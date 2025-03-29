@@ -55,6 +55,8 @@ private:
 	FrustumClass* m_Frustum = nullptr;
 	IMGUIClass* m_IMGUI = nullptr;
 
+	bool m_IsShowingCursor = true;
+
 public:
 	GraphicsClass() = delete;
 	GraphicsClass(const GraphicsClass& other) = delete;

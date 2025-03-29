@@ -12,6 +12,9 @@ public:
 
 	inline TransformClass* const& GetTransformObject() const { return m_Transform; }
 	inline const DirectX::XMMATRIX& GetViewMatrix() const { return m_ViewMatrix; }
+	
+
+	
 
 	void Render();
 

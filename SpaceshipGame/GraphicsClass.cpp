@@ -54,8 +54,8 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 {
 	HRESULT result = S_OK;
 	float ScalingFactor = 0.5f;
-	DirectX::XMFLOAT4 Position = { 10.f, 1.f, -0.5f, 1.f };
-	DirectX::XMFLOAT4 Rotation = { 0.f, -90.f, 0.f, 1.f };
+	DirectX::XMFLOAT4 Position = { 0.f, 0.f, 0.f, 1.f };
+	DirectX::XMFLOAT4 Rotation = { 0.f, 0.f, 0.f, 1.f };
 	DirectX::XMFLOAT4 Scaling = { 1.f, 1.f, 1.f, 1.f };
 	DirectX::XMMATRIX BaseViewMatrix;
 
@@ -278,6 +278,7 @@ HRESULT GraphicsClass::Frame(const InputClass* const& input, const float& frame,
 {
 	HRESULT result = S_OK;
 	bool KeyDown = false;
+	long MouseX = 0, MouseY = 0;
 
 	// 에러 메세지 초기화 //
 	e.title = _T("GraphicsClass Frame()");
@@ -285,22 +286,71 @@ HRESULT GraphicsClass::Frame(const InputClass* const& input, const float& frame,
 	// camera 객체의 frame time 갱신 및 keyboard, mouse의 input에 따라 camera 객체의 transform 변경 //
 	m_Camera->GetTransformObject()->SetFrameTime(frame);
 
-	KeyDown = input->IsLeftArrowPressed();
-	result = m_Camera->GetTransformObject()->ChangeRotation(RotationState::ROTATE_LEFT, KeyDown);
-	if (FAILED(result))
+	// 이동
 	{
-		e.contents = _T("camera 객체의 transform 변경(LEFT) 실패");
-		e.errorCode = result;
-		return result;
-	}
+		// 앞
+		KeyDown = input->IsWBottunPressed();
+		result = m_Camera->GetTransformObject()->ChangePosition(MoveState::MOVE_FORWARD, KeyDown);
+		if (FAILED(result))
+		{
+			e.contents = _T("camera 객체의 transform 변경(FORWARD) 실패");
+			e.errorCode = result;
+			return result;
+		}
 
-	KeyDown = input->IsRightArrowPressed();
-	result = m_Camera->GetTransformObject()->ChangeRotation(RotationState::ROTATE_RIGHT, KeyDown);
-	if (FAILED(result))
+		// 뒤
+		KeyDown = input->IsSBottunPressed();
+		result = m_Camera->GetTransformObject()->ChangePosition(MoveState::MOVE_BACKWARD, KeyDown);
+		if (FAILED(result))
+		{
+			e.contents = _T("camera 객체의 transform 변경(BACKWARD) 실패");
+			e.errorCode = result;
+			return result;
+		}
+
+		// 왼쪽
+		KeyDown = input->IsABottunPressed();
+		result = m_Camera->GetTransformObject()->ChangePosition(MoveState::MOVE_LEFT, KeyDown);
+		if (FAILED(result))
+		{
+			e.contents = _T("camera 객체의 transform 변경(LEFT) 실패");
+			e.errorCode = result;
+			return result;
+		}
+
+		// 오른쪽
+		KeyDown = input->IsDBottunPressed();
+		result = m_Camera->GetTransformObject()->ChangePosition(MoveState::MOVE_RIGHT, KeyDown);
+		if (FAILED(result))
+		{
+			e.contents = _T("camera 객체의 transform 변경(RIGHT) 진행 실패");
+			e.errorCode = result;
+			return result;
+		}
+	}
+	// 회전
+	KeyDown = input->IsMouseCenterBottunPressed();
+	if (KeyDown)
 	{
-		e.contents = _T("camera 객체의 transform 변경(RIGHT) 진행 실패");
-		e.errorCode = result;
-		return result;
+		input->GetMouseMoveDelta(MouseX, MouseY);
+		m_Camera->GetTransformObject()->ChangeRotation(MouseX, MouseY);
+
+		if (m_IsShowingCursor)
+		{
+			ShowCursor(false);
+			m_IsShowingCursor = false;
+		}
+	}
+	else
+	{
+		if (!m_IsShowingCursor)
+		{
+			m_IsShowingCursor = true;
+			ShowCursor(true);
+
+			// 마우스 커서 위치를 중앙으로 초기화 //
+			SetCursorPos(GetSystemMetrics(SM_CXSCREEN) / 2, GetSystemMetrics(SM_CYSCREEN) / 2);
+		}
 	}
 
 	// 렌더링 //

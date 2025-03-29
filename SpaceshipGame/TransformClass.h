@@ -7,17 +7,19 @@ public:
 	~TransformClass();
 
 	HRESULT ChangePosition(const MoveState& state, const bool& IsKeyDown);
-	HRESULT ChangeRotation(const RotationState& state, const bool& IsMouseMove);
+	void ChangeRotation(const long& MouseX, const long& MouseY);
 
 	// Getter //
 
 	inline const DirectX::XMMATRIX& GetAffine() const { return m_Affine; }
 	inline const DirectX::XMFLOAT4& GetPosition() const { return m_Position; }
 	inline const DirectX::XMFLOAT4& GetRotation() const { return m_Rotation; }
+	inline const float& GetKeyboardSensitivity() const { return m_KeyboardSensitivity; }
 
 	// Setter //
 
 	inline void SetFrameTime(const float& time) { m_FrameTime = time; }
+	inline void SetKeyboardSensitivity(const float& value) { m_KeyboardSensitivity = value; }
 
 	void SetPosition(const DirectX::XMFLOAT4& pos);
 	void SetPosition(const float& x, const float& y, const float& z);
@@ -29,8 +31,10 @@ private:
 
 	void UpdateAffineMatrix();
 
-	void TurnLeft(const bool& IsMouseMove);
-	void TurnRight(const bool& IsMouseMove);
+	void MoveLeft(const bool& IsKeyDown);
+	void MoveRight(const bool& IsKeyDown);
+	void MoveForward(const bool& IsKeyDown);
+	void MoveBackward(const bool& IsKeyDown);
 
 private:
 	DirectX::XMFLOAT4 m_Position = { 0.f, 0.f, 0.f, 0.f };
@@ -40,9 +44,14 @@ private:
 	DirectX::XMMATRIX m_Affine = DirectX::XMMatrixIdentity();
 
 	float m_FrameTime = 0.f;
-	float m_RotationY = 0.f;
-	float m_LeftTurnSpeed = 0.f;
-	float m_RightTurnSpeed = 0.f;
+
+	float m_KeyboardSensitivity = 0.1f;
+	float m_ForwardMoveSpeed = 0.f;
+	float m_BackwardMoveSpeed = 0.f;
+	float m_LeftMoveSpeed = 0.f;
+	float m_RightMoveSpeed = 0.f;
+	
+	float m_MouseSensitivity = 0.15f;
 
 public:
 	TransformClass(const TransformClass& other) = delete;

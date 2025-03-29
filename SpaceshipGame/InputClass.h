@@ -2,6 +2,12 @@
 
 class InputClass
 {
+private:
+	enum MOUSEBUTTON
+	{
+		MOUSE_LEFT = 0, MOUSE_RIGHT = 1, MOUSE_CENTER = 2,
+	};
+
 public:
 	InputClass(const HINSTANCE& hinstance, const HWND& hwnd, const int& ScreenWidth, const int& ScreenHeight);
 	~InputClass();
@@ -10,13 +16,24 @@ public:
 
 	// Getter //
 
-	inline bool IsEscapePressed() const { return ((m_KeyboardState[DIK_ESCAPE] & 0x80) ? true : false); }
-	inline bool IsLeftArrowPressed() const { return ((m_KeyboardState[DIK_LEFTARROW] & 0x80) ? true : false); }
-	inline bool IsRightArrowPressed() const { return ((m_KeyboardState[DIK_RIGHTARROW] & 0x80) ? true : false); }
+	inline bool IsEscapePressed() const { return m_KeyboardState[DIK_ESCAPE] & 0x80; }
+
+	inline bool IsLeftArrowPressed() const { return m_KeyboardState[DIK_LEFTARROW] & 0x80; }
+	inline bool IsRightArrowPressed() const { return m_KeyboardState[DIK_RIGHTARROW] & 0x80; }
+	inline bool IsUpArrowPressed() const { return m_KeyboardState[DIK_UPARROW] & 0x80; }
+	inline bool IsDownArrowPressed() const { return m_KeyboardState[DIK_DOWNARROW] & 0x80; }
+
+	inline bool IsABottunPressed() const { return m_KeyboardState[DIK_A] & 0x80; }
+	inline bool IsSBottunPressed() const { return m_KeyboardState[DIK_S] & 0x80; }
+	inline bool IsWBottunPressed() const { return m_KeyboardState[DIK_W] & 0x80; }
+	inline bool IsDBottunPressed() const { return m_KeyboardState[DIK_D] & 0x80; }
+
+	inline bool IsMouseCenterBottunPressed() const { return m_MouseState.rgbButtons[MOUSEBUTTON::MOUSE_CENTER] & 0x80; }
 
 	// Setter //
 
 	inline void GetMouseLocation(int& MouseX, int& MouseY) const { MouseX = m_MouseX; MouseY = m_MouseY; }
+	inline void GetMouseMoveDelta(long& MouseX, long& MouseY) const { MouseX = m_MouseState.lX; MouseY = m_MouseState.lY; }
 
 private:
 	HRESULT Initialize(const HINSTANCE& hinstance, const HWND& hwnd, const int& ScreenWidth, const int& ScreenHeight);
