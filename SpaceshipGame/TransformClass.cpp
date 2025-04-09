@@ -46,9 +46,24 @@ void TransformClass::SetRotation(const float& x, const float& y, const float& z)
 
 void TransformClass::Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling)
 {
+	float pitch, yaw, roll;
+	DirectX::XMMATRIX RotationMatrix;
+
 	m_Position = position;
 	m_Rotation = rotation;
 	m_Scaling = scaling;
+
+	// forward, right, up vector 설정 //
+	// 회전 행렬 설정 //
+	pitch = m_Position.x;
+	yaw = m_Position.y;
+	roll = m_Position.z;
+	RotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+
+	// 카메라의 local 좌표계의 축 추출 //
+	m_ForwardVector = DirectX::XMVector3Normalize(RotationMatrix.r[2]);
+	m_RightVector = DirectX::XMVector3Normalize(RotationMatrix.r[0]);
+	m_UpVector = DirectX::XMVector3Normalize(RotationMatrix.r[1]);
 
 	UpdateAffineMatrix();
 }
@@ -57,8 +72,22 @@ HRESULT TransformClass::ChangePosition(const MoveState& state, const bool& IsKey
 {
 	HRESULT result = S_OK;
 
+	float pitch, yaw, roll;
+	DirectX::XMMATRIX RotationMatrix;
+
 	// 에러 메세지 초기화 //
 	e.title = _T("TransformClass ChangePosition()");
+
+	// 회전 행렬 설정 //
+	pitch = m_Rotation.x;
+	yaw = m_Rotation.y;
+	roll = m_Rotation.z;
+	RotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+
+	// 해당 객체의 local 좌표계의 축 추출 //
+	m_ForwardVector = DirectX::XMVector3Normalize(RotationMatrix.r[2]);
+	m_RightVector = DirectX::XMVector3Normalize(RotationMatrix.r[0]);
+	m_UpVector = DirectX::XMVector3Normalize(RotationMatrix.r[1]);
 
 	switch (state)
 	{
@@ -99,9 +128,13 @@ void TransformClass::ChangeRotation(const long& MouseX, const long& MouseY)
 
 void TransformClass::MoveLeft(const bool& IsKeyDown)
 {
+	using namespace DirectX;
+
+	XMVECTOR position = XMLoadFloat4(&m_Position);
+
 	if (IsKeyDown)
 	{
-		m_LeftMoveSpeed += (m_FrameTime * 0.01f);
+		m_LeftMoveSpeed += (m_FrameTime * m_KeyboardSensitivity);
 
 		if (m_LeftMoveSpeed > (m_FrameTime * m_KeyboardSensitivity))
 		{
@@ -110,7 +143,7 @@ void TransformClass::MoveLeft(const bool& IsKeyDown)
 	}
 	else
 	{
-		m_LeftMoveSpeed -= (m_FrameTime * 0.005f);
+		m_LeftMoveSpeed -= (m_FrameTime * m_KeyboardSensitivity);
 
 		if (m_LeftMoveSpeed < 0.f)
 		{
@@ -118,14 +151,19 @@ void TransformClass::MoveLeft(const bool& IsKeyDown)
 		}
 	}
 
-	m_Position.x -= m_LeftMoveSpeed;
+	position -= m_RightVector * m_LeftMoveSpeed;
+	XMStoreFloat4(&m_Position, position);
 }
 
 void TransformClass::MoveRight(const bool& IsKeyDown)
 {
+	using namespace DirectX;
+
+	XMVECTOR position = XMLoadFloat4(&m_Position);
+
 	if (IsKeyDown)
 	{
-		m_RightMoveSpeed += (m_FrameTime * 0.01f);
+		m_RightMoveSpeed += (m_FrameTime * m_KeyboardSensitivity);
 
 		if (m_RightMoveSpeed > (m_FrameTime * m_KeyboardSensitivity))
 		{
@@ -134,7 +172,7 @@ void TransformClass::MoveRight(const bool& IsKeyDown)
 	}
 	else
 	{
-		m_RightMoveSpeed -= (m_FrameTime * 0.005f);
+		m_RightMoveSpeed -= (m_FrameTime * m_KeyboardSensitivity);
 
 		if (m_RightMoveSpeed < 0.f)
 		{
@@ -142,14 +180,19 @@ void TransformClass::MoveRight(const bool& IsKeyDown)
 		}
 	}
 
-	m_Position.x += m_RightMoveSpeed;
+	position += m_RightVector * m_RightMoveSpeed;
+	XMStoreFloat4(&m_Position, position);
 }
 
 void TransformClass::MoveForward(const bool& IsKeyDown)
 {
+	using namespace DirectX;
+
+	XMVECTOR position = XMLoadFloat4(&m_Position);
+
 	if (IsKeyDown)
 	{
-		m_ForwardMoveSpeed += (m_FrameTime * 0.01f);
+		m_ForwardMoveSpeed += (m_FrameTime * m_KeyboardSensitivity);
 
 		if (m_ForwardMoveSpeed > (m_FrameTime * m_KeyboardSensitivity))
 		{
@@ -158,7 +201,7 @@ void TransformClass::MoveForward(const bool& IsKeyDown)
 	}
 	else
 	{
-		m_ForwardMoveSpeed -= (m_FrameTime * 0.005f);
+		m_ForwardMoveSpeed -= (m_FrameTime * m_KeyboardSensitivity);
 
 		if (m_ForwardMoveSpeed < 0.f)
 		{
@@ -166,14 +209,19 @@ void TransformClass::MoveForward(const bool& IsKeyDown)
 		}
 	}
 
-	m_Position.z += m_ForwardMoveSpeed;
+	position += m_ForwardVector * m_ForwardMoveSpeed;
+	XMStoreFloat4(&m_Position, position);
 }
 
 void TransformClass::MoveBackward(const bool& IsKeyDown)
 {
+	using namespace DirectX;
+
+	XMVECTOR position = XMLoadFloat4(&m_Position);
+
 	if (IsKeyDown)
 	{
-		m_BackwardMoveSpeed += (m_FrameTime * 0.01f);
+		m_BackwardMoveSpeed += (m_FrameTime * m_KeyboardSensitivity);
 
 		if (m_BackwardMoveSpeed > (m_FrameTime * m_KeyboardSensitivity))
 		{
@@ -182,7 +230,7 @@ void TransformClass::MoveBackward(const bool& IsKeyDown)
 	}
 	else
 	{
-		m_BackwardMoveSpeed -= (m_FrameTime * 0.005f);
+		m_BackwardMoveSpeed -= (m_FrameTime * m_KeyboardSensitivity);
 
 		if (m_BackwardMoveSpeed < 0.f)
 		{
@@ -190,7 +238,8 @@ void TransformClass::MoveBackward(const bool& IsKeyDown)
 		}
 	}
 
-	m_Position.z -= m_BackwardMoveSpeed;
+	position -= m_ForwardVector * m_BackwardMoveSpeed;
+	XMStoreFloat4(&m_Position, position);
 }
 
 void TransformClass::UpdateAffineMatrix()

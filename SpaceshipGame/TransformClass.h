@@ -15,6 +15,11 @@ public:
 	inline const DirectX::XMMATRIX& GetAffine() const { return m_Affine; }
 	inline const DirectX::XMFLOAT4& GetPosition() const { return m_Position; }
 	inline const DirectX::XMFLOAT4& GetRotation() const { return m_Rotation; }
+
+	inline const DirectX::XMVECTOR& GetForwardVector() const { return m_ForwardVector; }
+	inline const DirectX::XMVECTOR& GetRightVector() const { return m_RightVector; }
+	inline const DirectX::XMVECTOR& GetUpVector() const { return m_UpVector; }
+
 	inline const float& GetKeyboardSensitivity() const { return m_KeyboardSensitivity; }
 
 	// Setter //
@@ -41,6 +46,10 @@ private:
 	DirectX::XMFLOAT4 m_Position = { 0.f, 0.f, 0.f, 0.f };
 	DirectX::XMFLOAT4 m_Rotation = { 0.f, 0.f, 0.f, 0.f };
 	DirectX::XMFLOAT4 m_Scaling = { 0.f, 0.f, 0.f, 0.f };
+
+	DirectX::XMVECTOR m_ForwardVector;							// 로컬 좌표계의 z, x, y 축
+	DirectX::XMVECTOR m_RightVector;
+	DirectX::XMVECTOR m_UpVector;
 
 	DirectX::XMMATRIX m_Affine = DirectX::XMMatrixIdentity();
 
