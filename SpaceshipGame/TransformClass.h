@@ -1,4 +1,5 @@
 #pragma once
+
 class TransformClass
 {
 public:
@@ -45,13 +46,13 @@ private:
 
 	float m_FrameTime = 0.f;
 
-	float m_KeyboardSensitivity = 0.1f;
 	float m_ForwardMoveSpeed = 0.f;
 	float m_BackwardMoveSpeed = 0.f;
 	float m_LeftMoveSpeed = 0.f;
 	float m_RightMoveSpeed = 0.f;
-	
-	float m_MouseSensitivity = 0.15f;
+
+	float m_KeyboardSensitivity = 0.1f;
+	float m_MouseSensitivity = 0.0015f;
 
 public:
 	TransformClass(const TransformClass& other) = delete;

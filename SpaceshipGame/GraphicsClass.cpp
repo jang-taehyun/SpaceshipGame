@@ -79,7 +79,6 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 		e.errorCode = E_FAIL;
 		return result;
 	}
-	m_Camera->Render();
 	BaseViewMatrix = m_Camera->GetViewMatrix();
 
 	// Model 객체 생성 및 초기화 //
@@ -290,43 +289,59 @@ HRESULT GraphicsClass::Frame(const InputClass* const& input, const float& frame,
 	{
 		// 앞
 		KeyDown = input->IsWBottunPressed();
-		result = m_Camera->GetTransformObject()->ChangePosition(MoveState::MOVE_FORWARD, KeyDown);
-		if (FAILED(result))
+		if (KeyDown)
 		{
-			e.contents = _T("camera 객체의 transform 변경(FORWARD) 실패");
-			e.errorCode = result;
-			return result;
+			result = m_Camera->Move(MoveState::MOVE_FORWARD);
+			if (FAILED(result))
+			{
+				e.contents = _T("camera 객체의 transform 변경(FORWARD) 실패");
+				e.errorCode = result;
+				return result;
+			}
 		}
+		
 
 		// 뒤
 		KeyDown = input->IsSBottunPressed();
-		result = m_Camera->GetTransformObject()->ChangePosition(MoveState::MOVE_BACKWARD, KeyDown);
-		if (FAILED(result))
+		if (KeyDown)
 		{
-			e.contents = _T("camera 객체의 transform 변경(BACKWARD) 실패");
-			e.errorCode = result;
-			return result;
+			result = m_Camera->Move(MoveState::MOVE_BACKWARD);
+			if (FAILED(result))
+			{
+				e.contents = _T("camera 객체의 transform 변경(BACKWARD) 실패");
+				e.errorCode = result;
+				return result;
+			}
 		}
+		
 
 		// 왼쪽
 		KeyDown = input->IsABottunPressed();
-		result = m_Camera->GetTransformObject()->ChangePosition(MoveState::MOVE_LEFT, KeyDown);
-		if (FAILED(result))
+		if (KeyDown)
 		{
-			e.contents = _T("camera 객체의 transform 변경(LEFT) 실패");
-			e.errorCode = result;
-			return result;
+			result = m_Camera->Move(MoveState::MOVE_LEFT);
+			if (FAILED(result))
+			{
+				e.contents = _T("camera 객체의 transform 변경(LEFT) 실패");
+				e.errorCode = result;
+				return result;
+			}
 		}
+		
 
 		// 오른쪽
 		KeyDown = input->IsDBottunPressed();
-		result = m_Camera->GetTransformObject()->ChangePosition(MoveState::MOVE_RIGHT, KeyDown);
-		if (FAILED(result))
+		if (KeyDown)
 		{
-			e.contents = _T("camera 객체의 transform 변경(RIGHT) 진행 실패");
-			e.errorCode = result;
-			return result;
+			result = m_Camera->Move(MoveState::MOVE_RIGHT);
+			if (FAILED(result))
+			{
+				e.contents = _T("camera 객체의 transform 변경(RIGHT) 진행 실패");
+				e.errorCode = result;
+				return result;
+			}
 		}
+		
 	}
 	// 회전
 	KeyDown = input->IsMouseCenterBottunPressed();

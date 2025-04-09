@@ -36,6 +36,8 @@ HRESULT CameraClass::Initialize(const DirectX::XMFLOAT4& position, const DirectX
 		return E_FAIL;
 	}
 
+	Render();
+
 	return result;
 }
 
@@ -48,60 +50,104 @@ void CameraClass::Shutdown()
 	}
 }
 
+void CameraClass::MoveForward()
+{
+	using namespace DirectX;
+
+	XMFLOAT4 param;
+	XMVECTOR position = XMLoadFloat4(&(m_Transform->GetPosition()));
+	position += m_ForwardVector * m_MoveSpeed;
+
+	XMStoreFloat4(&param, position);
+	m_Transform->SetPosition(param);
+}
+
+void CameraClass::MoveBackward()
+{
+	using namespace DirectX;
+
+	XMFLOAT4 param;
+	XMVECTOR position = XMLoadFloat4(&(m_Transform->GetPosition()));
+	position -= m_ForwardVector * m_MoveSpeed;
+
+	XMStoreFloat4(&param, position);
+	m_Transform->SetPosition(param);
+}
+
+void CameraClass::MoveLeft()
+{
+	using namespace DirectX;
+
+	XMFLOAT4 param;
+	XMVECTOR position = XMLoadFloat4(&(m_Transform->GetPosition()));
+	position -= m_RightVector * m_MoveSpeed;
+
+	XMStoreFloat4(&param, position);
+	m_Transform->SetPosition(param);
+}
+
+void CameraClass::MoveRight()
+{
+	using namespace DirectX;
+
+	XMFLOAT4 param;
+	XMVECTOR position = XMLoadFloat4(&(m_Transform->GetPosition()));
+	position += m_RightVector * m_MoveSpeed;
+
+	XMStoreFloat4(&param, position);
+	m_Transform->SetPosition(param);
+}
+
+HRESULT CameraClass::Move(const MoveState& dir)
+{
+	e.title = _T("CameraClass Initialize()");
+
+	switch (dir)
+	{
+	case MoveState::MOVE_FORWARD:
+		MoveForward();
+		break;
+	case MoveState::MOVE_BACKWARD:
+		MoveBackward();
+		break;
+	case MoveState::MOVE_LEFT:
+		MoveLeft();
+		break;
+	case MoveState::MOVE_RIGHT:
+		MoveRight();
+		break;
+	default:
+		e.contents = _T("예상치 못한 동작입니다.");
+		e.errorCode = E_FAIL;
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
 void CameraClass::Render()
 {
-	DirectX::XMFLOAT4 Up, Position, LookAt;
-	DirectX::XMVECTOR UpVector, PositionVector, LookAtVector;
-	float yaw, pitch, roll;
+	float pitch, yaw, roll;
 	DirectX::XMMATRIX RotationMatrix;
+	DirectX::XMVECTOR position, target;
 
-	// vector 설정 //
-	
-	// up vector 설정(카메라의 위쪽 방향 설정) //
-	// vector에 값 설정
-	Up.x = 0.f;
-	Up.y = 1.f;
-	Up.z = 0.f;
-
-	// XMVECTOR 구조체에 저장
-	UpVector = DirectX::XMLoadFloat4(&Up);
-
-	// position vector 설정(3D 월드에서 카메라의 위치 설정) //
-	// vector에 값 설정
-	Position = m_Transform->GetPosition();
-
-	// XMVECTOR 구조체에 저장
-	PositionVector = DirectX::XMLoadFloat4(&Position);
-
-	// lookat vector 설정(카메라가 바라보고 있는 방향 설정) //
-	// vector에 값 설정
-	LookAt.x = 0.f;
-	LookAt.y = 0.f;
-	LookAt.z = 1.f;
-
-	// XMVECTOR 구조체에 저장
-	LookAtVector = DirectX::XMLoadFloat4(&LookAt);
-
-	
-	// 회전 행렬 생성 //
-	// yaw, pitch, roll의 회전값을 라디안 단위로 설정 //
-	pitch = DirectX::XMConvertToRadians(m_Transform->GetRotation().x);
-	yaw = DirectX::XMConvertToRadians(m_Transform->GetRotation().y);
-	roll = DirectX::XMConvertToRadians(m_Transform->GetRotation().z);
-
-	// 회전 행렬 생성
+	// 회전 행렬 설정 //
+	pitch = m_Transform->GetRotation().x;
+	yaw = m_Transform->GetRotation().y;
+	roll = m_Transform->GetRotation().z;
 	RotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
 
+	// 카메라의 local 좌표계의 축 추출 //
+	m_ForwardVector = DirectX::XMVector3Normalize(RotationMatrix.r[2]);
+	m_RightVector = DirectX::XMVector3Normalize(RotationMatrix.r[0]);
+	m_UpVector = DirectX::XMVector3Normalize(RotationMatrix.r[1]);
 
-	// lookat vector, up vector에 회전 행렬 적용 //
-	// lookat vector, up vector에 회전 행렬를 적용하여,
-	// lookat vector와 up vector를 월드 좌표계 기준으로 표현
-	LookAtVector = DirectX::XMVector3TransformCoord(LookAtVector, RotationMatrix);
-	UpVector = DirectX::XMVector3TransformCoord(UpVector, RotationMatrix);
+	// 카메라의 world 좌표계의 position 추출 //
+	position = DirectX::XMLoadFloat4(&(m_Transform->GetPosition()));
 
-	// 카메라가 바라보고 있는 방향을 월드 좌표계 기준으로 변환 //
-	LookAtVector = DirectX::XMVectorAdd(PositionVector, LookAtVector);
+	// target vector 계산 //
+	target = DirectX::XMVectorAdd(position, m_ForwardVector);
 
-	// lookat vector, up vector, position vector를 통해 view matrix 생성 //
-	m_ViewMatrix = DirectX::XMMatrixLookAtLH(PositionVector, LookAtVector, UpVector);
+	// view matrix 생성 //
+	m_ViewMatrix = DirectX::XMMatrixLookAtLH(position, target, m_UpVector);
 }
