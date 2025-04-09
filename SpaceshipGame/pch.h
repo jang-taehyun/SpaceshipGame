@@ -38,6 +38,7 @@ typedef std::basic_string<TCHAR> tstring;
 #include "DxDefine.h"
 
 // typedef, 데이터 관련 //
+#include "typedef.h"
 #include "config.h"
 
 #endif //PCH_H

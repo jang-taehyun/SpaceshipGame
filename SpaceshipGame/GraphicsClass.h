@@ -7,7 +7,8 @@ const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
 
 class D3DClass;
-class ModelClass;
+// class ModelClass;
+class ModelManagerClass;
 class CameraClass;
 class TextureShaderClass;
 class MultiTextureShaderClass;
@@ -41,7 +42,8 @@ private:
 
 	CameraClass* m_Camera = nullptr;
 
-	ModelClass* m_Model = nullptr;
+	// ModelClass* m_Model = nullptr;
+	ModelManagerClass* m_ModelManager = nullptr;
 	TextureShaderClass* m_TextureShader = nullptr;
 	MultiTextureShaderClass* m_MultiTextureShader = nullptr;
 

@@ -122,6 +122,12 @@
     <Filter Include="TransformClass\Position2DClass">
       <UniqueIdentifier>{31005519-d99b-4479-b5c3-faa00bf4a255}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Actor">
+      <UniqueIdentifier>{0a67d35f-767e-4a98-b7e5-36269d24aa24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\ModelManager">
+      <UniqueIdentifier>{1f0abbbd-4932-423d-8fbb-340e55c207dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemClass.h">
@@ -253,6 +259,15 @@
     <ClInclude Include="TransformClass.h">
       <Filter>TransformClass</Filter>
     </ClInclude>
+    <ClInclude Include="ActorClass.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="typedef.h">
+      <Filter>Default\header</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelManagerClass.h">
+      <Filter>Model\ModelManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -359,6 +374,12 @@
     </ClCompile>
     <ClCompile Include="TransformClass.cpp">
       <Filter>TransformClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ActorClass.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelManagerClass.cpp">
+      <Filter>Model\ModelManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

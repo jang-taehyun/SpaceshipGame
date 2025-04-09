@@ -1,7 +1,11 @@
 #include "pch.h"
 #include "D3DClass.h"
 #include "CameraClass.h"
+
 #include "ModelClass.h"
+#include "ModelManagerClass.h"
+#include "TransformClass.h"
+
 #include "TextureShaderClass.h"			// -> TextureShaderClass 또는 BitmapClass를 사용하는 경우
 #include "MultiTextureShaderClass.h"
 #include "LightClass.h"					// -> LightShaderClass를 사용하는 경우
@@ -81,14 +85,11 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 	}
 	BaseViewMatrix = m_Camera->GetViewMatrix();
 
-	// Model 객체 생성 및 초기화 //
-	Position = { 0.f, 0.f, 0.f, 1.f };
-	Rotation = { 0.f, 0.f, 0.f, 1.f };
-	Scaling = { ScalingFactor, ScalingFactor, ScalingFactor, 1.f };
-	m_Model = new ModelClass(Position, Rotation, Scaling, m_D3D->GetDevice(), m_D3D->GetDeviceContext(), CubeTextureFileNames, CubeModelFileName);
-	if (!m_Model)
+	// Model manager 객체 생성 및 초기화 //
+	m_ModelManager = new ModelManagerClass(m_D3D->GetDevice(), m_D3D->GetDeviceContext());
+	if(!m_ModelManager)
 	{
-		e.contents = _T("Model 인스턴스 생성 실패");
+		e.contents = _T("Model Manager 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
 		return result;
 	}
@@ -260,10 +261,10 @@ void GraphicsClass::Shutdown()
 		m_AlphaMapShader = nullptr;
 	}
 
-	if (m_Model)
+	if (m_ModelManager)
 	{
-		delete m_Model;
-		m_Model = nullptr;
+		delete m_ModelManager;
+		m_ModelManager = nullptr;
 	}
 
 	if (m_Camera)
@@ -383,7 +384,8 @@ HRESULT GraphicsClass::Render(const int& fps, const int& cpu_usage)
 	// world, view, projection, ortho matrix 가져오기 및 업데이트 //
 	// world matrix
 	m_D3D->GetWorldMatrix(WorldMatrix);
-	WorldMatrix = m_Model->GetAffineMatrix();
+	// WorldMatrix = m_Model->GetAffineMatrix();
+	WorldMatrix = m_ModelManager->GetModel(ModelIDs::DEFAULT_SPACESHIP)->GetAffineMatrix();
 
 	// view matrix
 	ViewMatrix = m_Camera->GetViewMatrix();
@@ -399,8 +401,12 @@ HRESULT GraphicsClass::Render(const int& fps, const int& cpu_usage)
 	m_Frustum->ConstructFrustum(SCREEN_DEPTH, ProjectionMatrix, ViewMatrix);
 
 	// 렌더링 //
-	m_Model->Render(m_D3D->GetDeviceContext());
-	result = m_TextureShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), WorldMatrix, ViewMatrix, ProjectionMatrix, m_Model->GetTextureArray());
+	m_ModelManager->GetModel(ModelIDs::DEFAULT_SPACESHIP)->Render(m_D3D->GetDeviceContext());
+	result = m_TextureShader->Render(
+		m_D3D->GetDeviceContext(),
+		m_ModelManager->GetModel(ModelIDs::DEFAULT_SPACESHIP)->GetIndexCount(),
+		WorldMatrix, ViewMatrix, ProjectionMatrix,
+		m_ModelManager->GetModel(ModelIDs::DEFAULT_SPACESHIP)->GetTextureArray());
 	if (FAILED(result))
 	{
 		e.contents = _T("Model 렌더링 실패");

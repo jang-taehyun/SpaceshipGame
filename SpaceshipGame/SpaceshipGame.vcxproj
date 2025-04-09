@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ActorClass.h" />
     <ClInclude Include="AlphaMapShaderClass.h" />
     <ClInclude Include="CameraClass.h" />
     <ClInclude Include="ColorClass.h" />
@@ -181,6 +182,7 @@
     <ClInclude Include="LightMapShaderClass.h" />
     <ClInclude Include="LightShaderClass.h" />
     <ClInclude Include="ModelClass.h" />
+    <ClInclude Include="ModelManagerClass.h" />
     <ClInclude Include="MultiTextureShaderClass.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Position2DClass.h" />
@@ -195,8 +197,10 @@
     <ClInclude Include="TextureShaderClass.h" />
     <ClInclude Include="TimerClass.h" />
     <ClInclude Include="TransformClass.h" />
+    <ClInclude Include="typedef.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ActorClass.cpp" />
     <ClCompile Include="AlphaMapShaderClass.cpp" />
     <ClCompile Include="CameraClass.cpp" />
     <ClCompile Include="ColorClass.cpp" />
@@ -220,6 +224,7 @@
     <ClCompile Include="LightMapShaderClass.cpp" />
     <ClCompile Include="LightShaderClass.cpp" />
     <ClCompile Include="ModelClass.cpp" />
+    <ClCompile Include="ModelManagerClass.cpp" />
     <ClCompile Include="MultiTextureShaderClass.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
