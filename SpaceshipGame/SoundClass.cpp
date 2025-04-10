@@ -356,7 +356,20 @@ HRESULT SoundClass::LoadWaveFile(const std::wstring& FileName, IDirectSoundBuffe
 	}
 
 	// 임시 메모리에 저장된 데이터를 secondary buffer에 복사
-	memcpy(BufferPtr, WaveData, WaveFileHeader.DataSize);
+	if(WaveFileHeader.DataSize <= BufferSize)
+		memcpy(BufferPtr, WaveData, WaveFileHeader.DataSize);
+	else
+	{
+		if (WaveData)
+		{
+			delete[] WaveData;
+			WaveData = nullptr;
+		}
+
+		e.contents = _T("secondary buffer에 복사할 데이터가 너무 많습니다.");
+		e.errorCode = E_FAIL;
+		return E_FAIL;
+	}
 
 	// secondary buffer를 unlock
 	result = (*SecondaryBuffer)->Unlock((void*)BufferPtr, BufferSize, NULL, 0);

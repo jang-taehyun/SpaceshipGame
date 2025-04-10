@@ -1,4 +1,5 @@
 #include "pch.h"
+#include <fstream>
 #include "TextureClass.h"
 
 TextureClass::TextureClass() {}
@@ -136,72 +137,93 @@ void TextureClass::Shutdown()
 
 HRESULT TextureClass::LoadTarga(const std::wstring& FileName)
 {
+	HRESULT result = S_OK;
+	std::ifstream FileIn;
+	TargaHeader TargaFileHeader;			// targa 파일의 header 정보
+	int bpp = 0;							// targa 파일의 색상 bit 수(32bit 또는 24bit)
+	int ImageSize = 0;						// targa 이미지의 크기
+	char* TargaImage = nullptr;				// targa 이미지 데이터
+	unsigned int count = 0;
+	int index = 0, k = 0;
+
 	// targa 파일을 binary 모드로 열기 //
-	FILE* FilePtr = nullptr;
-	std::string convert;
-	convert.assign(FileName.begin(), FileName.end());
-	if (fopen_s(&FilePtr, convert.c_str(), "rb"))
+	FileIn.open(FileName, std::ios::in | std::ios::binary);
+	if (FileIn.fail())
 	{
 		return E_FAIL;
 	}
 
 	// targa 파일의 header를 가져오기 //
-	TargaHeader TargaFileHeader;
-	unsigned int count = (unsigned int)fread(&TargaFileHeader, sizeof(TargaHeader), 1, FilePtr);
-	if (1 != count)
+	FileIn.read((char*)&TargaFileHeader, sizeof(TargaFileHeader));
+	count = FileIn.gcount();
+	if (sizeof(TargaFileHeader) != count)
 	{
+		FileIn.close();
 		return E_FAIL;
 	}
 
 	// targa 파일의 header에서 중요 정보 가져오기 //
 	m_Height = TargaFileHeader.height;
 	m_Width = TargaFileHeader.width;
-	int bpp = TargaFileHeader.bpp;
+	bpp = TargaFileHeader.bpp;
 
 	// targa 파일이 32 bit인지 24 bit인지 확인 //
 	if (bpp != 32)
 	{
+		FileIn.close();
 		return E_FAIL;
 	}
 
 	// 32 bit 이미지 데이터의 크기 계산 //
-	int ImageSize = m_Width * m_Height * 4;
+	ImageSize = m_Width * m_Height * 4;
 
 	// targa 이미지 데이터용 메모리 할당 //
-	unsigned char* TargaImage = nullptr;
-	TargaImage = new unsigned char[ImageSize];
+	TargaImage = new char[ImageSize];
 	if (!TargaImage)
 	{
+		FileIn.close();
 		return E_FAIL;
 	}
 
 	// targa 이미지 데이터 읽기 //
-	count = (unsigned int)fread(TargaImage, 1, ImageSize, FilePtr);
+	FileIn.read(TargaImage, ImageSize);
+	count = FileIn.gcount();
 	if (count != ImageSize)
 	{
+		if (TargaImage)
+		{
+			delete[] TargaImage;
+			TargaImage = nullptr;
+		}
+
+		FileIn.close();
+
 		return E_FAIL;
 	}
 
 	// targa 이미지 파일 닫기 //
-	if (fclose(FilePtr))
-	{
-		return E_FAIL;
-	}
+	FileIn.close();
 
 	// targa 대상 데이터에 대한 메모리 할당 //
 	m_ImageData = new unsigned char[ImageSize];
 	if (!m_ImageData)
 	{
+		if (TargaImage)
+		{
+			delete[] TargaImage;
+			TargaImage = nullptr;
+		}
+
 		return E_FAIL;
 	}
 
 	// targa 대상 데이터 배열에 index 초기화 //
-	int index = 0;
+	index = 0;
 
 	// targa 이미지 데이터에 index 초기화 //
 	// targa 이미지 데이터의 읽기 시작 위치
 	// targa 데이터의 마지막 행에서 데이터의 읽기 시작
-	int k = (m_Width * m_Height * 4) - (m_Width * 4);
+	k = (m_Width * m_Height * 4) - (m_Width * 4);
 
 	// targa 데이터를 정렬하여 메모리에 저장 //
 	// targa 형식이 거꾸로 저장되었으므로 올바른 순서로 targa 이미지 데이터를 targa 대상 배열에 복사
@@ -211,15 +233,18 @@ HRESULT TextureClass::LoadTarga(const std::wstring& FileName)
 		// targa 데이터의 가로(width) 데이터를 메모리에 복사
 		for (int i = 0; i < m_Width; i++)
 		{
-			// targa의 픽셀 데이터는 BGRA 순서로 저장되므로, 이를 RGBA 순서로 변환
-			m_ImageData[index + 0] = TargaImage[k + 0];		// B
-			m_ImageData[index + 1] = TargaImage[k + 1];		// G
-			m_ImageData[index + 2] = TargaImage[k + 2];		// R
-			m_ImageData[index + 3] = TargaImage[k + 3];		// A
+			if ((index + 3) < ImageSize && (k + 3) < ImageSize)
+			{
+				// targa의 픽셀 데이터는 BGRA 순서로 저장되므로, 이를 RGBA 순서로 변환
+				m_ImageData[index + 0] = TargaImage[k + 0];		// B
+				m_ImageData[index + 1] = TargaImage[k + 1];		// G
+				m_ImageData[index + 2] = TargaImage[k + 2];		// R
+				m_ImageData[index + 3] = TargaImage[k + 3];		// A
 
-			// index, 읽을 데이터의 시작 위치 증가 //
-			k += 4;
-			index += 4;
+				// index, 읽을 데이터의 시작 위치 증가 //
+				k += 4;
+				index += 4;
+			}
 		}
 
 		// targa 이미지 데이터 인덱스를 역순으로 읽은 후 열의 시작 부분에서 이전 행으로 다시 설정
@@ -230,7 +255,7 @@ HRESULT TextureClass::LoadTarga(const std::wstring& FileName)
 	delete[] TargaImage;
 	TargaImage = nullptr;
 
-	return S_OK;
+	return result;
 }
 
 HRESULT TextureClass::LoadPNG(const std::wstring& FileName)
