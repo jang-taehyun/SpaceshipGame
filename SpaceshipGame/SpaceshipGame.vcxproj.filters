@@ -44,9 +44,6 @@
     <Filter Include="CameraClass">
       <UniqueIdentifier>{6d70804d-61ec-47a6-9770-f8b84460eb0e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Default\DDSTextureLoader">
-      <UniqueIdentifier>{ef106198-efe5-4225-98e5-660b8bd5ee8d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="FrustumClass">
       <UniqueIdentifier>{cbac6ccf-be28-4f73-9f9b-51c9b43e22fa}</UniqueIdentifier>
     </Filter>
@@ -109,9 +106,6 @@
     </Filter>
     <Filter Include="ColorClass">
       <UniqueIdentifier>{c18dc73e-7b11-4dc7-8fc8-f1b588077ea0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Default\IMGUI">
-      <UniqueIdentifier>{4a3437eb-cf9d-42ee-b819-8249105bb63f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Debugging\IMGUIClass">
       <UniqueIdentifier>{9769faa4-fe27-4ad5-9210-4d7a9cb01ff2}</UniqueIdentifier>
@@ -217,41 +211,8 @@
     <ClInclude Include="Position2DClass.h">
       <Filter>TransformClass\Position2DClass</Filter>
     </ClInclude>
-    <ClInclude Include="IMGUI\imconfig.h">
-      <Filter>Default\IMGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="IMGUI\imgui.h">
-      <Filter>Default\IMGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="IMGUI\imgui_impl_dx11.h">
-      <Filter>Default\IMGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="IMGUI\imgui_impl_win32.h">
-      <Filter>Default\IMGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="IMGUI\imgui_internal.h">
-      <Filter>Default\IMGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="IMGUI\imstb_rectpack.h">
-      <Filter>Default\IMGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="IMGUI\imstb_textedit.h">
-      <Filter>Default\IMGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="IMGUI\imstb_truetype.h">
-      <Filter>Default\IMGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="IMGUI\pch.h">
-      <Filter>Default\IMGUI</Filter>
-    </ClInclude>
     <ClInclude Include="IMGUIClass.h">
       <Filter>Debugging\IMGUIClass</Filter>
-    </ClInclude>
-    <ClInclude Include="DDSTextureLoader\DDSTextureLoader.h">
-      <Filter>Default\DDSTextureLoader</Filter>
-    </ClInclude>
-    <ClInclude Include="DDSTextureLoader\pch.h">
-      <Filter>Default\DDSTextureLoader</Filter>
     </ClInclude>
     <ClInclude Include="LightClass.h">
       <Filter>Light</Filter>
@@ -345,29 +306,8 @@
     <ClCompile Include="Position2DClass.cpp">
       <Filter>TransformClass\Position2DClass</Filter>
     </ClCompile>
-    <ClCompile Include="IMGUI\imgui.cpp">
-      <Filter>Default\IMGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="IMGUI\imgui_draw.cpp">
-      <Filter>Default\IMGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="IMGUI\imgui_impl_dx11.cpp">
-      <Filter>Default\IMGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="IMGUI\imgui_impl_win32.cpp">
-      <Filter>Default\IMGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="IMGUI\imgui_tables.cpp">
-      <Filter>Default\IMGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="IMGUI\imgui_widgets.cpp">
-      <Filter>Default\IMGUI</Filter>
-    </ClCompile>
     <ClCompile Include="IMGUIClass.cpp">
       <Filter>Debugging\IMGUIClass</Filter>
-    </ClCompile>
-    <ClCompile Include="DDSTextureLoader\DDSTextureLoader.cpp">
-      <Filter>Default\DDSTextureLoader</Filter>
     </ClCompile>
     <ClCompile Include="LightClass.cpp">
       <Filter>Light</Filter>

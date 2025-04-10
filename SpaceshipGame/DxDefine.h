@@ -8,7 +8,8 @@
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dsound.lib")
 #pragma comment(lib, "dxguid.lib")
-
+#pragma comment(lib, "DirectXTex.lib")
+#pragma comment(lib, "DDSTextureLoader.lib")
 
 #define DIRECTINPUT_VERSION 0x0800			// direct input의 version 설정
 											// direct input의 version을 설정하지 않으면 기본값인 8로 설정됨
@@ -22,3 +23,4 @@
 #include <dsound.h>
 
 #include <DirectXTex.h>
+#include <DDSTextureLoader.h>

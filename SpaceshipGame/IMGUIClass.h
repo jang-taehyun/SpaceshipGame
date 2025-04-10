@@ -1,9 +1,11 @@
 #pragma once
 
 // IMGUI ฐüทร //
-#include "IMGUI/imgui.h"
-#include "IMGUI/imgui_impl_dx11.h"
-#include "IMGUI/imgui_impl_win32.h"
+#pragma comment(lib, "IMGUI.lib")
+
+#include <imgui.h>
+#include <imgui_impl_win32.h>
+#include <imgui_impl_dx11.h>
 
 class CameraClass;
 
