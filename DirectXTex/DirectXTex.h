@@ -86,7 +86,7 @@ namespace DirectX
 
     FORMAT_TYPE __cdecl FormatDataType(_In_ DXGI_FORMAT fmt) noexcept;
 
-    enum CP_FLAGS : uint32_t
+    enum class CP_FLAGS : uint32_t
     {
         CP_FLAGS_NONE = 0x0,
         // Normal operation
@@ -124,7 +124,7 @@ namespace DirectX
 
     HRESULT __cdecl ComputePitch(
         _In_ DXGI_FORMAT fmt, _In_ size_t width, _In_ size_t height,
-        _Out_ size_t& rowPitch, _Out_ size_t& slicePitch, _In_ CP_FLAGS flags = CP_FLAGS_NONE) noexcept;
+        _Out_ size_t& rowPitch, _Out_ size_t& slicePitch, _In_ CP_FLAGS flags = CP_FLAGS::CP_FLAGS_NONE) noexcept;
 
     size_t __cdecl ComputeScanlines(_In_ DXGI_FORMAT fmt, _In_ size_t height) noexcept;
 
@@ -136,7 +136,7 @@ namespace DirectX
 
     //---------------------------------------------------------------------------------
     // Texture metadata
-    enum TEX_DIMENSION : uint32_t
+    enum class TEX_DIMENSION : uint32_t
         // Subset here matches D3D10_RESOURCE_DIMENSION and D3D11_RESOURCE_DIMENSION
     {
         TEX_DIMENSION_TEXTURE1D = 2,
@@ -155,7 +155,7 @@ namespace DirectX
         TEX_MISC2_ALPHA_MODE_MASK = 0x7L,
     };
 
-    enum TEX_ALPHA_MODE : uint32_t
+    enum class TEX_ALPHA_MODE : uint32_t
         // Matches DDS_ALPHA_MODE, encoded in MISC_FLAGS2
     {
         TEX_ALPHA_MODE_UNKNOWN = 0,
@@ -183,12 +183,12 @@ namespace DirectX
         bool __cdecl IsCubemap() const noexcept { return (miscFlags & TEX_MISC_TEXTURECUBE) != 0; }
             // Helper for miscFlags
 
-        bool __cdecl IsPMAlpha() const noexcept { return ((miscFlags2 & TEX_MISC2_ALPHA_MODE_MASK) == TEX_ALPHA_MODE_PREMULTIPLIED) != 0; }
+        bool __cdecl IsPMAlpha() const noexcept { return ((miscFlags2 & TEX_MISC2_ALPHA_MODE_MASK) == (unsigned int)TEX_ALPHA_MODE::TEX_ALPHA_MODE_PREMULTIPLIED) != 0; }
         void __cdecl SetAlphaMode(TEX_ALPHA_MODE mode) noexcept { miscFlags2 = (miscFlags2 & ~static_cast<uint32_t>(TEX_MISC2_ALPHA_MODE_MASK)) | static_cast<uint32_t>(mode); }
         TEX_ALPHA_MODE __cdecl GetAlphaMode() const noexcept { return static_cast<TEX_ALPHA_MODE>(miscFlags2 & TEX_MISC2_ALPHA_MODE_MASK); }
             // Helpers for miscFlags2
 
-        bool __cdecl IsVolumemap() const noexcept { return (dimension == TEX_DIMENSION_TEXTURE3D); }
+        bool __cdecl IsVolumemap() const noexcept { return (dimension == TEX_DIMENSION::TEX_DIMENSION_TEXTURE3D); }
             // Helper for dimension
 
         uint32_t __cdecl CalculateSubresource(size_t mip, size_t item) const noexcept;
@@ -210,7 +210,7 @@ namespace DirectX
         bool __cdecl IsDX10() const noexcept { return (fourCC == 0x30315844); }
     };
 
-    enum DDS_FLAGS : uint32_t
+    enum class DDS_FLAGS : uint32_t
     {
         DDS_FLAGS_NONE = 0x0,
 
@@ -257,7 +257,7 @@ namespace DirectX
         // Enables the loader to read large dimension .dds files (i.e. greater than known hardware requirements)
     };
 
-    enum TGA_FLAGS : uint32_t
+    enum class TGA_FLAGS : uint32_t
     {
         TGA_FLAGS_NONE = 0x0,
 
@@ -280,7 +280,7 @@ namespace DirectX
         // If no colorspace is specified in TGA 2.0 metadata, assume sRGB
     };
 
-    enum WIC_FLAGS : uint32_t
+    enum class WIC_FLAGS : uint32_t
     {
         WIC_FLAGS_NONE = 0x0,
 
@@ -436,17 +436,17 @@ namespace DirectX
         ScratchImage(const ScratchImage&) = delete;
         ScratchImage& operator=(const ScratchImage&) = delete;
 
-        HRESULT __cdecl Initialize(_In_ const TexMetadata& mdata, _In_ CP_FLAGS flags = CP_FLAGS_NONE) noexcept;
+        HRESULT __cdecl Initialize(_In_ const TexMetadata& mdata, _In_ CP_FLAGS flags = CP_FLAGS::CP_FLAGS_NONE) noexcept;
 
-        HRESULT __cdecl Initialize1D(_In_ DXGI_FORMAT fmt, _In_ size_t length, _In_ size_t arraySize, _In_ size_t mipLevels, _In_ CP_FLAGS flags = CP_FLAGS_NONE) noexcept;
-        HRESULT __cdecl Initialize2D(_In_ DXGI_FORMAT fmt, _In_ size_t width, _In_ size_t height, _In_ size_t arraySize, _In_ size_t mipLevels, _In_ CP_FLAGS flags = CP_FLAGS_NONE) noexcept;
-        HRESULT __cdecl Initialize3D(_In_ DXGI_FORMAT fmt, _In_ size_t width, _In_ size_t height, _In_ size_t depth, _In_ size_t mipLevels, _In_ CP_FLAGS flags = CP_FLAGS_NONE) noexcept;
-        HRESULT __cdecl InitializeCube(_In_ DXGI_FORMAT fmt, _In_ size_t width, _In_ size_t height, _In_ size_t nCubes, _In_ size_t mipLevels, _In_ CP_FLAGS flags = CP_FLAGS_NONE) noexcept;
+        HRESULT __cdecl Initialize1D(_In_ DXGI_FORMAT fmt, _In_ size_t length, _In_ size_t arraySize, _In_ size_t mipLevels, _In_ CP_FLAGS flags = CP_FLAGS::CP_FLAGS_NONE) noexcept;
+        HRESULT __cdecl Initialize2D(_In_ DXGI_FORMAT fmt, _In_ size_t width, _In_ size_t height, _In_ size_t arraySize, _In_ size_t mipLevels, _In_ CP_FLAGS flags = CP_FLAGS::CP_FLAGS_NONE) noexcept;
+        HRESULT __cdecl Initialize3D(_In_ DXGI_FORMAT fmt, _In_ size_t width, _In_ size_t height, _In_ size_t depth, _In_ size_t mipLevels, _In_ CP_FLAGS flags = CP_FLAGS::CP_FLAGS_NONE) noexcept;
+        HRESULT __cdecl InitializeCube(_In_ DXGI_FORMAT fmt, _In_ size_t width, _In_ size_t height, _In_ size_t nCubes, _In_ size_t mipLevels, _In_ CP_FLAGS flags = CP_FLAGS::CP_FLAGS_NONE) noexcept;
 
-        HRESULT __cdecl InitializeFromImage(_In_ const Image& srcImage, _In_ bool allow1D = false, _In_ CP_FLAGS flags = CP_FLAGS_NONE) noexcept;
-        HRESULT __cdecl InitializeArrayFromImages(_In_reads_(nImages) const Image* images, _In_ size_t nImages, _In_ bool allow1D = false, _In_ CP_FLAGS flags = CP_FLAGS_NONE) noexcept;
-        HRESULT __cdecl InitializeCubeFromImages(_In_reads_(nImages) const Image* images, _In_ size_t nImages, _In_ CP_FLAGS flags = CP_FLAGS_NONE) noexcept;
-        HRESULT __cdecl Initialize3DFromImages(_In_reads_(depth) const Image* images, _In_ size_t depth, _In_ CP_FLAGS flags = CP_FLAGS_NONE) noexcept;
+        HRESULT __cdecl InitializeFromImage(_In_ const Image& srcImage, _In_ bool allow1D = false, _In_ CP_FLAGS flags = CP_FLAGS::CP_FLAGS_NONE) noexcept;
+        HRESULT __cdecl InitializeArrayFromImages(_In_reads_(nImages) const Image* images, _In_ size_t nImages, _In_ bool allow1D = false, _In_ CP_FLAGS flags = CP_FLAGS::CP_FLAGS_NONE) noexcept;
+        HRESULT __cdecl InitializeCubeFromImages(_In_reads_(nImages) const Image* images, _In_ size_t nImages, _In_ CP_FLAGS flags = CP_FLAGS::CP_FLAGS_NONE) noexcept;
+        HRESULT __cdecl Initialize3DFromImages(_In_reads_(depth) const Image* images, _In_ size_t depth, _In_ CP_FLAGS flags = CP_FLAGS::CP_FLAGS_NONE) noexcept;
 
         void __cdecl Release() noexcept;
 
@@ -649,7 +649,7 @@ namespace DirectX
     //---------------------------------------------------------------------------------
     // Texture conversion, resizing, mipmap generation, and block compression
 
-    enum TEX_FR_FLAGS : uint32_t
+    enum class TEX_FR_FLAGS : uint32_t
     {
         TEX_FR_ROTATE0 = 0x0,
         TEX_FR_ROTATE90 = 0x1,
@@ -667,7 +667,7 @@ namespace DirectX
         // Flip and/or rotate image
 #endif
 
-    enum TEX_FILTER_FLAGS : uint32_t
+    enum class TEX_FILTER_FLAGS : uint32_t
     {
         TEX_FILTER_DEFAULT = 0,
 
@@ -790,7 +790,7 @@ namespace DirectX
         _In_ float alphaReference, _Inout_ ScratchImage& mipChain) noexcept;
 
 
-    enum TEX_PMALPHA_FLAGS : uint32_t
+    enum class TEX_PMALPHA_FLAGS : uint32_t
     {
         TEX_PMALPHA_DEFAULT = 0,
 
@@ -813,7 +813,7 @@ namespace DirectX
         _In_ TEX_PMALPHA_FLAGS flags, _Out_ ScratchImage& result) noexcept;
         // Converts to/from a premultiplied alpha version of the texture
 
-    enum TEX_COMPRESS_FLAGS : uint32_t
+    enum class TEX_COMPRESS_FLAGS : uint32_t
     {
         TEX_COMPRESS_DEFAULT = 0,
 
@@ -899,7 +899,7 @@ namespace DirectX
     //---------------------------------------------------------------------------------
     // Normal map operations
 
-    enum CNMAP_FLAGS : uint32_t
+    enum class CNMAP_FLAGS : uint32_t
     {
         CNMAP_DEFAULT = 0,
 
@@ -948,7 +948,7 @@ namespace DirectX
         _In_ const Image& srcImage, _In_ const Rect& srcRect, _In_ const Image& dstImage,
         _In_ TEX_FILTER_FLAGS filter, _In_ size_t xOffset, _In_ size_t yOffset) noexcept;
 
-    enum CMSE_FLAGS : uint32_t
+    enum class CMSE_FLAGS : uint32_t
     {
         CMSE_DEFAULT = 0,
 
@@ -967,7 +967,7 @@ namespace DirectX
         // Indicates that image should be scaled and biased before comparison (i.e. UNORM -> SNORM)
     };
 
-    HRESULT __cdecl ComputeMSE(_In_ const Image& image1, _In_ const Image& image2, _Out_ float& mse, _Out_writes_opt_(4) float* mseV, _In_ CMSE_FLAGS flags = CMSE_DEFAULT) noexcept;
+    HRESULT __cdecl ComputeMSE(_In_ const Image& image1, _In_ const Image& image2, _Out_ float& mse, _Out_writes_opt_(4) float* mseV, _In_ CMSE_FLAGS flags = CMSE_FLAGS::CMSE_DEFAULT) noexcept;
 
     HRESULT __cdecl EvaluateImage(
         _In_ const Image& image,
@@ -1030,7 +1030,7 @@ namespace DirectX
     //---------------------------------------------------------------------------------
     // Direct3D interop
 
-    enum CREATETEX_FLAGS : uint32_t
+    enum class CREATETEX_FLAGS : uint32_t
     {
         CREATETEX_DEFAULT = 0,
         CREATETEX_FORCE_SRGB = 0x1,

@@ -159,7 +159,7 @@ void SoundClass::ShutdownDirectSound()
 	}
 }
 
-HRESULT SoundClass::LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** const& SecondaryBuffer)
+HRESULT SoundClass::LoadWaveFile(const std::wstring& FileName, IDirectSoundBuffer8** const& SecondaryBuffer)
 {
 	HRESULT result = S_OK;
 	std::ifstream FileIn;

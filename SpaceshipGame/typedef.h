@@ -3,24 +3,24 @@
 // Error 관련
 typedef struct _error_content_
 {
-	tstring title;
-	tstring contents;
+	std::wstring title;
+	std::wstring contents;
 	HRESULT errorCode = S_OK;
 } ErrorContent;
 
 // shader 파일 관련
 typedef struct _shader_file_info_
 {
-	tstring vsFileName = { 0, };
-	tstring psFileName = { 0, };
-	tstring vsEntryPoint = { 0, };
-	tstring psEntryPoint = { 0, };
+	std::wstring vsFileName = { 0, };
+	std::wstring psFileName = { 0, };
+	std::string vsEntryPoint = { 0, };
+	std::string psEntryPoint = { 0, };
 } ShaderFileInfo;
 
 // sound 파일 관련
 typedef struct _sound_info_
 {
-	tstring filename = { 0, };
+	std::wstring filename = { 0, };
 } SoundFileInfo;
 
 // vertex 데이터 관련

@@ -35,14 +35,17 @@ ModelManagerClass::~ModelManagerClass()
 	IsInitialize = false;
 }
 
-ModelClass* const& ModelManagerClass::GetModel(ModelIDs key)
+ModelClass* const ModelManagerClass::GetModel(ModelIDs key)
 {
+	ModelClass* ret = nullptr;
 	std::map<ModelIDs, ModelClass*>::iterator iter;
 	
 	iter = m_ModelList.find(key);
 	if (m_ModelList.end() == iter)
-		return nullptr;
-	return iter->second;
+		return ret;
+
+	ret = iter->second;
+	return ret;
 }
 
 HRESULT ModelManagerClass::Initailize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext)

@@ -85,9 +85,9 @@ HRESULT TextClass::Render(ID3D11DeviceContext* const& DeviceContext, const Direc
 	return S_OK;
 }
 
-HRESULT TextClass::SetSentenceAboutInteger(const int& Number, const tstring& Title, const int& SentenceIdx, const Position2DClass& Position, const ColorClass& TextColor, ID3D11DeviceContext* const& DeviceContext)
+HRESULT TextClass::SetSentenceAboutInteger(const int& Number, const std::wstring& Title, const int& SentenceIdx, const Position2DClass& Position, const ColorClass& TextColor, ID3D11DeviceContext* const& DeviceContext)
 {
-	tstring tmp = Title + _T(" ");
+	std::wstring tmp = Title + _T(" ");
 	tmp = tmp + std::to_wstring(Number);
 
 	if (FAILED(UpdateSentence(m_Sentence[SentenceIdx], tmp, Position, TextColor, DeviceContext)))
@@ -187,7 +187,7 @@ HRESULT TextClass::InitializeSentence(SentenceType** const& Sentence, const int&
 	return S_OK;
 }
 
-HRESULT TextClass::UpdateSentence(SentenceType* const& Sentence, const tstring& Text, const Position2DClass& Position, const ColorClass& TextColor, ID3D11DeviceContext* const& DeviceContext)
+HRESULT TextClass::UpdateSentence(SentenceType* const& Sentence, const std::wstring& Text, const Position2DClass& Position, const ColorClass& TextColor, ID3D11DeviceContext* const& DeviceContext)
 {
 	// 문장 데이터의 색상 지정 //
 	Sentence->Color = TextColor;

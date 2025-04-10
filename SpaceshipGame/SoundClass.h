@@ -31,7 +31,7 @@ private:
 	HRESULT InitializeDirectSound(const HWND& hwnd);
 	void ShutdownDirectSound();
 
-	HRESULT LoadWaveFile(const tstring& FileName, IDirectSoundBuffer8** const& SecondaryBuffer);
+	HRESULT LoadWaveFile(const std::wstring& FileName, IDirectSoundBuffer8** const& SecondaryBuffer);
 	void ShutdownWaveFile(IDirectSoundBuffer8** const& SecondaryBuffer);
 
 	HRESULT PlayWaveFile();

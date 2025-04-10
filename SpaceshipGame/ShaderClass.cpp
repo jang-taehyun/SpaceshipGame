@@ -21,7 +21,7 @@ HRESULT ShaderClass::Initialize(ID3D11Device* const& Device, const HWND& hwnd, c
 		return E_FAIL;
 	}
 	// shader info 확인
-	if (info.vsFileName == _T("") || info.psFileName == _T("") || info.vsEntryPoint == _T("") || info.psEntryPoint == _T(""))
+	if (info.vsFileName == _T("") || info.psFileName == _T("") || info.vsEntryPoint == "" || info.psEntryPoint == "")
 	{
 		MessageBox(hwnd, _T("shader info 객체 안에 필요한 정보가 없는 것이 있습니다."), _T("shader info error"), MB_OK);
 		return E_FAIL;
@@ -49,12 +49,10 @@ HRESULT ShaderClass::Render(ID3D11DeviceContext* const& DeviceContext, const int
 HRESULT ShaderClass::InitializeShader(ID3D11Device* const& Device, const HWND& hwnd, const ShaderFileInfo& info)
 {
 	ID3D10Blob* ErrorMessage = nullptr;
-	std::string convert;
 
 	// vertex shader code 컴파일 //
 	ID3D10Blob* VertexShaderBuffer = nullptr;
-	convert.assign(info.vsEntryPoint.begin(), info.vsEntryPoint.end());
-	if (FAILED(D3DCompileFromFile(info.vsFileName.c_str(), NULL, NULL, convert.c_str(), "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &VertexShaderBuffer, &ErrorMessage)))
+	if (FAILED(D3DCompileFromFile(info.vsFileName.c_str(), NULL, NULL, info.vsEntryPoint.c_str(), "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &VertexShaderBuffer, &ErrorMessage)))
 	{
 		if (ErrorMessage)
 		{
@@ -70,8 +68,7 @@ HRESULT ShaderClass::InitializeShader(ID3D11Device* const& Device, const HWND& h
 
 	// pixel shader code 컴파일 //
 	ID3D10Blob* PixelShaderBuffer = nullptr;
-	convert.assign(info.psEntryPoint.begin(), info.psEntryPoint.end());
-	if (FAILED(D3DCompileFromFile(info.psFileName.c_str(), NULL, NULL, convert.c_str(), "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &PixelShaderBuffer, &ErrorMessage)))
+	if (FAILED(D3DCompileFromFile(info.psFileName.c_str(), NULL, NULL, info.psEntryPoint.c_str(), "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &PixelShaderBuffer, &ErrorMessage)))
 	{
 		if (ErrorMessage)
 		{
@@ -242,7 +239,7 @@ void ShaderClass::ShutdownShader()
 	}
 }
 
-void ShaderClass::OutputShaderErrorMessage(ID3D10Blob*& ErrorMessage, const HWND& hwnd, const tstring& ShaderFileName)
+void ShaderClass::OutputShaderErrorMessage(ID3D10Blob*& ErrorMessage, const HWND& hwnd, const std::wstring& ShaderFileName)
 {
 	OutputDebugStringA(reinterpret_cast<const char*>(ErrorMessage->GetBufferPointer()));
 

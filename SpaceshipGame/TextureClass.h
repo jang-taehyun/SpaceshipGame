@@ -17,17 +17,17 @@ public:
 	TextureClass(const TextureClass& other);
 	~TextureClass();
 
-	HRESULT Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& FileName);
-	HRESULT Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<tstring>& FileNames);
+	HRESULT Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::wstring& FileName);
+	HRESULT Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<std::wstring>& FileNames);
 	void Shutdown();
 
 	inline ID3D11ShaderResourceView* const& GetTexture(int idx) { return m_TextureView[idx]; }
 	inline std::vector<ID3D11ShaderResourceView*> const& GetTextures() { return m_TextureView; }
 
 private:
-	HRESULT LoadTarga(const tstring& FileName);
-	HRESULT LoadPNG(const tstring& FileName);
-	HRESULT LoadDDS(ID3D11Device* const& Device, const tstring& FileName);
+	HRESULT LoadTarga(const std::wstring& FileName);
+	HRESULT LoadPNG(const std::wstring& FileName);
+	HRESULT LoadDDS(ID3D11Device* const& Device, const std::wstring& FileName);
 
 	HRESULT CreateShaderResourceView(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext);
 

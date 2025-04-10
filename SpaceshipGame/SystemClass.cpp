@@ -206,7 +206,7 @@ HRESULT SystemClass::Frame()
 		return result;
 
 	// GraphicsÀÇ Frame() ÁøÇà //
-	result = m_Graphics->Frame(m_Input, m_Timer->GetTime(), m_FPS->GetFPS(), m_CPU->GetCPUPercentage());
+	result = m_Graphics->Frame(m_Input, m_Timer->GetTime(), m_FPS->GetFPS(), (int)m_CPU->GetCPUPercentage());
 	if (FAILED(result))
 		return result;
 

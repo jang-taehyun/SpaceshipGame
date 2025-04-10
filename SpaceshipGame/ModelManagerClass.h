@@ -10,7 +10,7 @@ public:
 	ModelManagerClass(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext);
 	virtual ~ModelManagerClass();
 
-	ModelClass* const& GetModel(ModelIDs id);
+	ModelClass* const GetModel(ModelIDs id);
 
 private:
 	HRESULT Initailize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext);

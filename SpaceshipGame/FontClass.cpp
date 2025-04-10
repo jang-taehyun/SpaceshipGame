@@ -7,7 +7,7 @@ FontClass::FontClass() {}
 FontClass::FontClass(const FontClass& other) {}
 FontClass::~FontClass() {}
 
-HRESULT FontClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& FontFileName, const tstring& TextureFileName)
+HRESULT FontClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::wstring& FontFileName, const std::wstring& TextureFileName)
 {
 	if (FAILED(LoadFontData(FontFileName)))
 	{
@@ -23,7 +23,7 @@ void FontClass::Shutdown()
 	ReleaseFontData();
 }
 
-void FontClass::BuildVertexArray(const void* const& vertices, const tstring& sentence, const float& drawX, const float& drawY)
+void FontClass::BuildVertexArray(const void* const& vertices, const std::wstring& sentence, const float& drawX, const float& drawY)
 {
 	VertexType* VertexPtr = (VertexType*)vertices;
 
@@ -75,7 +75,7 @@ void FontClass::BuildVertexArray(const void* const& vertices, const tstring& sen
 	}
 }
 
-HRESULT FontClass::LoadFontData(const tstring& FileName)
+HRESULT FontClass::LoadFontData(const std::wstring& FileName)
 {
 	std::ifstream FileIn;
 	char tmp;
@@ -129,7 +129,7 @@ void FontClass::ReleaseFontData()
 	}
 }
 
-HRESULT FontClass::LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& FileName)
+HRESULT FontClass::LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::wstring& FileName)
 {
 	m_Texture = new TextureClass;
 	if (!m_Texture)

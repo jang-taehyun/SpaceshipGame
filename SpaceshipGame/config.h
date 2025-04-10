@@ -21,12 +21,12 @@ enum class RotationState
 const SoundFileInfo s_info = { _T("./data/sound01.wav") };
 
 // font 파일 정보 //
-const tstring FontFileName = _T("./data/font01.txt");
-const tstring FontTextureFileName = _T("./data/font01.tga");
+const std::wstring FontFileName = _T("./data/font01.txt");
+const std::wstring FontTextureFileName = _T("./data/font01.tga");
 
 // 3D object 파일 정보 //
-const tstring CubeModelFileName = _T("./data/aircraft.txt");
-const std::vector<tstring> CubeTextureFileNames =
+const std::wstring CubeModelFileName = _T("./data/aircraft.txt");
+const std::vector<std::wstring> CubeTextureFileNames =
 {
 	_T("./data/aircraft.jpg")
 };
@@ -43,46 +43,46 @@ const ShaderFileInfo AlphaMapShaderInfo =
 {
 	_T("./shader/vertex/alphamap.vs"),
 	_T("./shader/pixel/alphamap.ps"),
-	_T("AlphaMapVertexShader"),
-	_T("AlphaMapPixelShader")
+	"AlphaMapVertexShader",
+	"AlphaMapPixelShader"
 };
 
 const ShaderFileInfo TextureShaderInfo =
 {
 	_T("./shader/vertex/texture.vs"),
 	_T("./shader/pixel/texture.ps"),
-	_T("TextureVertexShader"),
-	_T("TexturePixelShader")
+	"TextureVertexShader",
+	"TexturePixelShader"
 };
 
 const ShaderFileInfo MultiTextureShaderInfo =
 {
 	_T("./shader/vertex/multitexture.vs"),
 	_T("./shader/pixel/multitexture.ps"),
-	_T("MultiTextureVertexShader"),
-	_T("MultiTexturePixelShader")
+	"MultiTextureVertexShader",
+	"MultiTexturePixelShader"
 };
 
 const ShaderFileInfo LightShaderInfo =
 {
 	_T("./shader/vertex/light.vs"),
 	_T("./shader/pixel/light.ps"),
-	_T("LightVertexShader"),
-	_T("LightPixelShader")
+	"LightVertexShader",
+	"LightPixelShader"
 };
 
 const ShaderFileInfo LightMapShaderInfo =
 {
 	_T("./shader/vertex/lightmap.vs"),
 	_T("./shader/pixel/lightmap.ps"),
-	_T("LightMapVertexShader"),
-	_T("LightMapPixelShader")
+	"LightMapVertexShader",
+	"LightMapPixelShader"
 };
 
 const ShaderFileInfo FontShaderInfo =
 {
 	_T("./shader/vertex/font.vs"),
 	_T("./shader/pixel/font.ps"),
-	_T("FontVertexShader"),
-	_T("FontPixelShader")
+	"FontVertexShader",
+	"FontPixelShader"
 };

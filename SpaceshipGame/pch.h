@@ -30,8 +30,9 @@
 #include <stdio.h>
 #include <mmsystem.h>
 
+#ifndef UNICODE
 #define UNICODE
-typedef std::basic_string<TCHAR> tstring;
+#endif
 #include <tchar.h>				// windows header에 있는 자료형 확장
 
 // DirectX 11 관련 //

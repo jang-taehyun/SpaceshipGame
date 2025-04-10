@@ -5,9 +5,9 @@ TextureClass::TextureClass() {}
 TextureClass::TextureClass(const TextureClass& other) {}
 TextureClass::~TextureClass() {}
 
-HRESULT TextureClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& FileName)
+HRESULT TextureClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::wstring& FileName)
 {
-	tstring Extension;
+	std::wstring Extension;
 	size_t DotIdx;
 
 	// 매개변수 검사 //
@@ -48,9 +48,9 @@ HRESULT TextureClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContex
 	return CreateShaderResourceView(Device, DeviceContext);
 }
 
-HRESULT TextureClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<tstring>& FileNames)
+HRESULT TextureClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<std::wstring>& FileNames)
 {
-	tstring Extension;
+	std::wstring Extension;
 	size_t DotIdx;
 
 	for (int i = 0; i < FileNames.size(); ++i)
@@ -134,7 +134,7 @@ void TextureClass::Shutdown()
 	}
 }
 
-HRESULT TextureClass::LoadTarga(const tstring& FileName)
+HRESULT TextureClass::LoadTarga(const std::wstring& FileName)
 {
 	// targa 파일을 binary 모드로 열기 //
 	FILE* FilePtr = nullptr;
@@ -233,13 +233,13 @@ HRESULT TextureClass::LoadTarga(const tstring& FileName)
 	return S_OK;
 }
 
-HRESULT TextureClass::LoadPNG(const tstring& FileName)
+HRESULT TextureClass::LoadPNG(const std::wstring& FileName)
 {
 	// 1. ScratchImage 생성
 	DirectX::ScratchImage scratchImage;
 
 	// 2. PNG 파일 로드 (WIC 기반)
-	if (FAILED(DirectX::LoadFromWICFile(FileName.c_str(), DirectX::WIC_FLAGS_NONE, nullptr, scratchImage)))
+	if (FAILED(DirectX::LoadFromWICFile(FileName.c_str(), DirectX::WIC_FLAGS::WIC_FLAGS_NONE, nullptr, scratchImage)))
 	{
 		return E_FAIL;
 	}
@@ -261,7 +261,7 @@ HRESULT TextureClass::LoadPNG(const tstring& FileName)
 	return S_OK;
 }
 
-HRESULT TextureClass::LoadDDS(ID3D11Device* const& Device, const tstring& FileName)
+HRESULT TextureClass::LoadDDS(ID3D11Device* const& Device, const std::wstring& FileName)
 {
 	ID3D11ShaderResourceView* srv;
 	if (FAILED(DirectX::CreateDDSTextureFromFile(Device, FileName.c_str(), nullptr, &srv)))

@@ -23,8 +23,8 @@ private:
 	};
 
 public:
-	ModelClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& TextureFileName, const tstring& ModelFileName);
-	ModelClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<tstring>& TextureFileNames, const tstring& ModelFileName);
+	ModelClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::wstring& TextureFileName, const std::wstring& ModelFileName);
+	ModelClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<std::wstring>& TextureFileNames, const std::wstring& ModelFileName);
 	~ModelClass();
 
 	void Render(ID3D11DeviceContext* const& DeviceContext);
@@ -36,17 +36,17 @@ public:
 	inline const DirectX::XMMATRIX& GetAffineMatrix() const { return m_Transform->GetAffine(); }
 
 private:
-	HRESULT Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& TextureFileName, const tstring& ModelFileName);
-	HRESULT Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<tstring>& TextureFileNames, const tstring& ModelFileName);
+	HRESULT Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::wstring& TextureFileName, const std::wstring& ModelFileName);
+	HRESULT Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<std::wstring>& TextureFileNames, const std::wstring& ModelFileName);
 	void Shutdown();
 
-	HRESULT LoadModel(const tstring& FileName);
+	HRESULT LoadModel(const std::wstring& FileName);
 	HRESULT InitializeBuffers(ID3D11Device* const& Device);
 
 	void RenderBuffers(ID3D11DeviceContext* const& DeviceContext);
 
-	HRESULT LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& FileName);
-	HRESULT LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<tstring>& FileNames);
+	HRESULT LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::wstring& FileName);
+	HRESULT LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<std::wstring>& FileNames);
 
 	void ShutdownBuffers();
 	void ReleaseTexture();

@@ -36,11 +36,11 @@ public:
 	void Shutdown();
 	HRESULT Render(ID3D11DeviceContext* const& DeviceContext, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& OrthoMatrix);
 
-	HRESULT SetSentenceAboutInteger(const int& Number, const tstring& Title, const int& SentenceIdx, const Position2DClass& Position, const ColorClass& TextColor, ID3D11DeviceContext* const& DeviceContext);
+	HRESULT SetSentenceAboutInteger(const int& Number, const std::wstring& Title, const int& SentenceIdx, const Position2DClass& Position, const ColorClass& TextColor, ID3D11DeviceContext* const& DeviceContext);
 
 private:
 	HRESULT InitializeSentence(SentenceType** const& Sentence, const int& MaxLength, ID3D11Device* const& Device);
-	HRESULT UpdateSentence(SentenceType* const& Sentence, const tstring& Text, const Position2DClass& Position, const ColorClass& TextColor, ID3D11DeviceContext* const& DeviceContext);
+	HRESULT UpdateSentence(SentenceType* const& Sentence, const std::wstring& Text, const Position2DClass& Position, const ColorClass& TextColor, ID3D11DeviceContext* const& DeviceContext);
 	void ReleaseSentence(SentenceType** const& Sentence);
 	HRESULT RenderSentence(ID3D11DeviceContext* const& DeviceContext, const SentenceType* const& Sentence, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& OrthoMatrix);
 

@@ -11,6 +11,11 @@
 
 #pragma once
 
+#ifndef USING_DIRECTX
+#define USING_DIRECTX
+using namespace DirectX;
+#endif
+
 //=====================================================================================
 // Bitmask flags enumerator operators
 //=====================================================================================
@@ -27,16 +32,16 @@ DEFINE_ENUM_FLAG_OPERATORS(CMSE_FLAGS)
 DEFINE_ENUM_FLAG_OPERATORS(CREATETEX_FLAGS)
 
 // WIC_FILTER modes match TEX_FILTER modes
-constexpr WIC_FLAGS operator|(WIC_FLAGS a, TEX_FILTER_FLAGS b) { return static_cast<WIC_FLAGS>(static_cast<uint32_t>(a) | static_cast<uint32_t>(b & TEX_FILTER_MODE_MASK)); }
-constexpr WIC_FLAGS operator|(TEX_FILTER_FLAGS a, WIC_FLAGS b) { return static_cast<WIC_FLAGS>(static_cast<uint32_t>(a & TEX_FILTER_MODE_MASK) | static_cast<uint32_t>(b)); }
+constexpr WIC_FLAGS operator|(WIC_FLAGS a, TEX_FILTER_FLAGS b) { return static_cast<WIC_FLAGS>(static_cast<uint32_t>(a) | static_cast<uint32_t>((uint32_t)b & TEX_FILTER_MODE_MASK)); }
+constexpr WIC_FLAGS operator|(TEX_FILTER_FLAGS a, WIC_FLAGS b) { return static_cast<WIC_FLAGS>(static_cast<uint32_t>((uint32_t)a & TEX_FILTER_MODE_MASK) | static_cast<uint32_t>(b)); }
 
 // TEX_PMALPHA_SRGB match TEX_FILTER_SRGB
-constexpr TEX_PMALPHA_FLAGS operator|(TEX_PMALPHA_FLAGS a, TEX_FILTER_FLAGS b) { return static_cast<TEX_PMALPHA_FLAGS>(static_cast<uint32_t>(a) | static_cast<uint32_t>(b & TEX_FILTER_SRGB_MASK)); }
-constexpr TEX_PMALPHA_FLAGS operator|(TEX_FILTER_FLAGS a, TEX_PMALPHA_FLAGS b) { return static_cast<TEX_PMALPHA_FLAGS>(static_cast<uint32_t>(a & TEX_FILTER_SRGB_MASK) | static_cast<uint32_t>(b)); }
+constexpr TEX_PMALPHA_FLAGS operator|(TEX_PMALPHA_FLAGS a, TEX_FILTER_FLAGS b) { return static_cast<TEX_PMALPHA_FLAGS>(static_cast<uint32_t>(a) | static_cast<uint32_t>((uint32_t)b & TEX_FILTER_SRGB_MASK)); }
+constexpr TEX_PMALPHA_FLAGS operator|(TEX_FILTER_FLAGS a, TEX_PMALPHA_FLAGS b) { return static_cast<TEX_PMALPHA_FLAGS>(static_cast<uint32_t>((uint32_t)a & TEX_FILTER_SRGB_MASK) | static_cast<uint32_t>(b)); }
 
 // TEX_COMPRESS_SRGB match TEX_FILTER_SRGB
-constexpr TEX_COMPRESS_FLAGS operator|(TEX_COMPRESS_FLAGS a, TEX_FILTER_FLAGS b) { return static_cast<TEX_COMPRESS_FLAGS>(static_cast<uint32_t>(a) | static_cast<uint32_t>(b & TEX_FILTER_SRGB_MASK)); }
-constexpr TEX_COMPRESS_FLAGS operator|(TEX_FILTER_FLAGS a, TEX_COMPRESS_FLAGS b) { return static_cast<TEX_COMPRESS_FLAGS>(static_cast<uint32_t>(a & TEX_FILTER_SRGB_MASK) | static_cast<uint32_t>(b)); }
+constexpr TEX_COMPRESS_FLAGS operator|(TEX_COMPRESS_FLAGS a, TEX_FILTER_FLAGS b) { return static_cast<TEX_COMPRESS_FLAGS>(static_cast<uint32_t>(a) | static_cast<uint32_t>((uint32_t)b & TEX_FILTER_SRGB_MASK)); }
+constexpr TEX_COMPRESS_FLAGS operator|(TEX_FILTER_FLAGS a, TEX_COMPRESS_FLAGS b) { return static_cast<TEX_COMPRESS_FLAGS>(static_cast<uint32_t>((uint32_t)a & TEX_FILTER_SRGB_MASK) | static_cast<uint32_t>(b)); }
 
 
 //=====================================================================================
@@ -131,7 +136,7 @@ inline HRESULT __cdecl SaveToDDSMemory(const Image& image, DDS_FLAGS flags, Blob
     mdata.arraySize = 1;
     mdata.mipLevels = 1;
     mdata.format = image.format;
-    mdata.dimension = TEX_DIMENSION_TEXTURE2D;
+    mdata.dimension = TEX_DIMENSION::TEX_DIMENSION_TEXTURE2D;
 
     return SaveToDDSMemory(&image, 1, mdata, flags, blob);
 }
@@ -146,7 +151,7 @@ inline HRESULT __cdecl SaveToDDSFile(const Image& image, DDS_FLAGS flags, const 
     mdata.arraySize = 1;
     mdata.mipLevels = 1;
     mdata.format = image.format;
-    mdata.dimension = TEX_DIMENSION_TEXTURE2D;
+    mdata.dimension = TEX_DIMENSION::TEX_DIMENSION_TEXTURE2D;
 
     return SaveToDDSFile(&image, 1, mdata, flags, szFile);
 }
@@ -158,37 +163,37 @@ inline HRESULT __cdecl SaveToDDSFile(const Image& image, DDS_FLAGS flags, const 
 _Use_decl_annotations_
 inline HRESULT __cdecl GetMetadataFromTGAMemory(const uint8_t* pSource, size_t size, TexMetadata& metadata) noexcept
 {
-    return GetMetadataFromTGAMemory(pSource, size, TGA_FLAGS_NONE, metadata);
+    return GetMetadataFromTGAMemory(pSource, size, TGA_FLAGS::TGA_FLAGS_NONE, metadata);
 }
 
 _Use_decl_annotations_
 inline HRESULT __cdecl GetMetadataFromTGAFile(const wchar_t* szFile, TexMetadata& metadata) noexcept
 {
-    return GetMetadataFromTGAFile(szFile, TGA_FLAGS_NONE, metadata);
+    return GetMetadataFromTGAFile(szFile, TGA_FLAGS::TGA_FLAGS_NONE, metadata);
 }
 
 _Use_decl_annotations_
 inline HRESULT __cdecl LoadFromTGAMemory(const uint8_t* pSource, size_t size, TexMetadata* metadata, ScratchImage& image) noexcept
 {
-    return LoadFromTGAMemory(pSource, size, TGA_FLAGS_NONE, metadata, image);
+    return LoadFromTGAMemory(pSource, size, TGA_FLAGS::TGA_FLAGS_NONE, metadata, image);
 }
 
 _Use_decl_annotations_
 inline HRESULT __cdecl LoadFromTGAFile(const wchar_t* szFile, TexMetadata* metadata, ScratchImage& image) noexcept
 {
-    return LoadFromTGAFile(szFile, TGA_FLAGS_NONE, metadata, image);
+    return LoadFromTGAFile(szFile, TGA_FLAGS::TGA_FLAGS_NONE, metadata, image);
 }
 
 _Use_decl_annotations_
 inline HRESULT __cdecl SaveToTGAMemory(const Image& image, Blob& blob, const TexMetadata* metadata) noexcept
 {
-    return SaveToTGAMemory(image, TGA_FLAGS_NONE, blob, metadata);
+    return SaveToTGAMemory(image, TGA_FLAGS::TGA_FLAGS_NONE, blob, metadata);
 }
 
 _Use_decl_annotations_
 inline HRESULT __cdecl SaveToTGAFile(const Image& image, const wchar_t* szFile, const TexMetadata* metadata) noexcept
 {
-    return SaveToTGAFile(image, TGA_FLAGS_NONE, szFile, metadata);
+    return SaveToTGAFile(image, TGA_FLAGS::TGA_FLAGS_NONE, szFile, metadata);
 }
 
 

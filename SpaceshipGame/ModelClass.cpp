@@ -4,7 +4,7 @@
 
 static ErrorContent e;
 
-ModelClass::ModelClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& TextureFileName, const tstring& ModelFileName)
+ModelClass::ModelClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::wstring& TextureFileName, const std::wstring& ModelFileName)
 {
 	HRESULT result = S_OK;
 
@@ -19,7 +19,7 @@ ModelClass::ModelClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT
 	}
 }
 
-ModelClass::ModelClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<tstring>& TextureFileNames, const tstring& ModelFileName)
+ModelClass::ModelClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<std::wstring>& TextureFileNames, const std::wstring& ModelFileName)
 {
 	HRESULT result = S_OK;
 
@@ -39,7 +39,7 @@ ModelClass::~ModelClass()
 	Shutdown();
 }
 
-HRESULT ModelClass::Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& TextureFileName, const tstring& ModelFileName)
+HRESULT ModelClass::Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::wstring& TextureFileName, const std::wstring& ModelFileName)
 {
 	HRESULT result = S_OK;
 
@@ -85,7 +85,7 @@ HRESULT ModelClass::Initialize(const DirectX::XMFLOAT4& position, const DirectX:
 	return result;
 }
 
-HRESULT ModelClass::Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<tstring>& TextureFileNames, const tstring& ModelFileName)
+HRESULT ModelClass::Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<std::wstring>& TextureFileNames, const std::wstring& ModelFileName)
 {
 	HRESULT result = S_OK;
 
@@ -145,7 +145,7 @@ void ModelClass::Render(ID3D11DeviceContext* const& DeviceContext)
 	RenderBuffers(DeviceContext);
 }
 
-HRESULT ModelClass::LoadModel(const tstring& FileName)
+HRESULT ModelClass::LoadModel(const std::wstring& FileName)
 {
 	HRESULT result = S_OK;
 	std::ifstream FileIn;
@@ -345,7 +345,7 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext* const& DeviceContext)
 	DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-HRESULT ModelClass::LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const tstring& FileName)
+HRESULT ModelClass::LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::wstring& FileName)
 {
 	HRESULT result = S_OK;
 
@@ -373,7 +373,7 @@ HRESULT ModelClass::LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext
 	return result;
 }
 
-HRESULT ModelClass::LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<tstring>& FileNames)
+HRESULT ModelClass::LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<std::wstring>& FileNames)
 {
 	HRESULT result = S_OK;
 
