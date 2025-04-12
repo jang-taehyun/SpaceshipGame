@@ -80,8 +80,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)IMGUI;$(SolutionDir)DDSTextureLoader;$(SolutionDir)DirectXTex;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)IMGUI;$(SolutionDir)DDSTextureLoader;$(SolutionDir)DirectXTex;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)DirectXTK;$(SolutionDir)IMGUI;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)DirectXTK;$(SolutionDir)IMGUI;$(LibraryPath)</LibraryPath>
     <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

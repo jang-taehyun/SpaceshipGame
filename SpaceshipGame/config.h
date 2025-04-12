@@ -25,10 +25,10 @@ const std::wstring FontFileName = _T("./data/font01.txt");
 const std::wstring FontTextureFileName = _T("./data/font01.tga");
 
 // 3D object 파일 정보 //
-const std::wstring CubeModelFileName = _T("./data/cube.txt");
+const std::wstring CubeModelFileName = _T("./data/aircraft.txt");
 const std::vector<std::wstring> CubeTextureFileNames =
 {
-	_T("./data/stone01.tga")
+	_T("./data/aircraft.jpg")
 };
 
 // 3D object 모델 정보 //

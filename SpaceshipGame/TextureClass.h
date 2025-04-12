@@ -26,7 +26,7 @@ public:
 
 private:
 	HRESULT LoadTarga(const std::wstring& FileName);
-	HRESULT LoadPNG(const std::wstring& FileName);
+	HRESULT LoadPNG(ID3D11Device* const& Device, const std::wstring& FileName);
 	HRESULT LoadDDS(ID3D11Device* const& Device, const std::wstring& FileName);
 
 	HRESULT CreateShaderResourceView(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext);

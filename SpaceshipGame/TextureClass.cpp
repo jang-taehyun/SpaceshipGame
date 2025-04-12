@@ -1,5 +1,9 @@
+#pragma comment(lib, "DirectXTK.lib")
+
 #include "pch.h"
 #include <fstream>
+#include <WICTextureLoader.h>
+#include <DDSTextureLoader.h>
 #include "TextureClass.h"
 
 TextureClass::TextureClass() {}
@@ -29,24 +33,25 @@ HRESULT TextureClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContex
 	// 파일의 확장자에 따라 이미지 로드 함수를 호출해 메모리에 이미지 데이터 로드
 	if (_T("png") == Extension || _T("PNG") == Extension || _T("jpg") == Extension || _T("JPG") == Extension)
 	{
-		if (FAILED(LoadPNG(FileName)))
+		if (FAILED(LoadPNG(Device, FileName)))
 			return E_FAIL;
 	}
 	else if (_T("tga") == Extension || _T("TGA") == Extension)
 	{
 		if (FAILED(LoadTarga(FileName)))
 			return E_FAIL;
+
+		// 이미지 데이터에 맞는 SRV 생성 //
+		if (FAILED(CreateShaderResourceView(Device, DeviceContext)))
+			return E_FAIL;
 	}
 	else if (_T("dds") == Extension || _T("DDS") == Extension)
 	{
 		if (FAILED(LoadDDS(Device, FileName)))
 			return E_FAIL;
-		else
-			return S_OK;
 	}
 
-	// 이미지 데이터에 맞는 SRV 생성 //
-	return CreateShaderResourceView(Device, DeviceContext);
+	return S_OK;
 }
 
 HRESULT TextureClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<std::wstring>& FileNames)
@@ -74,25 +79,23 @@ HRESULT TextureClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContex
 		// 파일의 확장자에 따라 이미지 로드 함수를 호출해 메모리에 이미지 데이터 로드
 		if (_T("png") == Extension || _T("PNG") == Extension || _T("jpg") == Extension || _T("JPG") == Extension)
 		{
-			if (FAILED(LoadPNG(FileNames[i])))
+			if (FAILED(LoadPNG(Device, FileNames[i])))
 				return E_FAIL;
 		}
 		else if (_T("tga") == Extension || _T("TGA") == Extension)
 		{
 			if (FAILED(LoadTarga(FileNames[i])))
 				return E_FAIL;
+
+			// 이미지 데이터에 맞는 SRV 생성 //
+			if (FAILED(CreateShaderResourceView(Device, DeviceContext)))
+				return E_FAIL;
 		}
 		else if (_T("dds") == Extension || _T("DDS") == Extension)
 		{
 			if (FAILED(LoadDDS(Device, FileNames[i])))
 				return E_FAIL;
-			else
-				return S_OK;
 		}
-
-		// 이미지 데이터에 맞는 SRV 생성 //
-		if(FAILED(CreateShaderResourceView(Device, DeviceContext)))
-			return E_FAIL;
 	}
 
 	return S_OK;
@@ -155,7 +158,7 @@ HRESULT TextureClass::LoadTarga(const std::wstring& FileName)
 
 	// targa 파일의 header를 가져오기 //
 	FileIn.read((char*)&TargaFileHeader, sizeof(TargaFileHeader));
-	count = FileIn.gcount();
+	count = static_cast<unsigned int>(FileIn.gcount());
 	if (sizeof(TargaFileHeader) != count)
 	{
 		FileIn.close();
@@ -187,7 +190,7 @@ HRESULT TextureClass::LoadTarga(const std::wstring& FileName)
 
 	// targa 이미지 데이터 읽기 //
 	FileIn.read(TargaImage, ImageSize);
-	count = FileIn.gcount();
+	count = static_cast<unsigned int>(FileIn.gcount());
 	if (count != ImageSize)
 	{
 		if (TargaImage)
@@ -258,43 +261,32 @@ HRESULT TextureClass::LoadTarga(const std::wstring& FileName)
 	return result;
 }
 
-HRESULT TextureClass::LoadPNG(const std::wstring& FileName)
+HRESULT TextureClass::LoadPNG(ID3D11Device* const& Device, const std::wstring& FileName)
 {
-	// 1. ScratchImage 생성
-	DirectX::ScratchImage scratchImage;
+	HRESULT result = S_OK;
+	ID3D11ShaderResourceView* srv = nullptr;
 
-	// 2. PNG 파일 로드 (WIC 기반)
-	if (FAILED(DirectX::LoadFromWICFile(FileName.c_str(), DirectX::WIC_FLAGS::WIC_FLAGS_NONE, nullptr, scratchImage)))
-	{
-		return E_FAIL;
-	}
+	result = DirectX::CreateWICTextureFromFile(Device, FileName.c_str(), nullptr, &srv);
+	if (FAILED(result))
+		return result;
 
-	// 3. 텍스처 크기 정보 추출
-	const DirectX::Image* image = scratchImage.GetImage(0, 0, 0);
-	m_Width = static_cast<int>(image->width);
-	m_Height = static_cast<int>(image->height);
+	m_TextureView.push_back(srv);
 
-	// 4. 데이터를 m_TargaData에 복사
-	int ImageSize = m_Width * m_Height * 4;
-	m_ImageData = new unsigned char[ImageSize];
-	if (!m_ImageData)
-	{
-		return E_FAIL;
-	}
-	memcpy(m_ImageData, image->pixels, ImageSize);
-
-	return S_OK;
+	return result;
 }
 
 HRESULT TextureClass::LoadDDS(ID3D11Device* const& Device, const std::wstring& FileName)
 {
-	ID3D11ShaderResourceView* srv;
-	if (FAILED(DirectX::CreateDDSTextureFromFile(Device, FileName.c_str(), nullptr, &srv)))
-		return E_FAIL;
+	HRESULT result = S_OK;
+	ID3D11ShaderResourceView* srv = nullptr;
+
+	result = DirectX::CreateDDSTextureFromFile(Device, FileName.c_str(), nullptr, &srv);
+	if (FAILED(result))
+		return result;
 
 	m_TextureView.push_back(srv);
 
-	return S_OK;
+	return result;
 }
 
 HRESULT TextureClass::CreateShaderResourceView(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext)
