@@ -15,15 +15,15 @@ public:
 	IMGUIClass(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeivceContext);
 	~IMGUIClass();
 	
-	void Render(const CameraClass* const& camera, const int& fps, const int& cpu_usage);
+	void Render(CameraClass* const& camera, const int& fps, const int& cpu_usage);
 
 private:
 	void Initialize(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeivceContext);
 	void Shutdown();
 
-	void SetUI(const CameraClass* const& camera, const int& fps, const int& cpu_usage);
+	void SetUI(CameraClass* const& camera, const int& fps, const int& cpu_usage);
 	void SetFPSCPUUsage(const int& fps, const int& cpu_usage);
-	void SetCameraInfo(const CameraClass* const& camera);
+	void SetCameraInfo(CameraClass* const& camera);
 
 private:
 	static bool IsInitialize;

@@ -414,6 +414,19 @@ HRESULT GraphicsClass::Render(const int& fps, const int& cpu_usage)
 		return result;
 	}
 
+	m_ModelManager->GetModel(ModelIDs::DEFAULT_CUBE)->Render(m_D3D->GetDeviceContext());
+	result = m_TextureShader->Render(
+		m_D3D->GetDeviceContext(),
+		m_ModelManager->GetModel(ModelIDs::DEFAULT_CUBE)->GetIndexCount(),
+		WorldMatrix, ViewMatrix, ProjectionMatrix,
+		m_ModelManager->GetModel(ModelIDs::DEFAULT_CUBE)->GetTextureArray());
+	if (FAILED(result))
+	{
+		e.contents = _T("Model 렌더링 실패");
+		e.errorCode = result;
+		return result;
+	}
+
 	// 2D 렌더링 //
 	// depth buffer 비활성화
 	m_D3D->TurnDepthBufferOff();

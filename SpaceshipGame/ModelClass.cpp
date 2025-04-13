@@ -201,6 +201,9 @@ HRESULT ModelClass::LoadModel(const std::wstring& FileName)
 	// model file 닫기 //
 	FileIn.close();
 
+	if (FileName.find(_T("cube")) != std::wstring::npos)
+		m_Line = true;
+
 	return result;
 }
 
@@ -342,7 +345,7 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext* const& DeviceContext)
 	DeviceContext->IASetIndexBuffer(m_IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 	// vertex buffer에서 그릴 object의 기본 도형 설정 //
-	DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	DeviceContext->IASetPrimitiveTopology((!m_Line ? D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST : D3D11_PRIMITIVE_TOPOLOGY_LINELIST));
 }
 
 HRESULT ModelClass::LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::wstring& FileName)

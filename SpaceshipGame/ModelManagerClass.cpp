@@ -61,7 +61,7 @@ HRESULT ModelManagerClass::Initailize(ID3D11Device* const& Device, ID3D11DeviceC
 	e.title = _T("ModelManagerClass Initailize()");
 
 	// model 객체 생성 및 map에 insert //
-	model = new ModelClass(Position, Rotation, Scaling, Device, DeviceContext, CubeTextureFileNames, CubeModelFileName);
+	model = new ModelClass(Position, Rotation, Scaling, Device, DeviceContext, SpaceTextureFileNames, SpaceModelFileName);
 	if (!model)
 	{
 		e.contents = _T("Model 인스턴스 생성 실패");
@@ -69,6 +69,15 @@ HRESULT ModelManagerClass::Initailize(ID3D11Device* const& Device, ID3D11DeviceC
 		return result;
 	}
 	m_ModelList.insert(std::make_pair(ModelIDs::DEFAULT_SPACESHIP, model));
+
+	model = new ModelClass(Position, Rotation, Scaling, Device, DeviceContext, CubeTextureFileNames, CubeModelFileName);
+	if (!model)
+	{
+		e.contents = _T("Model 인스턴스 생성 실패");
+		e.errorCode = E_FAIL;
+		return result;
+	}
+	m_ModelList.insert(std::make_pair(ModelIDs::DEFAULT_CUBE, model));
 
 	return result;
 }

@@ -202,7 +202,7 @@ HRESULT InputClass::ReadKeyboard()
 		}
 	}
 
-	return result;
+	return S_OK;
 }
 
 HRESULT InputClass::ReadMouse()
@@ -228,7 +228,7 @@ HRESULT InputClass::ReadMouse()
 		}
 	}
 
-	return result;
+	return S_OK;
 }
 
 void InputClass::ProcessInput()

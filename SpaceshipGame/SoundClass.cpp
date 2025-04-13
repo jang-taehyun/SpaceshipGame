@@ -257,9 +257,15 @@ HRESULT SoundClass::LoadWaveFile(const std::wstring& FileName, IDirectSoundBuffe
 	// wav 파일의 data chunk header 확인
 	if (('d' != WaveFileHeader.DataChunkID[0]) || ('a' != WaveFileHeader.DataChunkID[1]) || ('t' != WaveFileHeader.DataChunkID[2]) || ('a' != WaveFileHeader.DataChunkID[3]))
 	{
-		e.contents = _T("Data chuck ID가 data가 아닙니다.");
-		e.errorCode = E_FAIL;
-		return E_FAIL;
+		while (strcmp("data", WaveFileHeader.DataChunkID))
+		{
+			if (FileIn.read(WaveFileHeader.DataChunkID, sizeof(WaveFileHeader.DataChunkID)).eof())
+			{
+				e.contents = _T("Data chuck ID가 data가 아닙니다.");
+				e.errorCode = E_FAIL;
+				return E_FAIL;
+			}
+		}
 	}
 
 	// wav 파일의 내용을 저장할 secondary buffer 생성 //

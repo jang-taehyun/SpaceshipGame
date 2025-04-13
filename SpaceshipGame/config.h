@@ -25,17 +25,24 @@ const std::wstring FontFileName = _T("./data/font01.txt");
 const std::wstring FontTextureFileName = _T("./data/font01.tga");
 
 // 3D object 파일 정보 //
-const std::wstring CubeModelFileName = _T("./data/aircraft.txt");
-const std::vector<std::wstring> CubeTextureFileNames =
+const std::wstring SpaceModelFileName = _T("./data/aircraft.txt");
+const std::vector<std::wstring> SpaceTextureFileNames =
 {
 	_T("./data/aircraft.jpg")
 };
 
+const std::wstring CubeModelFileName = _T("./data/cube.txt");
+const std::vector<std::wstring> CubeTextureFileNames =
+{
+	_T("./data/stone01.tga")
+};
+
 // 3D object 모델 정보 //
-const int NUMBER_OF_ALL_MODELS = 1;
+const int NUMBER_OF_ALL_MODELS = 2;
 enum class ModelIDs
 {
-	DEFAULT_SPACESHIP, 
+	DEFAULT_SPACESHIP,
+	DEFAULT_CUBE,
 };
 
 // shader 관련 정보 //

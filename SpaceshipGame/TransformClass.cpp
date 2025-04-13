@@ -151,6 +151,8 @@ void TransformClass::MoveLeft(const bool& IsKeyDown)
 		}
 	}
 
+	SetMoveSpeed(m_LeftMoveSpeed);
+
 	position -= m_RightVector * m_LeftMoveSpeed;
 	XMStoreFloat4(&m_Position, position);
 }
@@ -179,6 +181,8 @@ void TransformClass::MoveRight(const bool& IsKeyDown)
 			m_RightMoveSpeed = 0.f;
 		}
 	}
+
+	SetMoveSpeed(m_RightMoveSpeed);
 
 	position += m_RightVector * m_RightMoveSpeed;
 	XMStoreFloat4(&m_Position, position);
@@ -209,6 +213,8 @@ void TransformClass::MoveForward(const bool& IsKeyDown)
 		}
 	}
 
+	SetMoveSpeed(m_ForwardMoveSpeed);
+
 	position += m_ForwardVector * m_ForwardMoveSpeed;
 	XMStoreFloat4(&m_Position, position);
 }
@@ -237,6 +243,8 @@ void TransformClass::MoveBackward(const bool& IsKeyDown)
 			m_BackwardMoveSpeed = 0.f;
 		}
 	}
+
+	SetMoveSpeed(m_BackwardMoveSpeed);
 
 	position -= m_ForwardVector * m_BackwardMoveSpeed;
 	XMStoreFloat4(&m_Position, position);

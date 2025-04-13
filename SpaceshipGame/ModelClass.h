@@ -65,6 +65,8 @@ private:
 
 	TransformClass* m_Transform = nullptr;
 
+	bool m_Line = false;
+
 public:
 	ModelClass() = delete;
 	ModelClass(const ModelClass& other) = delete;

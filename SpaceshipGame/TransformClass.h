@@ -22,10 +22,20 @@ public:
 
 	inline const float& GetKeyboardSensitivity() const { return m_KeyboardSensitivity; }
 
+	inline const float GetMoveSpeed() const { return m_ForwardMoveSpeed; }
+
 	// Setter //
 
 	inline void SetFrameTime(const float& time) { m_FrameTime = time; }
 	inline void SetKeyboardSensitivity(const float& value) { m_KeyboardSensitivity = value; }
+
+	inline void SetMoveSpeed(const float& value)
+	{
+		m_ForwardMoveSpeed = value;
+		m_BackwardMoveSpeed = value;
+		m_LeftMoveSpeed = value;
+		m_RightMoveSpeed = value;
+	}
 
 	void SetPosition(const DirectX::XMFLOAT4& pos);
 	void SetPosition(const float& x, const float& y, const float& z);

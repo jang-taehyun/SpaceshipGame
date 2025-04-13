@@ -38,8 +38,7 @@
 // DirectX 11 관련 //
 #include "DxDefine.h"
 
-// typedef, 데이터 관련 //
-#include "typedef.h"
+// 데이터 관련 //
 #include "config.h"
 
 #endif //PCH_H

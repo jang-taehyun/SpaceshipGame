@@ -75,7 +75,7 @@ void IMGUIClass::Shutdown()
 	ImGui::DestroyContext();
 }
 
-void IMGUIClass::Render(const CameraClass* const& camera, const int& fps, const int& cpu_usage)
+void IMGUIClass::Render(CameraClass* const& camera, const int& fps, const int& cpu_usage)
 {
 	// IMGUI 렌더링 준비 //
 	ImGui_ImplDX11_NewFrame();
@@ -89,7 +89,7 @@ void IMGUIClass::Render(const CameraClass* const& camera, const int& fps, const 
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
-void IMGUIClass::SetUI(const CameraClass* const& camera, const int& fps, const int& cpu_usage)
+void IMGUIClass::SetUI(CameraClass* const& camera, const int& fps, const int& cpu_usage)
 {
 	SetFPSCPUUsage(fps, cpu_usage);
 	SetCameraInfo(camera);
@@ -120,10 +120,11 @@ void IMGUIClass::SetFPSCPUUsage(const int& fps, const int& cpu_usage)
 	ImGui::Text(tmp.c_str());
 	IsPress = ImGui::Button("test");
 
+
 	ImGui::End();
 }
 
-void IMGUIClass::SetCameraInfo(const CameraClass* const& camera)
+void IMGUIClass::SetCameraInfo(CameraClass* const& camera)
 {
 	ImVec2 pos, size;
 	bool IsPress = false;
@@ -153,6 +154,18 @@ void IMGUIClass::SetCameraInfo(const CameraClass* const& camera)
 	ImGui::Text(tmp.c_str());
 	tmp = std::to_string(camera->GetTransformObject()->GetRotation().z);
 	ImGui::Text(tmp.c_str());
+
+	IsPress = ImGui::Button("test");
+
+	ImGui::End();
+
+
+	// 카메라 이동 speed UI //
+	ImGui::SetNextWindowPos(m_WindowsPosition[2], ImGuiCond_Appearing);
+	ImGui::Begin(u8"카메라 이동 speed 조정", NULL);
+	float sensitive = camera->GetKeyboardSensitivity();
+	if (ImGui::SliderFloat("float", &sensitive, 0.0f, 0.1f))
+		camera->SetKeyboardSensitivity(sensitive);
 
 	IsPress = ImGui::Button("test");
 
