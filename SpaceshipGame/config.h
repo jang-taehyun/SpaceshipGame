@@ -18,7 +18,12 @@ enum class RotationState
 };
 
 // sound 파일 정보 //
-const SoundFileInfo s_info = { _T("./data/sound01.wav") };
+enum class SoundInfo
+{
+	BACKGROUND, EFFECT, 
+};
+const SoundFileInfo BackgroundSoundInfo = { _T("./data/dedede.wav") };
+const SoundFileInfo EffectSoundInfo = { _T("./data/sound01.wav") };
 
 // font 파일 정보 //
 const std::wstring FontFileName = _T("./data/font01.txt");

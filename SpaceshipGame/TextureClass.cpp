@@ -1,5 +1,3 @@
-#pragma comment(lib, "DirectXTK.lib")
-
 #include "pch.h"
 #include <fstream>
 #include <WICTextureLoader.h>

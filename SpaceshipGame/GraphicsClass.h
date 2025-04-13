@@ -20,6 +20,7 @@ class FrustumClass;
 class IMGUIClass;
 
 class InputClass;
+class SoundClass;
 
 class GraphicsClass
 {
@@ -27,12 +28,12 @@ public:
 	GraphicsClass(const int& ScreenWidth, const int& ScreenHeight, const HWND& hwnd);
 	~GraphicsClass();
 
-	HRESULT Frame(const InputClass* const& input, const float& frame, const int& fps, const int& cpu_usage);
+	HRESULT Frame(SoundClass* const& sound, const InputClass* const& input, const float& frame, const int& fps, const int& cpu_usage);
 
 private:
 	HRESULT Initialize(const int& ScreenWidth, const int& ScreenHeight, const HWND& hwnd);
 	void Shutdown();
-	HRESULT Render(const int& fps, const int& cpu_usage);
+	HRESULT Render(SoundClass* const& sound, const int& fps, const int& cpu_usage);
 
 private:
 	static bool IsInitialize;

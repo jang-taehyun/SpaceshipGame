@@ -18,6 +18,7 @@
 #include "IMGUIClass.h"
 
 #include "InputClass.h"
+#include "SoundClass.h"
 
 #include "GraphicsClass.h"
 
@@ -274,7 +275,7 @@ void GraphicsClass::Shutdown()
 	}
 }
 
-HRESULT GraphicsClass::Frame(const InputClass* const& input, const float& frame, const int& fps, const int& cpu_usage)
+HRESULT GraphicsClass::Frame(SoundClass* const& sound, const InputClass* const& input, const float& frame, const int& fps, const int& cpu_usage)
 {
 	HRESULT result = S_OK;
 	bool KeyDown = false;
@@ -354,7 +355,7 @@ HRESULT GraphicsClass::Frame(const InputClass* const& input, const float& frame,
 	}
 
 	// 렌더링 //
-	result = Render(fps, cpu_usage);
+	result = Render(sound, fps, cpu_usage);
 	if (FAILED(result))
 	{
 		e.contents = _T("Frame() 처리 실패");
@@ -365,7 +366,7 @@ HRESULT GraphicsClass::Frame(const InputClass* const& input, const float& frame,
 	return result;
 }
 
-HRESULT GraphicsClass::Render(const int& fps, const int& cpu_usage)
+HRESULT GraphicsClass::Render(SoundClass* const& sound, const int& fps, const int& cpu_usage)
 {
 	ErrorContent e;
 	HRESULT result = S_OK;
@@ -450,7 +451,7 @@ HRESULT GraphicsClass::Render(const int& fps, const int& cpu_usage)
 	m_D3D->TurnDepthBufferOn();
 	
 	// IMGUI 렌더링
-	m_IMGUI->Render(m_Camera, fps, cpu_usage);
+	m_IMGUI->Render(sound, m_Camera, fps, cpu_usage);
 
 	// back buffer에 있는 내용을 화면에 출력 //
 	m_D3D->EndScene();

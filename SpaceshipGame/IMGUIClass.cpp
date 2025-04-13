@@ -1,10 +1,11 @@
 #include "pch.h"
 
-// FPS, CPU, Timer 관련 //
+// FPS, CPU, Timer, Camera, Sound 관련 //
 #include "FPSClass.h"
 #include "CPUClass.h"
 #include "CameraClass.h"
 #include "TransformClass.h"
+#include "SoundClass.h"
 
 #include "IMGUIClass.h"
 
@@ -39,7 +40,7 @@ void IMGUIClass::Initialize(const HWND& hwnd, ID3D11Device* const& Device, ID3D1
 {
 	ImVec2 cur;
 	float adder = 30.f;
-	m_WindowsCount = 3;
+	m_WindowsCount = 6;
 
 	// 에러 메세지 초기화 //
 	e.title = _T("IMGUIClass Initialize()");
@@ -75,24 +76,25 @@ void IMGUIClass::Shutdown()
 	ImGui::DestroyContext();
 }
 
-void IMGUIClass::Render(CameraClass* const& camera, const int& fps, const int& cpu_usage)
+void IMGUIClass::Render(SoundClass* const& sound, CameraClass* const& camera, const int& fps, const int& cpu_usage)
 {
 	// IMGUI 렌더링 준비 //
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	SetUI(camera, fps, cpu_usage);
+	SetUI(sound, camera, fps, cpu_usage);
 
 	// 렌더링
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
-void IMGUIClass::SetUI(CameraClass* const& camera, const int& fps, const int& cpu_usage)
+void IMGUIClass::SetUI(SoundClass* const& sound, CameraClass* const& camera, const int& fps, const int& cpu_usage)
 {
 	SetFPSCPUUsage(fps, cpu_usage);
 	SetCameraInfo(camera);
+	SetSoundInfo(sound);
 }
 
 void IMGUIClass::SetFPSCPUUsage(const int& fps, const int& cpu_usage)
@@ -168,6 +170,37 @@ void IMGUIClass::SetCameraInfo(CameraClass* const& camera)
 		camera->SetKeyboardSensitivity(sensitive);
 
 	IsPress = ImGui::Button("test");
+
+	ImGui::End();
+}
+
+void IMGUIClass::SetSoundInfo(SoundClass* const& sound)
+{
+	bool IsPress = false;
+
+	// 사운드 재생 UI //
+	ImGui::SetNextWindowPos(m_WindowsPosition[3], ImGuiCond_Appearing);
+	ImGui::Begin(u8"사운드 재생 조정", NULL);
+
+	// backgound 오디오 //
+	IsPress = ImGui::Button(u8"백그라운드");
+	if (IsPress)
+	{
+		if (sound->IsBackgoundPlay())
+			sound->StopWaveFile(SoundInfo::BACKGROUND);
+		else
+			sound->PlayWaveFile(SoundInfo::BACKGROUND);
+	}
+
+	// effect 오디오 //
+	IsPress = ImGui::Button(u8"효과음");
+	if (IsPress)
+	{
+		if (sound->IsEffectPlay())
+			sound->StopWaveFile(SoundInfo::EFFECT);
+		else
+			sound->PlayWaveFile(SoundInfo::EFFECT);
+	}
 
 	ImGui::End();
 }

@@ -69,7 +69,7 @@ HRESULT SystemClass::Initialize()
 		return E_FAIL;
 	}
 
-	m_Sound = new SoundClass(m_hwnd, s_info);
+	m_Sound = new SoundClass();
 	if (!m_Sound)
 	{
 		e.contents = _T("SoundClass 인스턴스 생성 실패");
@@ -196,7 +196,7 @@ HRESULT SystemClass::Frame()
 	// 에러 메세지 초기화 //
 	e.title = _T("SystemClass Frame()");
 
-	// Timer, FPS, CPU, Input의 Frame() 진행 //
+	// Timer, FPS, CPU, Input, Sound의 Frame() 진행 //
 	m_Timer->Frame();
 	m_FPS->Frame();
 	m_CPU->Frame();
@@ -205,8 +205,12 @@ HRESULT SystemClass::Frame()
 	if (FAILED(result))
 		return result;
 
+	result = m_Sound->Frame();
+	if (FAILED(result))
+		return result;
+
 	// Graphics의 Frame() 진행 //
-	result = m_Graphics->Frame(m_Input, m_Timer->GetTime(), m_FPS->GetFPS(), (int)m_CPU->GetCPUPercentage());
+	result = m_Graphics->Frame(m_Sound, m_Input, m_Timer->GetTime(), m_FPS->GetFPS(), (int)m_CPU->GetCPUPercentage());
 	if (FAILED(result))
 		return result;
 

@@ -151,7 +151,7 @@ namespace DirectX
     };
 
     //----------------------------------------------------------------------------------
-    enum AUDIO_ENGINE_FLAGS : uint32_t
+    enum class AUDIO_ENGINE_FLAGS : uint32_t
     {
         AudioEngine_Default = 0x0,
 
@@ -167,7 +167,7 @@ namespace DirectX
         AudioEngine_DisableVoiceReuse = 0x40000,
     };
 
-    enum SOUND_EFFECT_INSTANCE_FLAGS : uint32_t
+    enum class SOUND_EFFECT_INSTANCE_FLAGS : uint32_t
     {
         SoundEffectInstance_Default = 0x0,
 
@@ -214,7 +214,7 @@ namespace DirectX
         Reverb_MAX
     };
 
-    enum SoundState : uint32_t
+    enum class SoundState : uint32_t
     {
         STOPPED = 0,
         PLAYING,
@@ -227,7 +227,7 @@ namespace DirectX
     {
     public:
         DIRECTX_TOOLKIT_API explicit AudioEngine(
-            AUDIO_ENGINE_FLAGS flags = AudioEngine_Default,
+            AUDIO_ENGINE_FLAGS flags = AUDIO_ENGINE_FLAGS::AudioEngine_Default,
             _In_opt_ const WAVEFORMATEX* wfx = nullptr,
             _In_opt_z_ const wchar_t* deviceId = nullptr,
             AUDIO_STREAM_CATEGORY category = AudioCategory_GameEffects) noexcept(false);
@@ -374,17 +374,17 @@ namespace DirectX
 
         DIRECTX_TOOLKIT_API std::unique_ptr<SoundEffectInstance> __cdecl CreateInstance(
             unsigned int index,
-            SOUND_EFFECT_INSTANCE_FLAGS flags = SoundEffectInstance_Default);
+            SOUND_EFFECT_INSTANCE_FLAGS flags = SOUND_EFFECT_INSTANCE_FLAGS::SoundEffectInstance_Default);
         DIRECTX_TOOLKIT_API std::unique_ptr<SoundEffectInstance> __cdecl CreateInstance(
             _In_z_ const char* name,
-            SOUND_EFFECT_INSTANCE_FLAGS flags = SoundEffectInstance_Default);
+            SOUND_EFFECT_INSTANCE_FLAGS flags = SOUND_EFFECT_INSTANCE_FLAGS::SoundEffectInstance_Default);
 
         DIRECTX_TOOLKIT_API std::unique_ptr<SoundStreamInstance> __cdecl CreateStreamInstance(
             unsigned int index,
-            SOUND_EFFECT_INSTANCE_FLAGS flags = SoundEffectInstance_Default);
+            SOUND_EFFECT_INSTANCE_FLAGS flags = SOUND_EFFECT_INSTANCE_FLAGS::SoundEffectInstance_Default);
         DIRECTX_TOOLKIT_API std::unique_ptr<SoundStreamInstance> __cdecl CreateStreamInstance(
             _In_z_ const char* name,
-            SOUND_EFFECT_INSTANCE_FLAGS flags = SoundEffectInstance_Default);
+            SOUND_EFFECT_INSTANCE_FLAGS flags = SOUND_EFFECT_INSTANCE_FLAGS::SoundEffectInstance_Default);
 
         DIRECTX_TOOLKIT_API bool __cdecl IsPrepared() const noexcept;
         DIRECTX_TOOLKIT_API bool __cdecl IsInUse() const noexcept;
@@ -482,7 +482,7 @@ namespace DirectX
         DIRECTX_TOOLKIT_API void __cdecl Play();
         DIRECTX_TOOLKIT_API void __cdecl Play(float volume, float pitch, float pan);
 
-        DIRECTX_TOOLKIT_API std::unique_ptr<SoundEffectInstance> __cdecl CreateInstance(SOUND_EFFECT_INSTANCE_FLAGS flags = SoundEffectInstance_Default);
+        DIRECTX_TOOLKIT_API std::unique_ptr<SoundEffectInstance> __cdecl CreateInstance(SOUND_EFFECT_INSTANCE_FLAGS flags = SOUND_EFFECT_INSTANCE_FLAGS::SoundEffectInstance_Default);
 
         DIRECTX_TOOLKIT_API bool __cdecl IsInUse() const noexcept;
 
@@ -838,7 +838,7 @@ namespace DirectX
             _In_ AudioEngine* engine,
             _In_ std::function<void __cdecl(DynamicSoundEffectInstance*)> bufferNeeded,
             int sampleRate, int channels, int sampleBits = 16,
-            SOUND_EFFECT_INSTANCE_FLAGS flags = SoundEffectInstance_Default);
+            SOUND_EFFECT_INSTANCE_FLAGS flags = SOUND_EFFECT_INSTANCE_FLAGS::SoundEffectInstance_Default);
 
         DIRECTX_TOOLKIT_API DynamicSoundEffectInstance(DynamicSoundEffectInstance&&) noexcept;
         DIRECTX_TOOLKIT_API DynamicSoundEffectInstance& operator= (DynamicSoundEffectInstance&&) noexcept;

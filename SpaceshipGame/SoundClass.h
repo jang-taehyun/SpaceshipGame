@@ -1,49 +1,39 @@
 #pragma once
 
+#include <Audio.h>
+
 class SoundClass
 {
-private:
-	struct WaveHeaderType
-	{
-		char ChunkID[4];
-		unsigned long ChunkSize;
-		char Format[4];
-		char SubChunkID[4];
-		unsigned long SubChunkSize;
-		unsigned short AudioFormat;
-		unsigned short NumberChannels;
-		unsigned long SampleRate;
-		unsigned long BytesPerSecond;
-		unsigned short BlockAlign;
-		unsigned short BitsPerSample;
-		char DataChunkID[4];
-		unsigned long DataSize;
-	};
-
 public:
-	SoundClass(const HWND& hwnd, const SoundFileInfo& info);
+	SoundClass();
 	~SoundClass();
 
+	HRESULT Frame();
+
+	bool IsBackgoundPlay() { return m_BackgroundSound->GetState() == DirectX::SoundState::PLAYING; }
+	bool IsEffectPlay() { return m_EffectSound->GetState() == DirectX::SoundState::PLAYING; }
+
+	HRESULT PlayWaveFile(const SoundInfo info);
+	HRESULT StopWaveFile(const SoundInfo info);
+
 private:
-	HRESULT Initialize(const HWND& hwnd, const SoundFileInfo& info);
+	HRESULT Initialize();
 	void Shutdown();
 
-	HRESULT InitializeDirectSound(const HWND& hwnd);
-	void ShutdownDirectSound();
-
-	HRESULT LoadWaveFile(const std::wstring& FileName, IDirectSoundBuffer8** const& SecondaryBuffer);
-	void ShutdownWaveFile(IDirectSoundBuffer8** const& SecondaryBuffer);
-
-	HRESULT PlayWaveFile();
+	HRESULT InitializeAudioEngine();
+	HRESULT LoadWaveFile();
 
 private:
 	static bool IsInitailize;
 	
-	IDirectSound8* m_DirectSound = nullptr;
-	IDirectSoundBuffer* m_PrimaryBuffer = nullptr;
-	IDirectSoundBuffer8* m_SecondaryBuffer1 = nullptr;
+	std::unique_ptr<DirectX::AudioEngine> m_AudioEngine;
+
+	std::unique_ptr<DirectX::SoundEffect> m_effect;
+	std::unique_ptr<DirectX::SoundEffect> m_background;
+
+	std::unique_ptr<DirectX::SoundEffectInstance> m_EffectSound;
+	std::unique_ptr<DirectX::SoundEffectInstance> m_BackgroundSound;
 
 public:
-	SoundClass() = delete;
 	SoundClass(const SoundClass& other) = delete;
 };
