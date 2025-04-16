@@ -279,19 +279,12 @@ HRESULT GraphicsClass::Render(SoundClass* const& sound, const int& fps, const in
 	m_Camera->Render();
 
 	// world, view, projection, ortho matrix 가져오기 및 업데이트 //
-	// world matrix
-	WorldMatrix = m_Player->GetAffineMatrix();
-
-	// view matrix
-	ViewMatrix = m_Camera->GetViewMatrix();
-
-	// projection matrix
-	m_D3D->GetProjectionMatrix(ProjectionMatrix);
+	WorldMatrix = m_Player->GetAffineMatrix();			// world matrix
+	ViewMatrix = m_Camera->GetViewMatrix();				// view matrix
+	m_D3D->GetProjectionMatrix(ProjectionMatrix);		// projection matrix
+	m_D3D->GetOrthoMatrix(OrthoMatrix);					// ortho matrix
 
 	transform = { WorldMatrix, ViewMatrix, ProjectionMatrix };
-
-	// ortho matrix
-	m_D3D->GetOrthoMatrix(OrthoMatrix);
 
 	// frustum culling을 이용한 rendering //
 	// viewing frustum 생성 및 render count(rendering한 3D object의 개수) 초기화
