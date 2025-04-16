@@ -29,14 +29,9 @@ HRESULT TextClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* 
 	}
 
 	// font shader object 생성 및 초기화 //
-	m_FontShader = new FontShaderClass;
+	m_FontShader = new FontShaderClass(hwnd, Device, FontShaderInfo);
 	if (!m_FontShader)
 	{
-		return E_FAIL;
-	}
-	if (FAILED(m_FontShader->Initialize(Device, hwnd, FontShaderInfo)))
-	{
-		MessageBox(hwnd, _T("Could not initialize the font shader object"), _T("Error"), MB_OK);
 		return E_FAIL;
 	}
 
@@ -59,7 +54,6 @@ void TextClass::Shutdown()
 	// member variable release //
 	if (m_FontShader)
 	{
-		m_FontShader->Shutdown();
 		delete m_FontShader;
 		m_FontShader = nullptr;
 	}
@@ -258,6 +252,8 @@ void TextClass::ReleaseSentence(SentenceType** const& Sentence)
 
 HRESULT TextClass::RenderSentence(ID3D11DeviceContext* const& DeviceContext, const SentenceType* const& Sentence, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& OrthoMatrix)
 {
+	TransformMatrixData transform = { WorldMatrix, m_BaseViewMatrix, OrthoMatrix };
+
 	// vertex buffer의 stride, offset 지정 //
 	unsigned int stride = sizeof(VertexType);
 	unsigned int offset = 0;
@@ -271,7 +267,7 @@ HRESULT TextClass::RenderSentence(ID3D11DeviceContext* const& DeviceContext, con
 
 	// 렌더링 //
 	DirectX::XMFLOAT4 PixelColor = DirectX::XMFLOAT4(Sentence->Color.GetColorRed(), Sentence->Color.GetColorGreen(), Sentence->Color.GetColorBlue(), Sentence->Color.GetColorAlpha());
-	if (FAILED(m_FontShader->Render(DeviceContext, Sentence->IndexCount, WorldMatrix, m_BaseViewMatrix, OrthoMatrix, m_Font->GetTextureArray(), PixelColor)))
+	if (FAILED(m_FontShader->Render(DeviceContext, Sentence->IndexCount, transform, m_Font->GetTextureArray(), PixelColor)))
 	{
 		return E_FAIL;
 	}

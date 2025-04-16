@@ -4,7 +4,6 @@
 #include "FPSClass.h"
 #include "CPUClass.h"
 #include "CameraClass.h"
-#include "TransformClass.h"
 #include "SoundClass.h"
 
 #include "IMGUIClass.h"
@@ -76,21 +75,21 @@ void IMGUIClass::Shutdown()
 	ImGui::DestroyContext();
 }
 
-void IMGUIClass::Render(SoundClass* const& sound, CameraClass* const& camera, const int& fps, const int& cpu_usage)
+void IMGUIClass::Render(ModelClass* const& model, SoundClass* const& sound, CameraClass* const& camera, const int& fps, const int& cpu_usage)
 {
 	// IMGUI 렌더링 준비 //
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	SetUI(sound, camera, fps, cpu_usage);
+	SetUI(model, sound, camera, fps, cpu_usage);
 
 	// 렌더링
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
-void IMGUIClass::SetUI(SoundClass* const& sound, CameraClass* const& camera, const int& fps, const int& cpu_usage)
+void IMGUIClass::SetUI(ModelClass* const& model, SoundClass* const& sound, CameraClass* const& camera, const int& fps, const int& cpu_usage)
 {
 	SetFPSCPUUsage(fps, cpu_usage);
 	SetCameraInfo(camera);
@@ -130,6 +129,7 @@ void IMGUIClass::SetCameraInfo(CameraClass* const& camera)
 {
 	ImVec2 pos, size;
 	bool IsPress = false;
+	float sensitive = 0.f;
 	std::string tmp;
 
 	// 카메라 위치, 회전 UI //
@@ -157,16 +157,10 @@ void IMGUIClass::SetCameraInfo(CameraClass* const& camera)
 	tmp = std::to_string(camera->GetTransformObject()->GetRotation().z);
 	ImGui::Text(tmp.c_str());
 
-	IsPress = ImGui::Button("test");
-
-	ImGui::End();
-
 
 	// 카메라 이동 speed UI //
-	ImGui::SetNextWindowPos(m_WindowsPosition[2], ImGuiCond_Appearing);
-	ImGui::Begin(u8"카메라 이동 speed 조정", NULL);
-	float sensitive = camera->GetKeyboardSensitivity();
-	if (ImGui::SliderFloat("float", &sensitive, 0.0f, 0.1f))
+	sensitive = camera->GetKeyboardSensitivity();
+	if (ImGui::SliderFloat(u8"카메라 속도", &sensitive, 0.0f, 0.1f))
 		camera->SetKeyboardSensitivity(sensitive);
 
 	IsPress = ImGui::Button("test");
@@ -179,7 +173,7 @@ void IMGUIClass::SetSoundInfo(SoundClass* const& sound)
 	bool IsPress = false;
 
 	// 사운드 재생 UI //
-	ImGui::SetNextWindowPos(m_WindowsPosition[3], ImGuiCond_Appearing);
+	ImGui::SetNextWindowPos(m_WindowsPosition[2], ImGuiCond_Appearing);
 	ImGui::Begin(u8"사운드 재생 조정", NULL);
 
 	// backgound 오디오 //

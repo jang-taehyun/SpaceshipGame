@@ -1,11 +1,12 @@
 #include "pch.h"
-#include "ModelClass.h"
+#include "SpaceshipModelClass.h"
+#include "CubeModelClass.h"
 #include "ModelManagerClass.h"
 
 bool ModelManagerClass::IsInitialize = false;
 static ErrorContent e;
 
-ModelManagerClass::ModelManagerClass(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext)
+ModelManagerClass::ModelManagerClass(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext)
 {
 	HRESULT result = S_OK;
 
@@ -19,7 +20,7 @@ ModelManagerClass::ModelManagerClass(ID3D11Device* const& Device, ID3D11DeviceCo
 		throw e;
 	}
 
-	result = Initailize(Device, DeviceContext);
+	result = Initailize(hwnd, Device, DeviceContext);
 	if (FAILED(result))
 	{
 		Shutdown();
@@ -48,32 +49,28 @@ ModelClass* const ModelManagerClass::GetModel(ModelIDs key)
 	return ret;
 }
 
-HRESULT ModelManagerClass::Initailize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext)
+HRESULT ModelManagerClass::Initailize(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext)
 {
 	HRESULT result = S_OK;
 	ModelClass* model = nullptr;
-	float ScalingFactor = 0.5f;
-	DirectX::XMFLOAT4 Position = { 0.f, 0.f, 0.f, 1.f };
-	DirectX::XMFLOAT4 Rotation = { 0.f, 0.f, 0.f, 1.f };
-	DirectX::XMFLOAT4 Scaling = { ScalingFactor, ScalingFactor, ScalingFactor, 1.f };
 
 	// 에러 메세지 초기화 //
 	e.title = _T("ModelManagerClass Initailize()");
 
 	// model 객체 생성 및 map에 insert //
-	model = new ModelClass(Position, Rotation, Scaling, Device, DeviceContext, SpaceTextureFileNames, SpaceModelFileName);
+	model = new SpaceshipModelClass(hwnd, Device, DeviceContext, SpaceshipModelInfo);
 	if (!model)
 	{
-		e.contents = _T("Model 인스턴스 생성 실패");
+		e.contents = _T("Model 인스턴스 생성 실패(spaceship)");
 		e.errorCode = E_FAIL;
 		return result;
 	}
 	m_ModelList.insert(std::make_pair(ModelIDs::DEFAULT_SPACESHIP, model));
 
-	model = new ModelClass(Position, Rotation, Scaling, Device, DeviceContext, CubeTextureFileNames, CubeModelFileName);
+	model = new CubeModelClass(hwnd, Device, DeviceContext, CubeModelInfo);
 	if (!model)
 	{
-		e.contents = _T("Model 인스턴스 생성 실패");
+		e.contents = _T("Model 인스턴스 생성 실패(cube)");
 		e.errorCode = E_FAIL;
 		return result;
 	}
@@ -91,4 +88,6 @@ void ModelManagerClass::Shutdown()
 		delete iter->second;
 		iter->second = nullptr;
 	}
+
+	m_ModelList.clear();
 }

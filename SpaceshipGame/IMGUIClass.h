@@ -9,6 +9,7 @@
 
 class CameraClass;
 class SoundClass;
+class ModelClass;
 
 class IMGUIClass
 {
@@ -16,13 +17,13 @@ public:
 	IMGUIClass(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeivceContext);
 	~IMGUIClass();
 	
-	void Render(SoundClass* const& sound, CameraClass* const& camera, const int& fps, const int& cpu_usage);
+	void Render(ModelClass* const& model, SoundClass* const& sound, CameraClass* const& camera, const int& fps, const int& cpu_usage);
 
 private:
 	void Initialize(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeivceContext);
 	void Shutdown();
 
-	void SetUI(SoundClass* const& sound, CameraClass* const& camera, const int& fps, const int& cpu_usage);
+	void SetUI(ModelClass* const& model, SoundClass* const& sound, CameraClass* const& camera, const int& fps, const int& cpu_usage);
 	void SetFPSCPUUsage(const int& fps, const int& cpu_usage);
 	void SetCameraInfo(CameraClass* const& camera);
 	void SetSoundInfo(SoundClass* const& sound);

@@ -155,11 +155,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ActorClass.h" />
-    <ClInclude Include="AlphaMapShaderClass.h" />
     <ClInclude Include="CameraClass.h" />
+    <ClInclude Include="CollisionClass.h" />
     <ClInclude Include="ColorClass.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="CPUClass.h" />
+    <ClInclude Include="CubeModelClass.h" />
     <ClInclude Include="D3DClass.h" />
     <ClInclude Include="DxDefine.h" />
     <ClInclude Include="FontClass.h" />
@@ -170,8 +171,6 @@
     <ClInclude Include="IMGUIClass.h" />
     <ClInclude Include="InputClass.h" />
     <ClInclude Include="LightClass.h" />
-    <ClInclude Include="LightMapShaderClass.h" />
-    <ClInclude Include="LightShaderClass.h" />
     <ClInclude Include="ModelClass.h" />
     <ClInclude Include="ModelManagerClass.h" />
     <ClInclude Include="MultiTextureShaderClass.h" />
@@ -181,21 +180,23 @@
     <ClInclude Include="ShaderClass.h" />
     <ClInclude Include="SoundClass.h" />
     <ClInclude Include="SpaceshipGame.h" />
+    <ClInclude Include="SpaceshipModelClass.h" />
+    <ClInclude Include="SpaceshipShaderClass.h" />
     <ClInclude Include="SystemClass.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TextClass.h" />
     <ClInclude Include="TextureClass.h" />
-    <ClInclude Include="TextureShaderClass.h" />
     <ClInclude Include="TimerClass.h" />
-    <ClInclude Include="TransformClass.h" />
+    <ClInclude Include="AffineClass.h" />
     <ClInclude Include="typedef.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ActorClass.cpp" />
-    <ClCompile Include="AlphaMapShaderClass.cpp" />
     <ClCompile Include="CameraClass.cpp" />
+    <ClCompile Include="CollisionClass.cpp" />
     <ClCompile Include="ColorClass.cpp" />
     <ClCompile Include="CPUClass.cpp" />
+    <ClCompile Include="CubeModelClass.cpp" />
     <ClCompile Include="D3DClass.cpp" />
     <ClCompile Include="FontClass.cpp" />
     <ClCompile Include="FontShaderClass.cpp" />
@@ -205,8 +206,6 @@
     <ClCompile Include="IMGUIClass.cpp" />
     <ClCompile Include="InputClass.cpp" />
     <ClCompile Include="LightClass.cpp" />
-    <ClCompile Include="LightMapShaderClass.cpp" />
-    <ClCompile Include="LightShaderClass.cpp" />
     <ClCompile Include="ModelClass.cpp" />
     <ClCompile Include="ModelManagerClass.cpp" />
     <ClCompile Include="MultiTextureShaderClass.cpp" />
@@ -220,12 +219,13 @@
     <ClCompile Include="Position2DClass.cpp" />
     <ClCompile Include="ShaderClass.cpp" />
     <ClCompile Include="SoundClass.cpp" />
+    <ClCompile Include="SpaceshipModelClass.cpp" />
+    <ClCompile Include="SpaceshipShaderClass.cpp" />
     <ClCompile Include="SystemClass.cpp" />
     <ClCompile Include="TextClass.cpp" />
     <ClCompile Include="TextureClass.cpp" />
-    <ClCompile Include="TextureShaderClass.cpp" />
     <ClCompile Include="TimerClass.cpp" />
-    <ClCompile Include="TransformClass.cpp" />
+    <ClCompile Include="AffineClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SpaceshipGame.rc" />

@@ -1,5 +1,4 @@
 #include "pch.h"
-
 #include "CameraClass.h"
 
 static ErrorContent e;
@@ -28,8 +27,8 @@ HRESULT CameraClass::Initialize(const DirectX::XMFLOAT4& position, const DirectX
 	// 에러 메세지 초기화 //
 	e.title = _T("CameraClass Initialize()");
 
-	m_Transform = new TransformClass(position, rotation, scaling);
-	if (!m_Transform)
+	m_Affine = new AffineClass(position, rotation, scaling);
+	if (!m_Affine)
 	{
 		e.contents = _T("TransformClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
@@ -43,10 +42,10 @@ HRESULT CameraClass::Initialize(const DirectX::XMFLOAT4& position, const DirectX
 
 void CameraClass::Shutdown()
 {
-	if (m_Transform)
+	if (m_Affine)
 	{
-		delete m_Transform;
-		m_Transform = nullptr;
+		delete m_Affine;
+		m_Affine = nullptr;
 	}
 }
 
@@ -56,11 +55,11 @@ void CameraClass::Render()
 	DirectX::XMVECTOR forward, up;
 
 	// 카메라의 local 좌표계의 축 추출 //
-	forward = m_Transform->GetForwardVector();
-	up = m_Transform->GetUpVector();
+	forward = m_Affine->GetForwardVector();
+	up = m_Affine->GetUpVector();
 
 	// 카메라의 world 좌표계의 position 추출 //
-	position = DirectX::XMLoadFloat4(&(m_Transform->GetPosition()));
+	position = DirectX::XMLoadFloat4(&(m_Affine->GetPosition()));
 
 	// target vector 계산 //
 	target = DirectX::XMVectorAdd(position, forward);

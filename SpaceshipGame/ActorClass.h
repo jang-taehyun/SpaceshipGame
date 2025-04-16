@@ -1,23 +1,28 @@
 #pragma once
 
-class TransformClass;
+#include "AffineClass.h"
+
+class CollisionClass;
 class ModelClass;
 
 class ActorClass
 {
 public:
-	ActorClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, const int ModelID = 0);
+	ActorClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, const ModelIDs ModelID = ModelIDs::DEFAULT_SPACESHIP);
 	virtual ~ActorClass();
 
-	inline const DirectX::XMMATRIX& GetAffineMatrix() const;
+	inline const DirectX::XMMATRIX& GetAffineMatrix() { return m_Affine->GetAffine(); }
+	inline CollisionClass* const& GetCollision() { return m_Collision; }
+	inline const ModelIDs& GetModelID() { return m_ModelID; }
 
 private:
-	HRESULT Initailize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, const int ModelID = 0);
+	HRESULT Initailize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, const ModelIDs ModelID = ModelIDs::DEFAULT_SPACESHIP);
 	void Shutdown();
 
 private:
-	TransformClass* m_Transform = nullptr;
-	int m_ModelID = 0;
+	AffineClass* m_Affine = nullptr;
+	CollisionClass* m_Collision = nullptr;
+	ModelIDs m_ModelID = ModelIDs::DEFAULT_SPACESHIP;
 
 public:
 	ActorClass() = delete;

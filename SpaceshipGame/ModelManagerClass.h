@@ -7,13 +7,13 @@ class ModelClass;
 class ModelManagerClass
 {
 public:
-	ModelManagerClass(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext);
+	ModelManagerClass(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext);
 	virtual ~ModelManagerClass();
 
 	ModelClass* const GetModel(ModelIDs id);
 
 private:
-	HRESULT Initailize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext);
+	HRESULT Initailize(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext);
 	void Shutdown();
 
 private:

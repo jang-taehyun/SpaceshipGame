@@ -11,12 +11,14 @@ struct VertexInputType
 {
 	float4 position : POSITION;
 	float2 tex : TEXCOORD0;
+	float3 normal : NORMAL;
 };
 
 struct PixelInputType
 {
 	float4 position : SV_POSITION;
 	float2 tex : TEXCOORD0;
+	float3 normal : NORMAL;
 };
 
 // vertex shader //
@@ -34,6 +36,9 @@ PixelInputType TextureVertexShader(VertexInputType input)
 
 	// pixel shader의 texture 좌표 저장 //
 	output.tex = input.tex;
+
+	// normal vector를 월드 공간으로 변환 //
+    output.normal = mul(input.normal, (float3x3)WorldMatrix);
 
 	return output;
 }

@@ -36,10 +36,12 @@ const std::vector<std::wstring> SpaceTextureFileNames =
 	_T("./data/aircraft.jpg")
 };
 
+
 const std::wstring CubeModelFileName = _T("./data/cube.txt");
 const std::vector<std::wstring> CubeTextureFileNames =
 {
-	_T("./data/stone01.tga")
+	_T("./data/stone01.tga"),
+	_T("./data/dirt01.dds"),
 };
 
 // 3D object 모델 정보 //
@@ -97,4 +99,19 @@ const ShaderFileInfo FontShaderInfo =
 	_T("./shader/pixel/font.ps"),
 	"FontVertexShader",
 	"FontPixelShader"
+};
+
+// 3D model 관련 정보들 //
+const ModelInfo SpaceshipModelInfo =
+{
+	SpaceModelFileName,
+	SpaceTextureFileNames,
+	TextureShaderInfo
+};
+
+const ModelInfo CubeModelInfo =
+{
+	CubeModelFileName,
+	CubeTextureFileNames,
+	MultiTextureShaderInfo
 };

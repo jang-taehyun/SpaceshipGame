@@ -1,9 +1,9 @@
 #pragma once
 
 #include "TextureClass.h"
-#include "TransformClass.h"
 
 class ModelLoaderClass;
+class ShaderClass;
 
 class ModelClass
 {
@@ -23,35 +23,31 @@ private:
 	};
 
 public:
-	ModelClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::wstring& TextureFileName, const std::wstring& ModelFileName);
-	ModelClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<std::wstring>& TextureFileNames, const std::wstring& ModelFileName);
-	~ModelClass();
+	ModelClass(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const ModelInfo& info);
+	virtual ~ModelClass();
 
-	void Render(ID3D11DeviceContext* const& DeviceContext);
+	HRESULT Render(ID3D11DeviceContext* const& DeviceContext, const TransformMatrixData& transform);
 
 	inline const int& GetIndexCount() const { return m_IndexCount; }
 	inline const ID3D11ShaderResourceView* const& GetTexture(const int idx = 0) { return m_Texture->GetTexture(idx); }
 	inline const std::vector<ID3D11ShaderResourceView*>& GetTextureArray() { return m_Texture->GetTextures(); }
-
-	inline const DirectX::XMMATRIX& GetAffineMatrix() const { return m_Transform->GetAffine(); }
+	inline ShaderClass* const& GetShader() { return m_Shader; }
 
 private:
-	HRESULT Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::wstring& TextureFileName, const std::wstring& ModelFileName);
-	HRESULT Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<std::wstring>& TextureFileNames, const std::wstring& ModelFileName);
-	void Shutdown();
-
+	HRESULT Initialize(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const ModelInfo& info);
 	HRESULT LoadModel(const std::wstring& FileName);
-	HRESULT InitializeBuffers(ID3D11Device* const& Device);
-
-	void RenderBuffers(ID3D11DeviceContext* const& DeviceContext);
-
-	HRESULT LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::wstring& FileName);
 	HRESULT LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<std::wstring>& FileNames);
+	HRESULT InitializeBuffers(ID3D11Device* const& Device);
+	virtual HRESULT InitializeShader(const HWND& hwnd, ID3D11Device* const& Device, const ShaderFileInfo& info) = 0;
 
+	void SetBuffers(ID3D11DeviceContext* const& DeviceContext);
+	virtual HRESULT RenderShader(ID3D11DeviceContext* const& DeviceContext, const TransformMatrixData& transform) = 0;
+
+	void Shutdown();
 	void ShutdownBuffers();
 	void ReleaseTexture();
+	virtual void ReleaseShader() = 0;
 	void ReleaseModel();
-	void ShutdownPosition();
 
 private:
 	ID3D11Buffer* m_VertexBufer = nullptr;
@@ -63,9 +59,8 @@ private:
 	ModelType* m_Model = nullptr;
 	TextureClass* m_Texture = nullptr;
 
-	TransformClass* m_Transform = nullptr;
-
-	bool m_Line = false;
+protected:
+	ShaderClass* m_Shader = nullptr;
 
 public:
 	ModelClass() = delete;
