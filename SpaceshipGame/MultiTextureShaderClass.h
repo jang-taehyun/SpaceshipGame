@@ -12,7 +12,7 @@ private:
 	} VertexType;
 
 public:
-	MultiTextureShaderClass(const HWND& hwnd, ID3D11Device* const& Device, const ShaderFileInfo& info);
+	explicit MultiTextureShaderClass(const HWND& hwnd, ID3D11Device* const& Device, const ShaderFileInfo& info);
 	virtual ~MultiTextureShaderClass();
 
 private:

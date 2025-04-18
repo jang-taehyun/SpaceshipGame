@@ -12,7 +12,7 @@ protected:
 
 public:
 	// 생성자, 소멸자 //
-	ShaderClass(const HWND& hwnd, ID3D11Device* const& Device, const ShaderFileInfo& info);
+	explicit ShaderClass(const HWND& hwnd, ID3D11Device* const& Device, const ShaderFileInfo& info);
 	virtual ~ShaderClass();
 
 	// shader 렌더링 함수 //

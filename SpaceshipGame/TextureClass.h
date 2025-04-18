@@ -13,7 +13,7 @@ private:
 	};
 
 public:
-	TextureClass(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<std::wstring>& FileNames);
+	explicit TextureClass(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<std::wstring>& FileNames);
 	virtual ~TextureClass();
 
 	inline ID3D11ShaderResourceView* const& GetTexture(int idx) { return m_TextureView[idx]; }

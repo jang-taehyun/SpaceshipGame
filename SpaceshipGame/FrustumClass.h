@@ -3,8 +3,8 @@
 class FrustumClass
 {
 public:
-	FrustumClass();
-	FrustumClass(const float& ScreenDepth, const DirectX::XMMATRIX& ProjectionMatrix, const DirectX::XMMATRIX& ViewMatrix);
+	explicit FrustumClass();
+	explicit FrustumClass(const float& ScreenDepth, const DirectX::XMMATRIX& ProjectionMatrix, const DirectX::XMMATRIX& ViewMatrix);
 	virtual ~FrustumClass();
 
 	// viewing frustum 생성, 업데이트 함수

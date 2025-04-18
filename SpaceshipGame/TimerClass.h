@@ -3,8 +3,8 @@
 class TimerClass
 {
 public:
-	TimerClass();
-	~TimerClass();
+	explicit TimerClass();
+	virtual ~TimerClass();
 
 	void Frame();
 

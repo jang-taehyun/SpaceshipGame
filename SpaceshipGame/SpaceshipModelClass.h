@@ -5,7 +5,7 @@
 class SpaceshipModelClass : public ModelClass
 {
 public:
-	SpaceshipModelClass(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const ModelInfo& ModelInfo);
+	explicit SpaceshipModelClass(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const ModelInfo& ModelInfo);
 	virtual ~SpaceshipModelClass();
 	
 private:

@@ -5,8 +5,8 @@ class ColorClass;
 class D3DClass
 {
 public:
-	D3DClass(const int& ScreenWidth, const int& ScreenHeight, const bool& VSYNC, const HWND& hwnd, const bool& FullScreen, const float& ScreenDepth, const float& ScreenNear);
-	~D3DClass();
+	explicit D3DClass(const int& ScreenWidth, const int& ScreenHeight, const bool& VSYNC, const HWND& hwnd, const bool& FullScreen, const float& ScreenDepth, const float& ScreenNear);
+	virtual ~D3DClass();
 
 	// back buffer를 지우는 함수 //
 	void BeginScene(const ColorClass& color);

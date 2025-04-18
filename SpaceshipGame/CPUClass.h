@@ -6,8 +6,8 @@
 class CPUClass
 {
 public:
-	CPUClass();
-	~CPUClass();
+	explicit CPUClass();
+	virtual ~CPUClass();
 	
 	void Frame();
 

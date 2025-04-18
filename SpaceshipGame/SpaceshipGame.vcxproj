@@ -173,7 +173,6 @@
     <ClInclude Include="ModelManagerClass.h" />
     <ClInclude Include="MultiTextureShaderClass.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Position2DClass.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ShaderClass.h" />
     <ClInclude Include="SoundClass.h" />
@@ -212,7 +211,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Position2DClass.cpp" />
     <ClCompile Include="ShaderClass.cpp" />
     <ClCompile Include="SoundClass.cpp" />
     <ClCompile Include="SpaceshipModelClass.cpp" />

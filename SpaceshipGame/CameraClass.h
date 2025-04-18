@@ -5,8 +5,8 @@
 class CameraClass
 {
 public:
-	CameraClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling);
-	~CameraClass();
+	explicit CameraClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling);
+	virtual ~CameraClass();
 
 	// Getter //
 

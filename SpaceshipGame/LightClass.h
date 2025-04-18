@@ -3,9 +3,9 @@
 class LightClass
 {
 public:
-	LightClass();
-	LightClass(const LightClass& other);
-	~LightClass();
+	explicit LightClass();
+	explicit LightClass(const LightClass& other);
+	virtual ~LightClass();
 
 	// Getter //
 

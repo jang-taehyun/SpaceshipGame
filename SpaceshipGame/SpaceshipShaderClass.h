@@ -13,7 +13,7 @@ private:
 	} VertexType;
 
 public:
-	SpaceshipShaderClass(const HWND& hwnd, ID3D11Device* const& Device, const ShaderFileInfo& info);
+	explicit SpaceshipShaderClass(const HWND& hwnd, ID3D11Device* const& Device, const ShaderFileInfo& info);
 	virtual ~SpaceshipShaderClass();
 
 private:

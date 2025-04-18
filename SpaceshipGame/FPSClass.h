@@ -3,8 +3,8 @@
 class FPSClass
 {
 public:
-	FPSClass();
-	~FPSClass();
+	explicit FPSClass();
+	virtual ~FPSClass();
 
 	void Frame();
 	

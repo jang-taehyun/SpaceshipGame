@@ -7,7 +7,7 @@ class ModelClass;
 class ModelManagerClass
 {
 public:
-	ModelManagerClass(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext);
+	explicit ModelManagerClass(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext);
 	virtual ~ModelManagerClass();
 
 	ModelClass* const GetModel(ModelIDs id);

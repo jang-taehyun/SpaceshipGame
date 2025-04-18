@@ -9,8 +9,8 @@ private:
 	};
 
 public:
-	InputClass(const HINSTANCE& hinstance, const HWND& hwnd, const int& ScreenWidth, const int& ScreenHeight);
-	~InputClass();
+	explicit InputClass(const HINSTANCE& hinstance, const HWND& hwnd, const int& ScreenWidth, const int& ScreenHeight);
+	virtual ~InputClass();
 	
 	HRESULT Frame();
 

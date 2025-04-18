@@ -10,8 +10,8 @@ class TimerClass;
 class SystemClass
 {
 public:
-	SystemClass();
-	~SystemClass();
+	explicit SystemClass();
+	virtual ~SystemClass();
 	
 	void Run();
 

@@ -5,8 +5,8 @@
 class CollisionClass
 {
 public:
-	CollisionClass(const DirectX::XMFLOAT3& dist);
-	~CollisionClass();
+	explicit CollisionClass(const DirectX::XMFLOAT3& dist);
+	virtual ~CollisionClass();
 
 	inline DirectX::BoundingBox* const& GetCollision() { return m_Collision; }
 	const DirectX::ContainmentType GetCollideState(CollisionClass* const& ref);
@@ -17,5 +17,9 @@ private:
 
 private:
 	DirectX::BoundingBox* m_Collision = nullptr;
+
+public:
+	CollisionClass() = delete;
+	CollisionClass(const CollisionClass& other) = delete;
 };
 

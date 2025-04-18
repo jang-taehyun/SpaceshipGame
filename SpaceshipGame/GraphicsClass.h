@@ -14,8 +14,8 @@ class ActorClass;
 class GraphicsClass
 {
 public:
-	GraphicsClass(const int& ScreenWidth, const int& ScreenHeight, const HWND& hwnd);
-	~GraphicsClass();
+	explicit GraphicsClass(const int& ScreenWidth, const int& ScreenHeight, const HWND& hwnd);
+	virtual ~GraphicsClass();
 
 	HRESULT Frame(SoundClass* const& sound, const InputClass* const& input, const float& frame, const int& fps, const int& cpu_usage);
 

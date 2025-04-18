@@ -6,7 +6,7 @@ public:
 	explicit ColorClass() = default;
 	explicit ColorClass(const ColorClass& other);
 	explicit ColorClass(const float&& r, const float&& g = 0.f, const float&& b = 0.f, const float&& a = 1.f);
-	~ColorClass();
+	virtual ~ColorClass();
 
 	// ---- Getter ---- //
 

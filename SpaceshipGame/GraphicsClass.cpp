@@ -8,7 +8,6 @@
 #include "ActorClass.h"
 
 #include "TextClass.h"
-#include "Position2DClass.h"
 
 #include "FrustumClass.h"
 #include "ColorClass.h"

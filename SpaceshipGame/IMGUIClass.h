@@ -14,8 +14,8 @@ class ModelClass;
 class IMGUIClass
 {
 public:
-	IMGUIClass(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeivceContext);
-	~IMGUIClass();
+	explicit IMGUIClass(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeivceContext);
+	virtual ~IMGUIClass();
 	
 	void Render(ModelClass* const& model, SoundClass* const& sound, CameraClass* const& camera, const int& fps, const int& cpu_usage);
 

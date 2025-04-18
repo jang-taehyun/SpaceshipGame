@@ -23,7 +23,7 @@ private:
 	};
 
 public:
-	ModelClass(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const ModelInfo& info);
+	explicit ModelClass(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const ModelInfo& info);
 	virtual ~ModelClass();
 
 	HRESULT Render(ID3D11DeviceContext* const& DeviceContext, const TransformMatrixData& transform);

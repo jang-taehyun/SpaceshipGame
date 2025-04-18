@@ -22,9 +22,6 @@ InputClass::InputClass(const HINSTANCE& hinstance, const HWND& hwnd, const int& 
 	if (FAILED(result))
 	{
 		Shutdown();
-
-		e.contents = _T("InputClass 초기화 실패");
-		e.errorCode = result;
 		throw e;
 	}
 

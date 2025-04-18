@@ -3,9 +3,9 @@
 class AffineClass
 {
 public:
-	AffineClass();
-	AffineClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling);
-	~AffineClass();
+	explicit AffineClass();
+	explicit AffineClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling);
+	virtual ~AffineClass();
 
 	HRESULT ChangePosition(const MoveState& state, const bool& IsKeyDown);
 	void ChangeRotation(const long& MouseX, const long& MouseY);

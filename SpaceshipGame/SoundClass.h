@@ -5,8 +5,8 @@
 class SoundClass
 {
 public:
-	SoundClass();
-	~SoundClass();
+	explicit SoundClass();
+	virtual ~SoundClass();
 
 	HRESULT Frame();
 

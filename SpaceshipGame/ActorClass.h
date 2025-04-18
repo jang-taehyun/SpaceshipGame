@@ -8,7 +8,7 @@ class ModelClass;
 class ActorClass
 {
 public:
-	ActorClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, const ModelIDs ModelID = ModelIDs::DEFAULT_SPACESHIP);
+	explicit ActorClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, const ModelIDs ModelID = ModelIDs::DEFAULT_SPACESHIP);
 	virtual ~ActorClass();
 
 	inline const DirectX::XMMATRIX& GetAffineMatrix() { return m_Affine->GetAffine(); }

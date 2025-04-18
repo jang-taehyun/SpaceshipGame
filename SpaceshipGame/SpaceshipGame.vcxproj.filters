@@ -47,12 +47,6 @@
     <Filter Include="FrustumClass">
       <UniqueIdentifier>{cbac6ccf-be28-4f73-9f9b-51c9b43e22fa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Texture">
-      <UniqueIdentifier>{f425539f-e15e-4831-a061-d4cb088eddbe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Texture\TextureClass">
-      <UniqueIdentifier>{b6694b6c-6699-4641-a190-0e899b0bce02}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Model">
       <UniqueIdentifier>{b2ab057f-896f-42aa-800e-4d42831064c2}</UniqueIdentifier>
     </Filter>
@@ -76,9 +70,6 @@
     </Filter>
     <Filter Include="AffineClass">
       <UniqueIdentifier>{383ce90a-46d7-4511-9780-bc79d489ac21}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AffineClass\Position2DClass">
-      <UniqueIdentifier>{31005519-d99b-4479-b5c3-faa00bf4a255}</UniqueIdentifier>
     </Filter>
     <Filter Include="Model\Spaceship">
       <UniqueIdentifier>{100f9a1d-d3f9-4cce-b959-68b9e635a74d}</UniqueIdentifier>
@@ -118,6 +109,9 @@
     </Filter>
     <Filter Include="TextClass">
       <UniqueIdentifier>{60015bc3-ca0b-4bf3-9efb-6b5fa100c17f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TextureClass">
+      <UniqueIdentifier>{f425539f-e15e-4831-a061-d4cb088eddbe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -166,9 +160,6 @@
     <ClInclude Include="FrustumClass.h">
       <Filter>FrustumClass</Filter>
     </ClInclude>
-    <ClInclude Include="TextureClass.h">
-      <Filter>Texture\TextureClass</Filter>
-    </ClInclude>
     <ClInclude Include="ModelClass.h">
       <Filter>Model\ModelClass</Filter>
     </ClInclude>
@@ -177,9 +168,6 @@
     </ClInclude>
     <ClInclude Include="ColorClass.h">
       <Filter>ColorClass</Filter>
-    </ClInclude>
-    <ClInclude Include="Position2DClass.h">
-      <Filter>AffineClass\Position2DClass</Filter>
     </ClInclude>
     <ClInclude Include="IMGUIClass.h">
       <Filter>Debugging\IMGUIClass</Filter>
@@ -220,6 +208,9 @@
     <ClInclude Include="TextClass.h">
       <Filter>TextClass</Filter>
     </ClInclude>
+    <ClInclude Include="TextureClass.h">
+      <Filter>TextureClass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -258,17 +249,11 @@
     <ClCompile Include="FrustumClass.cpp">
       <Filter>FrustumClass</Filter>
     </ClCompile>
-    <ClCompile Include="TextureClass.cpp">
-      <Filter>Texture\TextureClass</Filter>
-    </ClCompile>
     <ClCompile Include="ModelClass.cpp">
       <Filter>Model\ModelClass</Filter>
     </ClCompile>
     <ClCompile Include="ColorClass.cpp">
       <Filter>ColorClass</Filter>
-    </ClCompile>
-    <ClCompile Include="Position2DClass.cpp">
-      <Filter>AffineClass\Position2DClass</Filter>
     </ClCompile>
     <ClCompile Include="IMGUIClass.cpp">
       <Filter>Debugging\IMGUIClass</Filter>
@@ -305,6 +290,9 @@
     </ClCompile>
     <ClCompile Include="TextClass.cpp">
       <Filter>TextClass</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureClass.cpp">
+      <Filter>TextureClass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

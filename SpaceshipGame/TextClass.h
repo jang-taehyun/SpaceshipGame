@@ -5,7 +5,7 @@
 class TextClass
 {
 public:
-	TextClass(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext);
+	explicit TextClass(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext);
 	virtual ~TextClass();
 
 	void Render(ID3D11DeviceContext* const& DeviceContext, const std::wstring& text, const DirectX::XMFLOAT2& pos, const DirectX::XMVECTOR& color);
