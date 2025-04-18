@@ -62,12 +62,6 @@
     <Filter Include="Light">
       <UniqueIdentifier>{e3f9a0a2-cb03-4a0d-b1b3-509bf3d96848}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Font">
-      <UniqueIdentifier>{3eb92837-7d3e-4017-acbc-5825d51dc141}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="TextClass">
-      <UniqueIdentifier>{3484c0b2-5711-4923-aa1c-dc82aabb05b1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ColorClass">
       <UniqueIdentifier>{c18dc73e-7b11-4dc7-8fc8-f1b588077ea0}</UniqueIdentifier>
     </Filter>
@@ -95,32 +89,38 @@
     <Filter Include="Model\ShaderClass">
       <UniqueIdentifier>{e536d068-4c88-4f1d-99c6-3fa9d3bbbab8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Model\ShaderClass\Child">
-      <UniqueIdentifier>{246bdc41-b515-48db-99f6-c04f6b5df452}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model\ShaderClass\Child\MultiTexture">
-      <UniqueIdentifier>{dce89d75-8f85-474b-b259-3d00508309dd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model\ShaderClass\Child\FontShader">
-      <UniqueIdentifier>{a6c6b51c-926b-4c81-a5e1-6f39ddbc978a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model\ShaderClass\Parent">
-      <UniqueIdentifier>{69cc488c-e683-4a0d-a1c1-ac4cd22af194}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model\SpaceshipModelClass">
-      <UniqueIdentifier>{100f9a1d-d3f9-4cce-b959-68b9e635a74d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model\ShaderClass\Child\SpaceshipShader">
-      <UniqueIdentifier>{c9ce7fe0-dc45-431a-9878-9c4b6c77d898}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model\CubeModelClass">
-      <UniqueIdentifier>{43de61e0-d73d-4a1f-b024-b2e7dce79e48}</UniqueIdentifier>
-    </Filter>
     <Filter Include="AffineClass">
       <UniqueIdentifier>{383ce90a-46d7-4511-9780-bc79d489ac21}</UniqueIdentifier>
     </Filter>
     <Filter Include="AffineClass\Position2DClass">
       <UniqueIdentifier>{31005519-d99b-4479-b5c3-faa00bf4a255}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Spaceship">
+      <UniqueIdentifier>{100f9a1d-d3f9-4cce-b959-68b9e635a74d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Spaceship\SpaceshipShader">
+      <UniqueIdentifier>{c9ce7fe0-dc45-431a-9878-9c4b6c77d898}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Spaceship\SpaceshipModelClass">
+      <UniqueIdentifier>{a444c7e9-e553-470a-adfe-d8ff08a816e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Cube">
+      <UniqueIdentifier>{43de61e0-d73d-4a1f-b024-b2e7dce79e48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Cube\CubeModelClass">
+      <UniqueIdentifier>{9d79f49c-43c5-4c82-96ec-2aeee070b467}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Cube\CubeShaderClass">
+      <UniqueIdentifier>{ae9de815-ae4f-4a3d-8482-a59490cb4251}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Cube\CubeShaderClass\MultiTexture">
+      <UniqueIdentifier>{dce89d75-8f85-474b-b259-3d00508309dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Text">
+      <UniqueIdentifier>{60015bc3-ca0b-4bf3-9efb-6b5fa100c17f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Text\TextClass">
+      <UniqueIdentifier>{3484c0b2-5711-4923-aa1c-dc82aabb05b1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -144,12 +144,6 @@
     </ClInclude>
     <ClInclude Include="SoundClass.h">
       <Filter>SoundClass</Filter>
-    </ClInclude>
-    <ClInclude Include="ShaderClass.h">
-      <Filter>Model\ShaderClass\Parent</Filter>
-    </ClInclude>
-    <ClInclude Include="MultiTextureShaderClass.h">
-      <Filter>Model\ShaderClass\Child\MultiTexture</Filter>
     </ClInclude>
     <ClInclude Include="D3DClass.h">
       <Filter>Graphics\D3DClass</Filter>
@@ -181,17 +175,11 @@
     <ClInclude Include="ModelClass.h">
       <Filter>Model\ModelClass</Filter>
     </ClInclude>
-    <ClInclude Include="FontShaderClass.h">
-      <Filter>Model\ShaderClass\Child\FontShader</Filter>
-    </ClInclude>
-    <ClInclude Include="FontClass.h">
-      <Filter>Font</Filter>
-    </ClInclude>
     <ClInclude Include="config.h">
       <Filter>Default\header</Filter>
     </ClInclude>
     <ClInclude Include="TextClass.h">
-      <Filter>TextClass</Filter>
+      <Filter>Text\TextClass</Filter>
     </ClInclude>
     <ClInclude Include="ColorClass.h">
       <Filter>ColorClass</Filter>
@@ -220,14 +208,20 @@
     <ClInclude Include="CollisionClass.h">
       <Filter>CollisionClass</Filter>
     </ClInclude>
-    <ClInclude Include="SpaceshipModelClass.h">
-      <Filter>Model\SpaceshipModelClass</Filter>
-    </ClInclude>
     <ClInclude Include="SpaceshipShaderClass.h">
-      <Filter>Model\ShaderClass\Child\SpaceshipShader</Filter>
+      <Filter>Model\Spaceship\SpaceshipShader</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderClass.h">
+      <Filter>Model\ShaderClass</Filter>
+    </ClInclude>
+    <ClInclude Include="SpaceshipModelClass.h">
+      <Filter>Model\Spaceship\SpaceshipModelClass</Filter>
     </ClInclude>
     <ClInclude Include="CubeModelClass.h">
-      <Filter>Model\CubeModelClass</Filter>
+      <Filter>Model\Cube\CubeModelClass</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiTextureShaderClass.h">
+      <Filter>Model\Cube\CubeShaderClass\MultiTexture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -255,12 +249,6 @@
     <ClCompile Include="SoundClass.cpp">
       <Filter>SoundClass</Filter>
     </ClCompile>
-    <ClCompile Include="ShaderClass.cpp">
-      <Filter>Model\ShaderClass\Parent</Filter>
-    </ClCompile>
-    <ClCompile Include="MultiTextureShaderClass.cpp">
-      <Filter>Model\ShaderClass\Child\MultiTexture</Filter>
-    </ClCompile>
     <ClCompile Include="D3DClass.cpp">
       <Filter>Graphics\D3DClass</Filter>
     </ClCompile>
@@ -279,14 +267,8 @@
     <ClCompile Include="ModelClass.cpp">
       <Filter>Model\ModelClass</Filter>
     </ClCompile>
-    <ClCompile Include="FontShaderClass.cpp">
-      <Filter>Model\ShaderClass\Child\FontShader</Filter>
-    </ClCompile>
-    <ClCompile Include="FontClass.cpp">
-      <Filter>Font</Filter>
-    </ClCompile>
     <ClCompile Include="TextClass.cpp">
-      <Filter>TextClass</Filter>
+      <Filter>Text\TextClass</Filter>
     </ClCompile>
     <ClCompile Include="ColorClass.cpp">
       <Filter>ColorClass</Filter>
@@ -312,14 +294,20 @@
     <ClCompile Include="CollisionClass.cpp">
       <Filter>CollisionClass</Filter>
     </ClCompile>
-    <ClCompile Include="SpaceshipModelClass.cpp">
-      <Filter>Model\SpaceshipModelClass</Filter>
-    </ClCompile>
     <ClCompile Include="SpaceshipShaderClass.cpp">
-      <Filter>Model\ShaderClass\Child\SpaceshipShader</Filter>
+      <Filter>Model\Spaceship\SpaceshipShader</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderClass.cpp">
+      <Filter>Model\ShaderClass</Filter>
+    </ClCompile>
+    <ClCompile Include="SpaceshipModelClass.cpp">
+      <Filter>Model\Spaceship\SpaceshipModelClass</Filter>
     </ClCompile>
     <ClCompile Include="CubeModelClass.cpp">
-      <Filter>Model\CubeModelClass</Filter>
+      <Filter>Model\Cube\CubeModelClass</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiTextureShaderClass.cpp">
+      <Filter>Model\Cube\CubeShaderClass\MultiTexture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

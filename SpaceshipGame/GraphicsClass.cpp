@@ -8,6 +8,8 @@
 #include "ActorClass.h"
 
 #include "TextClass.h"
+#include "Position2DClass.h"
+
 #include "FrustumClass.h"
 #include "ColorClass.h"
 #include "IMGUIClass.h"
@@ -77,7 +79,7 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 	{
 		e.contents = _T("CameraClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
-		return result;
+		return E_FAIL;
 	}
 	BaseViewMatrix = m_Camera->GetViewMatrix();
 
@@ -87,7 +89,7 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 	{
 		e.contents = _T("Model Manager 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
-		return result;
+		return E_FAIL;
 	}
 
 	// Player 객체 생성 및 초기화 //
@@ -96,18 +98,15 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 	{
 		e.contents = _T("Actor 인스턴스 생성 실패(Player)");
 		e.errorCode = E_FAIL;
-		return result;
+		return E_FAIL;
 	}
 
 	// Text 객체 생성 및 초기화 //
-	m_Text = new TextClass;
+	m_Text = new TextClass(m_D3D->GetDevice(), m_D3D->GetDeviceContext());
 	if (!m_Text)
 	{
-		return E_FAIL;
-	}
-	if (FAILED(m_Text->Initialize(m_D3D->GetDevice(), m_D3D->GetDeviceContext(), hwnd, ScreenWidth, ScreenHeight, BaseViewMatrix)))
-	{
-		MessageBox(hwnd, _T("Could not initialize the text object"), _T("Error"), MB_OK);
+		e.contents = _T("Text 인스턴스 생성 실패");
+		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
 
@@ -124,7 +123,7 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 	{
 		e.contents = _T("IMGUIClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
-		return result;
+		return E_FAIL;
 	}
 
 	return result;
@@ -152,7 +151,6 @@ void GraphicsClass::Shutdown()
 
 	if (m_Text)
 	{
-		m_Text->Shutdown();
 		delete m_Text;
 		m_Text = nullptr;
 	}
@@ -315,13 +313,10 @@ HRESULT GraphicsClass::Render(SoundClass* const& sound, const int& fps, const in
 	m_D3D->TurnOnAlphaBlending();
 	
 	// text 렌더링
-	result = m_Text->Render(m_D3D->GetDeviceContext(), WorldMatrix, OrthoMatrix);
-	if (FAILED(result))
-	{
-		e.contents = _T("text 렌더링 실패");
-		e.errorCode = result;
-		return result;
-	}
+	DirectX::XMFLOAT2 pos = { 500.f, 600.f };
+	DirectX::XMFLOAT4 tmp = { 1.f, 1.f, 1.f, 1.f };
+	DirectX::XMVECTOR color = DirectX::XMLoadFloat4(&tmp);
+	m_Text->Render(m_D3D->GetDeviceContext(), _T("테스트 01 text ~ ! @"), pos, color);
 	
 	// alpha blend state 비활성화
 	m_D3D->TurnOffAlphaBlending();

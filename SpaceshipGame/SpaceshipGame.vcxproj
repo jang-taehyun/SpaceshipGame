@@ -163,8 +163,6 @@
     <ClInclude Include="CubeModelClass.h" />
     <ClInclude Include="D3DClass.h" />
     <ClInclude Include="DxDefine.h" />
-    <ClInclude Include="FontClass.h" />
-    <ClInclude Include="FontShaderClass.h" />
     <ClInclude Include="FPSClass.h" />
     <ClInclude Include="FrustumClass.h" />
     <ClInclude Include="GraphicsClass.h" />
@@ -198,8 +196,6 @@
     <ClCompile Include="CPUClass.cpp" />
     <ClCompile Include="CubeModelClass.cpp" />
     <ClCompile Include="D3DClass.cpp" />
-    <ClCompile Include="FontClass.cpp" />
-    <ClCompile Include="FontShaderClass.cpp" />
     <ClCompile Include="FPSClass.cpp" />
     <ClCompile Include="FrustumClass.cpp" />
     <ClCompile Include="GraphicsClass.cpp" />

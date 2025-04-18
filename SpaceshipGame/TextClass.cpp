@@ -1,276 +1,92 @@
 #include "pch.h"
-#include "FontClass.h"
-#include "FontShaderClass.h"
-#include "Position2DClass.h"
+#include <SimpleMath.h>
 #include "TextClass.h"
 
-TextClass::TextClass() {}
-TextClass::TextClass(const TextClass& other) {}
-TextClass::~TextClass() {}
+bool TextClass::IsInitialize = false;
+static ErrorContent e;
 
-HRESULT TextClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const HWND& hwnd,  const int& ScreenWidth, const int& ScreenHeight, const DirectX::XMMATRIX& BaseViewMatrix)
+TextClass::TextClass(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext)
 {
-	// 화면 해상도, view matrix 초기화 //
-	m_ScreenHeight = ScreenHeight;
-	m_ScreenWidth = ScreenWidth;
-	m_BaseViewMatrix = BaseViewMatrix;
+	HRESULT result = S_OK;
 
+	// 에러 메세지 초기화 //
+	e.title = _T("TextClass Constructor");
 
-	// font object 생성 및 초기화 //
-	m_Font = new FontClass;
-	if (!m_Font)
+	if (IsInitialize)
 	{
+		e.contents = _T("이미 TextClass 인스턴스가 존재합니다.");
+		e.errorCode = E_FAIL;
+		throw e;
+	}
+
+	result = Initialize(Device, DeviceContext);
+	if (FAILED(result))
+	{
+		Shutdown();
+		throw e;
+	}
+
+	IsInitialize = true;
+}
+
+TextClass::~TextClass()
+{
+	Shutdown();
+	IsInitialize = false;
+}
+
+HRESULT TextClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext)
+{
+	HRESULT result = S_OK;
+
+	// 에러 메세지 초기화 //
+	e.title = _T("TextClass Initialize()");
+
+	// bitmap 폰트를 로드 //
+	m_Font = std::make_unique<DirectX::SpriteFont>(Device, FontFileName.c_str());
+	if (!m_Font.get())
+	{
+		e.contents = _T("sprite font 객체 생성 실패");
+		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
-	if (FAILED(m_Font->Initialize(Device, DeviceContext, FontFileName, FontTextureFileName)))
+
+	// bitmap 폰트를 draw할 SpriteBatch 객체 생성 //
+	m_SpriteBatch = std::make_unique<DirectX::SpriteBatch>(DeviceContext);
+	if (!m_SpriteBatch.get())
 	{
-		MessageBox(hwnd, _T("Could not initialize the font object"), _T("Error"), MB_OK);
+		e.contents = _T("sprite batch 객체 생성 실패");
+		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
 
-	// font shader object 생성 및 초기화 //
-	m_FontShader = new FontShaderClass(hwnd, Device, FontShaderInfo);
-	if (!m_FontShader)
-	{
-		return E_FAIL;
-	}
-
-	// 출력할 문장 생성 및 초기화 //
-	for (int i = 0; i < 5; ++i)
-	{
-		if (FAILED(InitializeSentence(&m_Sentence[i], 16, Device)))
-			return E_FAIL;
-	}
-
-	return S_OK;
+	return result;
 }
 
 void TextClass::Shutdown()
 {
-	// 문장 데이터 release //
-	for(int i=0; i<5; ++i)
-		ReleaseSentence(&m_Sentence[i]);
-
-	// member variable release //
-	if (m_FontShader)
+	if (!m_SpriteBatch.get())
 	{
-		delete m_FontShader;
-		m_FontShader = nullptr;
+		m_SpriteBatch.reset();
 	}
-
-	if (m_Font)
-	{
-		m_Font->Shutdown();
-		delete m_Font;
-		m_Font = nullptr;
-	}
-}
-
-HRESULT TextClass::Render(ID3D11DeviceContext* const& DeviceContext, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& OrthoMatrix)
-{
-	for (int i = 0; i < 5; ++i)
-	{
-		if (FAILED(RenderSentence(DeviceContext, m_Sentence[i], WorldMatrix, OrthoMatrix)))
-		{
-			return E_FAIL;
-		}
-	}
-
-	return S_OK;
-}
-
-HRESULT TextClass::SetSentenceAboutInteger(const int& Number, const std::wstring& Title, const int& SentenceIdx, const Position2DClass& Position, const ColorClass& TextColor, ID3D11DeviceContext* const& DeviceContext)
-{
-	std::wstring tmp = Title + _T(" ");
-	tmp = tmp + std::to_wstring(Number);
-
-	if (FAILED(UpdateSentence(m_Sentence[SentenceIdx], tmp, Position, TextColor, DeviceContext)))
-	{
-		return E_FAIL;
-	}
-
-	return S_OK;
-}
-
-HRESULT TextClass::InitializeSentence(SentenceType** const& Sentence, const int& MaxLength, ID3D11Device* const& Device)
-{
-	// sentence object 생성 및 초기화 //
-	*Sentence = new SentenceType;
-	if (!(*Sentence))
-	{
-		return E_FAIL;
-	}
-
-	(*Sentence)->VertexBuffer = nullptr;
-	(*Sentence)->IndexBuffer = nullptr;
-	(*Sentence)->MaxLength = MaxLength;
-	(*Sentence)->VertexCount = MaxLength * 6;
-	(*Sentence)->IndexCount = (*Sentence)->VertexCount;
-
-
-	// 문장을 이루는 정점 데이터, 인덱스 데이터 생성 및 초기화 //
-	VertexType* vertices = new VertexType[((*Sentence)->VertexCount)];
-	if (!vertices)
-	{
-		return E_FAIL;
-	}
-	memset(vertices, 0, (sizeof(VertexType) * ((*Sentence)->VertexCount)));
-
-	unsigned long* indices = new unsigned long[((*Sentence)->IndexCount)];
-	if (!indices)
-	{
-		return E_FAIL;
-	}
-	for (int i = 0; i < ((*Sentence)->IndexCount); ++i)
-	{
-		indices[i] = i;
-	}
-
-
-	// dynamic vertex buffer 생성 및 초기화 //
-	D3D11_BUFFER_DESC VertexBufferDesc;
-	memset(&VertexBufferDesc, 0, sizeof(VertexBufferDesc));
-
-	VertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	VertexBufferDesc.ByteWidth = (sizeof(VertexType) * ((*Sentence)->VertexCount));
-	VertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	VertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	VertexBufferDesc.MiscFlags = 0;
-	VertexBufferDesc.StructureByteStride = 0;
-
-	D3D11_SUBRESOURCE_DATA VertexData;
-	VertexData.pSysMem = vertices;
-	VertexData.SysMemPitch = 0;
-	VertexData.SysMemSlicePitch = 0;
-
-	if (FAILED(Device->CreateBuffer(&VertexBufferDesc, &VertexData, &((*Sentence)->VertexBuffer))))
-	{
-		return E_FAIL;
-	}
-
-
-	// index buffer 생성 및 초기화 //
-	D3D11_BUFFER_DESC IndexBufferDesc;
-	memset(&IndexBufferDesc, 0, sizeof(IndexBufferDesc));
-
-	IndexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	IndexBufferDesc.ByteWidth = (sizeof(unsigned long) * ((*Sentence)->IndexCount));
-	IndexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	IndexBufferDesc.CPUAccessFlags = 0;
-	IndexBufferDesc.MiscFlags = 0;
-	IndexBufferDesc.StructureByteStride = 0;
-
-	D3D11_SUBRESOURCE_DATA IndexData;
-	IndexData.pSysMem = indices;
-	IndexData.SysMemPitch = 0;
-	IndexData.SysMemSlicePitch = 0;
-
-	if (FAILED(Device->CreateBuffer(&IndexBufferDesc, &IndexData, &((*Sentence)->IndexBuffer))))
-	{
-		return E_FAIL;
-	}
-
-
-	// 정점 데이터, 인덱스 데이터 해제 //
-	delete[] indices;
-	indices = nullptr;
-
-	delete[] vertices;
-	vertices = nullptr;
-
-	return S_OK;
-}
-
-HRESULT TextClass::UpdateSentence(SentenceType* const& Sentence, const std::wstring& Text, const Position2DClass& Position, const ColorClass& TextColor, ID3D11DeviceContext* const& DeviceContext)
-{
-	// 문장 데이터의 색상 지정 //
-	Sentence->Color = TextColor;
-
-	// 문장의 길이 지정 및 검사 //
-	int StringLength = (int)Text.length();
-	if (StringLength > Sentence->MaxLength)
-	{
-		return E_FAIL;
-	}
-
-	// 실제 정점 데이터 입력 //
-	VertexType* vertices = new VertexType[(Sentence->VertexCount)];
-	if (!vertices)
-	{
-		return E_FAIL;
-	}
-	memset(vertices, 0, (sizeof(VertexType) * (Sentence->VertexCount)));
 	
-	// 그려질 polygon의 스크린 x, y 좌표 계산
-	float DrawX = ((float)((m_ScreenWidth / 2) * -1) + Position.GetPositionX());
-	float DrawY = ((float)(m_ScreenHeight / 2) - Position.GetPositionY());
-
-	// 정점 데이터 update
-	m_Font->BuildVertexArray((void*)vertices, Text, DrawX, DrawY);
-
-
-	// vertex buffer의 내용 update //
-	D3D11_MAPPED_SUBRESOURCE MappedResource;
-	if (FAILED(DeviceContext->Map(Sentence->VertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource)))
+	if (!m_Font.get())
 	{
-		return E_FAIL;
-	}
-
-	VertexType* VerticesPtr = (VertexType*)MappedResource.pData;
-	memcpy(VerticesPtr, (void*)vertices, (sizeof(VertexType) * (Sentence->VertexCount)));
-
-	DeviceContext->Unmap(Sentence->VertexBuffer, 0);
-
-
-	// 정점 데이터 해제 //
-	delete[] vertices;
-	vertices = nullptr;
-
-	return S_OK;
-}
-
-void TextClass::ReleaseSentence(SentenceType** const& Sentence)
-{
-	if (*Sentence)
-	{
-		if ((*Sentence)->VertexBuffer)
-		{
-			(*Sentence)->VertexBuffer->Release();
-			(*Sentence)->VertexBuffer = nullptr;
-		}
-
-		if ((*Sentence)->IndexBuffer)
-		{
-			(*Sentence)->IndexBuffer->Release();
-			(*Sentence)->IndexBuffer = nullptr;
-		}
-
-		delete* Sentence;
-		*Sentence = nullptr;
+		m_Font.reset();
 	}
 }
 
-HRESULT TextClass::RenderSentence(ID3D11DeviceContext* const& DeviceContext, const SentenceType* const& Sentence, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& OrthoMatrix)
+void TextClass::Render(ID3D11DeviceContext* const& DeviceContext, const std::wstring& text, const DirectX::XMFLOAT2& pos, const DirectX::XMVECTOR& color)
 {
-	TransformMatrixData transform = { WorldMatrix, m_BaseViewMatrix, OrthoMatrix };
+	using namespace DirectX;
 
-	// vertex buffer의 stride, offset 지정 //
-	unsigned int stride = sizeof(VertexType);
-	unsigned int offset = 0;
+	SimpleMath::Vector2 FontPos = pos;
+	FontPos.x /= 2.f;
+	FontPos.y /= 2.f;
 
-	// input assembler에서 vertex buffer, index buffer 활성화 //
-	DeviceContext->IASetVertexBuffers(0, 1, &(Sentence->VertexBuffer), &stride, &offset);
-	DeviceContext->IASetIndexBuffer((Sentence->IndexBuffer), DXGI_FORMAT_R32_UINT, 0);
+	m_SpriteBatch->Begin();
 
-	// 기본 polygon 지정 //
-	DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	m_Font->DrawString(m_SpriteBatch.get(), text.c_str(), FontPos, color);
 
-	// 렌더링 //
-	DirectX::XMFLOAT4 PixelColor = DirectX::XMFLOAT4(Sentence->Color.GetColorRed(), Sentence->Color.GetColorGreen(), Sentence->Color.GetColorBlue(), Sentence->Color.GetColorAlpha());
-	if (FAILED(m_FontShader->Render(DeviceContext, Sentence->IndexCount, transform, m_Font->GetTextureArray(), PixelColor)))
-	{
-		return E_FAIL;
-	}
-
-	return S_OK;
+	m_SpriteBatch->End();
 }

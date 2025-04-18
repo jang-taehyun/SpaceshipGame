@@ -26,8 +26,7 @@ const SoundFileInfo BackgroundSoundInfo = { _T("./data/dedede.wav") };
 const SoundFileInfo EffectSoundInfo = { _T("./data/sound01.wav") };
 
 // font 파일 정보 //
-const std::wstring FontFileName = _T("./data/font01.txt");
-const std::wstring FontTextureFileName = _T("./data/font01.tga");
+const std::wstring FontFileName = _T("./resource/굴림.spritefont");
 
 // 3D object 파일 정보 //
 const std::wstring SpaceModelFileName = _T("./data/aircraft.txt");
@@ -44,7 +43,7 @@ const std::vector<std::wstring> CubeTextureFileNames =
 	_T("./data/dirt01.dds"),
 };
 
-// 3D object 모델 정보 //
+// 3D object 모델 관련 flag //
 const int NUMBER_OF_ALL_MODELS = 2;
 enum class ModelIDs
 {
