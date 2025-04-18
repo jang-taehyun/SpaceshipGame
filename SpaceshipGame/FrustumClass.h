@@ -4,11 +4,11 @@ class FrustumClass
 {
 public:
 	FrustumClass();
-	FrustumClass(const FrustumClass& other);
-	~FrustumClass();
+	FrustumClass(const float& ScreenDepth, const DirectX::XMMATRIX& ProjectionMatrix, const DirectX::XMMATRIX& ViewMatrix);
+	virtual ~FrustumClass();
 
-	// viewing frustum 생성 함수
-	void ConstructFrustum(const float& ScreenDepth, const DirectX::XMMATRIX& ProjectionMatrix, const DirectX::XMMATRIX& ViewMatrix);
+	// viewing frustum 생성, 업데이트 함수
+	void UpdateFrustum(const float& ScreenDepth, const DirectX::XMMATRIX& ProjectionMatrix, const DirectX::XMMATRIX& ViewMatrix);
 
 	// frustum volume에 존재하는지 확인하는 함수들 //
 
@@ -18,6 +18,11 @@ public:
 	bool CheckRectangle(const float& xCenter, const float& yCenter, const float& zCenter, const float& xSize, const float& ySize, const float& zSize);
 
 private:
+	static bool IsInitialize;
+
 	DirectX::XMVECTOR m_planes[6] = { 0, };
+
+public:
+	FrustumClass(const FrustumClass& other) = delete;
 };
 

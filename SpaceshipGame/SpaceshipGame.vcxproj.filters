@@ -56,9 +56,6 @@
     <Filter Include="Model">
       <UniqueIdentifier>{b2ab057f-896f-42aa-800e-4d42831064c2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Model\ModelClass">
-      <UniqueIdentifier>{193cacbb-0aa9-481f-9fab-e2a6ec264955}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Light">
       <UniqueIdentifier>{e3f9a0a2-cb03-4a0d-b1b3-509bf3d96848}</UniqueIdentifier>
     </Filter>
@@ -76,18 +73,6 @@
     </Filter>
     <Filter Include="CollisionClass">
       <UniqueIdentifier>{592442fa-c2c6-4422-948c-691ec3714668}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model\Shader">
-      <UniqueIdentifier>{3cb280fe-6c0a-49f4-b5f8-76497f04f653}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model\Shader\VertexShader">
-      <UniqueIdentifier>{195d6403-ca2f-4171-97e3-ef9386624936}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model\Shader\PixelShader">
-      <UniqueIdentifier>{4cc13100-384c-4da9-8b21-9fc33c37ee45}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model\ShaderClass">
-      <UniqueIdentifier>{e536d068-4c88-4f1d-99c6-3fa9d3bbbab8}</UniqueIdentifier>
     </Filter>
     <Filter Include="AffineClass">
       <UniqueIdentifier>{383ce90a-46d7-4511-9780-bc79d489ac21}</UniqueIdentifier>
@@ -116,11 +101,23 @@
     <Filter Include="Model\Cube\CubeShaderClass\MultiTexture">
       <UniqueIdentifier>{dce89d75-8f85-474b-b259-3d00508309dd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Text">
-      <UniqueIdentifier>{60015bc3-ca0b-4bf3-9efb-6b5fa100c17f}</UniqueIdentifier>
+    <Filter Include="Model\Shader">
+      <UniqueIdentifier>{3cb280fe-6c0a-49f4-b5f8-76497f04f653}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Text\TextClass">
-      <UniqueIdentifier>{3484c0b2-5711-4923-aa1c-dc82aabb05b1}</UniqueIdentifier>
+    <Filter Include="Model\Shader\VertexShader">
+      <UniqueIdentifier>{195d6403-ca2f-4171-97e3-ef9386624936}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Shader\PixelShader">
+      <UniqueIdentifier>{4cc13100-384c-4da9-8b21-9fc33c37ee45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\ShaderClass">
+      <UniqueIdentifier>{e536d068-4c88-4f1d-99c6-3fa9d3bbbab8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\ModelClass">
+      <UniqueIdentifier>{193cacbb-0aa9-481f-9fab-e2a6ec264955}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TextClass">
+      <UniqueIdentifier>{60015bc3-ca0b-4bf3-9efb-6b5fa100c17f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -178,9 +175,6 @@
     <ClInclude Include="config.h">
       <Filter>Default\header</Filter>
     </ClInclude>
-    <ClInclude Include="TextClass.h">
-      <Filter>Text\TextClass</Filter>
-    </ClInclude>
     <ClInclude Include="ColorClass.h">
       <Filter>ColorClass</Filter>
     </ClInclude>
@@ -222,6 +216,9 @@
     </ClInclude>
     <ClInclude Include="MultiTextureShaderClass.h">
       <Filter>Model\Cube\CubeShaderClass\MultiTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="TextClass.h">
+      <Filter>TextClass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -267,9 +264,6 @@
     <ClCompile Include="ModelClass.cpp">
       <Filter>Model\ModelClass</Filter>
     </ClCompile>
-    <ClCompile Include="TextClass.cpp">
-      <Filter>Text\TextClass</Filter>
-    </ClCompile>
     <ClCompile Include="ColorClass.cpp">
       <Filter>ColorClass</Filter>
     </ClCompile>
@@ -308,6 +302,9 @@
     </ClCompile>
     <ClCompile Include="MultiTextureShaderClass.cpp">
       <Filter>Model\Cube\CubeShaderClass\MultiTexture</Filter>
+    </ClCompile>
+    <ClCompile Include="TextClass.cpp">
+      <Filter>TextClass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

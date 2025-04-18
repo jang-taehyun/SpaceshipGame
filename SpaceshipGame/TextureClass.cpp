@@ -4,56 +4,35 @@
 #include <DDSTextureLoader.h>
 #include "TextureClass.h"
 
-TextureClass::TextureClass() {}
-TextureClass::TextureClass(const TextureClass& other) {}
-TextureClass::~TextureClass() {}
+static ErrorContent e;
 
-HRESULT TextureClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::wstring& FileName)
+TextureClass::TextureClass(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<std::wstring>& FileNames)
 {
-	std::wstring Extension;
-	size_t DotIdx;
+	HRESULT result = S_OK;
 
-	// 매개변수 검사 //
-	if (_T("") == FileName)
+	// 에러 메세지 초기화 //
+	e.title = _T("TextureClass Constructor");
+
+	result = Initialize(Device, DeviceContext, FileNames);
+	if (FAILED(result))
 	{
-		return E_FAIL;
+		Shutdown();
+		throw e;
 	}
+}
 
-	// 파일의 확장자 추출
-	if (FileName.rfind('.') == std::string::npos)
-	{
-		return E_FAIL;
-	}
-
-	DotIdx = FileName.rfind('.');
-	Extension = FileName.substr(DotIdx + (size_t)1);
-
-	// 파일의 확장자에 따라 이미지 로드 함수를 호출해 메모리에 이미지 데이터 로드
-	if (_T("png") == Extension || _T("PNG") == Extension || _T("jpg") == Extension || _T("JPG") == Extension)
-	{
-		if (FAILED(LoadPNG(Device, FileName)))
-			return E_FAIL;
-	}
-	else if (_T("tga") == Extension || _T("TGA") == Extension)
-	{
-		if (FAILED(LoadTarga(FileName)))
-			return E_FAIL;
-
-		// 이미지 데이터에 맞는 SRV 생성 //
-		if (FAILED(CreateShaderResourceView(Device, DeviceContext)))
-			return E_FAIL;
-	}
-	else if (_T("dds") == Extension || _T("DDS") == Extension)
-	{
-		if (FAILED(LoadDDS(Device, FileName)))
-			return E_FAIL;
-	}
-
-	return S_OK;
+TextureClass::~TextureClass()
+{
+	Shutdown();
 }
 
 HRESULT TextureClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<std::wstring>& FileNames)
 {
+	HRESULT result = S_OK;
+
+	// 에러 메세지 초기화 //
+	e.title = _T("TextureClass Initialize()");
+
 	std::wstring Extension;
 	size_t DotIdx;
 
@@ -62,12 +41,16 @@ HRESULT TextureClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContex
 		// 매개변수 검사 //
 		if (_T("") == FileNames[i])
 		{
+			e.contents = _T("필요한 파일 정보(경로, 이름)이 없습니다.");
+			e.errorCode = E_FAIL;
 			return E_FAIL;
 		}
 
 		// 파일의 확장자 추출
 		if (FileNames[i].rfind('.') == std::string::npos)
 		{
+			e.contents = _T("필요한 파일 정보(경로, 이름)에 확장자가 없습니다.");
+			e.errorCode = E_FAIL;
 			return E_FAIL;
 		}
 
@@ -77,26 +60,30 @@ HRESULT TextureClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContex
 		// 파일의 확장자에 따라 이미지 로드 함수를 호출해 메모리에 이미지 데이터 로드
 		if (_T("png") == Extension || _T("PNG") == Extension || _T("jpg") == Extension || _T("JPG") == Extension)
 		{
-			if (FAILED(LoadPNG(Device, FileNames[i])))
-				return E_FAIL;
+			result = LoadPNG(Device, FileNames[i]);
+			if (FAILED(result))
+				return result;
 		}
 		else if (_T("tga") == Extension || _T("TGA") == Extension)
 		{
-			if (FAILED(LoadTarga(FileNames[i])))
-				return E_FAIL;
+			result = LoadTarga(FileNames[i]);
+			if (FAILED(result))
+				return result;
 
 			// 이미지 데이터에 맞는 SRV 생성 //
-			if (FAILED(CreateShaderResourceView(Device, DeviceContext)))
-				return E_FAIL;
+			result = CreateShaderResourceView(Device, DeviceContext);
+			if (FAILED(result))
+				return result;
 		}
 		else if (_T("dds") == Extension || _T("DDS") == Extension)
 		{
-			if (FAILED(LoadDDS(Device, FileNames[i])))
-				return E_FAIL;
+			result = LoadDDS(Device, FileNames[i]);
+			if (FAILED(result))
+				return result;
 		}
 	}
 
-	return S_OK;
+	return result;
 }
 
 void TextureClass::Shutdown()
@@ -115,20 +102,6 @@ void TextureClass::Shutdown()
 		m_TextureView.clear();
 	}
 
-	if (!m_Texture.empty())
-	{
-		for (int i = 0; i < m_Texture.size(); ++i)
-		{
-			if (!m_Texture[i])
-			{
-				m_Texture[i]->Release();
-				m_Texture[i] = nullptr;
-			}
-		}
-
-		m_Texture.clear();
-	}
-
 	if (m_ImageData)
 	{
 		delete[] m_ImageData;
@@ -144,8 +117,11 @@ HRESULT TextureClass::LoadTarga(const std::wstring& FileName)
 	int bpp = 0;							// targa 파일의 색상 bit 수(32bit 또는 24bit)
 	int ImageSize = 0;						// targa 이미지의 크기
 	char* TargaImage = nullptr;				// targa 이미지 데이터
-	unsigned int count = 0;
+	UINT count = 0;
 	int index = 0, k = 0;
+
+	// 에러 메세지 초기화 //
+	e.title = _T("TextureClass LoadTarga()");
 
 	// targa 파일을 binary 모드로 열기 //
 	FileIn.open(FileName, std::ios::in | std::ios::binary);
@@ -160,6 +136,8 @@ HRESULT TextureClass::LoadTarga(const std::wstring& FileName)
 	if (sizeof(TargaFileHeader) != count)
 	{
 		FileIn.close();
+		e.contents = _T("targa 파일의 header를 가져오기 실패");
+		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
 
@@ -172,6 +150,8 @@ HRESULT TextureClass::LoadTarga(const std::wstring& FileName)
 	if (bpp != 32)
 	{
 		FileIn.close();
+		e.contents = _T("targa 파일이 32bit가 아닙니다.");
+		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
 
@@ -183,6 +163,8 @@ HRESULT TextureClass::LoadTarga(const std::wstring& FileName)
 	if (!TargaImage)
 	{
 		FileIn.close();
+		e.contents = _T("targa 이미지 데이터용 메모리 할당 실패");
+		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
 
@@ -198,7 +180,8 @@ HRESULT TextureClass::LoadTarga(const std::wstring& FileName)
 		}
 
 		FileIn.close();
-
+		e.contents = _T("targa 이미지 데이터 읽기 실패");
+		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
 
@@ -215,6 +198,8 @@ HRESULT TextureClass::LoadTarga(const std::wstring& FileName)
 			TargaImage = nullptr;
 		}
 
+		e.contents = _T("targa 대상 데이터에 대한 메모리 할당 실패");
+		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
 
@@ -264,9 +249,16 @@ HRESULT TextureClass::LoadPNG(ID3D11Device* const& Device, const std::wstring& F
 	HRESULT result = S_OK;
 	ID3D11ShaderResourceView* srv = nullptr;
 
+	// 에러 메세지 초기화 //
+	e.title = _T("TextureClass LoadPNG()");
+
 	result = DirectX::CreateWICTextureFromFile(Device, FileName.c_str(), nullptr, &srv);
 	if (FAILED(result))
+	{
+		e.contents = _T("WIC texture 파일(png, jpg 등) load 실패");
+		e.errorCode = result;
 		return result;
+	}
 
 	m_TextureView.push_back(srv);
 
@@ -278,9 +270,16 @@ HRESULT TextureClass::LoadDDS(ID3D11Device* const& Device, const std::wstring& F
 	HRESULT result = S_OK;
 	ID3D11ShaderResourceView* srv = nullptr;
 
+	// 에러 메세지 초기화 //
+	e.title = _T("TextureClass LoadDDS()");
+
 	result = DirectX::CreateDDSTextureFromFile(Device, FileName.c_str(), nullptr, &srv);
 	if (FAILED(result))
+	{
+		e.contents = _T("dds texture 파일 load 실패");
+		e.errorCode = result;
 		return result;
+	}
 
 	m_TextureView.push_back(srv);
 
@@ -289,13 +288,19 @@ HRESULT TextureClass::LoadDDS(ID3D11Device* const& Device, const std::wstring& F
 
 HRESULT TextureClass::CreateShaderResourceView(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext)
 {
-	ID3D11Texture2D* texture = nullptr;
-	ID3D11ShaderResourceView* srv = nullptr;
+	HRESULT result = S_OK;
+	D3D11_TEXTURE2D_DESC TextureDesc;							// texture 설정 정보
+	D3D11_SHADER_RESOURCE_VIEW_DESC ShaderResourceViewDesc;		// shader resoure view 설정 정보
+	ID3D11Texture2D* texture = nullptr;							// texture
+	ID3D11ShaderResourceView* srv = nullptr;					// shader resoure view
+	UINT RowPitch = 0;
 
-	// 빈 texture 생성 //
-	D3D11_TEXTURE2D_DESC TextureDesc;
+	// 에러 메세지, 구조체 초기화 //
+	e.title = _T("TextureClass LoadDDS()");
 	memset(&TextureDesc, 0, sizeof(TextureDesc));
-
+	memset(&ShaderResourceViewDesc, 0, sizeof(ShaderResourceViewDesc));
+	
+	// 빈 texture 생성 //
 	// texure 구조체 설정
 	TextureDesc.Height = m_Height;
 	TextureDesc.Width = m_Width;
@@ -310,24 +315,25 @@ HRESULT TextureClass::CreateShaderResourceView(ID3D11Device* const& Device, ID3D
 	TextureDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
 
 	// 빈 texture 생성
-	if (FAILED(Device->CreateTexture2D(&TextureDesc, NULL, &texture)))
+	result = Device->CreateTexture2D(&TextureDesc, NULL, &texture);
+	if (FAILED(result))
 	{
-		return E_FAIL;
+		e.contents = _T("빈 texture 생성 실패");
+		e.errorCode = result;
+		return result;
 	}
 
 	// 이미지 데이터를 빈 texture에 복사 //
 
 	// 이미지 데이터의 width의 크기(바이트 크기) 구하기
 	// 이미지는 RGBA 형식이므로, 한 pixel의 크기는 4byte
-	UINT RowPitch = (m_Width * 4) * sizeof(unsigned char);
+	RowPitch = (m_Width * 4) * sizeof(unsigned char);
 
 	// 이미지 데이터를 texture에 복사
 	DeviceContext->UpdateSubresource(texture, 0, NULL, m_ImageData, RowPitch, 0);
 
-	// shader resource view 생성 //
-	D3D11_SHADER_RESOURCE_VIEW_DESC ShaderResourceViewDesc;
-	memset(&ShaderResourceViewDesc, 0, sizeof(ShaderResourceViewDesc));
 
+	// shader resource view 생성 //
 	// shader resource view 설정
 	ShaderResourceViewDesc.Format = TextureDesc.Format;
 	ShaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
@@ -335,21 +341,23 @@ HRESULT TextureClass::CreateShaderResourceView(ID3D11Device* const& Device, ID3D
 	ShaderResourceViewDesc.Texture2D.MipLevels = -1;
 
 	// shader resource view 생성
-	if (FAILED(Device->CreateShaderResourceView(texture, &ShaderResourceViewDesc, &srv)))
+	result = Device->CreateShaderResourceView(texture, &ShaderResourceViewDesc, &srv);
+	if (FAILED(result))
 	{
-		return E_FAIL;
+		e.contents = _T("shader resource view 생성 실패");
+		e.errorCode = result;
+		return result;
 	}
 
 	// texture의 Mipmap 생성 //
 	DeviceContext->GenerateMips(srv);
 
+	// 생성된 texture resource view를 멤버 변수에 저장 //
+	m_TextureView.push_back(srv);
+
 	// 이미지 데이터 해제 //
 	delete[] m_ImageData;
 	m_ImageData = nullptr;
 
-	// 생성된 texture, texture resource view를 멤버 변수에 저장 //
-	m_Texture.push_back(texture);
-	m_TextureView.push_back(srv);
-
-	return S_OK;
+	return result;
 }

@@ -299,19 +299,10 @@ HRESULT ModelClass::LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext
 	e.title = _T("ModelClass LoadTexture()");
 
 	// texture object 생성 //
-	m_Texture = new TextureClass;
+	m_Texture = new TextureClass(Device, DeviceContext, FileNames);
 	if (!m_Texture)
 	{
 		e.contents = _T("texture 인스턴스 생성 실패");
-		e.errorCode = E_FAIL;
-		return E_FAIL;
-	}
-
-	// texture 객체 초기화 //
-	result = m_Texture->Initialize(Device, DeviceContext, FileNames);
-	if (FAILED(result))
-	{
-		e.contents = _T("texture 객체 초기화 실패");
 		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
@@ -347,7 +338,6 @@ void ModelClass::ReleaseTexture()
 {
 	if (m_Texture)
 	{
-		m_Texture->Shutdown();
 		delete m_Texture;
 		m_Texture = nullptr;
 	}

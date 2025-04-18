@@ -81,13 +81,15 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
+
+	// Base view matrix 가져오기 //
 	BaseViewMatrix = m_Camera->GetViewMatrix();
 
 	// Model manager 객체 생성 및 초기화 //
 	m_ModelManager = new ModelManagerClass(hwnd, m_D3D->GetDevice(), m_D3D->GetDeviceContext());
 	if(!m_ModelManager)
 	{
-		e.contents = _T("Model Manager 인스턴스 생성 실패");
+		e.contents = _T("Model Manager Class 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
@@ -96,7 +98,7 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 	m_Player = new ActorClass(Position, Rotation, Scaling, ModelIDs::DEFAULT_SPACESHIP);
 	if (!m_Player)
 	{
-		e.contents = _T("Actor 인스턴스 생성 실패(Player)");
+		e.contents = _T("ActorClass 인스턴스 생성 실패(Player)");
 		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
@@ -105,7 +107,7 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 	m_Text = new TextClass(m_D3D->GetDevice(), m_D3D->GetDeviceContext());
 	if (!m_Text)
 	{
-		e.contents = _T("Text 인스턴스 생성 실패");
+		e.contents = _T("TextClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
@@ -114,6 +116,8 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 	m_Frustum = new FrustumClass;
 	if (!m_Frustum)
 	{
+		e.contents = _T("FrustumClass 인스턴스 생성 실패");
+		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
 
@@ -261,7 +265,6 @@ HRESULT GraphicsClass::Frame(SoundClass* const& sound, const InputClass* const& 
 
 HRESULT GraphicsClass::Render(SoundClass* const& sound, const int& fps, const int& cpu_usage)
 {
-	ErrorContent e;
 	HRESULT result = S_OK;
 	DirectX::XMMATRIX WorldMatrix, ViewMatrix, ProjectionMatrix, OrthoMatrix;
 	TransformMatrixData transform;
@@ -285,8 +288,8 @@ HRESULT GraphicsClass::Render(SoundClass* const& sound, const int& fps, const in
 	transform = { WorldMatrix, ViewMatrix, ProjectionMatrix };
 
 	// frustum culling을 이용한 rendering //
-	// viewing frustum 생성 및 render count(rendering한 3D object의 개수) 초기화
-	m_Frustum->ConstructFrustum(SCREEN_DEPTH, ProjectionMatrix, ViewMatrix);
+	// viewing frustum 업데이트 및 render count(rendering한 3D object의 개수) 초기화
+	m_Frustum->UpdateFrustum(SCREEN_DEPTH, ProjectionMatrix, ViewMatrix);
 
 	// 렌더링 //
 	result = m_ModelManager->GetModel(m_Player->GetModelID())->Render(m_D3D->GetDeviceContext(), transform);

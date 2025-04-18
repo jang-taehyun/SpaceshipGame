@@ -1,10 +1,6 @@
 #pragma once
 
 #include <SpriteFont.h>
-#include "ColorClass.h"
-
-class FontShaderClass;
-class Position2DClass;
 
 class TextClass
 {

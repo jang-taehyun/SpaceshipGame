@@ -1,11 +1,51 @@
 #include "pch.h"
 #include "FrustumClass.h"
 
-FrustumClass::FrustumClass() {}
-FrustumClass::FrustumClass(const FrustumClass& other) {}
-FrustumClass::~FrustumClass() {}
+bool FrustumClass::IsInitialize = false;
+static ErrorContent e;
 
-void FrustumClass::ConstructFrustum(const float& ScreenDepth, const DirectX::XMMATRIX& ProjectionMatrix, const DirectX::XMMATRIX& ViewMatrix)
+FrustumClass::FrustumClass()
+{
+    HRESULT result = S_OK;
+
+    // 에러 메세지 초기화 //
+    e.title = _T("FrustumClass Constructor");
+
+    if (IsInitialize)
+    {
+        e.contents = _T("이미 FrustumClass 인스턴스가 존재합니다.");
+        e.errorCode = E_FAIL;
+        throw e;
+    }
+
+    IsInitialize = true;
+}
+
+FrustumClass::FrustumClass(const float& ScreenDepth, const DirectX::XMMATRIX& ProjectionMatrix, const DirectX::XMMATRIX& ViewMatrix)
+{
+    HRESULT result = S_OK;
+
+    // 에러 메세지 초기화 //
+    e.title = _T("FrustumClass Constructor");
+
+    if (IsInitialize)
+    {
+        e.contents = _T("이미 FrustumClass 인스턴스가 존재합니다.");
+        e.errorCode = E_FAIL;
+        throw e;
+    }
+
+    UpdateFrustum(ScreenDepth, ProjectionMatrix, ViewMatrix);
+
+    IsInitialize = true;
+}
+
+FrustumClass::~FrustumClass()
+{
+    IsInitialize = false;
+}
+
+void FrustumClass::UpdateFrustum(const float& ScreenDepth, const DirectX::XMMATRIX& ProjectionMatrix, const DirectX::XMMATRIX& ViewMatrix)
 {
 	// projection matrix를 XMFLOAT4X4 자료형으로 변환 //
 	DirectX::XMFLOAT4X4 projectionMatrix;

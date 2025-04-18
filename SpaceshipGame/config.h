@@ -5,6 +5,12 @@
 const int WIDTH = 1200;
 const int HEIGHT = 800;
 
+// Graphics 설정 //
+const bool FULL_SCREEN = false;
+const bool VSYNC_ENABLED = true;
+const float SCREEN_DEPTH = 1000.0f;
+const float SCREEN_NEAR = 0.1f;
+
 // position 상태 정보 //
 enum class MoveState
 {

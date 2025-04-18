@@ -78,9 +78,7 @@ void TextClass::Shutdown()
 
 void TextClass::Render(ID3D11DeviceContext* const& DeviceContext, const std::wstring& text, const DirectX::XMFLOAT2& pos, const DirectX::XMVECTOR& color)
 {
-	using namespace DirectX;
-
-	SimpleMath::Vector2 FontPos = pos;
+	DirectX::SimpleMath::Vector2 FontPos = pos;
 	FontPos.x /= 2.f;
 	FontPos.y /= 2.f;
 
