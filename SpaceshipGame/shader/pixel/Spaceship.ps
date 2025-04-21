@@ -1,0 +1,71 @@
+// GLOBAL //
+Texture2D ShaderTexture;
+SamplerState SampleType;
+
+// 조명 관련 상수 버퍼 //
+cbuffer LightBuffer
+{
+	float4 AmbientColor;	// ambient의 색상
+	float4 DiffuseColor;    // diffuse의 색상
+	float3 LightDirection;  // 빛의 방향 벡터
+	float SpecularPower;	// specular 강도
+	float4 SpecularColor;	// specular color
+};
+
+// TYPEDEFS //
+struct PixelInputType
+{
+	float4 position : SV_POSITION;
+	float2 tex : TEXCOORD0;
+	float3 normal : NORMAL;
+	float3 viewDirection : TEXCOORD1;	// view direction
+};
+
+// pixel shader //
+float4 SpaceshipPixelShader(PixelInputType input) : SV_TARGET
+{
+	float4 TextureColor;    // texture의 색상
+	float3 LightDir;        // 빛의 방향
+	float LightIntensity;   // 빛의 세기
+	float4 Color;           // 최종 pixel의 색상
+	float4 Specular;		// specular 색상
+
+	// texture 좌표 위치를 sampler을 사용해 texture에서 pixel 색상을 sampling //
+	TextureColor = ShaderTexture.Sample(SampleType, input.tex);
+
+	// 색상의 기본값을 ambient의 색상으로 설정
+	Color = AmbientColor;
+
+	// specular 색상 초기화
+	Specular = float4(0.f, 0.f, 0.f, 0.f);
+
+	// 빛 방향을 반전
+	LightDir = -LightDirection;
+
+	// 해당 pixel에 비추어 지는 빛의 양(빛의 강도, Light Intensity)을 계산
+	LightIntensity = saturate(dot(input.normal, LightDir));
+
+	// 빛의 양이 0보다 클 때(빛이 비추어 질 때), 주변광(ambient light)까지 적용하여 계산
+	if(LightIntensity > 0.f)
+	{
+		// ambient light 적용
+		Color += (DiffuseColor * LightIntensity);
+
+		// 광원의 색상(DiffuseColor)과 강도(LightIntensity)를 이용해 pixel에 적용될 최종 조명 색상 결정
+		Color = saturate(Color);
+
+		// 강도(LightIntensity), normal vector, 빛 방향(LightDir)를 이용해 reflect vector 계산
+		float3 Reflection = normalize(2 * LightIntensity * input.normal - LightDir);
+
+		// reflect vector, view direction, shininess를 이용해 specular 계산
+		Specular = pow(saturate(dot(Reflection, input.viewDirection)), SpecularPower);
+	}
+
+	// texture pixel과 최종 조명 색상을 곱해 최종 pixel의 색상 결정
+	Color = Color * TextureColor;
+
+	// 최종 pixel의 색상에 specular 적용
+	Color = saturate(Color + Specular);
+
+	return Color;
+}

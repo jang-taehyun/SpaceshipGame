@@ -2,6 +2,16 @@
 Texture2D ShaderTextures[2];
 SamplerState SamplerType;
 
+// 조명 관련 상수 버퍼 //
+cbuffer LightBuffer
+{
+	float4 AmbientColor;	// ambient의 색상
+	float4 DiffuseColor;    // diffuse의 색상
+	float3 LightDirection;  // 빛의 방향 벡터
+	float SpecularPower;	// specular 강도
+	float4 SpecularColor;	// specular color
+};
+
 // TYPEDEFS //
 struct PixelInputType
 {

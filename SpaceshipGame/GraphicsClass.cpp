@@ -6,6 +6,7 @@
 #include "ModelManagerClass.h"
 #include "AffineClass.h"
 #include "ActorClass.h"
+#include "LightClass.h"
 
 #include "TextClass.h"
 
@@ -59,6 +60,11 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 	DirectX::XMFLOAT4 Rotation = { 0.f, 0.f, 0.f, 1.f };
 	DirectX::XMFLOAT4 Scaling = { 1.f, 1.f, 1.f, 1.f };
 	DirectX::XMMATRIX BaseViewMatrix;
+	DirectX::XMFLOAT4 AmbientColor = DirectX::XMFLOAT4(0.15f, 0.15f, 0.15f, 1.f);;
+	DirectX::XMFLOAT4 DiffuseColor = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);;
+	DirectX::XMFLOAT3 LightDirection = DirectX::XMFLOAT3(0.f, 0.f, 1.f);
+	DirectX::XMFLOAT4 SpecularColor = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);
+	float SpecularPower = 64.f;
 
 	// 에러 메세지 초기화 //
 	e.title = _T("GraphicsClass Initialize()");
@@ -120,11 +126,20 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 		return E_FAIL;
 	}
 
-	// IMGUI 세팅 //
+	// IMGUI 객체 생성 //
 	m_IMGUI = new IMGUIClass(hwnd, m_D3D->GetDevice(), m_D3D->GetDeviceContext());
 	if (!m_IMGUI)
 	{
 		e.contents = _T("IMGUIClass 인스턴스 생성 실패");
+		e.errorCode = E_FAIL;
+		return E_FAIL;
+	}
+
+	// Light 객체 생성 //
+	m_Light = new LightClass(AmbientColor, DiffuseColor, LightDirection, SpecularColor, SpecularPower);
+	if (!m_Light)
+	{
+		e.contents = _T("lightClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
@@ -134,6 +149,12 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 
 void GraphicsClass::Shutdown()
 {
+	if (m_Light)
+	{
+		delete m_Light;
+		m_Light = nullptr;
+	}
+
 	if (m_Player)
 	{
 		delete m_Player;
@@ -291,7 +312,7 @@ HRESULT GraphicsClass::Render(SoundClass* const& sound, const int& fps, const in
 	m_Frustum->UpdateFrustum(SCREEN_DEPTH, ProjectionMatrix, ViewMatrix);
 
 	// 렌더링 //
-	result = m_ModelManager->GetModel(m_Player->GetModelID())->Render(m_D3D->GetDeviceContext(), transform);
+	result = m_ModelManager->GetModel(m_Player->GetModelID())->Render(m_D3D->GetDeviceContext(), transform, m_Light, m_Camera);
 	if (FAILED(result))
 	{
 		e.contents = _T("Model 렌더링 실패");
@@ -299,7 +320,7 @@ HRESULT GraphicsClass::Render(SoundClass* const& sound, const int& fps, const in
 		return result;
 	}
 
-	result = m_ModelManager->GetModel(ModelIDs::DEFAULT_CUBE)->Render(m_D3D->GetDeviceContext(), transform);
+	result = m_ModelManager->GetModel(ModelIDs::DEFAULT_CUBE)->Render(m_D3D->GetDeviceContext(), transform, m_Light, m_Camera);
 	if (FAILED(result))
 	{
 		e.contents = _T("Model 렌더링 실패");
@@ -327,7 +348,7 @@ HRESULT GraphicsClass::Render(SoundClass* const& sound, const int& fps, const in
 	m_D3D->TurnDepthBufferOn();
 	
 	// IMGUI 렌더링
-	m_IMGUI->Render(m_ModelManager->GetModel(m_Player->GetModelID()), sound, m_Camera, fps, cpu_usage);
+	m_IMGUI->Render(m_Light, m_ModelManager->GetModel(m_Player->GetModelID()), sound, m_Camera, fps, cpu_usage);
 
 	// back buffer에 있는 내용을 화면에 출력 //
 	m_D3D->EndScene();

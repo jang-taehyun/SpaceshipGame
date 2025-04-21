@@ -1,4 +1,7 @@
 #include "pch.h"
+#include "LightClass.h"
+#include "CameraClass.h"
+#include "AffineClass.h"
 #include "ShaderClass.h"
 
 static ErrorContent e;
@@ -52,7 +55,7 @@ void ShaderClass::Shutdown()
 	ShutdownShader();
 }
 
-HRESULT ShaderClass::Render(ID3D11DeviceContext* const& DeviceContext, const int& IndexCount, const TransformMatrixData& transform, const std::vector<ID3D11ShaderResourceView*>& Textures)
+HRESULT ShaderClass::Render(ID3D11DeviceContext* const& DeviceContext, const int& IndexCount, const TransformMatrixData& transform, const LightClass* const& light, const CameraClass* const& camera, const std::vector<ID3D11ShaderResourceView*>& Textures)
 {
 	HRESULT result = S_OK;
 
@@ -60,7 +63,7 @@ HRESULT ShaderClass::Render(ID3D11DeviceContext* const& DeviceContext, const int
 	e.title = _T("ShaderClass Render()");
 
 	// shader의 전역변수(buffer) 설정 //
-	result = SetShaderParameters(DeviceContext, transform, Textures);
+	result = SetShaderParameters(DeviceContext, transform, light, camera, Textures);
 	if (FAILED(result))
 		return result;
 
@@ -135,6 +138,16 @@ HRESULT ShaderClass::InitializeShader(const HWND& hwnd, ID3D11Device* const& Dev
 	if (FAILED(result))
 		return result;
 
+	// light 상수 버퍼 생성 //
+	result = CreateConstantBuffer(Device, m_LightBuffer, sizeof(LightBufferType));
+	if (FAILED(result))
+		return result;
+
+	// camera 상수 버퍼 생성 //
+	result = CreateConstantBuffer(Device, m_CameraBuffer, sizeof(CameraBufferType));
+	if (FAILED(result))
+		return result;
+
 	// texture sampler state 생성 //
 	result = CreateTextureSamplerState(Device, m_SampleState);
 	if (FAILED(result))
@@ -146,14 +159,14 @@ HRESULT ShaderClass::InitializeShader(const HWND& hwnd, ID3D11Device* const& Dev
 HRESULT ShaderClass::CreateConstantBuffer(ID3D11Device* const& Device, ID3D11Buffer*& Buffer, const UINT& BufferSize)
 {
 	HRESULT result = S_OK;
-	D3D11_BUFFER_DESC ConstantBufferDesc;							// transform 상수 버퍼 정보
+	D3D11_BUFFER_DESC ConstantBufferDesc;							// 상수 버퍼 정보
 
 	// 에러 메세지, 구조체 초기화 //
 	e.title = _T("ShaderClass CreateConstantBuffer()");
 	memset(&ConstantBufferDesc, 0, sizeof(ConstantBufferDesc));
 
-	// transform 상수 버퍼 생성 //
-	// transform 상수 버퍼 설정
+	// 상수 버퍼 생성 //
+	// 상수 버퍼 설정
 	ConstantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	ConstantBufferDesc.ByteWidth = BufferSize;
 	ConstantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -161,11 +174,11 @@ HRESULT ShaderClass::CreateConstantBuffer(ID3D11Device* const& Device, ID3D11Buf
 	ConstantBufferDesc.MiscFlags = 0;
 	ConstantBufferDesc.StructureByteStride = 0;
 
-	// transform 상수 버퍼 생성
+	// 상수 버퍼 생성
 	result = Device->CreateBuffer(&ConstantBufferDesc, NULL, &Buffer);
 	if (FAILED(result))
 	{
-		e.contents = _T("transform 상수 버퍼 생성 실패");
+		e.contents = _T("상수 버퍼 생성 실패");
 		e.errorCode = result;
 		return result;
 	}
@@ -218,6 +231,18 @@ void ShaderClass::ShutdownShader()
 		m_SampleState = nullptr;
 	}
 
+	if (m_CameraBuffer)
+	{
+		m_CameraBuffer->Release();
+		m_CameraBuffer = nullptr;
+	}
+
+	if (m_LightBuffer)
+	{
+		m_LightBuffer->Release();
+		m_LightBuffer = nullptr;
+	}
+
 	if (m_MatrixBuffer)
 	{
 		m_MatrixBuffer->Release();
@@ -254,7 +279,7 @@ void ShaderClass::ShutdownShaderBuffer()
 
 void ShaderClass::OutputShaderErrorMessage(ID3D10Blob*& ErrorMessage, const HWND& hwnd, const std::wstring& ShaderFileName)
 {
-	OutputDebugString(static_cast<const wchar_t*>(ErrorMessage->GetBufferPointer()));
+	OutputDebugStringA(reinterpret_cast<const char*>(ErrorMessage->GetBufferPointer()));
 
 	ErrorMessage->Release();
 	ErrorMessage = nullptr;
@@ -262,7 +287,7 @@ void ShaderClass::OutputShaderErrorMessage(ID3D10Blob*& ErrorMessage, const HWND
 	MessageBox(hwnd, _T("Error compiling shader."), ShaderFileName.c_str(), MB_OK);
 }
 
-HRESULT ShaderClass::SetShaderParameters(ID3D11DeviceContext* const& DeviceContext, const TransformMatrixData& transform, const std::vector<ID3D11ShaderResourceView*>& Textures)
+HRESULT ShaderClass::SetShaderParameters(ID3D11DeviceContext* const& DeviceContext, const TransformMatrixData& transform, const LightClass* const& light, const CameraClass* const& camera, const std::vector<ID3D11ShaderResourceView*>& Textures)
 {
 	HRESULT result = S_OK;
 	unsigned int SlotNum = 0;									// slot 번호
@@ -270,19 +295,35 @@ HRESULT ShaderClass::SetShaderParameters(ID3D11DeviceContext* const& DeviceConte
 	// 에러 메세지 초기화 //
 	e.title = _T("ShaderClass SetShaderParameters()");
 
-	// 행렬들을 HLSL에 맞게 변환 //
-	// 행렬들을 transpose 연산하여 shader에서 사용할 수 있도록 한다.
-	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranspose(transform.world);
-	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixTranspose(transform.view);
-	DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixTranspose(transform.projection);
-
 	// matrix constant buffer의 내용 업데이트 //
 	// vertex shader에서 matrix constant buffer의 위치 : 0번
 	SlotNum = 0;
-	result = UpdateMatrixBuffer(DeviceContext, SlotNum, worldMatrix, viewMatrix, projectionMatrix);
+	result = UpdateMatrixBuffer(DeviceContext, SlotNum, transform);
 	if (FAILED(result))
 	{
 		e.contents = _T("matrix constant buffer의 내용 업데이트 실패");
+		e.errorCode = result;
+		return result;
+	}
+
+	// light constant buffer의 내용 업데이트 //
+	// pixel shader에서 light constant buffer의 위치 : 0번
+	SlotNum = 0;
+	result = UpdateLightBuffer(DeviceContext, SlotNum, light);
+	if (FAILED(result))
+	{
+		e.contents = _T("light constant buffer의 내용 업데이트 실패");
+		e.errorCode = result;
+		return result;
+	}
+
+	// camera constant buffer의 내용 업데이트 //
+	// vertex shader에서 camera constant buffer의 위치 : 1번
+	SlotNum = 1;
+	result = UpdateCameraBuffer(DeviceContext, SlotNum, camera);
+	if (FAILED(result))
+	{
+		e.contents = _T("camera constant buffer의 내용 업데이트 실패");
 		e.errorCode = result;
 		return result;
 	}
@@ -294,14 +335,23 @@ HRESULT ShaderClass::SetShaderParameters(ID3D11DeviceContext* const& DeviceConte
 	return result;
 }
 
-HRESULT ShaderClass::UpdateMatrixBuffer(ID3D11DeviceContext* const& DeviceContext, unsigned int& slot, const DirectX::XMMATRIX& WorldMatrix, const DirectX::XMMATRIX& ViewMatrix, const DirectX::XMMATRIX& ProjectionMatrix)
+HRESULT ShaderClass::UpdateMatrixBuffer(ID3D11DeviceContext* const& DeviceContext, unsigned int& slot, const TransformMatrixData& transform)
 {
 	HRESULT result = S_OK;
 	D3D11_MAPPED_SUBRESOURCE MappedResource;						// lock
 	MatrixBufferType* DataPtr = nullptr;							// buffer의 포인터
+	DirectX::XMMATRIX worldMatrix;									// world
+	DirectX::XMMATRIX viewMatrix;									// view
+	DirectX::XMMATRIX projectionMatrix;								// projection
 
 	// 에러 메세지 초기화 //
 	e.title = _T("ShaderClass UpdateMatrixBuffer()");
+
+	// 행렬들을 HLSL에 맞게 변환 //
+	// 행렬들을 transpose 연산하여 shader에서 사용할 수 있도록 한다.
+	worldMatrix = DirectX::XMMatrixTranspose(transform.world);
+	viewMatrix = DirectX::XMMatrixTranspose(transform.view);
+	projectionMatrix = DirectX::XMMatrixTranspose(transform.projection);
 
 	// matrix constant buffer의 내용을 CPU가 쓸 수 있도록 잠금 //
 	result = DeviceContext->Map(m_MatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource);
@@ -316,15 +366,86 @@ HRESULT ShaderClass::UpdateMatrixBuffer(ID3D11DeviceContext* const& DeviceContex
 	DataPtr = (MatrixBufferType*)MappedResource.pData;
 
 	// matrix constant buffer에 데이터(행렬) 복사
-	DataPtr->World = WorldMatrix;
-	DataPtr->View = ViewMatrix;
-	DataPtr->Projection = ProjectionMatrix;
+	DataPtr->World = worldMatrix;
+	DataPtr->View = viewMatrix;
+	DataPtr->Projection = projectionMatrix;
 
 	// matrix constant buffer의 잠금을 푼다.
 	DeviceContext->Unmap(m_MatrixBuffer, 0);
 
 	// vertex shader에서 상수 버퍼의 위치 설정 및 matrix constant buffer의 내용 업데이트
 	DeviceContext->VSSetConstantBuffers(slot, 1, &m_MatrixBuffer);
+
+	return result;
+}
+
+HRESULT ShaderClass::UpdateLightBuffer(ID3D11DeviceContext* const& DeviceContext, unsigned int& slot, const LightClass* const& light)
+{
+	HRESULT result = S_OK;
+	D3D11_MAPPED_SUBRESOURCE MappedResource;						// lock
+	LightBufferType* DataPtr = nullptr;								// buffer의 포인터
+
+	// 에러 메세지 초기화 //
+	e.title = _T("ShaderClass UpdateLightBuffer()");
+
+	// 광원 상수 버퍼의 내용을 CPU가 쓸 수 있도록 잠금
+	result = DeviceContext->Map(m_LightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource);
+	if (FAILED(result))
+	{
+		e.contents = _T("lock 실패");
+		e.errorCode = result;
+		return result;
+	}
+
+	// 광원 상수 버퍼의 데이터에 대한 포인터를 가져온다.
+	DataPtr = (LightBufferType*)MappedResource.pData;
+
+	// 광원 상수 버퍼에 데이터(행렬) 복사
+	DataPtr->AmbientColor = light->GetAmbientColor();
+	DataPtr->DiffuseColor = light->GetDiffuseColor();
+	DataPtr->LightDirection = light->GetDirection();
+	DataPtr->SpecularColor = light->GetSpecularColor();
+	DataPtr->SpecularPower = light->GetSpecularPower();
+
+	// 광원 상수 버퍼의 잠금을 푼다.
+	DeviceContext->Unmap(m_LightBuffer, 0);
+
+	// pixel shader의 광원 상수 버퍼의 위치 설정 및 light constant buffer의 내용 업데이트
+	DeviceContext->PSSetConstantBuffers(slot, 1, &m_LightBuffer);
+
+	return result;
+}
+
+HRESULT ShaderClass::UpdateCameraBuffer(ID3D11DeviceContext* const& DeviceContext, unsigned int& slot, const CameraClass* const& camera)
+{
+	HRESULT result = S_OK;
+	D3D11_MAPPED_SUBRESOURCE MappedResource;						// lock
+	CameraBufferType* DataPtr = nullptr;							// buffer의 포인터
+
+	// 에러 메세지 초기화 //
+	e.title = _T("ShaderClass UpdateCameraBuffer()");
+
+	// camera constant buffer의 내용을 CPU가 쓸 수 있도록 잠금 //
+	result = DeviceContext->Map(m_CameraBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource);
+	if (FAILED(result))
+	{
+		e.contents = _T("lock 실패");
+		e.errorCode = result;
+		return result;
+	}
+
+	// camera constant buffer의 데이터에 대한 포인터를 가져오기 //
+	DataPtr = (CameraBufferType*)MappedResource.pData;
+
+	// camera constant buffer에 데이터(행렬) 복사
+	DataPtr->CameraPosition = DirectX::XMFLOAT3(camera->GetTransformObject()->GetPosition().x, camera->GetTransformObject()->GetPosition().y, camera->GetTransformObject()->GetPosition().z);
+	DataPtr->padding = 0.f;
+
+	// camera constant buffer의 잠금을 푼다.
+	DeviceContext->Unmap(m_MatrixBuffer, 0);
+
+	// vertex shader에서 상수 버퍼의 위치 설정 및 camera constant buffer의 내용 업데이트
+	DeviceContext->VSSetConstantBuffers(slot, 1, &m_CameraBuffer);
 
 	return result;
 }

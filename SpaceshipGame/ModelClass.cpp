@@ -69,7 +69,7 @@ void ModelClass::Shutdown()
 	ReleaseModel();
 }
 
-HRESULT ModelClass::Render(ID3D11DeviceContext* const& DeviceContext, const TransformMatrixData& transform)
+HRESULT ModelClass::Render(ID3D11DeviceContext* const& DeviceContext, const TransformMatrixData& transform, const LightClass* const& light, const CameraClass* const& camera)
 {
 	HRESULT result = S_OK;
 
@@ -80,7 +80,7 @@ HRESULT ModelClass::Render(ID3D11DeviceContext* const& DeviceContext, const Tran
 	SetBuffers(DeviceContext);
 
 	// shader를 통해 렌더링
-	result = RenderShader(DeviceContext, transform);
+	result = RenderShader(DeviceContext, transform, light, camera);
 	if (FAILED(result))
 	{
 		e.contents = _T("shader 렌더링 실패");

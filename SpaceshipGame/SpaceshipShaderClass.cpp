@@ -34,7 +34,7 @@ HRESULT SpaceshipShaderClass::CreateInputLayout(ID3D11Device* const& Device)
 	D3D11_INPUT_ELEMENT_DESC PolygonLayout[3];
 	UINT ElementsCount = 0;
 
-	// 에러 메세지, 지역 변수 초기화
+	// 에러 메세지, 구조체 초기화
 	e.title = _T("SpaceshipShaderClass CreateInputLayout()");
 	memset(PolygonLayout, 0, sizeof(PolygonLayout));
 

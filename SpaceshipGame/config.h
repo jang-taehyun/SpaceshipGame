@@ -106,12 +106,20 @@ const ShaderFileInfo FontShaderInfo =
 	"FontPixelShader"
 };
 
+const ShaderFileInfo SpaceshipShaderInfo =
+{
+	_T("./shader/vertex/Spaceship.vs"),
+	_T("./shader/pixel/Spaceship.ps"),
+	"SpaceshipVertexShader",
+	"SpaceshipPixelShader"
+};
+
 // 3D model 관련 정보들 //
 const ModelInfo SpaceshipModelInfo =
 {
 	SpaceModelFileName,
 	SpaceTextureFileNames,
-	TextureShaderInfo
+	SpaceshipShaderInfo
 };
 
 const ModelInfo CubeModelInfo =

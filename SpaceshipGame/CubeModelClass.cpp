@@ -43,14 +43,14 @@ HRESULT CubeModelClass::InitializeShader(const HWND& hwnd, ID3D11Device* const& 
 	return result;
 }
 
-HRESULT CubeModelClass::RenderShader(ID3D11DeviceContext* const& DeviceContext, const TransformMatrixData& transform)
+HRESULT CubeModelClass::RenderShader(ID3D11DeviceContext* const& DeviceContext, const TransformMatrixData& transform, const LightClass* const& light, const CameraClass* const& camera)
 {
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
 	e.title = _T("CubeModelClass RenderShader()");
 
-	result = static_cast<MultiTextureShaderClass*>(GetShader())->Render(DeviceContext, GetIndexCount(), transform, GetTextureArray());
+	result = static_cast<MultiTextureShaderClass*>(GetShader())->Render(DeviceContext, GetIndexCount(), transform, light, camera, GetTextureArray());
 	if (FAILED(result))
 	{
 		e.contents = _T("multi-texture shader class의 인스턴스에서 Render 실패");

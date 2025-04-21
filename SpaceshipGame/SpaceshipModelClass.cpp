@@ -43,14 +43,14 @@ HRESULT SpaceshipModelClass::InitializeShader(const HWND& hwnd, ID3D11Device* co
 	return result;
 }
 
-HRESULT SpaceshipModelClass::RenderShader(ID3D11DeviceContext* const& DeviceContext, const TransformMatrixData& transform)
+HRESULT SpaceshipModelClass::RenderShader(ID3D11DeviceContext* const& DeviceContext, const TransformMatrixData& transform, const LightClass* const& light, const CameraClass* const& camera)
 {
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
 	e.title = _T("SpaceshipModelClass RenderShader()");
 
-	result = static_cast<SpaceshipShaderClass*>(GetShader())->Render(DeviceContext, GetIndexCount(), transform, GetTextureArray());
+	result = static_cast<SpaceshipShaderClass*>(GetShader())->Render(DeviceContext, GetIndexCount(), transform, light, camera, GetTextureArray());
 	if (FAILED(result))
 	{
 		e.contents = _T("spaceship shader class의 인스턴스에서 Render 실패");

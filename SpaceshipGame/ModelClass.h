@@ -4,6 +4,8 @@
 
 class ModelLoaderClass;
 class ShaderClass;
+class LightClass;
+class CameraClass;
 
 class ModelClass
 {
@@ -26,7 +28,7 @@ public:
 	explicit ModelClass(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const ModelInfo& info);
 	virtual ~ModelClass();
 
-	HRESULT Render(ID3D11DeviceContext* const& DeviceContext, const TransformMatrixData& transform);
+	HRESULT Render(ID3D11DeviceContext* const& DeviceContext, const TransformMatrixData& transform, const LightClass* const& light, const CameraClass* const& camera);
 
 	inline const int& GetIndexCount() const { return m_IndexCount; }
 	inline const ID3D11ShaderResourceView* const& GetTexture(const int idx = 0) { return m_Texture->GetTexture(idx); }
@@ -41,7 +43,7 @@ private:
 	virtual HRESULT InitializeShader(const HWND& hwnd, ID3D11Device* const& Device, const ShaderFileInfo& info) = 0;
 
 	void SetBuffers(ID3D11DeviceContext* const& DeviceContext);
-	virtual HRESULT RenderShader(ID3D11DeviceContext* const& DeviceContext, const TransformMatrixData& transform) = 0;
+	virtual HRESULT RenderShader(ID3D11DeviceContext* const& DeviceContext, const TransformMatrixData& transform, const LightClass* const& light, const CameraClass* const& camera) = 0;
 
 	void Shutdown();
 	void ShutdownBuffers();

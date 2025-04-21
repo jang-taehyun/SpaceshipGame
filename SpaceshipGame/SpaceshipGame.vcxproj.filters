@@ -74,9 +74,6 @@
     <Filter Include="Model\Spaceship">
       <UniqueIdentifier>{100f9a1d-d3f9-4cce-b959-68b9e635a74d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Model\Spaceship\SpaceshipShader">
-      <UniqueIdentifier>{c9ce7fe0-dc45-431a-9878-9c4b6c77d898}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Model\Spaceship\SpaceshipModelClass">
       <UniqueIdentifier>{a444c7e9-e553-470a-adfe-d8ff08a816e9}</UniqueIdentifier>
     </Filter>
@@ -112,6 +109,9 @@
     </Filter>
     <Filter Include="TextureClass">
       <UniqueIdentifier>{f425539f-e15e-4831-a061-d4cb088eddbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Spaceship\SpaceshipShaderClass">
+      <UniqueIdentifier>{c9ce7fe0-dc45-431a-9878-9c4b6c77d898}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -191,7 +191,7 @@
       <Filter>CollisionClass</Filter>
     </ClInclude>
     <ClInclude Include="SpaceshipShaderClass.h">
-      <Filter>Model\Spaceship\SpaceshipShader</Filter>
+      <Filter>Model\Spaceship\SpaceshipShaderClass</Filter>
     </ClInclude>
     <ClInclude Include="ShaderClass.h">
       <Filter>Model\ShaderClass</Filter>
@@ -274,7 +274,7 @@
       <Filter>CollisionClass</Filter>
     </ClCompile>
     <ClCompile Include="SpaceshipShaderClass.cpp">
-      <Filter>Model\Spaceship\SpaceshipShader</Filter>
+      <Filter>Model\Spaceship\SpaceshipShaderClass</Filter>
     </ClCompile>
     <ClCompile Include="ShaderClass.cpp">
       <Filter>Model\ShaderClass</Filter>
@@ -349,6 +349,12 @@
       <Filter>Model\Shader\VertexShader</Filter>
     </None>
     <None Include="shader\vertex\texture.vs">
+      <Filter>Model\Shader\VertexShader</Filter>
+    </None>
+    <None Include="shader\pixel\Spaceship.ps">
+      <Filter>Model\Shader\PixelShader</Filter>
+    </None>
+    <None Include="shader\vertex\Spaceship.vs">
       <Filter>Model\Shader\VertexShader</Filter>
     </None>
   </ItemGroup>

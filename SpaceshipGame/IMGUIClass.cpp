@@ -1,10 +1,11 @@
 #include "pch.h"
 
-// FPS, CPU, Timer, Camera, Sound 관련 //
+// FPS, CPU, Timer, Camera, Sound, Light 관련 //
 #include "FPSClass.h"
 #include "CPUClass.h"
 #include "CameraClass.h"
 #include "SoundClass.h"
+#include "LightClass.h"
 
 #include "IMGUIClass.h"
 
@@ -75,25 +76,26 @@ void IMGUIClass::Shutdown()
 	ImGui::DestroyContext();
 }
 
-void IMGUIClass::Render(ModelClass* const& model, SoundClass* const& sound, CameraClass* const& camera, const int& fps, const int& cpu_usage)
+void IMGUIClass::Render(LightClass* const& light, ModelClass* const& model, SoundClass* const& sound, CameraClass* const& camera, const int& fps, const int& cpu_usage)
 {
 	// IMGUI 렌더링 준비 //
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	SetUI(model, sound, camera, fps, cpu_usage);
+	SetUI(light, model, sound, camera, fps, cpu_usage);
 
 	// 렌더링
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
-void IMGUIClass::SetUI(ModelClass* const& model, SoundClass* const& sound, CameraClass* const& camera, const int& fps, const int& cpu_usage)
+void IMGUIClass::SetUI(LightClass* const& light, ModelClass* const& model, SoundClass* const& sound, CameraClass* const& camera, const int& fps, const int& cpu_usage)
 {
 	SetFPSCPUUsage(fps, cpu_usage);
 	SetCameraInfo(camera);
 	SetSoundInfo(sound);
+	SetLightInfo(light);
 }
 
 void IMGUIClass::SetFPSCPUUsage(const int& fps, const int& cpu_usage)
@@ -195,6 +197,84 @@ void IMGUIClass::SetSoundInfo(SoundClass* const& sound)
 		else
 			sound->PlayWaveFile(SoundInfo::EFFECT);
 	}
+
+	ImGui::End();
+}
+
+void IMGUIClass::SetLightInfo(LightClass* const& light)
+{
+	ImVec2 pos, size;
+	bool IsPress = false;
+	float value = 0.f;
+	std::string tmp;
+
+	// light 관련 UI //
+	ImGui::SetNextWindowPos(m_WindowsPosition[3], ImGuiCond_Appearing);
+	ImGui::Begin(u8"광원 정보(ambient, diffuse, direction, specular color, specular power", NULL);
+	ImGui::SetWindowSize(m_WindowsSize, ImGuiCond_Once);
+
+	pos = ImGui::GetWindowPos();
+	size = ImGui::GetWindowSize();
+
+	// ambient
+	value = light->GetAmbientColor().x;
+	if (ImGui::SliderFloat(u8"ambient R", &value, 0.0f, 1.f))
+		light->SetAmbientColor(value, light->GetAmbientColor().y, light->GetAmbientColor().z, light->GetAmbientColor().w);
+	value = light->GetAmbientColor().y;
+	if (ImGui::SliderFloat(u8"ambient G", &value, 0.0f, 1.f))
+		light->SetAmbientColor(light->GetAmbientColor().x, value, light->GetAmbientColor().z, light->GetAmbientColor().w);
+	value = light->GetAmbientColor().z;
+	if (ImGui::SliderFloat(u8"ambient B", &value, 0.0f, 1.f))
+		light->SetAmbientColor(light->GetAmbientColor().x, light->GetAmbientColor().y, value, light->GetAmbientColor().w);
+	value = light->GetAmbientColor().w;
+	if (ImGui::SliderFloat(u8"ambient A", &value, 0.0f, 1.f))
+		light->SetAmbientColor(light->GetAmbientColor().x, light->GetAmbientColor().y, light->GetAmbientColor().z, value);
+
+	// diffuse
+	value = light->GetDiffuseColor().x;
+	if (ImGui::SliderFloat(u8"diffuse R", &value, 0.0f, 1.f))
+		light->SetDiffuseColor(value, light->GetDiffuseColor().y, light->GetDiffuseColor().z, light->GetDiffuseColor().w);
+	value = light->GetDiffuseColor().y;
+	if (ImGui::SliderFloat(u8"diffuse G", &value, 0.0f, 1.f))
+		light->SetDiffuseColor(light->GetDiffuseColor().x, value, light->GetDiffuseColor().z, light->GetDiffuseColor().w);
+	value = light->GetDiffuseColor().z;
+	if (ImGui::SliderFloat(u8"diffuse B", &value, 0.0f, 1.f))
+		light->SetDiffuseColor(light->GetDiffuseColor().x, light->GetDiffuseColor().y, value, light->GetDiffuseColor().w);
+	value = light->GetDiffuseColor().w;
+	if (ImGui::SliderFloat(u8"diffuse A", &value, 0.0f, 1.f))
+		light->SetDiffuseColor(light->GetDiffuseColor().x, light->GetDiffuseColor().y, light->GetDiffuseColor().z, value);
+
+	// direction
+	value = light->GetDirection().x;
+	if (ImGui::SliderFloat(u8"direction X", &value, 0.0f, 1.f))
+		light->SetDirection(value, light->GetDirection().y, light->GetDirection().z);
+	value = light->GetDirection().y;
+	if (ImGui::SliderFloat(u8"direction Y", &value, 0.0f, 1.f))
+		light->SetDirection(light->GetDirection().x, value, light->GetDirection().z);
+	value = light->GetDirection().z;
+	if (ImGui::SliderFloat(u8"direction Z", &value, 0.0f, 1.f))
+		light->SetDirection(light->GetDirection().x, light->GetDirection().y, value);
+
+	// specular color
+	value = light->GetSpecularColor().x;
+	if (ImGui::SliderFloat(u8"specular color R", &value, 0.0f, 1.f))
+		light->SetSpecularColor(value, light->GetSpecularColor().y, light->GetSpecularColor().z, light->GetSpecularColor().w);
+	value = light->GetSpecularColor().y;
+	if (ImGui::SliderFloat(u8"specular color G", &value, 0.0f, 1.f))
+		light->SetSpecularColor(light->GetSpecularColor().x, value, light->GetSpecularColor().z, light->GetSpecularColor().w);
+	value = light->GetSpecularColor().z;
+	if (ImGui::SliderFloat(u8"specular color B", &value, 0.0f, 1.f))
+		light->SetSpecularColor(light->GetSpecularColor().x, light->GetSpecularColor().y, value, light->GetSpecularColor().w);
+	value = light->GetSpecularColor().w;
+	if (ImGui::SliderFloat(u8"specular color A", &value, 0.0f, 1.f))
+		light->SetSpecularColor(light->GetSpecularColor().x, light->GetSpecularColor().y, light->GetSpecularColor().z, value);
+
+	// specular power
+	value = light->GetSpecularPower();
+	if (ImGui::SliderFloat(u8"specular power", &value, 0.0f, 10000.f))
+		light->SetSpecularPower(value);
+
+	IsPress = ImGui::Button("test");
 
 	ImGui::End();
 }

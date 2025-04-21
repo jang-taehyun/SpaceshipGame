@@ -6,6 +6,7 @@ class CameraClass;
 class TextClass;
 class FrustumClass;
 class IMGUIClass;
+class LightClass;
 
 class InputClass;
 class SoundClass;
@@ -37,6 +38,8 @@ private:
 	TextClass* m_Text = nullptr;
 	FrustumClass* m_Frustum = nullptr;
 	IMGUIClass* m_IMGUI = nullptr;
+
+	LightClass* m_Light = nullptr;
 
 	bool m_IsShowingCursor = true;
 
