@@ -214,7 +214,7 @@ HRESULT ModelClass::InitializeBuffers(ID3D11Device* const& Device)
 	VertexData.SysMemSlicePitch = 0;
 
 	// vertex buffer 생성
-	result = Device->CreateBuffer(&VertexBufferDesc, &VertexData, &m_VertexBufer);
+	result = Device->CreateBuffer(&VertexBufferDesc, &VertexData, &m_VertexBuffer);
 	if (FAILED(result))
 	{
 		if (indices)
@@ -284,7 +284,7 @@ void ModelClass::SetBuffers(ID3D11DeviceContext* const& DeviceContext)
 	UINT offset = 0;
 
 	// input assembler에서 vertex buffer, index buffer 활성화 //
-	DeviceContext->IASetVertexBuffers(0, 1, &m_VertexBufer, &stride, &offset);
+	DeviceContext->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
 	DeviceContext->IASetIndexBuffer(m_IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 	// vertex buffer에서 그릴 object의 기본 도형 설정 //
@@ -318,10 +318,10 @@ void ModelClass::ShutdownBuffers()
 		m_IndexBuffer = nullptr;
 	}
 
-	if (m_VertexBufer)
+	if (m_VertexBuffer)
 	{
-		m_VertexBufer->Release();
-		m_VertexBufer = nullptr;
+		m_VertexBuffer->Release();
+		m_VertexBuffer = nullptr;
 	}
 }
 

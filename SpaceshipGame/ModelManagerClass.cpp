@@ -67,7 +67,7 @@ HRESULT ModelManagerClass::Initailize(const HWND& hwnd, ID3D11Device* const& Dev
 	}
 	m_ModelList.insert(std::make_pair(ModelIDs::DEFAULT_SPACESHIP, model));
 
-	model = new CubeModelClass(hwnd, Device, DeviceContext, CubeModelInfo);
+	model = new CubeModelClass(hwnd, Device, DeviceContext, CubeModelInfo, DirectX::XMFLOAT4(0.f, 1.f, 0.f, 1.f));
 	if (!model)
 	{
 		e.contents = _T("Model 인스턴스 생성 실패(cube)");

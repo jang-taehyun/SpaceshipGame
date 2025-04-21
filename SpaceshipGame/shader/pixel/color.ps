@@ -1,12 +1,30 @@
+// GLOBAL //
+Texture2D ShaderTexture;
+SamplerState SampleType;
+
+// 조명 관련 상수 버퍼 //
+cbuffer LightBuffer : register(b0)
+{
+	float4 AmbientColor;	// ambient의 색상
+	float4 DiffuseColor;    // diffuse의 색상
+	float3 LightDirection;  // 빛의 방향 벡터
+	float SpecularPower;	// specular 강도
+	float4 SpecularColor;	// specular color
+};
+
+cbuffer ColorBuffer : register(b1)
+{
+	float4 Color;
+};
+
 // TYPEDEFS //
 struct PixelInputType
 {
 	float4 position : SV_POSITION;
-	float4 color : COLOR;
 };
 
 // pixel shader //
 float4 ColorPixelShader(PixelInputType input) : SV_TARGET
 {
-	return input.color;
+	return Color;
 }

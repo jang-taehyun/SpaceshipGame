@@ -1,22 +1,28 @@
 // GLOBAL //
-cbuffer MatrixBuffer
+cbuffer MatrixBuffer : register(b0)
 {
 	matrix WorldMatrix;
 	matrix ViewMatrix;
 	matrix ProjectionMatrix;
 };
 
+cbuffer CameraBuffer : register(b1)
+{
+	float3 CameraPosition;
+	float padding;
+};
+
 // TYPEDEF //
 struct VertexInputType
 {
 	float4 position : POSITION;
-	float4 color : COLOR;
+	float2 tex : TEXCOORD0;
+	float3 normal : NORMAL;
 };
 
 struct PixelInputType
 {
 	float4 position : SV_POSITION;
-	float4 color : COLOR;
 };
 
 // vertex shader //
@@ -31,9 +37,6 @@ PixelInputType ColorVertexShader(VertexInputType input)
 	output.position = mul(input.position, WorldMatrix);
 	output.position = mul(output.position, ViewMatrix);
 	output.position = mul(output.position, ProjectionMatrix);
-
-	// pixel shader가 사용할 입력 색상 저장
-	output.color = input.color;
 
 	return output;
 }

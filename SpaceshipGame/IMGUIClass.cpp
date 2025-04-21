@@ -203,18 +203,13 @@ void IMGUIClass::SetSoundInfo(SoundClass* const& sound)
 
 void IMGUIClass::SetLightInfo(LightClass* const& light)
 {
-	ImVec2 pos, size;
-	bool IsPress = false;
 	float value = 0.f;
-	std::string tmp;
+	bool IsPress = false;
 
 	// light 관련 UI //
 	ImGui::SetNextWindowPos(m_WindowsPosition[3], ImGuiCond_Appearing);
 	ImGui::Begin(u8"광원 정보(ambient, diffuse, direction, specular color, specular power", NULL);
 	ImGui::SetWindowSize(m_WindowsSize, ImGuiCond_Once);
-
-	pos = ImGui::GetWindowPos();
-	size = ImGui::GetWindowSize();
 
 	// ambient
 	value = light->GetAmbientColor().x;
@@ -246,13 +241,13 @@ void IMGUIClass::SetLightInfo(LightClass* const& light)
 
 	// direction
 	value = light->GetDirection().x;
-	if (ImGui::SliderFloat(u8"direction X", &value, 0.0f, 1.f))
+	if (ImGui::SliderFloat(u8"direction X", &value, -100.0f, 100.f))
 		light->SetDirection(value, light->GetDirection().y, light->GetDirection().z);
 	value = light->GetDirection().y;
-	if (ImGui::SliderFloat(u8"direction Y", &value, 0.0f, 1.f))
+	if (ImGui::SliderFloat(u8"direction Y", &value, -100.0f, 100.f))
 		light->SetDirection(light->GetDirection().x, value, light->GetDirection().z);
 	value = light->GetDirection().z;
-	if (ImGui::SliderFloat(u8"direction Z", &value, 0.0f, 1.f))
+	if (ImGui::SliderFloat(u8"direction Z", &value, -100.0f, 100.f))
 		light->SetDirection(light->GetDirection().x, light->GetDirection().y, value);
 
 	// specular color

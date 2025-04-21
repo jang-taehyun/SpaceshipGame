@@ -86,9 +86,6 @@
     <Filter Include="Model\Cube\CubeShaderClass">
       <UniqueIdentifier>{ae9de815-ae4f-4a3d-8482-a59490cb4251}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Model\Cube\CubeShaderClass\MultiTexture">
-      <UniqueIdentifier>{dce89d75-8f85-474b-b259-3d00508309dd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Model\Shader">
       <UniqueIdentifier>{3cb280fe-6c0a-49f4-b5f8-76497f04f653}</UniqueIdentifier>
     </Filter>
@@ -202,14 +199,14 @@
     <ClInclude Include="CubeModelClass.h">
       <Filter>Model\Cube\CubeModelClass</Filter>
     </ClInclude>
-    <ClInclude Include="MultiTextureShaderClass.h">
-      <Filter>Model\Cube\CubeShaderClass\MultiTexture</Filter>
-    </ClInclude>
     <ClInclude Include="TextClass.h">
       <Filter>TextClass</Filter>
     </ClInclude>
     <ClInclude Include="TextureClass.h">
       <Filter>TextureClass</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorShaderClass.h">
+      <Filter>Model\Cube\CubeShaderClass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -285,14 +282,14 @@
     <ClCompile Include="CubeModelClass.cpp">
       <Filter>Model\Cube\CubeModelClass</Filter>
     </ClCompile>
-    <ClCompile Include="MultiTextureShaderClass.cpp">
-      <Filter>Model\Cube\CubeShaderClass\MultiTexture</Filter>
-    </ClCompile>
     <ClCompile Include="TextClass.cpp">
       <Filter>TextClass</Filter>
     </ClCompile>
     <ClCompile Include="TextureClass.cpp">
       <Filter>TextureClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorShaderClass.cpp">
+      <Filter>Model\Cube\CubeShaderClass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

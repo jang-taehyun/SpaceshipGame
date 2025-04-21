@@ -59,6 +59,7 @@ PixelInputType SpaceshipVertexShader(VertexInputType input)
 
 	// view direction vector ¡§±‘»≠
 	output.viewDirection = normalize(output.viewDirection);
+	// output.viewDirection = normalize(CameraPosition.xyz);
 
 	return output;
 }

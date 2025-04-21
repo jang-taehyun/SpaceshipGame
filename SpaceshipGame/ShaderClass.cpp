@@ -51,7 +51,6 @@ HRESULT ShaderClass::Initialize(const HWND& hwnd, ID3D11Device* const& Device, c
 
 void ShaderClass::Shutdown()
 {
-	ShutdownShaderBuffer();
 	ShutdownShader();
 }
 
@@ -77,12 +76,14 @@ HRESULT ShaderClass::InitializeShader(const HWND& hwnd, ID3D11Device* const& Dev
 {
 	HRESULT result = S_OK;
 	ID3D10Blob* ErrorMessage = nullptr;					// shader compile 에러메세지
+	ID3D10Blob* VertexShaderBuffer = nullptr;			// vertex shader buffer
+	ID3D10Blob* PixelShaderBuffer = nullptr;			// pixel shader buffer
 
 	// 에러 메세지 초기화 //
 	e.title = _T("ShaderClass InitializeShader()");
 
 	// vertex shader code 컴파일 //
-	result = D3DCompileFromFile(info.vsFileName.c_str(), NULL, NULL, info.vsEntryPoint.c_str(), "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &m_VertexShaderBuffer, &ErrorMessage);
+	result = D3DCompileFromFile(info.vsFileName.c_str(), NULL, NULL, info.vsEntryPoint.c_str(), "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &VertexShaderBuffer, &ErrorMessage);
 	if (FAILED(result))
 	{
 		if (ErrorMessage)
@@ -99,7 +100,7 @@ HRESULT ShaderClass::InitializeShader(const HWND& hwnd, ID3D11Device* const& Dev
 	}
 
 	// pixel shader code 컴파일 //
-	result = D3DCompileFromFile(info.psFileName.c_str(), NULL, NULL, info.psEntryPoint.c_str(), "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &m_PixelShaderBuffer, &ErrorMessage);
+	result = D3DCompileFromFile(info.psFileName.c_str(), NULL, NULL, info.psEntryPoint.c_str(), "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &PixelShaderBuffer, &ErrorMessage);
 	if (FAILED(result))
 	{
 		if (ErrorMessage)
@@ -116,7 +117,7 @@ HRESULT ShaderClass::InitializeShader(const HWND& hwnd, ID3D11Device* const& Dev
 	}
 
 	// vertex shader 생성 //
-	result = Device->CreateVertexShader(m_VertexShaderBuffer->GetBufferPointer(), m_VertexShaderBuffer->GetBufferSize(), NULL, &m_VertexShader);
+	result = Device->CreateVertexShader(VertexShaderBuffer->GetBufferPointer(), VertexShaderBuffer->GetBufferSize(), NULL, &m_VertexShader);
 	if (FAILED(result))
 	{
 		e.contents = _T("vertex shader 생성 실패");
@@ -125,10 +126,19 @@ HRESULT ShaderClass::InitializeShader(const HWND& hwnd, ID3D11Device* const& Dev
 	}
 
 	// pixel shader 생성 //
-	result = Device->CreatePixelShader(m_PixelShaderBuffer->GetBufferPointer(), m_PixelShaderBuffer->GetBufferSize(), NULL, &m_PixelShader);
+	result = Device->CreatePixelShader(PixelShaderBuffer->GetBufferPointer(), PixelShaderBuffer->GetBufferSize(), NULL, &m_PixelShader);
 	if (FAILED(result))
 	{
-		e.contents = _T("vertex shader 생성 실패");
+		e.contents = _T("pixel shader 생성 실패");
+		e.errorCode = result;
+		return result;
+	}
+
+	// input layout 생성
+	result = CreateInputLayout(Device, VertexShaderBuffer);
+	if (FAILED(result))
+	{
+		e.contents = _T("input layout 생성 실패");
 		e.errorCode = result;
 		return result;
 	}
@@ -152,6 +162,64 @@ HRESULT ShaderClass::InitializeShader(const HWND& hwnd, ID3D11Device* const& Dev
 	result = CreateTextureSamplerState(Device, m_SampleState);
 	if (FAILED(result))
 		return result;
+
+	// vertex shader buffer, pixel shader buffer 해제
+	PixelShaderBuffer->Release();
+	PixelShaderBuffer = nullptr;
+
+	VertexShaderBuffer->Release();
+	VertexShaderBuffer = nullptr;
+
+	return result;
+}
+
+HRESULT ShaderClass::CreateInputLayout(ID3D11Device* const& Device, ID3D10Blob* const& VertexShaderBuffer)
+{
+	HRESULT result = S_OK;
+	D3D11_INPUT_ELEMENT_DESC PolygonLayout[3];
+	UINT ElementsCount = 0;
+
+	// 에러 메세지, 구조체 초기화
+	e.title = _T("ShaderClass CreateInputLayout()");
+	memset(PolygonLayout, 0, sizeof(PolygonLayout));
+
+	// vertex input layout 설정
+	// vertex input layout 설정는 ModelClass의 VertexType 구조, vertex shader 내부의 VertexInputType 모두 일치해야 함
+	PolygonLayout[0].SemanticName = "POSITION";
+	PolygonLayout[0].SemanticIndex = 0;
+	PolygonLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	PolygonLayout[0].InputSlot = 0;
+	PolygonLayout[0].AlignedByteOffset = 0;
+	PolygonLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	PolygonLayout[0].InstanceDataStepRate = 0;
+
+	PolygonLayout[1].SemanticName = "TEXCOORD";
+	PolygonLayout[1].SemanticIndex = 0;
+	PolygonLayout[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+	PolygonLayout[1].InputSlot = 0;
+	PolygonLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	PolygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	PolygonLayout[1].InstanceDataStepRate = 0;
+
+	PolygonLayout[2].SemanticName = "NORMAL";
+	PolygonLayout[2].SemanticIndex = 0;
+	PolygonLayout[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	PolygonLayout[2].InputSlot = 0;
+	PolygonLayout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	PolygonLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	PolygonLayout[2].InstanceDataStepRate = 0;
+
+	// input layout의 개수 구하기
+	ElementsCount = static_cast<UINT>(sizeof(PolygonLayout) / sizeof(PolygonLayout[0]));
+
+	// input layout 생성
+	result = Device->CreateInputLayout(PolygonLayout, ElementsCount, VertexShaderBuffer->GetBufferPointer(), VertexShaderBuffer->GetBufferSize(), &m_Layout);
+	if (FAILED(result))
+	{
+		e.contents = _T("input layout 생성 실패");
+		e.errorCode = result;
+		return result;
+	}
 
 	return result;
 }
@@ -249,6 +317,12 @@ void ShaderClass::ShutdownShader()
 		m_MatrixBuffer = nullptr;
 	}
 
+	if (m_Layout)
+	{
+		m_Layout->Release();
+		m_Layout = nullptr;
+	}
+
 	if (m_PixelShader)
 	{
 		m_PixelShader->Release();
@@ -259,21 +333,6 @@ void ShaderClass::ShutdownShader()
 	{
 		m_VertexShader->Release();
 		m_VertexShader = nullptr;
-	}
-}
-
-void ShaderClass::ShutdownShaderBuffer()
-{
-	if (m_PixelShaderBuffer)
-	{
-		m_PixelShaderBuffer->Release();
-		m_PixelShaderBuffer = nullptr;
-	}
-
-	if (m_VertexShaderBuffer)
-	{
-		m_VertexShaderBuffer->Release();
-		m_VertexShaderBuffer = nullptr;
 	}
 }
 

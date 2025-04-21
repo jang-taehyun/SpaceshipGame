@@ -114,6 +114,14 @@ const ShaderFileInfo SpaceshipShaderInfo =
 	"SpaceshipPixelShader"
 };
 
+const ShaderFileInfo CubeShaderInfo =
+{
+	_T("./shader/vertex/color.vs"),
+	_T("./shader/pixel/color.ps"),
+	"ColorVertexShader",
+	"ColorPixelShader"
+};
+
 // 3D model 관련 정보들 //
 const ModelInfo SpaceshipModelInfo =
 {
@@ -126,5 +134,5 @@ const ModelInfo CubeModelInfo =
 {
 	CubeModelFileName,
 	CubeTextureFileNames,
-	MultiTextureShaderInfo
+	CubeShaderInfo
 };

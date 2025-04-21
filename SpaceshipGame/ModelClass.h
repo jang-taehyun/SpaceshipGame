@@ -9,7 +9,7 @@ class CameraClass;
 
 class ModelClass
 {
-private:
+protected:
 	struct VertexType
 	{
 		DirectX::XMFLOAT3 position;
@@ -42,7 +42,6 @@ private:
 	HRESULT InitializeBuffers(ID3D11Device* const& Device);
 	virtual HRESULT InitializeShader(const HWND& hwnd, ID3D11Device* const& Device, const ShaderFileInfo& info) = 0;
 
-	void SetBuffers(ID3D11DeviceContext* const& DeviceContext);
 	virtual HRESULT RenderShader(ID3D11DeviceContext* const& DeviceContext, const TransformMatrixData& transform, const LightClass* const& light, const CameraClass* const& camera) = 0;
 
 	void Shutdown();
@@ -51,8 +50,13 @@ private:
 	virtual void ReleaseShader() = 0;
 	void ReleaseModel();
 
+protected:
+	virtual void SetBuffers(ID3D11DeviceContext* const& DeviceContext);
+	inline ID3D11Buffer* const& GetVertexBuffer() const { return m_VertexBuffer; }
+	inline ID3D11Buffer* const& GetIndexBuffer() const { return m_IndexBuffer; }
+
 private:
-	ID3D11Buffer* m_VertexBufer = nullptr;
+	ID3D11Buffer* m_VertexBuffer = nullptr;
 	ID3D11Buffer* m_IndexBuffer = nullptr;
 	
 	int m_VertexCount = 0;
