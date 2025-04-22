@@ -1,25 +1,34 @@
 #pragma once
 
 #include <SimpleMath.h>
+class AffineClass;
 
 class CollisionClass
 {
 public:
-	explicit CollisionClass(const DirectX::XMFLOAT3& dist);
+	explicit CollisionClass();
 	virtual ~CollisionClass();
 
-	inline DirectX::BoundingBox* const& GetCollision() { return m_Collision; }
+	inline DirectX::BoundingOrientedBox* const& GetCollision() { return m_Collision; }
 	const DirectX::ContainmentType GetCollideState(CollisionClass* const& ref);
 
+	const DirectX::XMMATRIX& GetAffine() const;
+
+	void SetCenter(const DirectX::XMFLOAT3& center);
+	void SetRotate(const DirectX::XMFLOAT4& quat);
+	void SetExtents(const DirectX::XMFLOAT3& extents);
+
 private:
-	HRESULT Initialize(const DirectX::XMFLOAT3& dist);
+	HRESULT Initialize();
 	void Shutdown();
 
+	void UpdateAffine();
+
 private:
-	DirectX::BoundingBox* m_Collision = nullptr;
+	DirectX::BoundingOrientedBox* m_Collision = nullptr;
+	AffineClass* m_Affine = nullptr;
 
 public:
-	CollisionClass() = delete;
 	CollisionClass(const CollisionClass& other) = delete;
 };
 

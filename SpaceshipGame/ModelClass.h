@@ -39,9 +39,8 @@ private:
 	HRESULT Initialize(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const ModelInfo& info);
 	HRESULT LoadModel(const std::wstring& FileName);
 	HRESULT LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<std::wstring>& FileNames);
-	HRESULT InitializeBuffers(ID3D11Device* const& Device);
+	
 	virtual HRESULT InitializeShader(const HWND& hwnd, ID3D11Device* const& Device, const ShaderFileInfo& info) = 0;
-
 	virtual HRESULT RenderShader(ID3D11DeviceContext* const& DeviceContext, const TransformMatrixData& transform, const LightClass* const& light, const CameraClass* const& camera) = 0;
 
 	void Shutdown();
@@ -49,6 +48,9 @@ private:
 	void ReleaseTexture();
 	virtual void ReleaseShader() = 0;
 	void ReleaseModel();
+
+protected:
+	HRESULT InitializeBuffers(ID3D11Device* const& Device);
 
 protected:
 	virtual void SetBuffers(ID3D11DeviceContext* const& DeviceContext);

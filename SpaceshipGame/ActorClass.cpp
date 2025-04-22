@@ -44,6 +44,14 @@ HRESULT ActorClass::Initailize(const DirectX::XMFLOAT4& position, const DirectX:
 
 	m_ModelID = ModelID;
 
+	m_Collision = new CollisionClass();
+	if (!m_Collision)
+	{
+		e.contents = _T("CollisionClass 인스턴스 생성 실패");
+		e.errorCode = E_FAIL;
+		return E_FAIL;
+	}
+
 	return result;
 }
 

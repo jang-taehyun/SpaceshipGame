@@ -15,6 +15,8 @@ public:
 	inline CollisionClass* const& GetCollision() { return m_Collision; }
 	inline const ModelIDs& GetModelID() { return m_ModelID; }
 
+	inline AffineClass* const& GetAffineObject() const { return m_Affine; }
+
 private:
 	HRESULT Initailize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, const ModelIDs ModelID = ModelIDs::DEFAULT_SPACESHIP);
 	void Shutdown();

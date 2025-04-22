@@ -18,8 +18,8 @@ protected:
 		DirectX::XMFLOAT4 AmbientColor;
 		DirectX::XMFLOAT4 DiffuseColor;
 		DirectX::XMFLOAT3 LightDirection;
-		float SpecularPower;
 		DirectX::XMFLOAT4 SpecularColor;
+		float SpecularPower;
 	};
 
 	struct CameraBufferType

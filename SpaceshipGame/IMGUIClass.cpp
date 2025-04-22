@@ -7,6 +7,10 @@
 #include "SoundClass.h"
 #include "LightClass.h"
 
+// actor, collision 관련
+#include "ActorClass.h"
+#include "CollisionClass.h"
+
 #include "IMGUIClass.h"
 
 bool IMGUIClass::IsInitialize = false;
@@ -76,26 +80,28 @@ void IMGUIClass::Shutdown()
 	ImGui::DestroyContext();
 }
 
-void IMGUIClass::Render(LightClass* const& light, ModelClass* const& model, SoundClass* const& sound, CameraClass* const& camera, const int& fps, const int& cpu_usage)
+void IMGUIClass::Render(ActorClass* const& actor, LightClass* const& light, ModelClass* const& model, SoundClass* const& sound, CameraClass* const& camera, const int& fps, const int& cpu_usage)
 {
 	// IMGUI 렌더링 준비 //
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	SetUI(light, model, sound, camera, fps, cpu_usage);
+	SetUI(actor, light, model, sound, camera, fps, cpu_usage);
 
 	// 렌더링
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
-void IMGUIClass::SetUI(LightClass* const& light, ModelClass* const& model, SoundClass* const& sound, CameraClass* const& camera, const int& fps, const int& cpu_usage)
+void IMGUIClass::SetUI(ActorClass* const& actor, LightClass* const& light, ModelClass* const& model, SoundClass* const& sound, CameraClass* const& camera, const int& fps, const int& cpu_usage)
 {
 	SetFPSCPUUsage(fps, cpu_usage);
 	SetCameraInfo(camera);
 	SetSoundInfo(sound);
 	SetLightInfo(light);
+	SetActorAffine(actor);
+	SetActorCollision(actor);
 }
 
 void IMGUIClass::SetFPSCPUUsage(const int& fps, const int& cpu_usage)
@@ -129,6 +135,8 @@ void IMGUIClass::SetFPSCPUUsage(const int& fps, const int& cpu_usage)
 
 void IMGUIClass::SetCameraInfo(CameraClass* const& camera)
 {
+	static float origin = camera->GetKeyboardSensitivity();
+
 	ImVec2 pos, size;
 	bool IsPress = false;
 	float sensitive = 0.f;
@@ -165,7 +173,12 @@ void IMGUIClass::SetCameraInfo(CameraClass* const& camera)
 	if (ImGui::SliderFloat(u8"카메라 속도", &sensitive, 0.0f, 0.1f))
 		camera->SetKeyboardSensitivity(sensitive);
 
-	IsPress = ImGui::Button("test");
+	// 초기화 //
+	IsPress = ImGui::Button("reset");
+	if (IsPress)
+	{
+		camera->SetKeyboardSensitivity(origin);
+	}
 
 	ImGui::End();
 }
@@ -203,12 +216,18 @@ void IMGUIClass::SetSoundInfo(SoundClass* const& sound)
 
 void IMGUIClass::SetLightInfo(LightClass* const& light)
 {
+	static DirectX::XMFLOAT4 origin_ambient = light->GetAmbientColor();
+	static DirectX::XMFLOAT4 origin_diffuse = light->GetDiffuseColor();
+	static DirectX::XMFLOAT3 origin_direction = light->GetDirection();
+	static DirectX::XMFLOAT4 origin_specular_color = light->GetSpecularColor();
+	static float origin_specular_power = light->GetSpecularPower();
+
 	float value = 0.f;
 	bool IsPress = false;
 
 	// light 관련 UI //
 	ImGui::SetNextWindowPos(m_WindowsPosition[3], ImGuiCond_Appearing);
-	ImGui::Begin(u8"광원 정보(ambient, diffuse, direction, specular color, specular power", NULL);
+	ImGui::Begin(u8"광원 정보(ambient, diffuse, direction, specular color, specular power)", NULL);
 	ImGui::SetWindowSize(m_WindowsSize, ImGuiCond_Once);
 
 	// ambient
@@ -241,13 +260,13 @@ void IMGUIClass::SetLightInfo(LightClass* const& light)
 
 	// direction
 	value = light->GetDirection().x;
-	if (ImGui::SliderFloat(u8"direction X", &value, -100.0f, 100.f))
+	if (ImGui::SliderFloat(u8"direction X", &value, 0.0f, 1.f))
 		light->SetDirection(value, light->GetDirection().y, light->GetDirection().z);
 	value = light->GetDirection().y;
-	if (ImGui::SliderFloat(u8"direction Y", &value, -100.0f, 100.f))
+	if (ImGui::SliderFloat(u8"direction Y", &value, 0.0f, 1.f))
 		light->SetDirection(light->GetDirection().x, value, light->GetDirection().z);
 	value = light->GetDirection().z;
-	if (ImGui::SliderFloat(u8"direction Z", &value, -100.0f, 100.f))
+	if (ImGui::SliderFloat(u8"direction Z", &value, 0.0f, 1.f))
 		light->SetDirection(light->GetDirection().x, light->GetDirection().y, value);
 
 	// specular color
@@ -269,7 +288,132 @@ void IMGUIClass::SetLightInfo(LightClass* const& light)
 	if (ImGui::SliderFloat(u8"specular power", &value, 0.0f, 10000.f))
 		light->SetSpecularPower(value);
 
-	IsPress = ImGui::Button("test");
+	IsPress = ImGui::Button("reset");
+	if (IsPress)
+	{
+		light->SetAmbientColor(origin_ambient);
+		light->SetDiffuseColor(origin_diffuse);
+		light->SetDirection(origin_direction);
+		light->SetSpecularColor(origin_specular_color);
+		light->SetSpecularPower(origin_specular_power);
+	}
+
+	ImGui::End();
+}
+
+void IMGUIClass::SetActorAffine(ActorClass* const& actor)
+{
+	static DirectX::XMFLOAT4 origin_position = actor->GetAffineObject()->GetPosition();
+	static DirectX::XMFLOAT4 origin_rotate = actor->GetAffineObject()->GetRotation();
+	static DirectX::XMFLOAT4 origin_scale = actor->GetAffineObject()->GetScaling();
+
+	DirectX::XMFLOAT4 value;
+	bool IsPress = false;
+
+	// actor affine 관련 UI //
+	ImGui::SetNextWindowPos(m_WindowsPosition[4], ImGuiCond_Appearing);
+	ImGui::Begin(u8"actor의 모델(position, rotate, scale)", NULL);
+	ImGui::SetWindowSize(m_WindowsSize, ImGuiCond_Once);
+
+	// position
+	value = actor->GetAffineObject()->GetPosition();
+	if (ImGui::SliderFloat(u8"position X", &value.x, -100.0f, 100.f))
+		actor->GetAffineObject()->SetPosition(value);
+	value = actor->GetAffineObject()->GetPosition();
+	if (ImGui::SliderFloat(u8"position Y", &value.y, -100.0f, 100.f))
+		actor->GetAffineObject()->SetPosition(value);
+	value = actor->GetAffineObject()->GetPosition();
+	if (ImGui::SliderFloat(u8"position Z", &value.z, -100.0f, 100.f))
+		actor->GetAffineObject()->SetPosition(value);
+
+	// rotate
+	value = actor->GetAffineObject()->GetRotation();
+	if (ImGui::SliderFloat(u8"rotate X", &value.x, 0.f, 1.f))
+		actor->GetAffineObject()->SetRotation(value);
+	value = actor->GetAffineObject()->GetRotation();
+	if (ImGui::SliderFloat(u8"rotate Y", &value.y, 0.f, 1.f))
+		actor->GetAffineObject()->SetRotation(value);
+	value = actor->GetAffineObject()->GetRotation();
+	if (ImGui::SliderFloat(u8"rotate Z", &value.z, 0.f, 1.f))
+		actor->GetAffineObject()->SetRotation(value);
+
+	// scale
+	value = actor->GetAffineObject()->GetScaling();
+	if (ImGui::SliderFloat(u8"scale X", &value.x, -100.0f, 100.f))
+		actor->GetAffineObject()->SetScale(value);
+	value = actor->GetAffineObject()->GetScaling();
+	if (ImGui::SliderFloat(u8"scale Y", &value.y, -100.0f, 100.f))
+		actor->GetAffineObject()->SetScale(value);
+	value = actor->GetAffineObject()->GetScaling();
+	if (ImGui::SliderFloat(u8"scale Z", &value.z, -100.0f, 100.f))
+		actor->GetAffineObject()->SetScale(value);
+
+	IsPress = ImGui::Button("reset");
+	if (IsPress)
+	{
+		actor->GetAffineObject()->SetPosition(origin_position);
+		actor->GetAffineObject()->SetRotation(origin_rotate);
+		actor->GetAffineObject()->SetScale(origin_scale);
+	}
+
+	ImGui::End();
+}
+
+void IMGUIClass::SetActorCollision(ActorClass* const& actor)
+{
+	static DirectX::XMFLOAT3 origin_center = actor->GetCollision()->GetCollision()->Center;
+	static DirectX::XMFLOAT4 origin_orientation = actor->GetCollision()->GetCollision()->Orientation;
+	static DirectX::XMFLOAT3 origin_extends = actor->GetCollision()->GetCollision()->Extents;
+
+	DirectX::XMFLOAT4 value1;
+	DirectX::XMFLOAT3 value2;
+	bool IsPress = false;
+
+	// actor collision affine 관련 UI //
+	ImGui::SetNextWindowPos(m_WindowsPosition[5], ImGuiCond_Appearing);
+	ImGui::Begin(u8"actor collision(position, rotate, scale)", NULL);
+	ImGui::SetWindowSize(m_WindowsSize, ImGuiCond_Once);
+
+	// position
+	value2 = actor->GetCollision()->GetCollision()->Center;
+	if (ImGui::SliderFloat(u8"center X", &value2.x, -100.0f, 100.f))
+		actor->GetCollision()->SetCenter(value2);
+	value2 = actor->GetCollision()->GetCollision()->Center;
+	if (ImGui::SliderFloat(u8"center Y", &value2.y, -100.0f, 100.f))
+		actor->GetCollision()->SetCenter(value2);
+	value2 = actor->GetCollision()->GetCollision()->Center;
+	if (ImGui::SliderFloat(u8"center Z", &value2.z, -100.0f, 100.f))
+		actor->GetCollision()->SetCenter(value2);
+
+	// rotate
+	value1 = actor->GetCollision()->GetCollision()->Orientation;
+	if (ImGui::SliderFloat(u8"rotate X", &value1.x, 0.f, 1.f))
+		actor->GetCollision()->SetRotate(value1);
+	value1 = actor->GetCollision()->GetCollision()->Orientation;
+	if (ImGui::SliderFloat(u8"rotate Y", &value1.y, 0.f, 1.f))
+		actor->GetCollision()->SetRotate(value1);
+	value1 = actor->GetCollision()->GetCollision()->Orientation;
+	if (ImGui::SliderFloat(u8"rotate Z", &value1.z, 0.f, 1.f))
+		actor->GetCollision()->SetRotate(value1);
+
+	// scale
+	value2 = actor->GetCollision()->GetCollision()->Extents;
+	if (ImGui::SliderFloat(u8"extends X", &value2.x, -100.0f, 100.f))
+		actor->GetCollision()->SetExtents(value2);
+	value2 = actor->GetCollision()->GetCollision()->Extents;
+	if (ImGui::SliderFloat(u8"extends Y", &value2.y, -100.0f, 100.f))
+		actor->GetCollision()->SetExtents(value2);
+	value2 = actor->GetCollision()->GetCollision()->Extents;
+	if (ImGui::SliderFloat(u8"extends Z", &value2.z, -100.0f, 100.f))
+		actor->GetCollision()->SetExtents(value2);
+
+	IsPress = ImGui::Button("reset");
+	if (IsPress)
+	{
+		actor->GetCollision()->SetCenter(origin_center);
+		actor->GetCollision()->SetRotate(origin_orientation);
+		actor->GetCollision()->SetExtents(origin_extends);
+	}
 
 	ImGui::End();
 }

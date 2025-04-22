@@ -1,16 +1,17 @@
 #include "pch.h"
+#include "AffineClass.h"
 #include "CollisionClass.h"
 
 static ErrorContent e;
 
-CollisionClass::CollisionClass(const DirectX::XMFLOAT3& dist)
+CollisionClass::CollisionClass()
 {
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
 	e.title = _T("CollisionClass constructor");
 
-	result = Initialize(dist);
+	result = Initialize();
 	if (FAILED(result))
 	{
 		Shutdown();
@@ -29,31 +30,87 @@ const DirectX::ContainmentType CollisionClass::GetCollideState(CollisionClass* c
 	return ret;
 }
 
-HRESULT CollisionClass::Initialize(const DirectX::XMFLOAT3& dist)
+const DirectX::XMMATRIX& CollisionClass::GetAffine() const
+{
+	return m_Affine->GetAffine();
+}
+
+void CollisionClass::SetCenter(const DirectX::XMFLOAT3& center)
+{
+	m_Collision->Center = center;
+	UpdateAffine();
+}
+
+void CollisionClass::SetRotate(const DirectX::XMFLOAT4& quat)
+{
+	m_Collision->Orientation = quat;
+	UpdateAffine();
+}
+
+void CollisionClass::SetExtents(const DirectX::XMFLOAT3& extents)
+{
+	m_Collision->Extents = extents;
+	UpdateAffine();
+}
+
+HRESULT CollisionClass::Initialize()
 {
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
 	e.title = _T("CollisionClass Initialize()");
 
-	m_Collision = new DirectX::BoundingBox;
+	m_Collision = new DirectX::BoundingOrientedBox;
 	if (!m_Collision)
 	{
-		e.contents = _T("bounding box 객체 생성 실패");
+		e.contents = _T("bounding oriented box 객체 생성 실패");
 		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
 
-	m_Collision->Extents = dist;
+	m_Affine = new AffineClass();
+	if (!m_Affine)
+	{
+		e.contents = _T("Affine 클래스 객체 생성 실패");
+		e.errorCode = E_FAIL;
+		return E_FAIL;
+	}
 
 	return result;
 }
 
 void CollisionClass::Shutdown()
 {
+	if (m_Affine)
+	{
+		delete m_Affine;
+		m_Affine = nullptr;
+	}
+
 	if (m_Collision)
 	{
 		delete m_Collision;
 		m_Collision = nullptr;
 	}
+}
+
+void CollisionClass::UpdateAffine()
+{
+	// Extents
+	DirectX::XMVECTOR scaleVec = DirectX::XMVectorScale(DirectX::XMLoadFloat3(&(m_Collision->Extents)), 2.0f);
+	DirectX::XMFLOAT4 scaleF4;
+	DirectX::XMStoreFloat4(&scaleF4, scaleVec);
+	m_Affine->SetScale(scaleF4);
+
+	// Orientation
+	DirectX::XMVECTOR quat = DirectX::XMLoadFloat4(&(m_Collision->Orientation));
+	DirectX::XMFLOAT4 quatF4;
+	DirectX::XMStoreFloat4(&quatF4, quat);
+	m_Affine->SetRotation(quatF4);
+
+	// Center
+	DirectX::XMVECTOR centerVec = XMLoadFloat3(&(m_Collision->Center));
+	DirectX::XMFLOAT4 centerF4;
+	DirectX::XMStoreFloat4(&centerF4, centerVec);
+	m_Affine->SetPosition(centerF4);
 }

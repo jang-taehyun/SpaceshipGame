@@ -15,6 +15,7 @@ public:
 	inline const DirectX::XMMATRIX& GetAffine() const { return m_Affine; }
 	inline const DirectX::XMFLOAT4& GetPosition() const { return m_Position; }
 	inline const DirectX::XMFLOAT4& GetRotation() const { return m_Rotation; }
+	inline const DirectX::XMFLOAT4& GetScaling() const { return m_Scaling; }
 
 	inline const DirectX::XMVECTOR& GetForwardVector() const { return m_ForwardVector; }
 	inline const DirectX::XMVECTOR& GetRightVector() const { return m_RightVector; }
@@ -41,6 +42,8 @@ public:
 	void SetPosition(const float& x, const float& y, const float& z);
 	void SetRotation(const DirectX::XMFLOAT4& rot);
 	void SetRotation(const float& x, const float& y, const float& z);
+	void SetScale(const DirectX::XMFLOAT4& scale);
+	void SetScale(const float& x, const float& y, const float& z);
 	
 private:
 	void Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling);

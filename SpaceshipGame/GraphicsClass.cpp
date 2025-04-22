@@ -5,6 +5,7 @@
 #include "ModelClass.h"
 #include "ModelManagerClass.h"
 #include "AffineClass.h"
+#include "CollisionClass.h"
 #include "ActorClass.h"
 #include "LightClass.h"
 
@@ -190,6 +191,12 @@ void GraphicsClass::Shutdown()
 		delete m_Camera;
 		m_Camera = nullptr;
 	}
+
+	if (m_D3D)
+	{
+		delete m_D3D;
+		m_D3D = nullptr;
+	}
 }
 
 HRESULT GraphicsClass::Frame(SoundClass* const& sound, const InputClass* const& input, const float& frame, const int& fps, const int& cpu_usage)
@@ -311,6 +318,11 @@ HRESULT GraphicsClass::Render(SoundClass* const& sound, const int& fps, const in
 	// viewing frustum 업데이트 및 render count(rendering한 3D object의 개수) 초기화
 	m_Frustum->UpdateFrustum(SCREEN_DEPTH, ProjectionMatrix, ViewMatrix);
 
+
+	// ------------ //
+	// ------------ //
+
+
 	// 렌더링 //
 	result = m_ModelManager->GetModel(m_Player->GetModelID())->Render(m_D3D->GetDeviceContext(), transform, m_Light, m_Camera);
 	if (FAILED(result))
@@ -320,6 +332,7 @@ HRESULT GraphicsClass::Render(SoundClass* const& sound, const int& fps, const in
 		return result;
 	}
 
+	transform.world = m_Player->GetCollision()->GetAffine();
 	result = m_ModelManager->GetModel(ModelIDs::DEFAULT_CUBE)->Render(m_D3D->GetDeviceContext(), transform, m_Light, m_Camera);
 	if (FAILED(result))
 	{
@@ -348,7 +361,7 @@ HRESULT GraphicsClass::Render(SoundClass* const& sound, const int& fps, const in
 	m_D3D->TurnDepthBufferOn();
 	
 	// IMGUI 렌더링
-	m_IMGUI->Render(m_Light, m_ModelManager->GetModel(m_Player->GetModelID()), sound, m_Camera, fps, cpu_usage);
+	m_IMGUI->Render(m_Player, m_Light, m_ModelManager->GetModel(m_Player->GetModelID()), sound, m_Camera, fps, cpu_usage);
 
 	// back buffer에 있는 내용을 화면에 출력 //
 	m_D3D->EndScene();

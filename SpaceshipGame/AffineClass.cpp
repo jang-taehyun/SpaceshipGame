@@ -44,6 +44,18 @@ void AffineClass::SetRotation(const float& x, const float& y, const float& z)
 	UpdateAffineMatrix();
 }
 
+void AffineClass::SetScale(const DirectX::XMFLOAT4& scale)
+{
+	m_Scaling = scale;
+	UpdateAffineMatrix();
+}
+
+void AffineClass::SetScale(const float& x, const float& y, const float& z)
+{
+	m_Scaling = DirectX::XMFLOAT4(x, y, z, 1.f);
+	UpdateAffineMatrix();
+}
+
 void AffineClass::Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling)
 {
 	float pitch, yaw, roll;

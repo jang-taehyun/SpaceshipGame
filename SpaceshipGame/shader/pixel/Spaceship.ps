@@ -3,7 +3,7 @@ Texture2D ShaderTexture;
 SamplerState SampleType;
 
 // 조명 관련 상수 버퍼 //
-cbuffer LightBuffer
+cbuffer LightBuffer : register(b0)
 {
 	float4 AmbientColor;	// ambient의 색상
 	float4 DiffuseColor;    // diffuse의 색상

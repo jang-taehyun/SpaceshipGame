@@ -1,12 +1,12 @@
 // GLOBAL //
-cbuffer MatrixBuffer
+cbuffer MatrixBuffer : register(b0)
 {
 	matrix WorldMatrix;
 	matrix ViewMatrix;
 	matrix ProjectionMatrix;
 };
 
-cbuffer CameraBuffer
+cbuffer CameraBuffer : register(b1)
 {
 	float3 CameraPosition;
 	float padding;
