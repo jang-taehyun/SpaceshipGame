@@ -9,8 +9,8 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	_In_ int nCmdShow)
 {
 	// 메모리 누수 감지 활성화
-	// _CrtSetBreakAlloc(3496);
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);;
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	_CrtSetBreakAlloc(393498);
 
 	try
 	{

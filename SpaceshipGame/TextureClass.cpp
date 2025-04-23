@@ -318,6 +318,17 @@ HRESULT TextureClass::CreateShaderResourceView(ID3D11Device* const& Device, ID3D
 	result = Device->CreateTexture2D(&TextureDesc, NULL, &texture);
 	if (FAILED(result))
 	{
+		if (texture)
+		{
+			texture->Release();
+			texture = nullptr;
+		}
+		if (srv)
+		{
+			srv->Release();
+			srv = nullptr;
+		}
+
 		e.contents = _T("后 texture 积己 角菩");
 		e.errorCode = result;
 		return result;
@@ -344,6 +355,17 @@ HRESULT TextureClass::CreateShaderResourceView(ID3D11Device* const& Device, ID3D
 	result = Device->CreateShaderResourceView(texture, &ShaderResourceViewDesc, &srv);
 	if (FAILED(result))
 	{
+		if (texture)
+		{
+			texture->Release();
+			texture = nullptr;
+		}
+		if (srv)
+		{
+			srv->Release();
+			srv = nullptr;
+		}
+
 		e.contents = _T("shader resource view 积己 角菩");
 		e.errorCode = result;
 		return result;

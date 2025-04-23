@@ -99,6 +99,8 @@ HRESULT ColorShaderClass::SetShaderParameters(ID3D11DeviceContext* const& Device
 
 void ColorShaderClass::ShutdownBuffer()
 {
+	OutputDebugString(_T("ColorShaderClass ShutdownBuffer()"));
+
 	if (m_ColorBuffer)
 	{
 		m_ColorBuffer->Release();

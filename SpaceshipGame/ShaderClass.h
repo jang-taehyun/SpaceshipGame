@@ -58,6 +58,8 @@ private:
 	// shader 디버깅 함수 //
 	void OutputShaderErrorMessage(ID3D10Blob*& ErrorMessage, const HWND& hwnd, const std::wstring& ShaderFileName);
 
+	void ShutdownShaderBufferErrorMessage(ID3D10Blob*& VertexShaderBuffer, ID3D10Blob*& PixelShaderBuffer, ID3D10Blob*& ErrorMessage);
+
 protected:
 	// shader 내부에 들어갈 데이터들 업데이트하는 함수 //
 	virtual HRESULT SetShaderParameters(ID3D11DeviceContext* const& DeviceContext, const TransformMatrixData& transform, const LightClass* const& light, const CameraClass* const& camera, const std::vector<ID3D11ShaderResourceView*>& Textures);

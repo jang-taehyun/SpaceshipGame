@@ -76,6 +76,8 @@ HRESULT CollisionClass::Initialize()
 		return E_FAIL;
 	}
 
+	m_Color = DirectX::XMFLOAT4(0.f, 1.f, 0.f, 1.f);
+
 	return result;
 }
 
@@ -97,7 +99,7 @@ void CollisionClass::Shutdown()
 void CollisionClass::UpdateAffine()
 {
 	// Extents
-	DirectX::XMVECTOR scaleVec = DirectX::XMVectorScale(DirectX::XMLoadFloat3(&(m_Collision->Extents)), 2.0f);
+	DirectX::XMVECTOR scaleVec = DirectX::XMVectorScale(DirectX::XMLoadFloat3(&(m_Collision->Extents)), 1.0f);
 	DirectX::XMFLOAT4 scaleF4;
 	DirectX::XMStoreFloat4(&scaleF4, scaleVec);
 	m_Affine->SetScale(scaleF4);

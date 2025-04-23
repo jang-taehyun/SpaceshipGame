@@ -51,6 +51,7 @@ HRESULT ShaderClass::Initialize(const HWND& hwnd, ID3D11Device* const& Device, c
 
 void ShaderClass::Shutdown()
 {
+	OutputDebugString(_T("ShaderClass Shutdown()"));
 	ShutdownShader();
 }
 
@@ -95,6 +96,7 @@ HRESULT ShaderClass::InitializeShader(const HWND& hwnd, ID3D11Device* const& Dev
 			e.contents = _T("vertex shader file이 없습니다.");
 			e.errorCode = result;
 		}
+		ShutdownShaderBufferErrorMessage(VertexShaderBuffer, PixelShaderBuffer, ErrorMessage);
 
 		return result;
 	}
@@ -112,6 +114,7 @@ HRESULT ShaderClass::InitializeShader(const HWND& hwnd, ID3D11Device* const& Dev
 			e.contents = _T("pixel shader file이 없습니다.");
 			e.errorCode = result;
 		}
+		ShutdownShaderBufferErrorMessage(VertexShaderBuffer, PixelShaderBuffer, ErrorMessage);
 
 		return result;
 	}
@@ -120,6 +123,7 @@ HRESULT ShaderClass::InitializeShader(const HWND& hwnd, ID3D11Device* const& Dev
 	result = Device->CreateVertexShader(VertexShaderBuffer->GetBufferPointer(), VertexShaderBuffer->GetBufferSize(), NULL, &m_VertexShader);
 	if (FAILED(result))
 	{
+		ShutdownShaderBufferErrorMessage(VertexShaderBuffer, PixelShaderBuffer, ErrorMessage);
 		e.contents = _T("vertex shader 생성 실패");
 		e.errorCode = result;
 		return result;
@@ -129,6 +133,7 @@ HRESULT ShaderClass::InitializeShader(const HWND& hwnd, ID3D11Device* const& Dev
 	result = Device->CreatePixelShader(PixelShaderBuffer->GetBufferPointer(), PixelShaderBuffer->GetBufferSize(), NULL, &m_PixelShader);
 	if (FAILED(result))
 	{
+		ShutdownShaderBufferErrorMessage(VertexShaderBuffer, PixelShaderBuffer, ErrorMessage);
 		e.contents = _T("pixel shader 생성 실패");
 		e.errorCode = result;
 		return result;
@@ -138,6 +143,7 @@ HRESULT ShaderClass::InitializeShader(const HWND& hwnd, ID3D11Device* const& Dev
 	result = CreateInputLayout(Device, VertexShaderBuffer);
 	if (FAILED(result))
 	{
+		ShutdownShaderBufferErrorMessage(VertexShaderBuffer, PixelShaderBuffer, ErrorMessage);
 		e.contents = _T("input layout 생성 실패");
 		e.errorCode = result;
 		return result;
@@ -146,29 +152,38 @@ HRESULT ShaderClass::InitializeShader(const HWND& hwnd, ID3D11Device* const& Dev
 	// 행렬 상수 버퍼 생성 //
 	result = CreateConstantBuffer(Device, m_MatrixBuffer, sizeof(MatrixBufferType));
 	if (FAILED(result))
+	{
+		ShutdownShaderBufferErrorMessage(VertexShaderBuffer, PixelShaderBuffer, ErrorMessage);
 		return result;
+	}
+		
 
 	// light 상수 버퍼 생성 //
 	result = CreateConstantBuffer(Device, m_LightBuffer, sizeof(LightBufferType));
 	if (FAILED(result))
+	{
+		ShutdownShaderBufferErrorMessage(VertexShaderBuffer, PixelShaderBuffer, ErrorMessage);
 		return result;
+	}
 
 	// camera 상수 버퍼 생성 //
 	result = CreateConstantBuffer(Device, m_CameraBuffer, sizeof(CameraBufferType));
 	if (FAILED(result))
+	{
+		ShutdownShaderBufferErrorMessage(VertexShaderBuffer, PixelShaderBuffer, ErrorMessage);
 		return result;
+	}
 
 	// texture sampler state 생성 //
 	result = CreateTextureSamplerState(Device, m_SampleState);
 	if (FAILED(result))
+	{
+		ShutdownShaderBufferErrorMessage(VertexShaderBuffer, PixelShaderBuffer, ErrorMessage);
 		return result;
+	}
 
-	// vertex shader buffer, pixel shader buffer 해제
-	PixelShaderBuffer->Release();
-	PixelShaderBuffer = nullptr;
-
-	VertexShaderBuffer->Release();
-	VertexShaderBuffer = nullptr;
+	// vertex shader buffer, pixel shader buffer, error message 해제
+	ShutdownShaderBufferErrorMessage(VertexShaderBuffer, PixelShaderBuffer, ErrorMessage);
 
 	return result;
 }
@@ -344,6 +359,27 @@ void ShaderClass::OutputShaderErrorMessage(ID3D10Blob*& ErrorMessage, const HWND
 	ErrorMessage = nullptr;
 
 	MessageBox(hwnd, _T("Error compiling shader."), ShaderFileName.c_str(), MB_OK);
+}
+
+void ShaderClass::ShutdownShaderBufferErrorMessage(ID3D10Blob*& VertexShaderBuffer, ID3D10Blob*& PixelShaderBuffer, ID3D10Blob*& ErrorMessage)
+{
+	if (ErrorMessage)
+	{
+		ErrorMessage->Release();
+		ErrorMessage = nullptr;
+	}
+
+	if (VertexShaderBuffer)
+	{
+		VertexShaderBuffer->Release();
+		VertexShaderBuffer = nullptr;
+	}
+
+	if (PixelShaderBuffer)
+	{
+		PixelShaderBuffer->Release();
+		PixelShaderBuffer = nullptr;
+	}
 }
 
 HRESULT ShaderClass::SetShaderParameters(ID3D11DeviceContext* const& DeviceContext, const TransformMatrixData& transform, const LightClass* const& light, const CameraClass* const& camera, const std::vector<ID3D11ShaderResourceView*>& Textures)

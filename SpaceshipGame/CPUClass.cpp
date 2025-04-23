@@ -66,10 +66,13 @@ HRESULT CPUClass::Initialize()
 
 void CPUClass::Shutdown()
 {
-	if (m_CanReadCPU)
+	if (m_CanReadCPU || m_QueryHandle)
 	{
 		PdhCloseQuery(m_QueryHandle);
+		m_QueryHandle = 0;
 	}
+
+	m_CanReadCPU = false;
 }
 
 void CPUClass::Frame()

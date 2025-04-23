@@ -407,7 +407,7 @@ HRESULT D3DClass::GetRefreshRate(const int& ScreenWidth, const int& ScreenHeight
 
 		e.contents = _T("display mode의 정보를 담을 배열 생성 실패");
 		e.errorCode = E_FAIL;
-		return result;
+		return E_FAIL;
 	}
 	result = AdapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &ModeCount, DisplayModeList);
 	if (FAILED(result))

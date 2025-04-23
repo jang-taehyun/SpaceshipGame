@@ -2,7 +2,7 @@
 #include "ActorClass.h"
 #include "ActorManagerClass.h"
 
-#define DEFAULT_OTHER_OBJECT_COUNT 1;
+#define DEFAULT_OTHER_OBJECT_COUNT 1
 
 bool ActorManagerClass::IsInitialize = false;
 static ErrorContent e;
@@ -130,7 +130,7 @@ void ActorManagerClass::Shutdown()
 		m_Player = nullptr;
 	}
 
-	for (int i = 0; i < OtherMaxLimit; ++i)
+	for (int i = 0; i < m_OthersCount; ++i)
 	{
 		if (m_Other[i])
 		{

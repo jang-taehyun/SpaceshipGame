@@ -4,7 +4,8 @@
 
 static ErrorContent e;
 
-CubeModelClass::CubeModelClass(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const ModelInfo& info, const DirectX::XMFLOAT4& color) : ModelClass(hwnd, Device, DeviceContext, info), m_Color(color)
+CubeModelClass::CubeModelClass(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const ModelInfo& info, const DirectX::XMFLOAT4& color)
+	: ModelClass(hwnd, Device, DeviceContext, info), m_Color(color)
 {
 	HRESULT result = S_OK;
 

@@ -65,12 +65,12 @@ HRESULT TextClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* 
 
 void TextClass::Shutdown()
 {
-	if (!m_SpriteBatch.get())
+	if (m_SpriteBatch)
 	{
 		m_SpriteBatch.reset();
 	}
 	
-	if (!m_Font.get())
+	if (m_Font)
 	{
 		m_Font.reset();
 	}

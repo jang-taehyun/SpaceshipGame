@@ -76,16 +76,20 @@ HRESULT SoundClass::Initialize()
 
 void SoundClass::Shutdown()
 {
-	// m_EffectSound->Stop();
-	// m_BackgroundSound->Stop();
-	// 
-	// m_EffectSound->~SoundEffectInstance();
-	// m_BackgroundSound->~SoundEffectInstance();
-	// 
-	// m_effect->~SoundEffect();
-	// m_background->~SoundEffect();
-	// 
-	// m_AudioEngine->~AudioEngine();
+	if (m_EffectSound)
+		m_EffectSound->Stop();
+
+	if (m_BackgroundSound)
+		m_BackgroundSound->Stop();
+
+	m_EffectSound.reset();
+	m_BackgroundSound.reset();
+	m_Effect.reset();
+	m_Background.reset();
+	m_AudioEngine.reset();
+
+	// COM 객체 초기화 해제
+	CoUninitialize();
 }
 
 HRESULT SoundClass::InitializeAudioEngine()
@@ -122,12 +126,12 @@ HRESULT SoundClass::LoadWaveFile()
 	e.title = _T("SoundClass LoadWaveFile()");
 
 	// wave 파일을 load //
-	m_effect = std::make_unique<DirectX::SoundEffect>(m_AudioEngine.get(), EffectSoundInfo.filename.c_str());
-	m_background = std::make_unique<DirectX::SoundEffect>(m_AudioEngine.get(), BackgroundSoundInfo.filename.c_str());
+	m_Effect = std::make_unique<DirectX::SoundEffect>(m_AudioEngine.get(), EffectSoundInfo.filename.c_str());
+	m_Background = std::make_unique<DirectX::SoundEffect>(m_AudioEngine.get(), BackgroundSoundInfo.filename.c_str());
 
 	// sound effect instance 생성 //
-	m_EffectSound = m_effect->CreateInstance();
-	m_BackgroundSound = m_background->CreateInstance();
+	m_EffectSound = m_Effect->CreateInstance();
+	m_BackgroundSound = m_Background->CreateInstance();
 
 	return result;
 }

@@ -28,8 +28,8 @@ private:
 	
 	std::unique_ptr<DirectX::AudioEngine> m_AudioEngine;
 
-	std::unique_ptr<DirectX::SoundEffect> m_effect;
-	std::unique_ptr<DirectX::SoundEffect> m_background;
+	std::unique_ptr<DirectX::SoundEffect> m_Effect;
+	std::unique_ptr<DirectX::SoundEffect> m_Background;
 
 	std::unique_ptr<DirectX::SoundEffectInstance> m_EffectSound;
 	std::unique_ptr<DirectX::SoundEffectInstance> m_BackgroundSound;
