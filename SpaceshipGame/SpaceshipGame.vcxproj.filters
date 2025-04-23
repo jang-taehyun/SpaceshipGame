@@ -110,6 +110,12 @@
     <Filter Include="Model\Spaceship\SpaceshipShaderClass">
       <UniqueIdentifier>{c9ce7fe0-dc45-431a-9878-9c4b6c77d898}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Actor\ActorClass">
+      <UniqueIdentifier>{24aabe3a-49bc-4ae5-80f5-f47d9bdbc317}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor\ActorManagerClass">
+      <UniqueIdentifier>{f76564fc-c875-488a-bc4b-f72ebb04c305}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemClass.h">
@@ -175,9 +181,6 @@
     <ClInclude Include="AffineClass.h">
       <Filter>AffineClass</Filter>
     </ClInclude>
-    <ClInclude Include="ActorClass.h">
-      <Filter>Actor</Filter>
-    </ClInclude>
     <ClInclude Include="typedef.h">
       <Filter>Default\header</Filter>
     </ClInclude>
@@ -207,6 +210,12 @@
     </ClInclude>
     <ClInclude Include="ColorShaderClass.h">
       <Filter>Model\Cube\CubeShaderClass</Filter>
+    </ClInclude>
+    <ClInclude Include="ActorClass.h">
+      <Filter>Actor\ActorClass</Filter>
+    </ClInclude>
+    <ClInclude Include="ActorManagerClass.h">
+      <Filter>Actor\ActorManagerClass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -261,9 +270,6 @@
     <ClCompile Include="AffineClass.cpp">
       <Filter>AffineClass</Filter>
     </ClCompile>
-    <ClCompile Include="ActorClass.cpp">
-      <Filter>Actor</Filter>
-    </ClCompile>
     <ClCompile Include="ModelManagerClass.cpp">
       <Filter>Model\ModelManager</Filter>
     </ClCompile>
@@ -290,6 +296,12 @@
     </ClCompile>
     <ClCompile Include="ColorShaderClass.cpp">
       <Filter>Model\Cube\CubeShaderClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ActorClass.cpp">
+      <Filter>Actor\ActorClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ActorManagerClass.cpp">
+      <Filter>Actor\ActorManagerClass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

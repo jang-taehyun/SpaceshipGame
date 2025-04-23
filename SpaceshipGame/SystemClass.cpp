@@ -5,6 +5,7 @@
 #include "FPSClass.h"
 #include "CPUClass.h"
 #include "TimerClass.h"
+#include "ActorManagerClass.h"
 #include "SystemClass.h"
 
 bool SystemClass::IsInitialize = false;
@@ -101,11 +102,25 @@ HRESULT SystemClass::Initialize()
 		return E_FAIL;
 	}
 
+	m_ActorManager = new ActorManagerClass;
+	if (!m_ActorManager)
+	{
+		e.contents = _T("ActorManagerClass 인스턴스 생성 실패");
+		e.errorCode = E_FAIL;
+		return E_FAIL;
+	}
+
 	return result;
 }
 
 void SystemClass::Shutdown()
 {
+	if (m_ActorManager)
+	{
+		delete m_ActorManager;
+		m_ActorManager = nullptr;
+	}
+
 	if (m_Timer)
 	{
 		delete m_Timer;
@@ -210,7 +225,7 @@ HRESULT SystemClass::Frame()
 		return result;
 
 	// Graphics의 Frame() 진행 //
-	result = m_Graphics->Frame(m_Sound, m_Input, m_Timer->GetTime(), m_FPS->GetFPS(), (int)m_CPU->GetCPUPercentage());
+	result = m_Graphics->Frame(m_ActorManager, m_Sound, m_Input, m_Timer->GetTime(), m_FPS->GetFPS(), (int)m_CPU->GetCPUPercentage());
 	if (FAILED(result))
 		return result;
 

@@ -4,7 +4,7 @@ class AffineClass
 {
 public:
 	explicit AffineClass();
-	explicit AffineClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling);
+	explicit AffineClass(const AffineInfo& affine);
 	virtual ~AffineClass();
 
 	HRESULT ChangePosition(const MoveState& state, const bool& IsKeyDown);
@@ -46,7 +46,7 @@ public:
 	void SetScale(const float& x, const float& y, const float& z);
 	
 private:
-	void Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling);
+	void Initialize(const AffineInfo& affine);
 
 	void UpdateAffineMatrix();
 

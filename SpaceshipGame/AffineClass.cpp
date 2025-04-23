@@ -6,16 +6,17 @@ static ErrorContent e;
 
 AffineClass::AffineClass()
 {
-	DirectX::XMFLOAT4 position = { 0.f, 0.f, 0.f, 1.f };
-	DirectX::XMFLOAT4 rotation = { 0.f, 0.f, 0.f, 1.f };
-	DirectX::XMFLOAT4 scaling = { 1.f, 1.f, 1.f, 1.f };
+	AffineInfo affine;
+	affine.position = { 0.f, 0.f, 0.f, 1.f };
+	affine.rotation = { 0.f, 0.f, 0.f, 1.f };
+	affine.scale = { 1.f, 1.f, 1.f, 1.f };
 
-	Initialize(position, rotation, scaling);
+	Initialize(affine);
 }
 
-AffineClass::AffineClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling)
+AffineClass::AffineClass(const AffineInfo& affine)
 {
-	Initialize(position, rotation, scaling);
+	Initialize(affine);
 }
 
 AffineClass::~AffineClass() {}
@@ -56,14 +57,14 @@ void AffineClass::SetScale(const float& x, const float& y, const float& z)
 	UpdateAffineMatrix();
 }
 
-void AffineClass::Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling)
+void AffineClass::Initialize(const AffineInfo& affine)
 {
 	float pitch, yaw, roll;
 	DirectX::XMMATRIX RotationMatrix;
 
-	m_Position = position;
-	m_Rotation = rotation;
-	m_Scaling = scaling;
+	m_Position = affine.position;
+	m_Rotation = affine.rotation;
+	m_Scaling = affine.scale;
 
 	// forward, right, up vector 설정 //
 	// 회전 행렬 설정 //

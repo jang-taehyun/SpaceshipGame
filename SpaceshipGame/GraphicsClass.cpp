@@ -1,22 +1,26 @@
 #include "pch.h"
+
 #include "D3DClass.h"
 #include "CameraClass.h"
+#include "LightClass.h"
+
+#include "ColorClass.h"
 
 #include "ModelClass.h"
 #include "ModelManagerClass.h"
+
+#include "ActorManagerClass.h"
+#include "ActorClass.h"
 #include "AffineClass.h"
 #include "CollisionClass.h"
-#include "ActorClass.h"
-#include "LightClass.h"
 
-#include "TextClass.h"
-
-#include "FrustumClass.h"
-#include "ColorClass.h"
-#include "IMGUIClass.h"
 
 #include "InputClass.h"
 #include "SoundClass.h"
+
+#include "TextClass.h"
+#include "FrustumClass.h"
+#include "IMGUIClass.h"
 
 #include "GraphicsClass.h"
 
@@ -57,9 +61,7 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 {
 	HRESULT result = S_OK;
 	float ScalingFactor = 0.5f;
-	DirectX::XMFLOAT4 Position = { 0.f, 0.f, 0.f, 1.f };
-	DirectX::XMFLOAT4 Rotation = { 0.f, 0.f, 0.f, 1.f };
-	DirectX::XMFLOAT4 Scaling = { 1.f, 1.f, 1.f, 1.f };
+	AffineInfo affine;
 	DirectX::XMMATRIX BaseViewMatrix;
 	DirectX::XMFLOAT4 AmbientColor = DirectX::XMFLOAT4(0.15f, 0.15f, 0.15f, 1.f);;
 	DirectX::XMFLOAT4 DiffuseColor = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);;
@@ -80,7 +82,10 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 	}
 
 	// Camera 객체 생성 및 초기화 //
-	m_Camera = new CameraClass(Position, Rotation, Scaling);
+	affine.position = { 0.f, 0.f, 0.f, 1.f };
+	affine.rotation = { 0.f, 0.f, 0.f, 1.f };
+	affine.scale = { 1.f, 1.f, 1.f, 1.f };
+	m_Camera = new CameraClass(affine);
 	if (!m_Camera)
 	{
 		e.contents = _T("CameraClass 인스턴스 생성 실패");
@@ -96,15 +101,6 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 	if(!m_ModelManager)
 	{
 		e.contents = _T("Model Manager Class 인스턴스 생성 실패");
-		e.errorCode = E_FAIL;
-		return E_FAIL;
-	}
-
-	// Player 객체 생성 및 초기화 //
-	m_Player = new ActorClass(Position, Rotation, Scaling, ModelIDs::DEFAULT_SPACESHIP);
-	if (!m_Player)
-	{
-		e.contents = _T("ActorClass 인스턴스 생성 실패(Player)");
 		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
@@ -156,12 +152,6 @@ void GraphicsClass::Shutdown()
 		m_Light = nullptr;
 	}
 
-	if (m_Player)
-	{
-		delete m_Player;
-		m_Player = nullptr;
-	}
-
 	if (m_IMGUI)
 	{
 		delete m_IMGUI;
@@ -199,7 +189,7 @@ void GraphicsClass::Shutdown()
 	}
 }
 
-HRESULT GraphicsClass::Frame(SoundClass* const& sound, const InputClass* const& input, const float& frame, const int& fps, const int& cpu_usage)
+HRESULT GraphicsClass::Frame(ActorManagerClass* const& actor_manager, SoundClass* const& sound, const InputClass* const& input, const float& frame, const int& fps, const int& cpu_usage)
 {
 	HRESULT result = S_OK;
 	bool KeyDown = false;
@@ -279,7 +269,7 @@ HRESULT GraphicsClass::Frame(SoundClass* const& sound, const InputClass* const& 
 	}
 
 	// 렌더링 //
-	result = Render(sound, fps, cpu_usage);
+	result = Render(actor_manager, sound, fps, cpu_usage);
 	if (FAILED(result))
 	{
 		e.contents = _T("Frame() 처리 실패");
@@ -290,10 +280,10 @@ HRESULT GraphicsClass::Frame(SoundClass* const& sound, const InputClass* const& 
 	return result;
 }
 
-HRESULT GraphicsClass::Render(SoundClass* const& sound, const int& fps, const int& cpu_usage)
+HRESULT GraphicsClass::Render(ActorManagerClass* const& actor_manager, SoundClass* const& sound, const int& fps, const int& cpu_usage)
 {
 	HRESULT result = S_OK;
-	DirectX::XMMATRIX WorldMatrix, ViewMatrix, ProjectionMatrix, OrthoMatrix;
+	DirectX::XMMATRIX OrthoMatrix;
 	TransformMatrixData transform;
 	ColorClass background;
 
@@ -306,46 +296,58 @@ HRESULT GraphicsClass::Render(SoundClass* const& sound, const int& fps, const in
 	// 카메라의 위치에 따라 view matrix 생성 //
 	m_Camera->Render();
 
-	// world, view, projection, ortho matrix 가져오기 및 업데이트 //
-	WorldMatrix = m_Player->GetAffineMatrix();			// world matrix
-	ViewMatrix = m_Camera->GetViewMatrix();				// view matrix
-	m_D3D->GetProjectionMatrix(ProjectionMatrix);		// projection matrix
-	m_D3D->GetOrthoMatrix(OrthoMatrix);					// ortho matrix
-
-	transform = { WorldMatrix, ViewMatrix, ProjectionMatrix };
+	// view, projection, ortho matrix 가져오기 및 업데이트 //
+	transform.view = m_Camera->GetViewMatrix();										// view matrix
+	transform.projection = m_D3D->GetProjectionMatrix();							// projection matrix
+	OrthoMatrix = m_D3D->GetOrthoMatrix();											// ortho matrix
 
 	// frustum culling을 이용한 rendering //
 	// viewing frustum 업데이트 및 render count(rendering한 3D object의 개수) 초기화
-	m_Frustum->UpdateFrustum(SCREEN_DEPTH, ProjectionMatrix, ViewMatrix);
-
-
-	// ------------ //
-	// ------------ //
-
+	m_Frustum->UpdateFrustum(SCREEN_DEPTH, transform.projection, transform.view);
 
 	// 렌더링 //
-	result = m_ModelManager->GetModel(m_Player->GetModelID())->Render(m_D3D->GetDeviceContext(), transform, m_Light, m_Camera);
+	// player
+	transform.world = actor_manager->GetPlayerObject()->GetAffineMatrix();
+	result = m_ModelManager->GetModel(actor_manager->GetPlayerObject()->GetModelID())->Render(m_D3D->GetDeviceContext(), transform, m_Light, m_Camera);
 	if (FAILED(result))
 	{
 		e.contents = _T("Model 렌더링 실패");
 		e.errorCode = result;
 		return result;
 	}
-
-	transform.world = m_Player->GetCollision()->GetAffine();
+	transform.world = actor_manager->GetPlayerObject()->GetCollision()->GetAffine();
 	result = m_ModelManager->GetModel(ModelIDs::DEFAULT_CUBE)->Render(m_D3D->GetDeviceContext(), transform, m_Light, m_Camera);
 	if (FAILED(result))
 	{
-		e.contents = _T("Model 렌더링 실패");
+		e.contents = _T("Collision 렌더링 실패");
 		e.errorCode = result;
 		return result;
 	}
 
+	// other
+	for (int i = 0; i < actor_manager->GetOtherObjectCount(); ++i)
+	{
+		transform.world = actor_manager->GetOtherObject(i)->GetAffineMatrix();
+		result = m_ModelManager->GetModel(actor_manager->GetOtherObject(i)->GetModelID())->Render(m_D3D->GetDeviceContext(), transform, m_Light, m_Camera);
+		if (FAILED(result))
+		{
+			e.contents = _T("Model 렌더링 실패");
+			e.errorCode = result;
+			return result;
+		}
+		transform.world = actor_manager->GetOtherObject(i)->GetCollision()->GetAffine();
+		result = m_ModelManager->GetModel(ModelIDs::DEFAULT_CUBE)->Render(m_D3D->GetDeviceContext(), transform, m_Light, m_Camera);
+		if (FAILED(result))
+		{
+			e.contents = _T("Collision 렌더링 실패");
+			e.errorCode = result;
+			return result;
+		}
+	}
+
 	// 2D 렌더링 //
-	// depth buffer 비활성화
+	// depth buffer 비활성화, alpha blend state 활성화
 	m_D3D->TurnDepthBufferOff();
-	
-	// alpha blend state 활성화
 	m_D3D->TurnOnAlphaBlending();
 	
 	// text 렌더링
@@ -354,14 +356,12 @@ HRESULT GraphicsClass::Render(SoundClass* const& sound, const int& fps, const in
 	DirectX::XMVECTOR color = DirectX::XMLoadFloat4(&tmp);
 	m_Text->Render(m_D3D->GetDeviceContext(), _T("테스트 01 text ~ ! @"), pos, color);
 	
-	// alpha blend state 비활성화
+	// alpha blend state 비활성화, depth buffer 활성화
 	m_D3D->TurnOffAlphaBlending();
-	
-	// depth buffer 활성화
 	m_D3D->TurnDepthBufferOn();
 	
 	// IMGUI 렌더링
-	m_IMGUI->Render(m_Player, m_Light, m_ModelManager->GetModel(m_Player->GetModelID()), sound, m_Camera, fps, cpu_usage);
+	m_IMGUI->Render(actor_manager, m_Light, sound, m_Camera, fps, cpu_usage);
 
 	// back buffer에 있는 내용을 화면에 출력 //
 	m_D3D->EndScene();

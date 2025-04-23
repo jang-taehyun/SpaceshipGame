@@ -6,14 +6,14 @@
 
 static ErrorContent e;
 
-ActorClass::ActorClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, const ModelIDs ModelID)
+ActorClass::ActorClass(const AffineInfo& affine, const ModelIDs ModelID)
 {
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
 	e.title = _T("ActorClass constructor");
 
-	result = Initailize(position, rotation, scaling, ModelID);
+	result = Initailize(affine, ModelID);
 	if (FAILED(result))
 	{
 		Shutdown();
@@ -26,15 +26,15 @@ ActorClass::~ActorClass()
 	Shutdown();
 }
 
-HRESULT ActorClass::Initailize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling, const ModelIDs ModelID)
+HRESULT ActorClass::Initailize(const AffineInfo& affine, const ModelIDs ModelID)
 {
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
 	e.title = _T("ActorClass Initailize()");
 
-	// transform 인스턴스 생성 //
-	m_Affine = new AffineClass(position, rotation, scaling);
+	// affine 인스턴스 생성 //
+	m_Affine = new AffineClass(affine);
 	if (!m_Affine)
 	{
 		e.contents = _T("AffineClass 인스턴스 생성 실패");

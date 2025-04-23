@@ -5,7 +5,7 @@
 class CameraClass
 {
 public:
-	explicit CameraClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling);
+	explicit CameraClass(const AffineInfo& affine);
 	virtual ~CameraClass();
 
 	// Getter //
@@ -22,7 +22,7 @@ public:
 	void Render();
 
 private:
-	HRESULT Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling);
+	HRESULT Initialize(const AffineInfo& affine);
 	void Shutdown();
 
 private:

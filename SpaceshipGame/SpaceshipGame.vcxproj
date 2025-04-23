@@ -155,6 +155,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ActorClass.h" />
+    <ClInclude Include="ActorManagerClass.h" />
     <ClInclude Include="CameraClass.h" />
     <ClInclude Include="CollisionClass.h" />
     <ClInclude Include="ColorClass.h" />
@@ -189,6 +190,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ActorClass.cpp" />
+    <ClCompile Include="ActorManagerClass.cpp" />
     <ClCompile Include="CameraClass.cpp" />
     <ClCompile Include="CollisionClass.cpp" />
     <ClCompile Include="ColorClass.cpp" />

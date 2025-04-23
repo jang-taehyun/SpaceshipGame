@@ -6,6 +6,7 @@ class SoundClass;
 class FPSClass;
 class CPUClass;
 class TimerClass;
+class ActorManagerClass;
 
 class SystemClass
 {
@@ -43,6 +44,8 @@ private:
 	FPSClass* m_FPS = nullptr;
 	CPUClass* m_CPU = nullptr;
 	TimerClass* m_Timer = nullptr;
+
+	ActorManagerClass* m_ActorManager = nullptr;
 
 public:
 	SystemClass(const SystemClass& other) = delete;

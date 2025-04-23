@@ -3,11 +3,11 @@
 
 static ErrorContent e;
 
-CameraClass::CameraClass(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling)
+CameraClass::CameraClass(const AffineInfo& affine)
 {
 	HRESULT result = S_OK;
 
-	result = Initialize(position, rotation, scaling);
+	result = Initialize(affine);
 	if (FAILED(result))
 	{
 		Shutdown();
@@ -20,14 +20,14 @@ CameraClass::~CameraClass()
 	Shutdown();
 }
 
-HRESULT CameraClass::Initialize(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT4& scaling)
+HRESULT CameraClass::Initialize(const AffineInfo& affine)
 {
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
 	e.title = _T("CameraClass Initialize()");
 
-	m_Affine = new AffineClass(position, rotation, scaling);
+	m_Affine = new AffineClass(affine);
 	if (!m_Affine)
 	{
 		e.contents = _T("TransformClass 인스턴스 생성 실패");

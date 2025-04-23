@@ -58,7 +58,7 @@ float4 SpaceshipPixelShader(PixelInputType input) : SV_TARGET
 		float3 Reflection = normalize(2 * LightIntensity * input.normal - LightDir);
 
 		// reflect vector, view direction, shininess를 이용해 specular 계산
-		Specular = pow(saturate(dot(Reflection, input.viewDirection)), SpecularPower);
+		Specular = SpecularColor * pow(saturate(dot(Reflection, input.viewDirection)), SpecularPower);
 	}
 
 	// texture pixel과 최종 조명 색상을 곱해 최종 pixel의 색상 결정

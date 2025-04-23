@@ -26,9 +26,9 @@ public:
 
 	// Setter //
 
-	inline void GetProjectionMatrix(DirectX::XMMATRIX& ProjectionMatrix) { ProjectionMatrix = m_ProjectionMatrix; }
-	inline void GetWorldMatrix(DirectX::XMMATRIX& WorldMatrix) { WorldMatrix = m_WorlMatrix; }
-	inline void GetOrthoMatrix(DirectX::XMMATRIX& OrthoMatrix) { OrthoMatrix = m_OrthoMatrix; }
+	inline const DirectX::XMMATRIX& GetProjectionMatrix() { return m_ProjectionMatrix; }
+	inline const DirectX::XMMATRIX& GetWorldMatrix() { return m_WorlMatrix; }
+	inline const DirectX::XMMATRIX& GetOrthoMatrix() { return m_OrthoMatrix; }
 
 
 	void TurnDepthBufferOn();
