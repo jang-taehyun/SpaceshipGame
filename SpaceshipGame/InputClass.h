@@ -28,6 +28,8 @@ public:
 	inline bool IsWBottunPressed() const { return m_KeyboardState[DIK_W] & 0x80; }
 	inline bool IsDBottunPressed() const { return m_KeyboardState[DIK_D] & 0x80; }
 
+	inline bool IsSpacebarPressed() const { return m_KeyboardState[DIK_SPACE] & 0x80; }
+
 	inline bool IsMouseCenterBottunPressed() const { return m_MouseState.rgbButtons[MOUSEBUTTON::MOUSE_CENTER] & 0x80; }
 
 	// Setter //

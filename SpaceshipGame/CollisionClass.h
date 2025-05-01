@@ -1,6 +1,9 @@
 #pragma once
 
 #include <SimpleMath.h>
+#include <DirectXMath.h>
+#include <DirectXCollision.h>
+
 class AffineClass;
 
 class CollisionClass
@@ -10,7 +13,8 @@ public:
 	virtual ~CollisionClass();
 
 	inline DirectX::BoundingOrientedBox* const& GetCollision() { return m_Collision; }
-	const DirectX::ContainmentType GetCollideState(CollisionClass* const& ref);
+	const DirectX::ContainmentType GetCollideState(DirectX::BoundingOrientedBox* const& collision);
+	const DirectX::ContainmentType GetCollideState(const DirectX::SimpleMath::Ray* const& ray);
 	const DirectX::XMMATRIX& GetAffine() const;
 	inline const DirectX::XMFLOAT4& GetColor() const { return m_Color; }
 

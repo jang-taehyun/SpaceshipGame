@@ -24,10 +24,26 @@ CollisionClass::~CollisionClass()
 	Shutdown();
 }
 
-const DirectX::ContainmentType CollisionClass::GetCollideState(CollisionClass* const& ref)
+const DirectX::ContainmentType CollisionClass::GetCollideState(DirectX::BoundingOrientedBox* const& collision)
 {
-	DirectX::ContainmentType ret = m_Collision->Contains(*ref->GetCollision());
+	DirectX::ContainmentType ret = m_Collision->Contains(*collision);
 	return ret;
+}
+
+const DirectX::ContainmentType CollisionClass::GetCollideState(const DirectX::SimpleMath::Ray* const& ray)
+{
+	if (!ray || !m_Collision)
+		return DirectX::ContainmentType::DISJOINT;
+
+	float dist = 0.f;
+	DirectX::XMVECTOR origin = DirectX::XMLoadFloat3(&(ray->position));
+	DirectX::XMVECTOR dir = DirectX::XMLoadFloat3(&(ray->direction));
+	
+	dir = DirectX::XMVector3Normalize(dir);
+
+	bool ret = m_Collision->Intersects(origin, dir, dist);
+
+	return (ret ? DirectX::ContainmentType::CONTAINS : DirectX::ContainmentType::DISJOINT);
 }
 
 const DirectX::XMMATRIX& CollisionClass::GetAffine() const

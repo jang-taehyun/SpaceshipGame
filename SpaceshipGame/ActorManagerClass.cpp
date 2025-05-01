@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ActorClass.h"
+#include "PlayerClass.h"
 #include "ActorManagerClass.h"
 
 #define DEFAULT_OTHER_OBJECT_COUNT 1
@@ -90,10 +91,10 @@ HRESULT ActorManagerClass::Initialize(const AffineInfo& PlayerAffine, const Mode
 	e.title = _T("GraphicsClass Initialize()");
 
 	// Player 객체 생성 및 초기화 //
-	m_Player = new ActorClass(PlayerAffine, PlayerModelID);
+	m_Player = new PlayerClass(PlayerAffine, PlayerModelID);
 	if (!m_Player)
 	{
-		e.contents = _T("ActorClass 인스턴스 생성 실패(Player)");
+		e.contents = _T("PlayerClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}

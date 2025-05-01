@@ -10,6 +10,7 @@
 // actor, collision °ü·Ã
 #include "ActorManagerClass.h"
 #include "ActorClass.h"
+#include "PlayerClass.h"
 #include "CollisionClass.h"
 
 #include "IMGUIClass.h"
@@ -109,7 +110,7 @@ void IMGUIClass::SetUI(ActorManagerClass* const& actor_manager, LightClass* cons
 	SetLightInfo(title, 3, light);
 
 	title = u8"playerÀÇ affine(position, rotate, scale), collision(center, rotate, extends)";
-	SetActorInfo(title, 4, actor_manager->GetPlayerObject());
+	SetActorInfo(title, 4, static_cast<ActorClass*>(actor_manager->GetPlayerObject()));
 	
 	for (int i = 0; i < actor_manager->GetOtherObjectCount(); ++i)
 	{

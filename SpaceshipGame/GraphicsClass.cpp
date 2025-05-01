@@ -11,6 +11,8 @@
 
 #include "ActorManagerClass.h"
 #include "ActorClass.h"
+#include "PlayerClass.h"
+
 #include "AffineClass.h"
 #include "CollisionClass.h"
 
@@ -271,7 +273,7 @@ HRESULT GraphicsClass::Frame(ActorManagerClass* const& actor_manager, SoundClass
 	}
 
 	// 렌더링 //
-	result = Render(actor_manager, sound, fps, cpu_usage);
+	result = Render(actor_manager, sound, fps, cpu_usage, input);
 	if (FAILED(result))
 	{
 		e.contents = _T("Frame() 처리 실패");
@@ -282,7 +284,7 @@ HRESULT GraphicsClass::Frame(ActorManagerClass* const& actor_manager, SoundClass
 	return result;
 }
 
-HRESULT GraphicsClass::Render(ActorManagerClass* const& actor_manager, SoundClass* const& sound, const int& fps, const int& cpu_usage)
+HRESULT GraphicsClass::Render(ActorManagerClass* const& actor_manager, SoundClass* const& sound, const int& fps, const int& cpu_usage, const InputClass* const& input)
 {
 	HRESULT result = S_OK;
 	DirectX::XMMATRIX OrthoMatrix;
@@ -326,11 +328,18 @@ HRESULT GraphicsClass::Render(ActorManagerClass* const& actor_manager, SoundClas
 	// player collision
 	for (int i = 0; i < actor_manager->GetOtherObjectCount(); ++i)
 	{
-		if (actor_manager->GetPlayerObject()->GetCollision()->GetCollideState(actor_manager->GetOtherObject(i)->GetCollision()) != DirectX::ContainmentType::DISJOINT)
+		DirectX::XMFLOAT4 color = DirectX::XMFLOAT4(0.f, 1.f, 0.f, 1.f);
+
+		if (actor_manager->GetPlayerObject()->GetCollision()->GetCollideState(actor_manager->GetOtherObject(i)->GetCollision()->GetCollision()) != DirectX::ContainmentType::DISJOINT)
+			color.x = 1.f;
+		if (input->IsSpacebarPressed())
 		{
-			actor_manager->GetPlayerObject()->GetCollision()->SetColor(DirectX::XMFLOAT4(1.f, 0.f, 0.f, 1.f));
-			actor_manager->GetOtherObject(i)->GetCollision()->SetColor(DirectX::XMFLOAT4(1.f, 0.f, 0.f, 1.f));
+			if(actor_manager->GetOtherObject(i)->GetCollision()->GetCollideState(actor_manager->GetPlayerObject()->GetRay()) == DirectX::ContainmentType::CONTAINS)
+				color.z = 1.f;
 		}
+
+		actor_manager->GetPlayerObject()->GetCollision()->SetColor(color);
+		actor_manager->GetOtherObject(i)->GetCollision()->SetColor(color);
 	}
 	transform.world = actor_manager->GetPlayerObject()->GetCollision()->GetAffine();
 	static_cast<CubeModelClass*>(m_ModelManager->GetModel(ModelIDs::DEFAULT_CUBE))->SetColor(actor_manager->GetPlayerObject()->GetCollision()->GetColor());

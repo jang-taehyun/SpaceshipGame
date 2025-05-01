@@ -24,7 +24,7 @@ public:
 private:
 	HRESULT Initialize(const int& ScreenWidth, const int& ScreenHeight, const HWND& hwnd);
 	void Shutdown();
-	HRESULT Render(ActorManagerClass* const& actor_manager, SoundClass* const& sound, const int& fps, const int& cpu_usage);
+	HRESULT Render(ActorManagerClass* const& actor_manager, SoundClass* const& sound, const int& fps, const int& cpu_usage, const InputClass* const& input);
 
 private:
 	static bool IsInitialize;

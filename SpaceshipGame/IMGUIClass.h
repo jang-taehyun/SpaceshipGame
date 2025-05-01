@@ -14,6 +14,8 @@ class SoundClass;
 class ModelClass;
 class LightClass;
 class ActorManagerClass;
+class ActorClass;
+class PlayerClass;
 
 class IMGUIClass
 {
