@@ -32,18 +32,23 @@ const DirectX::ContainmentType CollisionClass::GetCollideState(DirectX::Bounding
 
 const DirectX::ContainmentType CollisionClass::GetCollideState(const DirectX::SimpleMath::Ray* const& ray)
 {
-	if (!ray || !m_Collision)
+	if (!m_Collision || !ray)
 		return DirectX::ContainmentType::DISJOINT;
 
+	DirectX::XMVECTOR origin = XMLoadFloat3(&ray->position);
+	DirectX::XMVECTOR direction = XMLoadFloat3(&ray->direction);
+
+	if (DirectX::XMVector3Equal(direction, DirectX::XMVectorZero()))
+		return DirectX::ContainmentType::DISJOINT;
+
+	direction = DirectX::XMVector3Normalize(direction);
+
+	assert(DirectX::Internal::XMVector3IsUnit(direction));  // 디버그에서 반드시 확인
+
 	float dist = 0.f;
-	DirectX::XMVECTOR origin = DirectX::XMLoadFloat3(&(ray->position));
-	DirectX::XMVECTOR dir = DirectX::XMLoadFloat3(&(ray->direction));
-	
-	dir = DirectX::XMVector3Normalize(dir);
+	bool hit = m_Collision->Intersects(origin, direction, dist);
 
-	bool ret = m_Collision->Intersects(origin, dir, dist);
-
-	return (ret ? DirectX::ContainmentType::CONTAINS : DirectX::ContainmentType::DISJOINT);
+	return hit ? DirectX::ContainmentType::CONTAINS : DirectX::ContainmentType::DISJOINT;
 }
 
 const DirectX::XMMATRIX& CollisionClass::GetAffine() const

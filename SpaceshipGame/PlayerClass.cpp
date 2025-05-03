@@ -33,7 +33,7 @@ HRESULT PlayerClass::IntializeRay(const AffineInfo& affine)
 	pos.x = affine.position.x;
 	pos.y = affine.position.y;
 	pos.z = affine.position.z;
-	dir.z = affine.rotation.z;
+	dir.z = 1.f;
 
 	m_Ray = new DirectX::SimpleMath::Ray(pos, dir);
 	if (!m_Ray)
