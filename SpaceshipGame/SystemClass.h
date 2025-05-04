@@ -7,6 +7,7 @@ class FPSClass;
 class CPUClass;
 class TimerClass;
 class ActorManagerClass;
+class ProcessManagerClass;
 
 class SystemClass
 {
@@ -46,6 +47,7 @@ private:
 	TimerClass* m_Timer = nullptr;
 
 	ActorManagerClass* m_ActorManager = nullptr;
+	ProcessManagerClass* m_ProcessManager = nullptr;
 
 public:
 	SystemClass(const SystemClass& other) = delete;

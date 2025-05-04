@@ -6,6 +6,7 @@
 #include "CPUClass.h"
 #include "TimerClass.h"
 #include "ActorManagerClass.h"
+#include "ProcessManagerClass.h"
 #include "SystemClass.h"
 
 bool SystemClass::IsInitialize = false;
@@ -110,11 +111,25 @@ HRESULT SystemClass::Initialize()
 		return E_FAIL;
 	}
 
+	m_ProcessManager = new ProcessManagerClass;
+	if (!m_ProcessManager)
+	{
+		e.contents = _T("ProcessManagerClass 인스턴스 생성 실패");
+		e.errorCode = E_FAIL;
+		return E_FAIL;
+	}
+
 	return result;
 }
 
 void SystemClass::Shutdown()
 {
+	if (m_ProcessManager)
+	{
+		delete m_ProcessManager;
+		m_ProcessManager = nullptr;
+	}
+
 	if (m_ActorManager)
 	{
 		delete m_ActorManager;
@@ -211,7 +226,7 @@ HRESULT SystemClass::Frame()
 	// 에러 메세지 초기화 //
 	e.title = _T("SystemClass Frame()");
 
-	// Timer, FPS, CPU, Input, Sound의 Frame() 진행 //
+	// Timer, FPS, CPU, Input, Sound, Process의 Frame() 진행 //
 	m_Timer->Frame();
 	m_FPS->Frame();
 	m_CPU->Frame();
@@ -224,8 +239,12 @@ HRESULT SystemClass::Frame()
 	if (FAILED(result))
 		return result;
 
+	result = m_ProcessManager->Frame(m_ActorManager, m_Graphics->GetCamera(), m_Input, m_Timer->GetTime());
+	if (FAILED(result))
+		return result;
+
 	// Graphics의 Frame() 진행 //
-	result = m_Graphics->Frame(m_ActorManager, m_Sound, m_Input, m_Timer->GetTime(), m_FPS->GetFPS(), (int)m_CPU->GetCPUPercentage());
+	result = m_Graphics->Frame(m_ActorManager, m_Sound, m_FPS->GetFPS(), (int)m_CPU->GetCPUPercentage());
 	if (FAILED(result))
 		return result;
 

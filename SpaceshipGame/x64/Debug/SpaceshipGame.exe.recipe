@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>D:\SpaceshipGame\SpaceshipGame\x64\Debug\SpaceshipGame.exe</FullPath>
+      <FullPath>D:\project\SpaceshipGame\x64\Debug\SpaceshipGame.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

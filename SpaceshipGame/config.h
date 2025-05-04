@@ -23,6 +23,12 @@ enum class RotationState
 	ROTATE_UP, ROTATE_DOWN, ROTATE_RIGHT, ROTATE_LEFT,
 };
 
+// collision 상태 정보 //
+enum class CollisionState
+{
+	NONE = 0, OBB_HIT = 1, RAY_HIT = 2,
+};
+
 // sound 파일 정보 //
 enum class SoundInfo
 {

@@ -45,7 +45,7 @@ const DirectX::ContainmentType CollisionClass::GetCollideState(const DirectX::Si
 
 	assert(DirectX::Internal::XMVector3IsUnit(direction));  // 디버그에서 반드시 확인
 
-	float dist = 0.f;
+	float dist = 5.f;
 	bool hit = m_Collision->Intersects(origin, direction, dist);
 
 	return hit ? DirectX::ContainmentType::CONTAINS : DirectX::ContainmentType::DISJOINT;
