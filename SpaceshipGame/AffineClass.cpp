@@ -131,10 +131,10 @@ HRESULT AffineClass::ChangePosition(const MoveState& state, const bool& IsKeyDow
 void AffineClass::ChangeRotation(const long& MouseX, const long& MouseY)
 {
 	// yaw 업데이트 //
-	m_Rotation.y += ((float)MouseX * m_MouseSensitivity);
+	m_Rotation.y += ((float)MouseX * m_FrameTime * m_MouseSensitivity);
 
 	// pitch 업데이트 //
-	m_Rotation.x += ((float)MouseY * m_MouseSensitivity);
+	m_Rotation.x += ((float)MouseY * m_FrameTime * m_MouseSensitivity);
 
 	UpdateAffineMatrix();
 }
@@ -228,7 +228,7 @@ void AffineClass::MoveForward(const bool& IsKeyDown)
 
 	SetMoveSpeed(m_ForwardMoveSpeed);
 
-	position += m_ForwardVector * m_ForwardMoveSpeed;
+	position += (m_ForwardVector * m_ForwardMoveSpeed);
 	XMStoreFloat4(&m_Position, position);
 }
 

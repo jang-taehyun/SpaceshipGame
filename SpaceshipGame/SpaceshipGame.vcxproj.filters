@@ -116,6 +116,12 @@
     <Filter Include="Actor\ActorManagerClass">
       <UniqueIdentifier>{f76564fc-c875-488a-bc4b-f72ebb04c305}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Actor\PlayerClass">
+      <UniqueIdentifier>{5e8fff4f-0d38-44d2-91d3-05d828d5d9b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ProcessManagerClass">
+      <UniqueIdentifier>{53171791-417b-4d08-a31a-c30fbf724969}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemClass.h">
@@ -217,6 +223,12 @@
     <ClInclude Include="ActorManagerClass.h">
       <Filter>Actor\ActorManagerClass</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerClass.h">
+      <Filter>Actor\PlayerClass</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessManagerClass.h">
+      <Filter>ProcessManagerClass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -303,6 +315,12 @@
     <ClCompile Include="ActorManagerClass.cpp">
       <Filter>Actor\ActorManagerClass</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerClass.cpp">
+      <Filter>Actor\PlayerClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessManagerClass.cpp">
+      <Filter>ProcessManagerClass</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SpaceshipGame.rc">
@@ -366,5 +384,6 @@
     <None Include="shader\vertex\Spaceship.vs">
       <Filter>Model\Shader\VertexShader</Filter>
     </None>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

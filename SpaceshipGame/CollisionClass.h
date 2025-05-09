@@ -17,10 +17,13 @@ public:
 	const DirectX::ContainmentType GetCollideState(const DirectX::SimpleMath::Ray* const& ray);
 	const DirectX::XMMATRIX& GetAffine() const;
 	inline const DirectX::XMFLOAT4& GetColor() const { return m_Color; }
+	inline AffineClass* const& GetAffineObject() const { return m_Affine; }
 
 	void SetCenter(const DirectX::XMFLOAT3& center);
+	void SetCenter(const DirectX::XMFLOAT4& center);
 	void SetRotate(const DirectX::XMFLOAT4& quat);
 	void SetExtents(const DirectX::XMFLOAT3& extents);
+	void SetExtents(const DirectX::XMFLOAT4& extents);
 	inline void SetColor(const DirectX::XMFLOAT4& value) { m_Color = value; }
 
 private:

@@ -80,8 +80,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)DirectXTK;$(SolutionDir)IMGUI;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)DirectXTK;$(SolutionDir)IMGUI;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)DirectXTK\header;$(SolutionDir)IMGUI_library\header;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)DirectXTK\lib\x64;$(SolutionDir)IMGUI_library\lib\x64;$(LibraryPath)</LibraryPath>
     <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -174,6 +174,8 @@
     <ClInclude Include="ModelManagerClass.h" />
     <ClInclude Include="ColorShaderClass.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="PlayerClass.h" />
+    <ClInclude Include="ProcessManagerClass.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ShaderClass.h" />
     <ClInclude Include="SoundClass.h" />
@@ -213,6 +215,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PlayerClass.cpp" />
+    <ClCompile Include="ProcessManagerClass.cpp" />
     <ClCompile Include="ShaderClass.cpp" />
     <ClCompile Include="SoundClass.cpp" />
     <ClCompile Include="SpaceshipModelClass.cpp" />
@@ -231,6 +235,7 @@
     <Image Include="SpaceshipGame.ico" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="shader\pixel\alphamap.ps" />
     <None Include="shader\pixel\color.ps" />
     <None Include="shader\pixel\font.ps" />

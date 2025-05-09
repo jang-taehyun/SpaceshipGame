@@ -16,8 +16,8 @@ public:
 	inline const float GetMoveSpeed() const { return m_Affine->GetMoveSpeed(); }
 	inline void SetMoveSpeed(const float value) { m_Affine->SetMoveSpeed(value); }
 
-	inline const float GetKeyboardSensitivity() const { return m_Affine->GetKeyboardSensitivity(); }
-	inline void SetKeyboardSensitivity(const float value) { m_Affine->SetKeyboardSensitivity(value); }
+	// inline const float GetKeyboardSensitivity() const { return m_Affine->GetKeyboardSensitivity(); }
+	// inline void SetKeyboardSensitivity(const float value) { m_Affine->SetKeyboardSensitivity(value); }
 
 	void Render();
 

@@ -15,12 +15,14 @@ public:
 
 private:
 	HRESULT ProcessCamera(CameraClass* const& camera, const InputClass* const& input, const float& frame_time);
-	HRESULT ProcessActor(ActorManagerClass* const& actor_manager, const InputClass* const& input);
+	HRESULT ProcessActor(ActorManagerClass* const& actor_manager, const InputClass* const& input, const float& frame_time);
 
 private:
 	void UpdateCameraFrameTime(CameraClass* const& camera, const float& frame_time);
 	HRESULT UpdateCameraAffine(CameraClass* const& camera, const InputClass* const& input);
+	void UpdateObjectFrameTime(ActorManagerClass* const& actor_manager, const float& frame_time);
 	HRESULT UpdateActorCollisionState(ActorManagerClass* const& actor_manager, const InputClass* const& input);
+	HRESULT UpdateActorAffine(ActorManagerClass* const& actor_manager, const InputClass* const& input);
 
 private:
 	static bool IsInitialize;

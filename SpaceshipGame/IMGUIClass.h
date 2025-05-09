@@ -1,7 +1,7 @@
 #pragma once
 
 // IMGUI ฐüทร //
-#pragma comment(lib, "IMGUI.lib")
+#pragma comment(lib, "IMGUI_library.lib")
 
 #include <imgui.h>
 #include <imgui_impl_win32.h>

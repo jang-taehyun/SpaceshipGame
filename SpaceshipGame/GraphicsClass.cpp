@@ -86,8 +86,8 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 	}
 
 	// Camera 객체 생성 및 초기화 //
-	affine.position = { 0.f, 0.f, 0.f, 1.f };
-	affine.rotation = { 0.f, 0.f, 0.f, 1.f };
+	affine.position = { 0.f, 3.35f, -3.35f, 1.f };
+	affine.rotation = { 0.32f, 0.006f, 0.f, 1.f };
 	affine.scale = { 1.f, 1.f, 1.f, 1.f };
 	m_Camera = new CameraClass(affine);
 	if (!m_Camera)
@@ -226,6 +226,13 @@ HRESULT GraphicsClass::Render(ActorManagerClass* const& actor_manager, SoundClas
 	m_D3D->BeginScene(background);
 
 	// 카메라의 위치에 따라 view matrix 생성 //
+	DirectX::XMFLOAT4 cpos = actor_manager->GetPlayerObject()->GetAffineObject()->GetPosition();
+	DirectX::XMFLOAT4 crot = actor_manager->GetPlayerObject()->GetAffineObject()->GetRotation();
+	cpos.y += 2.35f;
+	crot.x += 0.32f;
+	crot.y += 0.006f;
+	m_Camera->GetTransformObject()->SetPosition(cpos);
+	m_Camera->GetTransformObject()->SetRotation(crot);
 	m_Camera->Render();
 
 	// view, projection, ortho matrix 가져오기 및 업데이트 //

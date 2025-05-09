@@ -1,0 +1,305 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Access" MembersFormat="FullSignature">
+  <Class Name="ActorClass" Collapsed="true">
+    <Position X="6.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAgAAgAAACAAAAAAAQAACAAAAAAgBAAAAAEAACE=</HashCode>
+      <FileName>ActorClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PlayerClass" Collapsed="true">
+    <Position X="6.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAQAAAAAAAAgAAABgAAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>PlayerClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ActorManagerClass" Collapsed="true">
+    <Position X="13.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAAQAhAAAEAQAEAAAAAgACAAAAgAAAAAA=</HashCode>
+      <FileName>ActorManagerClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CubeModelClass" Collapsed="true">
+    <Position X="0.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAABAAAAAAAAAAAAEAAAAEAAAAACAAAgAAEgAAAA=</HashCode>
+      <FileName>CubeModelClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ColorShaderClass" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAAAAAABAAAAAgAAAAABoAAAAACAA=</HashCode>
+      <FileName>ColorShaderClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SpaceshipModelClass" Collapsed="true">
+    <Position X="2.75" Y="6.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAEAAAAEAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>SpaceshipModelClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SpaceshipShaderClass" Collapsed="true">
+    <Position X="2.75" Y="3.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAgAAA=</HashCode>
+      <FileName>SpaceshipShaderClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ModelClass" Collapsed="true">
+    <Position X="1.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAmAQASEgAAAcARAAAcAREAEAgAAAAAABBAAADAEAA=</HashCode>
+      <FileName>ModelClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShaderClass" Collapsed="true">
+    <Position X="1.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAgoQAAAABAAAVIAAAgOAUAAEACCIAAgABAAAAACCAA=</HashCode>
+      <FileName>ShaderClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ModelManagerClass" Collapsed="true">
+    <Position X="18.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAgAQAEAAAAAAAAAAAAAAEAQAA=</HashCode>
+      <FileName>ModelManagerClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LightClass" Collapsed="true">
+    <Position X="17" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAhEAAAABIQCwAgAAAAEAAAAAAAABASACkACAAAAA=</HashCode>
+      <FileName>LightClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="D3DClass" Collapsed="true">
+    <Position X="15.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CoAAhQAQEAEAAUjIQAFEQQWFAAQCUApEBAUAGAAAABI=</HashCode>
+      <FileName>D3DClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GraphicsClass" Collapsed="true">
+    <Position X="20.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAgAAIg4AAAAAAIQEEAAQAAAAAABAAAAAAAQE=</HashCode>
+      <FileName>GraphicsClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FPSClass" Collapsed="true">
+    <Position X="17" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAgAAgAQAAAAEAAAAAAABAAAAAABAAAAQAAAE=</HashCode>
+      <FileName>FPSClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPUClass" Collapsed="true">
+    <Position X="13.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAQAgAAEAAQREAAAAEAAQAAEAAAAAAAE=</HashCode>
+      <FileName>CPUClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IMGUIClass" Collapsed="true">
+    <Position X="13.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAACBEAAAAAIAwAAAARAAQAEAAgAAAAAQBAAAAAAAQA=</HashCode>
+      <FileName>IMGUIClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimerClass" Collapsed="true">
+    <Position X="20.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAABAAgAAAAQAAIAAAAAAEAABAAAAACAAAAAAQAAE=</HashCode>
+      <FileName>TimerClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TextClass" Collapsed="true">
+    <Position X="17" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAMAAAAQBAAAAAAQAEAAAAAAEAABAAAAAAAAA=</HashCode>
+      <FileName>TextClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InputClass" Collapsed="true">
+    <Position X="15.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAgJAAwAAAQABAzQAQBZlAAAIAEAAAAAIGAE=</HashCode>
+      <FileName>InputClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SoundClass" Collapsed="true">
+    <Position X="13.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAQAAAAAAAQCAAAAEARAAgABIHAAEAAAAAAAQQAE=</HashCode>
+      <FileName>SoundClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ColorClass" Collapsed="true">
+    <Position X="20.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAQAAAQAAAAAAAAAEAIAAAAIAAAAAEAAACAwABAAAkE=</HashCode>
+      <FileName>ColorClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SystemClass" Collapsed="true">
+    <Position X="15.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAoAAAAAAAAQAACAAAASAEgYAAAABQAJAABEQABAc=</HashCode>
+      <FileName>SystemClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AffineClass" Collapsed="true">
+    <Position X="15.25" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAgZRAEiCCARAAAAgABhAQQIEAQqgIRABhAgEAIAI=</HashCode>
+      <FileName>AffineClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CameraClass" Collapsed="true">
+    <Position X="17" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAQAAAAAACQAAAAAAAQCQAKAAAgAAARAgAAAAAAA=</HashCode>
+      <FileName>CameraClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FrustumClass" Collapsed="true">
+    <Position X="18.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAiAAAAAgAAAAAAAAAEAQAAAAAAEBAAAAQAAAA=</HashCode>
+      <FileName>FrustumClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TextureClass" Collapsed="true">
+    <Position X="18.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABBACEBAAJUABAAAAAQAAAAAAAECAAAAAAAgAAAA=</HashCode>
+      <FileName>TextureClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CollisionClass" Collapsed="true">
+    <Position X="18.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CCAAAABAAgAAQQAAAAQAAQIAAAQAAACAAAgAAAhAEAE=</HashCode>
+      <FileName>CollisionClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProcessManagerClass" Collapsed="true">
+    <Position X="20.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAgABAAAIAAAAAAAAAAEAAAAAAAASAAAAAAAAIM=</HashCode>
+      <FileName>ProcessManagerClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="_error_content_" Collapsed="true">
+    <Position X="10.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAQAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>typedef.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_shader_file_info_" Collapsed="true">
+    <Position X="9.5" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAQAAAAAAAABAAAAAAAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>typedef.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_sound_info_" Collapsed="true">
+    <Position X="5.5" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>typedef.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_transform_info_" Collapsed="true">
+    <Position X="7.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAEAAAAAAAAAAAAACAIAACAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>typedef.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="_model_info_" Collapsed="true">
+    <Position X="1.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAAAAAAQAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>typedef.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="ErrorContent" Collapsed="true">
+    <Position X="10.25" Y="1.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="ShaderFileInfo" Collapsed="true">
+    <Position X="9" Y="13.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="SoundFileInfo" Collapsed="true">
+    <Position X="5.25" Y="13.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="TransformInfo" Collapsed="true">
+    <Position X="7" Y="8.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="ModelInfo" Collapsed="true">
+    <Position X="1.25" Y="11.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Enum Name="MoveState" Collapsed="true">
+    <Position X="17" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAgAAUAAAAAAA=</HashCode>
+      <FileName>config.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="RotationState" Collapsed="true">
+    <Position X="18.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAEABAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>config.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="CollisionState" Collapsed="true">
+    <Position X="13.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAAAAAAAEAAAAAEAAAAAAAA=</HashCode>
+      <FileName>config.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SoundInfo" Collapsed="true">
+    <Position X="20.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAIAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>config.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ModelIDs" Collapsed="true">
+    <Position X="15.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>config.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>

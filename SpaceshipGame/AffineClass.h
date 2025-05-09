@@ -22,6 +22,7 @@ public:
 	inline const DirectX::XMVECTOR& GetUpVector() const { return m_UpVector; }
 
 	inline const float& GetKeyboardSensitivity() const { return m_KeyboardSensitivity; }
+	inline const float& GetMouseSensitivity() const { return m_MouseSensitivity; }
 
 	inline const float GetMoveSpeed() const { return m_ForwardMoveSpeed; }
 
@@ -29,6 +30,7 @@ public:
 
 	inline void SetFrameTime(const float& time) { m_FrameTime = time; }
 	inline void SetKeyboardSensitivity(const float& value) { m_KeyboardSensitivity = value; }
+	inline void SetMouseSensitivity(const float& value) { m_MouseSensitivity = value; }
 
 	inline void SetMoveSpeed(const float& value)
 	{
@@ -56,9 +58,9 @@ private:
 	void MoveBackward(const bool& IsKeyDown);
 
 private:
-	DirectX::XMFLOAT4 m_Position = { 0.f, 0.f, 0.f, 0.f };
-	DirectX::XMFLOAT4 m_Rotation = { 0.f, 0.f, 0.f, 0.f };
-	DirectX::XMFLOAT4 m_Scaling = { 0.f, 0.f, 0.f, 0.f };
+	DirectX::XMFLOAT4 m_Position = { 0.f, 0.f, 0.f, 1.f };
+	DirectX::XMFLOAT4 m_Rotation = { 1.f, 1.f, 1.f, 1.f };
+	DirectX::XMFLOAT4 m_Scaling = { 1.f, 1.f, 1.f, 1.f };
 
 	DirectX::XMVECTOR m_ForwardVector;							// 로컬 좌표계의 z, x, y 축
 	DirectX::XMVECTOR m_RightVector;

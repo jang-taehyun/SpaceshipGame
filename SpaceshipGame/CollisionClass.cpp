@@ -35,20 +35,18 @@ const DirectX::ContainmentType CollisionClass::GetCollideState(const DirectX::Si
 	if (!m_Collision || !ray)
 		return DirectX::ContainmentType::DISJOINT;
 
+	float dist = 5.f;
 	DirectX::XMVECTOR origin = XMLoadFloat3(&ray->position);
 	DirectX::XMVECTOR direction = XMLoadFloat3(&ray->direction);
+	bool IsHit = false;
 
 	if (DirectX::XMVector3Equal(direction, DirectX::XMVectorZero()))
 		return DirectX::ContainmentType::DISJOINT;
 
 	direction = DirectX::XMVector3Normalize(direction);
+	IsHit = m_Collision->Intersects(origin, direction, dist);
 
-	assert(DirectX::Internal::XMVector3IsUnit(direction));  // 디버그에서 반드시 확인
-
-	float dist = 5.f;
-	bool hit = m_Collision->Intersects(origin, direction, dist);
-
-	return hit ? DirectX::ContainmentType::CONTAINS : DirectX::ContainmentType::DISJOINT;
+	return (IsHit ? DirectX::ContainmentType::CONTAINS : DirectX::ContainmentType::DISJOINT);
 }
 
 const DirectX::XMMATRIX& CollisionClass::GetAffine() const
@@ -62,6 +60,14 @@ void CollisionClass::SetCenter(const DirectX::XMFLOAT3& center)
 	UpdateAffine();
 }
 
+void CollisionClass::SetCenter(const DirectX::XMFLOAT4& center)
+{
+	m_Collision->Center.x = center.x;
+	m_Collision->Center.y = center.y;
+	m_Collision->Center.z = center.z;
+	UpdateAffine();
+}
+
 void CollisionClass::SetRotate(const DirectX::XMFLOAT4& quat)
 {
 	m_Collision->Orientation = quat;
@@ -71,6 +77,14 @@ void CollisionClass::SetRotate(const DirectX::XMFLOAT4& quat)
 void CollisionClass::SetExtents(const DirectX::XMFLOAT3& extents)
 {
 	m_Collision->Extents = extents;
+	UpdateAffine();
+}
+
+void CollisionClass::SetExtents(const DirectX::XMFLOAT4& extents)
+{
+	m_Collision->Extents.x = extents.x;
+	m_Collision->Extents.y = extents.y;
+	m_Collision->Extents.z = extents.z;
 	UpdateAffine();
 }
 

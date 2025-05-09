@@ -1,0 +1,308 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "PREfast Code Analysis",
+          "version": "14.29.30159.0",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX86\\x64\\c1xx.dll\" -ACf{1F7B090C-16DB-4822-966A-A93D26ED4681} -ACpmspft140.dll -Alint -D_PREFAST_ -D_AST_FE_ -Analyze -zm0x0011C1B0 -il C:\\Users\\scjk9\\AppData\\Local\\Temp\\_CL_2a048cdcast -typedil -f GraphicsClass.cpp -Ze -D_MSC_EXTENSIONS -Zp16 -pc \\:/ -D_MSC_VER=1929 -D_MSC_FULL_VER=192930159 -D_MSC_BUILD=0 -D_M_AMD64=100 -ZILP448 -D_M_X64=100 -D_WIN64 -D_WIN32 -GR -D_CPPRTTI -nologo -W 3 -diagnostics:column -D_GUARDOVERFLOW_CRT_ALLOCATORS=1 -Ot -DCODE_ANALYSIS -D_DEBUG -D_WINDOWS -D_UNICODE -DUNICODE -EHs -D_CPPUNWIND -EHc -D__MSVC_RUNTIME_CHECKS -RTCs -RTCu -MDd -D_DEBUG -D_MT -D_DLL -GS -D_M_FP_PRECISE -permissive- -Zc:wchar_t -Zc:forScope -Ycpch.h -Fpx64\\Debug\\SpaceshipGame.pch -Fox64\\Debug\\GraphicsClass.obj -Fdx64\\Debug\\vc142.pdb -external:W 3 -Gd -analyze:projectdirectory D:\\SpaceshipGame\\SpaceshipGame\\SpaceshipGame -analyze:rulesetdirectory ;C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Team Tools\\Static Analysis Tools\\\\Rule Sets; -analyze:ruleset C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Team Tools\\Static Analysis Tools\\Rule Sets\\NativeRecommendedRules.ruleset -analyze:quiet -analyze:plugin C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX86\\x86\\EspXEngine.dll -FC -errorreport:prompt -I D:\\SpaceshipGame\\SpaceshipGame\\DirectXTK\\header -I D:\\SpaceshipGame\\SpaceshipGame\\IMGUI_library\\header -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\atlmfc\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Auxiliary\\VS\\include -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\ucrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\shared -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\winrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\cppwinrt -I C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\Include\\um -external:I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\include -external:I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\atlmfc\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\atlmfc\\include -external:I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Auxiliary\\VS\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Auxiliary\\VS\\include -external:I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\ucrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\ucrt -external:I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um -external:I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\shared -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\shared -external:I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\winrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\winrt -external:I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\cppwinrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\cppwinrt -external:I C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\Include\\um -I C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\Include\\um",
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/graphicsclass.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "md5": "e557e0481df2653060d4bdee0194684c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/pch.h"
+          },
+          "hashes": {
+            "md5": "1102220f1de2f41c7ff9bca489f37dda"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/targetver.h"
+          },
+          "hashes": {
+            "md5": "d573e424878d40446feda935b76b19cf"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/dxdefine.h"
+          },
+          "hashes": {
+            "md5": "7d93cee5f800659eb6541d8c1192eaaa"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/config.h"
+          },
+          "hashes": {
+            "md5": "821e7696b0deaa5b56d9d4e3c956b4d4"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/typedef.h"
+          },
+          "hashes": {
+            "md5": "3a0065ebdb14de2d2f11671164d89162"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/d3dclass.h"
+          },
+          "hashes": {
+            "md5": "f2fffb974f1c8a9f105396098bf5ce94"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/cameraclass.h"
+          },
+          "hashes": {
+            "md5": "eddcacea6ee3f104f5cf3e2cd40e63c7"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/affineclass.h"
+          },
+          "hashes": {
+            "md5": "ad45e640c6690d8bab222332d842ad3b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/lightclass.h"
+          },
+          "hashes": {
+            "md5": "8c7c72608a98fa469ea050546ba12517"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/colorclass.h"
+          },
+          "hashes": {
+            "md5": "3bfe8270de089ee73ef2f477cf036563"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/modelclass.h"
+          },
+          "hashes": {
+            "md5": "af6f71661e9c07fca6ee7982bb2fb831"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/textureclass.h"
+          },
+          "hashes": {
+            "md5": "34d0819ad2c39aa88eda3fad9ee151d7"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/modelmanagerclass.h"
+          },
+          "hashes": {
+            "md5": "ddc760cb9596bbb968878372d4a7d716"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/actormanagerclass.h"
+          },
+          "hashes": {
+            "md5": "eebf9127ade459d6933668398eea2fce"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/actorclass.h"
+          },
+          "hashes": {
+            "md5": "bd35ddb8e3d7a74642fdf265faf74bb4"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/playerclass.h"
+          },
+          "hashes": {
+            "md5": "f0e6df91b2825c07790b49c31e92e69a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/directxtk/header/simplemath.h"
+          },
+          "hashes": {
+            "md5": "e554a20e47b70e0a370551970057a777"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/directxtk/header/simplemath.inl"
+          },
+          "hashes": {
+            "md5": "b3a385dc21e3804906dfe3fb81609ce1"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/collisionclass.h"
+          },
+          "hashes": {
+            "md5": "a0733a56059eb215c25c81e44de94cbc"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/cubemodelclass.h"
+          },
+          "hashes": {
+            "md5": "721ad0ea0245492187a83ed7ad30a5a5"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/inputclass.h"
+          },
+          "hashes": {
+            "md5": "ec12c7bf653e406353f1baa2ca074ad8"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/soundclass.h"
+          },
+          "hashes": {
+            "md5": "dd6bc3955fc87fbfe025f6fac61e9bbd"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/directxtk/header/audio.h"
+          },
+          "hashes": {
+            "md5": "b8ed0545ceeaa09a498e44810a1f67a5"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/textclass.h"
+          },
+          "hashes": {
+            "md5": "94c02ed8aca7113725c3f45c61d25fdd"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/directxtk/header/spritefont.h"
+          },
+          "hashes": {
+            "md5": "0c58501b1a9bf394bd76354bc331bf57"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/directxtk/header/spritebatch.h"
+          },
+          "hashes": {
+            "md5": "f26726d35a5378d04ea643d67b8b0b77"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/frustumclass.h"
+          },
+          "hashes": {
+            "md5": "97015e24149d8951d58ba0925aeea74f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/imguiclass.h"
+          },
+          "hashes": {
+            "md5": "822cef43d99bc58dafd2173f5a7e763f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/imgui_library/header/imgui.h"
+          },
+          "hashes": {
+            "md5": "0a9e46655a14cda1c7f459872e3d863b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/imgui_library/header/pch.h"
+          },
+          "hashes": {
+            "md5": "c7fd86bd1505f481bcea34b633999e90"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/imgui_library/header/imconfig.h"
+          },
+          "hashes": {
+            "md5": "3dd3bcef75ef48cd88915a1b270d4fb9"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/imgui_library/header/imgui_impl_win32.h"
+          },
+          "hashes": {
+            "md5": "fed99ee29ad1078f7e5a161795571f4e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/imgui_library/header/imgui_impl_dx11.h"
+          },
+          "hashes": {
+            "md5": "a2c465daafb7ff9b986719449638158e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/spaceshipgame/spaceshipgame/spaceshipgame/graphicsclass.h"
+          },
+          "hashes": {
+            "md5": "b4924b47c89cf65b7c38c97e310a7cac"
+          }
+        }
+      ]
+    }
+  ]
+}

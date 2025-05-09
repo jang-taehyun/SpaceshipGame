@@ -142,7 +142,11 @@ void IMGUIClass::SetFPSCPUUsage(const std::string& title, const int& IMGUI_Windo
 
 void IMGUIClass::SetCameraInfo(const std::string& title, const int& IMGUI_Window_idx, CameraClass* const& camera)
 {
-	static float origin = camera->GetKeyboardSensitivity();
+	static float keyboard_origin = camera->GetTransformObject()->GetKeyboardSensitivity();
+	static float mouse_origin = camera->GetTransformObject()->GetMouseSensitivity();
+	static DirectX::XMFLOAT4 origin_position = camera->GetTransformObject()->GetPosition();
+	static DirectX::XMFLOAT4 origin_rotate = camera->GetTransformObject()->GetRotation();
+	static DirectX::XMFLOAT4 origin_scale = camera->GetTransformObject()->GetScaling();
 
 	bool IsPress = false;
 	float sensitive = 0.f;
@@ -178,15 +182,24 @@ void IMGUIClass::SetCameraInfo(const std::string& title, const int& IMGUI_Window
 
 
 	// 카메라 이동 speed UI //
-	sensitive = camera->GetKeyboardSensitivity();
-	if (ImGui::SliderFloat(u8"카메라 속도", &sensitive, 0.0f, 0.1f))
-		camera->SetKeyboardSensitivity(sensitive);
+	sensitive = camera->GetTransformObject()->GetKeyboardSensitivity();
+	if (ImGui::SliderFloat(u8"카메라 이동 속도", &sensitive, 0.0f, 0.1f))
+		camera->GetTransformObject()->SetKeyboardSensitivity(sensitive);
+	
+	// 카메라 회전 speed UI //
+	sensitive = camera->GetTransformObject()->GetMouseSensitivity();
+	if (ImGui::SliderFloat(u8"카메라 회전 속도", &sensitive, 0.0f, 0.002f))
+		camera->GetTransformObject()->SetMouseSensitivity(sensitive);
 
 	// 초기화 //
 	IsPress = ImGui::Button("reset");
 	if (IsPress)
 	{
-		camera->SetKeyboardSensitivity(origin);
+		camera->GetTransformObject()->SetKeyboardSensitivity(keyboard_origin);
+		camera->GetTransformObject()->SetMouseSensitivity(mouse_origin);
+		camera->GetTransformObject()->SetPosition(origin_position);
+		camera->GetTransformObject()->SetRotation(origin_rotate);
+		camera->GetTransformObject()->SetScale(origin_scale);
 	}
 
 	ImGui::End();
