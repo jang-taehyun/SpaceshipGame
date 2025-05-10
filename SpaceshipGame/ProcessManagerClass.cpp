@@ -105,7 +105,7 @@ HRESULT ProcessManagerClass::ProcessActor(ActorManagerClass* const& actor_manage
 
 void ProcessManagerClass::UpdateCameraFrameTime(CameraClass* const& camera, const float& frame_time)
 {
-	camera->GetTransformObject()->SetFrameTime(frame_time);
+	camera->GetAffineObject()->SetFrameTime(frame_time);
 }
 
 HRESULT ProcessManagerClass::UpdateCameraAffine(CameraClass* const& camera, const InputClass* const& input)
@@ -120,7 +120,7 @@ HRESULT ProcessManagerClass::UpdateCameraAffine(CameraClass* const& camera, cons
 	// 이동 //
 	// 앞
 	KeyDown = input->IsWBottunPressed();
-	result = camera->GetTransformObject()->ChangePosition(MoveState::MOVE_FORWARD, KeyDown);
+	result = camera->GetAffineObject()->ChangePosition(MoveState::MOVE_FORWARD, KeyDown);
 	if (FAILED(result))
 	{
 		e.contents = _T("camera 객체의 transform 변경(FORWARD) 실패");
@@ -130,7 +130,7 @@ HRESULT ProcessManagerClass::UpdateCameraAffine(CameraClass* const& camera, cons
 
 	// 뒤
 	KeyDown = input->IsSBottunPressed();
-	result = camera->GetTransformObject()->ChangePosition(MoveState::MOVE_BACKWARD, KeyDown);
+	result = camera->GetAffineObject()->ChangePosition(MoveState::MOVE_BACKWARD, KeyDown);
 	if (FAILED(result))
 	{
 		e.contents = _T("camera 객체의 transform 변경(BACKWARD) 실패");
@@ -140,7 +140,7 @@ HRESULT ProcessManagerClass::UpdateCameraAffine(CameraClass* const& camera, cons
 
 	// 왼쪽
 	KeyDown = input->IsABottunPressed();
-	result = camera->GetTransformObject()->ChangePosition(MoveState::MOVE_LEFT, KeyDown);
+	result = camera->GetAffineObject()->ChangePosition(MoveState::MOVE_LEFT, KeyDown);
 	if (FAILED(result))
 	{
 		e.contents = _T("camera 객체의 transform 변경(LEFT) 실패");
@@ -150,7 +150,7 @@ HRESULT ProcessManagerClass::UpdateCameraAffine(CameraClass* const& camera, cons
 
 	// 오른쪽
 	KeyDown = input->IsDBottunPressed();
-	result = camera->GetTransformObject()->ChangePosition(MoveState::MOVE_RIGHT, KeyDown);
+	result = camera->GetAffineObject()->ChangePosition(MoveState::MOVE_RIGHT, KeyDown);
 	if (FAILED(result))
 	{
 		e.contents = _T("camera 객체의 transform 변경(RIGHT) 진행 실패");
@@ -163,7 +163,7 @@ HRESULT ProcessManagerClass::UpdateCameraAffine(CameraClass* const& camera, cons
 	if (KeyDown)
 	{
 		input->GetMouseMoveDelta(MouseX, MouseY);
-		camera->GetTransformObject()->ChangeRotation(MouseX, MouseY);
+		camera->GetAffineObject()->ChangeRotation(MouseX, MouseY);
 	
 		if (m_IsShowingCursor)
 		{

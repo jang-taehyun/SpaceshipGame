@@ -10,14 +10,11 @@ public:
 
 	// Getter //
 
-	inline AffineClass* const& GetTransformObject() const { return m_Affine; }
+	inline AffineClass* const& GetAffineObject() const { return m_Affine; }
 	inline const DirectX::XMMATRIX& GetViewMatrix() const { return m_ViewMatrix; }
 
 	inline const float GetMoveSpeed() const { return m_Affine->GetMoveSpeed(); }
 	inline void SetMoveSpeed(const float value) { m_Affine->SetMoveSpeed(value); }
-
-	// inline const float GetKeyboardSensitivity() const { return m_Affine->GetKeyboardSensitivity(); }
-	// inline void SetKeyboardSensitivity(const float value) { m_Affine->SetKeyboardSensitivity(value); }
 
 	void Render();
 

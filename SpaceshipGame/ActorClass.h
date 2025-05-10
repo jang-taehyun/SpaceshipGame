@@ -11,11 +11,9 @@ public:
 	explicit ActorClass(const AffineInfo& affine, const ModelIDs ModelID = ModelIDs::DEFAULT_SPACESHIP);
 	virtual ~ActorClass();
 
-	inline const DirectX::XMMATRIX& GetAffineMatrix() { return m_Affine->GetAffine(); }
-	inline CollisionClass* const& GetCollision() { return m_Collision; }
-	inline const ModelIDs& GetModelID() { return m_ModelID; }
-
 	inline AffineClass* const& GetAffineObject() const { return m_Affine; }
+	inline CollisionClass* const& GetCollision() const { return m_Collision; }
+	inline const ModelIDs& GetModelID() const { return m_ModelID; }
 
 private:
 	HRESULT Initailize(const AffineInfo& affine, const ModelIDs ModelID = ModelIDs::DEFAULT_SPACESHIP);

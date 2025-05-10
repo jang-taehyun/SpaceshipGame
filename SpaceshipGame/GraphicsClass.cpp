@@ -231,8 +231,8 @@ HRESULT GraphicsClass::Render(ActorManagerClass* const& actor_manager, SoundClas
 	cpos.y += 2.35f;
 	crot.x += 0.32f;
 	crot.y += 0.006f;
-	m_Camera->GetTransformObject()->SetPosition(cpos);
-	m_Camera->GetTransformObject()->SetRotation(crot);
+	m_Camera->GetAffineObject()->SetPosition(cpos);
+	m_Camera->GetAffineObject()->SetRotation(crot);
 	m_Camera->Render();
 
 	// view, projection, ortho matrix 가져오기 및 업데이트 //
@@ -246,7 +246,7 @@ HRESULT GraphicsClass::Render(ActorManagerClass* const& actor_manager, SoundClas
 
 	// 렌더링 //
 	// player model
-	transform.world = actor_manager->GetPlayerObject()->GetAffineMatrix();
+	transform.world = actor_manager->GetPlayerObject()->GetAffineObject()->GetAffine();
 	result = m_ModelManager->GetModel(actor_manager->GetPlayerObject()->GetModelID())->Render(m_D3D->GetDeviceContext(), transform, m_Light, m_Camera);
 	if (FAILED(result))
 	{
@@ -256,7 +256,7 @@ HRESULT GraphicsClass::Render(ActorManagerClass* const& actor_manager, SoundClas
 	}
 
 	// player collision
-	transform.world = actor_manager->GetPlayerObject()->GetCollision()->GetAffine();
+	transform.world = actor_manager->GetPlayerObject()->GetCollision()->GetAffineObject()->GetAffine();
 	static_cast<CubeModelClass*>(m_ModelManager->GetModel(ModelIDs::DEFAULT_CUBE))->SetColor(actor_manager->GetPlayerObject()->GetCollision()->GetColor());
 	result = m_ModelManager->GetModel(ModelIDs::DEFAULT_CUBE)->Render(m_D3D->GetDeviceContext(), transform, m_Light, m_Camera);
 	if (FAILED(result))
@@ -269,7 +269,7 @@ HRESULT GraphicsClass::Render(ActorManagerClass* const& actor_manager, SoundClas
 	// other
 	for (int i = 0; i < actor_manager->GetOtherObjectCount(); ++i)
 	{
-		transform.world = actor_manager->GetOtherObject(i)->GetAffineMatrix();
+		transform.world = actor_manager->GetOtherObject(i)->GetAffineObject()->GetAffine();
 		result = m_ModelManager->GetModel(actor_manager->GetOtherObject(i)->GetModelID())->Render(m_D3D->GetDeviceContext(), transform, m_Light, m_Camera);
 		if (FAILED(result))
 		{
@@ -277,7 +277,7 @@ HRESULT GraphicsClass::Render(ActorManagerClass* const& actor_manager, SoundClas
 			e.errorCode = result;
 			return result;
 		}
-		transform.world = actor_manager->GetOtherObject(i)->GetCollision()->GetAffine();
+		transform.world = actor_manager->GetOtherObject(i)->GetCollision()->GetAffineObject()->GetAffine();
 		static_cast<CubeModelClass*>(m_ModelManager->GetModel(ModelIDs::DEFAULT_CUBE))->SetColor(actor_manager->GetOtherObject(i)->GetCollision()->GetColor());
 		result = m_ModelManager->GetModel(ModelIDs::DEFAULT_CUBE)->Render(m_D3D->GetDeviceContext(), transform, m_Light, m_Camera);
 		if (FAILED(result))

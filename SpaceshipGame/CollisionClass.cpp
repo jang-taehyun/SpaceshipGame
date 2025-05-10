@@ -49,11 +49,6 @@ const DirectX::ContainmentType CollisionClass::GetCollideState(const DirectX::Si
 	return (IsHit ? DirectX::ContainmentType::CONTAINS : DirectX::ContainmentType::DISJOINT);
 }
 
-const DirectX::XMMATRIX& CollisionClass::GetAffine() const
-{
-	return m_Affine->GetAffine();
-}
-
 void CollisionClass::SetCenter(const DirectX::XMFLOAT3& center)
 {
 	m_Collision->Center = center;
@@ -68,9 +63,25 @@ void CollisionClass::SetCenter(const DirectX::XMFLOAT4& center)
 	UpdateAffine();
 }
 
+void CollisionClass::SetCenter(const float& x, const float& y, const float& z)
+{
+	m_Collision->Center.x = x;
+	m_Collision->Center.y = y;
+	m_Collision->Center.z = z;
+	UpdateAffine();
+}
+
 void CollisionClass::SetRotate(const DirectX::XMFLOAT4& quat)
 {
 	m_Collision->Orientation = quat;
+	UpdateAffine();
+}
+
+void CollisionClass::SetRotate(const float& x, const float& y, const float& z)
+{
+	m_Collision->Orientation.x = x;
+	m_Collision->Orientation.y = y;
+	m_Collision->Orientation.z = z;
 	UpdateAffine();
 }
 
@@ -86,6 +97,22 @@ void CollisionClass::SetExtents(const DirectX::XMFLOAT4& extents)
 	m_Collision->Extents.y = extents.y;
 	m_Collision->Extents.z = extents.z;
 	UpdateAffine();
+}
+
+void CollisionClass::SetExtents(const float& x, const float& y, const float& z)
+{
+	m_Collision->Extents.x = x;
+	m_Collision->Extents.y = y;
+	m_Collision->Extents.z = z;
+	UpdateAffine();
+}
+
+void CollisionClass::SetColor(const float& red, const float& green, const float& blue, const float& alpha)
+{
+	m_Color.x = red;
+	m_Color.y = green;
+	m_Color.z = blue;
+	m_Color.w = alpha;
 }
 
 HRESULT CollisionClass::Initialize()

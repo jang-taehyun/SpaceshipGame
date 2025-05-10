@@ -533,7 +533,7 @@ HRESULT ShaderClass::UpdateCameraBuffer(ID3D11DeviceContext* const& DeviceContex
 	DataPtr = (CameraBufferType*)MappedResource.pData;
 
 	// camera constant buffer에 데이터(행렬) 복사
-	DataPtr->CameraPosition = DirectX::XMFLOAT3(camera->GetTransformObject()->GetPosition().x, camera->GetTransformObject()->GetPosition().y, camera->GetTransformObject()->GetPosition().z);
+	DataPtr->CameraPosition = DirectX::XMFLOAT3(camera->GetAffineObject()->GetPosition().x, camera->GetAffineObject()->GetPosition().y, camera->GetAffineObject()->GetPosition().z);
 	DataPtr->padding = 0.f;
 
 	// camera constant buffer의 잠금을 푼다.
