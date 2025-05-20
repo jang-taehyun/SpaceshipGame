@@ -1,33 +1,33 @@
 #pragma once
 
-const int OtherMaxLimit = 6;
+const static int ACTOR_MAX_COUNT = 6;
 
-class ActorClass;
-class PlayerClass;
+class IActorControlClass;
 
 class ActorManagerClass
 {
 public:
-	explicit ActorManagerClass();
-	explicit ActorManagerClass(const AffineInfo& PlayerAffine, const ModelIDs PlayerModelID, const AffineInfo* const& OtherAffine, const int& OthersCount, const ModelIDs* const& OtherModelIDs);
+	explicit ActorManagerClass(const AffineInfo* const& ActorAffines, const AffineInfo* const& CollisionAffines, const ModelIDs* const& ModelIDs, const int& ActorCount, const int& PlayerIdx);
 	virtual ~ActorManagerClass();
 
-	inline PlayerClass* const& GetPlayerObject() const { return m_Player; }
-	ActorClass* const& GetOtherObject(int idx) const;
-	inline const int& GetOtherObjectCount() const { return m_OthersCount; }
+	inline IActorControlClass* const& GetPlayerObject() const { return m_ActorInterfaces[m_PlayerIdx]; }
+	inline const int& GetActorCount() const { return m_ActorCount; }
+
+	IActorControlClass* const& operator()(int idx) const;
 
 private:
-	HRESULT Initialize(const AffineInfo& PlayerAffine, const ModelIDs PlayerModelID, const AffineInfo* const& OtherAffine, const int& OthersCount, const ModelIDs* const& OtherModelIDs);
+	HRESULT Initialize(const AffineInfo* const& ActorAffines, const AffineInfo* const& CollisionAffines, const ModelIDs* const& ModelIDs, const int& ActorCount, const int& PlayerIdx);
 	void Shutdown();
 
 private:
 	static bool IsInitialize;
 
-	PlayerClass* m_Player = nullptr;
-	ActorClass* m_Other[OtherMaxLimit] = { nullptr, };
-	int m_OthersCount = 0;
+	IActorControlClass* m_ActorInterfaces[ACTOR_MAX_COUNT] = { nullptr, };
+	int m_ActorCount = 0;
+	int m_PlayerIdx = 0;
 
 public:
+	ActorManagerClass() = delete;
 	ActorManagerClass(const ActorManagerClass& other) = delete;
 };
 

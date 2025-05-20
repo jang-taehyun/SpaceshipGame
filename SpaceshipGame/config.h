@@ -29,6 +29,12 @@ enum class CollisionState
 	NONE = 0, OBB_HIT = 1, RAY_HIT = 2,
 };
 
+// scene 정보 //
+enum class SceneState
+{
+	NONE = 0, LOADING = 1, MATCH = 2, INGAME = 3,
+};
+
 // sound 파일 정보 //
 enum class SoundInfo
 {

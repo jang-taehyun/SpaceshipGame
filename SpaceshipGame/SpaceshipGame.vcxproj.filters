@@ -53,9 +53,6 @@
     <Filter Include="Light">
       <UniqueIdentifier>{e3f9a0a2-cb03-4a0d-b1b3-509bf3d96848}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ColorClass">
-      <UniqueIdentifier>{c18dc73e-7b11-4dc7-8fc8-f1b588077ea0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Debugging\IMGUIClass">
       <UniqueIdentifier>{9769faa4-fe27-4ad5-9210-4d7a9cb01ff2}</UniqueIdentifier>
     </Filter>
@@ -64,12 +61,6 @@
     </Filter>
     <Filter Include="Model\ModelManager">
       <UniqueIdentifier>{1f0abbbd-4932-423d-8fbb-340e55c207dd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="CollisionClass">
-      <UniqueIdentifier>{592442fa-c2c6-4422-948c-691ec3714668}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AffineClass">
-      <UniqueIdentifier>{383ce90a-46d7-4511-9780-bc79d489ac21}</UniqueIdentifier>
     </Filter>
     <Filter Include="Model\Spaceship">
       <UniqueIdentifier>{100f9a1d-d3f9-4cce-b959-68b9e635a74d}</UniqueIdentifier>
@@ -101,9 +92,6 @@
     <Filter Include="Model\ModelClass">
       <UniqueIdentifier>{193cacbb-0aa9-481f-9fab-e2a6ec264955}</UniqueIdentifier>
     </Filter>
-    <Filter Include="TextClass">
-      <UniqueIdentifier>{60015bc3-ca0b-4bf3-9efb-6b5fa100c17f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="TextureClass">
       <UniqueIdentifier>{f425539f-e15e-4831-a061-d4cb088eddbe}</UniqueIdentifier>
     </Filter>
@@ -113,14 +101,35 @@
     <Filter Include="Actor\ActorClass">
       <UniqueIdentifier>{24aabe3a-49bc-4ae5-80f5-f47d9bdbc317}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Actor\ActorManagerClass">
+    <Filter Include="SceneManagerClass">
+      <UniqueIdentifier>{53171791-417b-4d08-a31a-c30fbf724969}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TextRenderClass">
+      <UniqueIdentifier>{60015bc3-ca0b-4bf3-9efb-6b5fa100c17f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor\IActorControlClass">
+      <UniqueIdentifier>{f700590f-9ef5-45ee-a39d-ac7ad4006c01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ActorManagerClass">
       <UniqueIdentifier>{f76564fc-c875-488a-bc4b-f72ebb04c305}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Actor\PlayerClass">
-      <UniqueIdentifier>{5e8fff4f-0d38-44d2-91d3-05d828d5d9b1}</UniqueIdentifier>
+    <Filter Include="Affine">
+      <UniqueIdentifier>{383ce90a-46d7-4511-9780-bc79d489ac21}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ProcessManagerClass">
-      <UniqueIdentifier>{53171791-417b-4d08-a31a-c30fbf724969}</UniqueIdentifier>
+    <Filter Include="Affine\AffineClass">
+      <UniqueIdentifier>{f4cfa62f-a1db-4c9f-9081-a3a827113035}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Affine\IAffineControlClass">
+      <UniqueIdentifier>{580b2aea-f030-4206-8f4c-782262c456a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collision">
+      <UniqueIdentifier>{592442fa-c2c6-4422-948c-691ec3714668}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collision\CollisionClass">
+      <UniqueIdentifier>{987c6e2a-d1cd-47be-b20d-921047896965}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collision\ICollisionContorlClass">
+      <UniqueIdentifier>{ce04e28a-0279-4617-9ec5-845e5e46a44b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -175,26 +184,17 @@
     <ClInclude Include="config.h">
       <Filter>Default\header</Filter>
     </ClInclude>
-    <ClInclude Include="ColorClass.h">
-      <Filter>ColorClass</Filter>
-    </ClInclude>
     <ClInclude Include="IMGUIClass.h">
       <Filter>Debugging\IMGUIClass</Filter>
     </ClInclude>
     <ClInclude Include="LightClass.h">
       <Filter>Light</Filter>
     </ClInclude>
-    <ClInclude Include="AffineClass.h">
-      <Filter>AffineClass</Filter>
-    </ClInclude>
     <ClInclude Include="typedef.h">
       <Filter>Default\header</Filter>
     </ClInclude>
     <ClInclude Include="ModelManagerClass.h">
       <Filter>Model\ModelManager</Filter>
-    </ClInclude>
-    <ClInclude Include="CollisionClass.h">
-      <Filter>CollisionClass</Filter>
     </ClInclude>
     <ClInclude Include="SpaceshipShaderClass.h">
       <Filter>Model\Spaceship\SpaceshipShaderClass</Filter>
@@ -208,8 +208,8 @@
     <ClInclude Include="CubeModelClass.h">
       <Filter>Model\Cube\CubeModelClass</Filter>
     </ClInclude>
-    <ClInclude Include="TextClass.h">
-      <Filter>TextClass</Filter>
+    <ClInclude Include="TextRenderClass.h">
+      <Filter>TextRenderClass</Filter>
     </ClInclude>
     <ClInclude Include="TextureClass.h">
       <Filter>TextureClass</Filter>
@@ -221,13 +221,25 @@
       <Filter>Actor\ActorClass</Filter>
     </ClInclude>
     <ClInclude Include="ActorManagerClass.h">
-      <Filter>Actor\ActorManagerClass</Filter>
+      <Filter>ActorManagerClass</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerClass.h">
-      <Filter>Actor\PlayerClass</Filter>
+    <ClInclude Include="SceneManagerClass.h">
+      <Filter>SceneManagerClass</Filter>
     </ClInclude>
-    <ClInclude Include="ProcessManagerClass.h">
-      <Filter>ProcessManagerClass</Filter>
+    <ClInclude Include="IActorControlClass.h">
+      <Filter>Actor\IActorControlClass</Filter>
+    </ClInclude>
+    <ClInclude Include="AffineClass.h">
+      <Filter>Affine\AffineClass</Filter>
+    </ClInclude>
+    <ClInclude Include="IAffineControlClass.h">
+      <Filter>Affine\IAffineControlClass</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionClass.h">
+      <Filter>Collision\CollisionClass</Filter>
+    </ClInclude>
+    <ClInclude Include="ICollisionContorlClass.h">
+      <Filter>Collision\ICollisionContorlClass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -270,23 +282,14 @@
     <ClCompile Include="ModelClass.cpp">
       <Filter>Model\ModelClass</Filter>
     </ClCompile>
-    <ClCompile Include="ColorClass.cpp">
-      <Filter>ColorClass</Filter>
-    </ClCompile>
     <ClCompile Include="IMGUIClass.cpp">
       <Filter>Debugging\IMGUIClass</Filter>
     </ClCompile>
     <ClCompile Include="LightClass.cpp">
       <Filter>Light</Filter>
     </ClCompile>
-    <ClCompile Include="AffineClass.cpp">
-      <Filter>AffineClass</Filter>
-    </ClCompile>
     <ClCompile Include="ModelManagerClass.cpp">
       <Filter>Model\ModelManager</Filter>
-    </ClCompile>
-    <ClCompile Include="CollisionClass.cpp">
-      <Filter>CollisionClass</Filter>
     </ClCompile>
     <ClCompile Include="SpaceshipShaderClass.cpp">
       <Filter>Model\Spaceship\SpaceshipShaderClass</Filter>
@@ -300,8 +303,8 @@
     <ClCompile Include="CubeModelClass.cpp">
       <Filter>Model\Cube\CubeModelClass</Filter>
     </ClCompile>
-    <ClCompile Include="TextClass.cpp">
-      <Filter>TextClass</Filter>
+    <ClCompile Include="TextRenderClass.cpp">
+      <Filter>TextRenderClass</Filter>
     </ClCompile>
     <ClCompile Include="TextureClass.cpp">
       <Filter>TextureClass</Filter>
@@ -313,13 +316,25 @@
       <Filter>Actor\ActorClass</Filter>
     </ClCompile>
     <ClCompile Include="ActorManagerClass.cpp">
-      <Filter>Actor\ActorManagerClass</Filter>
+      <Filter>ActorManagerClass</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerClass.cpp">
-      <Filter>Actor\PlayerClass</Filter>
+    <ClCompile Include="SceneManagerClass.cpp">
+      <Filter>SceneManagerClass</Filter>
     </ClCompile>
-    <ClCompile Include="ProcessManagerClass.cpp">
-      <Filter>ProcessManagerClass</Filter>
+    <ClCompile Include="IActorControlClass.cpp">
+      <Filter>Actor\IActorControlClass</Filter>
+    </ClCompile>
+    <ClCompile Include="AffineClass.cpp">
+      <Filter>Affine\AffineClass</Filter>
+    </ClCompile>
+    <ClCompile Include="IAffineControlClass.cpp">
+      <Filter>Affine\IAffineControlClass</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionClass.cpp">
+      <Filter>Collision\CollisionClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ICollisionContorlClass.cpp">
+      <Filter>Collision\ICollisionContorlClass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

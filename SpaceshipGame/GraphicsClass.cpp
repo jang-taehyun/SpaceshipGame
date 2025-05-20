@@ -22,7 +22,7 @@
 #include "InputClass.h"
 #include "SoundClass.h"
 
-#include "TextClass.h"
+#include "TextRenderClass.h"
 #include "FrustumClass.h"
 #include "IMGUIClass.h"
 
@@ -110,8 +110,8 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 	}
 
 	// Text 객체 생성 및 초기화 //
-	m_Text = new TextClass(m_D3D->GetDevice(), m_D3D->GetDeviceContext());
-	if (!m_Text)
+	m_TextRender = new TextRenderClass(m_D3D->GetDevice(), m_D3D->GetDeviceContext());
+	if (!m_TextRender)
 	{
 		e.contents = _T("TextClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
@@ -168,10 +168,10 @@ void GraphicsClass::Shutdown()
 		m_Frustum = nullptr;
 	}
 
-	if (m_Text)
+	if (m_TextRender)
 	{
-		delete m_Text;
-		m_Text = nullptr;
+		delete m_TextRender;
+		m_TextRender = nullptr;
 	}
 
 	if (m_ModelManager)
@@ -193,7 +193,7 @@ void GraphicsClass::Shutdown()
 	}
 }
 
-HRESULT GraphicsClass::Frame(ActorManagerClass* const& actor_manager, SoundClass* const& sound, const int& fps, const int& cpu_usage)
+HRESULT GraphicsClass::Frame(ActorManagerClass* const& actor_manager, SoundClass* const& sound, const int& fps, const int& cpu_usage, const std::wstring& scene_info)
 {
 	HRESULT result = S_OK;
 
@@ -201,7 +201,7 @@ HRESULT GraphicsClass::Frame(ActorManagerClass* const& actor_manager, SoundClass
 	e.title = _T("GraphicsClass Frame()");
 
 	// 렌더링 //
-	result = Render(actor_manager, sound, fps, cpu_usage);
+	result = Render(actor_manager, sound, fps, cpu_usage, scene_info);
 	if (FAILED(result))
 	{
 		e.contents = _T("Frame() 처리 실패");
@@ -212,7 +212,7 @@ HRESULT GraphicsClass::Frame(ActorManagerClass* const& actor_manager, SoundClass
 	return result;
 }
 
-HRESULT GraphicsClass::Render(ActorManagerClass* const& actor_manager, SoundClass* const& sound, const int& fps, const int& cpu_usage)
+HRESULT GraphicsClass::Render(ActorManagerClass* const& actor_manager, SoundClass* const& sound, const int& fps, const int& cpu_usage, const std::wstring& scene_info)
 {
 	HRESULT result = S_OK;
 	DirectX::XMMATRIX OrthoMatrix;
@@ -289,19 +289,10 @@ HRESULT GraphicsClass::Render(ActorManagerClass* const& actor_manager, SoundClas
 	}
 
 	// 2D 렌더링 //
-	// depth buffer 비활성화, alpha blend state 활성화
-	m_D3D->TurnDepthBufferOff();
-	m_D3D->TurnOnAlphaBlending();
-	
 	// text 렌더링
 	DirectX::XMFLOAT2 pos = { 500.f, 600.f };
-	DirectX::XMFLOAT4 tmp = { 1.f, 1.f, 1.f, 1.f };
-	DirectX::XMVECTOR color = DirectX::XMLoadFloat4(&tmp);
-	m_Text->Render(m_D3D->GetDeviceContext(), _T("테스트 01 text ~ ! @"), pos, color);
-	
-	// alpha blend state 비활성화, depth buffer 활성화
-	m_D3D->TurnOffAlphaBlending();
-	m_D3D->TurnDepthBufferOn();
+	DirectX::XMFLOAT4 color = { 1.f, 1.f, 1.f, 1.f };
+	m_TextRender->Render(m_D3D, scene_info, pos, color);
 	
 	// IMGUI 렌더링
 	m_IMGUI->Render(actor_manager, m_Light, sound, m_Camera, fps, cpu_usage);

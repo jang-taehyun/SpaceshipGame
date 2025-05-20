@@ -3,7 +3,7 @@
   <Class Name="ActorClass" Collapsed="true">
     <Position X="6.5" Y="2.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CAAAAAgAAgAAACAAAAAAAQAACAAAAAAgBAAAAAEAACE=</HashCode>
+      <HashCode>CAAAAAgAAgAAAAAAAAAAAQAACAAAAAAgBAAAAAEAACE=</HashCode>
       <FileName>ActorClass.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -119,11 +119,11 @@
       <FileName>TimerClass.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TextClass" Collapsed="true">
+  <Class Name="TextRenderClass" Collapsed="true">
     <Position X="17" Y="4.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAMAAAAQBAAAAAAQAEAAAAAAEAABAAAAAAAAA=</HashCode>
-      <FileName>TextClass.h</FileName>
+      <HashCode>AAAAAAAAIAAAAQBAAAAAAQAEAAAAAAAAABQAAAAQAAA=</HashCode>
+      <FileName>TextRenderClass.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="InputClass" Collapsed="true">
@@ -157,14 +157,14 @@
   <Class Name="AffineClass" Collapsed="true">
     <Position X="15.25" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CAAAgZRAEiCCARAAAAgABhAQQIEAQqgIRABhAgEAIAI=</HashCode>
+      <HashCode>CAAAgZRAEiCCARAAAAkAFhAQQIEAQqgIRABhAgEAIAI=</HashCode>
       <FileName>AffineClass.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="CameraClass" Collapsed="true">
     <Position X="17" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CAAAAQAAAAAACQAAAAAAAQCQAKAAAgAAARAgAAAAAAA=</HashCode>
+      <HashCode>CAAAAQAAAAAACQAAAAAAAQCQCCAAAAAAARAAAAAAAAA=</HashCode>
       <FileName>CameraClass.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -185,19 +185,19 @@
   <Class Name="CollisionClass" Collapsed="true">
     <Position X="18.75" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CCAAAABAAgAAQQAAAAQAAQIAAAQAAACAAAgAAAhAEAE=</HashCode>
+      <HashCode>CCAAAAAAAgAAQQAAAAQAAQIACAQAAACAAAgAAAhAEAE=</HashCode>
       <FileName>CollisionClass.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ProcessManagerClass" Collapsed="true">
     <Position X="20.5" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAIAgABAAAIAAAAAAAAAAEAAAAAAAASAAAAAAAAIM=</HashCode>
+      <HashCode>AAAAIAgABACAIAAAAABAAAAEAAAgAAAASBAAAAAIAJM=</HashCode>
       <FileName>ProcessManagerClass.h</FileName>
     </TypeIdentifier>
   </Class>
   <Struct Name="_error_content_" Collapsed="true">
-    <Position X="10.5" Y="3.25" Width="1.5" />
+    <Position X="10.25" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AEAAAAAAQAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
       <FileName>typedef.h</FileName>
@@ -232,7 +232,7 @@
     </TypeIdentifier>
   </Struct>
   <Typedef Name="ErrorContent" Collapsed="true">
-    <Position X="10.25" Y="1.25" Width="2.25" />
+    <Position X="10" Y="1.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>typedef.h</FileName>

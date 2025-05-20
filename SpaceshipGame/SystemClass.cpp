@@ -244,7 +244,7 @@ HRESULT SystemClass::Frame()
 		return result;
 
 	// GraphicsÀÇ Frame() ÁøÇà //
-	result = m_Graphics->Frame(m_ActorManager, m_Sound, m_FPS->GetFPS(), (int)m_CPU->GetCPUPercentage());
+	result = m_Graphics->Frame(m_ActorManager, m_Sound, m_FPS->GetFPS(), (int)m_CPU->GetCPUPercentage(), m_ProcessManager->GetSceneString());
 	if (FAILED(result))
 		return result;
 

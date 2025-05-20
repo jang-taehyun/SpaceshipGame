@@ -5,21 +5,21 @@
 #include "ActorClass.h"
 #include "PlayerClass.h"
 #include "ActorManagerClass.h"
-#include "ProcessManagerClass.h"
+#include "SceneManagerClass.h"
 
-bool ProcessManagerClass::IsInitialize = false;
+bool SceneManagerClass::IsInitialize = false;
 static ErrorContent e;
 
-ProcessManagerClass::ProcessManagerClass()
+SceneManagerClass::SceneManagerClass()
 {
 	HRESULT result = S_OK;
 
 	// 에러 메세지, 변수 초기화 //
-	e.title = _T("ProcessManagerClass Constructor");
+	e.title = _T("SceneManagerClass Constructor");
 
 	if (IsInitialize)
 	{
-		e.contents = _T("이미 ProcessManagerClass 인스턴스가 존재합니다.");
+		e.contents = _T("이미 SceneManagerClass 인스턴스가 존재합니다.");
 		e.errorCode = E_FAIL;
 		throw e;
 	}
@@ -27,17 +27,17 @@ ProcessManagerClass::ProcessManagerClass()
 	IsInitialize = true;
 }
 
-ProcessManagerClass::~ProcessManagerClass()
+SceneManagerClass::~SceneManagerClass()
 {
 	IsInitialize = false;
 }
 
-HRESULT ProcessManagerClass::Frame(ActorManagerClass* const& actor_manager, CameraClass* const& camera, const InputClass* const& input, const float& frame_time)
+HRESULT SceneManagerClass::Frame(ActorManagerClass* const& actor_manager, CameraClass* const& camera, const InputClass* const& input, const float& frame_time)
 {
 	HRESULT result = S_OK;
 
 	// 에러 메세지, 변수 초기화 //
-	e.title = _T("ProcessManagerClass Frame()");
+	e.title = _T("SceneManagerClass Frame()");
 
 	result = ProcessCamera(camera, input, frame_time);
 	if (FAILED(result))
@@ -53,15 +53,17 @@ HRESULT ProcessManagerClass::Frame(ActorManagerClass* const& actor_manager, Came
 		return result;
 	}
 
+	ProcessSceneInfo();
+
 	return result;
 }
 
-HRESULT ProcessManagerClass::ProcessCamera(CameraClass* const& camera, const InputClass* const& input, const float& frame_time)
+HRESULT SceneManagerClass::ProcessCamera(CameraClass* const& camera, const InputClass* const& input, const float& frame_time)
 {
 	HRESULT result = S_OK;
 
 	// 에러 메세지, 변수 초기화 //
-	e.title = _T("ProcessManagerClass ProcessCamera()");
+	e.title = _T("SceneManagerClass ProcessCamera()");
 
 	// camera 객체의 frame time 갱신
 	UpdateCameraFrameTime(camera, frame_time);
@@ -77,12 +79,12 @@ HRESULT ProcessManagerClass::ProcessCamera(CameraClass* const& camera, const Inp
 	return result;
 }
 
-HRESULT ProcessManagerClass::ProcessActor(ActorManagerClass* const& actor_manager, const InputClass* const& input, const float& frame_time)
+HRESULT SceneManagerClass::ProcessActor(ActorManagerClass* const& actor_manager, const InputClass* const& input, const float& frame_time)
 {
 	HRESULT result = S_OK;
 
 	// 에러 메세지, 변수 초기화 //
-	e.title = _T("ProcessManagerClass ProcessActor()");
+	e.title = _T("SceneManagerClass ProcessActor()");
 
 	UpdateObjectFrameTime(actor_manager, frame_time);
 
@@ -103,19 +105,38 @@ HRESULT ProcessManagerClass::ProcessActor(ActorManagerClass* const& actor_manage
 	return result;
 }
 
-void ProcessManagerClass::UpdateCameraFrameTime(CameraClass* const& camera, const float& frame_time)
+void SceneManagerClass::ProcessSceneInfo()
+{
+	switch (m_SceneState)
+	{
+	case SceneState::MATCH:
+		m_SceneString = _T("MATCH");
+		break;
+	case SceneState::LOADING:
+		m_SceneString = _T("LOADING");
+		break;
+	case SceneState::INGAME:
+		m_SceneString = _T("INGAME");
+		break;
+	default:
+		m_SceneString = _T("NONE");
+		break;
+	}
+}
+
+void SceneManagerClass::UpdateCameraFrameTime(CameraClass* const& camera, const float& frame_time)
 {
 	camera->GetAffineObject()->SetFrameTime(frame_time);
 }
 
-HRESULT ProcessManagerClass::UpdateCameraAffine(CameraClass* const& camera, const InputClass* const& input)
+HRESULT SceneManagerClass::UpdateCameraAffine(CameraClass* const& camera, const InputClass* const& input)
 {
 	HRESULT result = S_OK;
 	bool KeyDown = false;
 	long MouseX = 0, MouseY = 0;
 
 	// 에러 메세지, 변수 초기화 //
-	e.title = _T("ProcessManagerClass UpdateCameraAffine()");
+	e.title = _T("SceneManagerClass UpdateCameraAffine()");
 
 	// 이동 //
 	// 앞
@@ -186,13 +207,13 @@ HRESULT ProcessManagerClass::UpdateCameraAffine(CameraClass* const& camera, cons
 	return result;
 }
 
-void ProcessManagerClass::UpdateObjectFrameTime(ActorManagerClass* const& actor_manager, const float& frame_time)
+void SceneManagerClass::UpdateObjectFrameTime(ActorManagerClass* const& actor_manager, const float& frame_time)
 {
 	actor_manager->GetPlayerObject()->GetAffineObject()->SetFrameTime(frame_time);
 	actor_manager->GetPlayerObject()->GetCollision()->GetAffineObject()->SetFrameTime(frame_time);
 }
 
-HRESULT ProcessManagerClass::UpdateActorCollisionState(ActorManagerClass* const& actor_manager, const InputClass* const& input)
+HRESULT SceneManagerClass::UpdateActorCollisionState(ActorManagerClass* const& actor_manager, const InputClass* const& input)
 {
 	HRESULT result = S_OK;
 	DirectX::XMFLOAT4 color;
@@ -201,7 +222,7 @@ HRESULT ProcessManagerClass::UpdateActorCollisionState(ActorManagerClass* const&
 	DirectX::XMFLOAT4 Ray = DirectX::XMFLOAT4(0.f, 0.f, 1.f, 1.f);
 
 	// 에러 메세지, 변수 초기화 //
-	e.title = _T("ProcessManagerClass UpdateActorCollisionState()");
+	e.title = _T("SceneManagerClass UpdateActorCollisionState()");
 
 	// 충돌 처리
 	for (int i = 0; i < actor_manager->GetOtherObjectCount(); ++i)
@@ -223,14 +244,14 @@ HRESULT ProcessManagerClass::UpdateActorCollisionState(ActorManagerClass* const&
 	return result;
 }
 
-HRESULT ProcessManagerClass::UpdateActorAffine(ActorManagerClass* const& actor_manager, const InputClass* const& input)
+HRESULT SceneManagerClass::UpdateActorAffine(ActorManagerClass* const& actor_manager, const InputClass* const& input)
 {
 	HRESULT result = S_OK;
 	bool KeyDown = false;
 	long MouseX = 0, MouseY = 0;
 
 	// 에러 메세지, 변수 초기화 //
-	e.title = _T("ProcessManagerClass UpdateActorCollisionState()");
+	e.title = _T("SceneManagerClass UpdateActorCollisionState()");
 
 	// 이동 처리 //
 	// 앞

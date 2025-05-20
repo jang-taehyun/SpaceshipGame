@@ -1,19 +1,19 @@
 #include "pch.h"
-#include <SimpleMath.h>
+#include "IAffineControlClass.h"
+#include "ICollisionContorlClass.h"
 
-#include "CollisionClass.h"
 #include "ActorClass.h"
 
 static ErrorContent e;
 
-ActorClass::ActorClass(const AffineInfo& affine, const ModelIDs ModelID)
+ActorClass::ActorClass(const AffineInfo& ModelAffine, const AffineInfo& CollisionAffine, const ModelIDs ModelID = ModelIDs::DEFAULT_SPACESHIP)
 {
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
 	e.title = _T("ActorClass constructor");
 
-	result = Initailize(affine, ModelID);
+	result = Initailize(ModelAffine, CollisionAffine, ModelID);
 	if (FAILED(result))
 	{
 		Shutdown();
@@ -26,28 +26,29 @@ ActorClass::~ActorClass()
 	Shutdown();
 }
 
-HRESULT ActorClass::Initailize(const AffineInfo& affine, const ModelIDs ModelID)
+HRESULT ActorClass::Initailize(const AffineInfo& ModelAffine, const AffineInfo& CollisionAffine, const ModelIDs ModelID = ModelIDs::DEFAULT_SPACESHIP)
 {
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
 	e.title = _T("ActorClass Initailize()");
 
-	// affine 인스턴스 생성 //
-	m_Affine = new AffineClass(affine);
-	if (!m_Affine)
+	m_ModelID = ModelID;
+
+	// IAffineControlClass 인스턴스 생성 //
+	m_AffineInterface = new IAffineControlClass(ModelAffine);
+	if (!m_AffineInterface)
 	{
-		e.contents = _T("AffineClass 인스턴스 생성 실패");
+		e.contents = _T("IAffineControlClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
-
-	m_ModelID = ModelID;
-
-	m_Collision = new CollisionClass();
-	if (!m_Collision)
+	
+	// ICollisionContorlClass 인스턴스 생성 //
+	m_CollisionInterface = new ICollisionContorlClass(CollisionAffine);
+	if (!m_CollisionInterface)
 	{
-		e.contents = _T("CollisionClass 인스턴스 생성 실패");
+		e.contents = _T("ICollisionContorlClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
@@ -57,15 +58,15 @@ HRESULT ActorClass::Initailize(const AffineInfo& affine, const ModelIDs ModelID)
 
 void ActorClass::Shutdown()
 {
-	if (m_Collision)
+	if (m_CollisionInterface)
 	{
-		delete m_Collision;
-		m_Collision = nullptr;
+		delete m_CollisionInterface;
+		m_CollisionInterface = nullptr;
 	}
 
-	if (m_Affine)
+	if (m_AffineInterface)
 	{
-		delete m_Affine;
-		m_Affine = nullptr;
+		delete m_AffineInterface;
+		m_AffineInterface = nullptr;
 	}
 }
