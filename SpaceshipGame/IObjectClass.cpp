@@ -1,8 +1,5 @@
 #include "pch.h"
-#include "ActorClass.h"
-#include "IAffineControlClass.h"
-#include "ICollisionContorlClass.h"
-#include "IActorControlClass.h"
+#include "IObjectClass.h"
 
 static ErrorContent e;
 

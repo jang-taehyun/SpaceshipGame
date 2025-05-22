@@ -165,12 +165,13 @@
     <ClInclude Include="FPSClass.h" />
     <ClInclude Include="FrustumClass.h" />
     <ClInclude Include="GraphicsClass.h" />
-    <ClInclude Include="IActorControlClass.h" />
+    <ClInclude Include="IMoveClass.h" />
+    <ClInclude Include="IObjectClass.h" />
     <ClInclude Include="IAffineControlClass.h" />
     <ClInclude Include="ICollisionContorlClass.h" />
     <ClInclude Include="IMGUIClass.h" />
     <ClInclude Include="InputClass.h" />
-    <ClInclude Include="IObjectMoveableClass.h" />
+    <ClInclude Include="MoveClass.h" />
     <ClInclude Include="LightClass.h" />
     <ClInclude Include="ModelClass.h" />
     <ClInclude Include="ModelManagerClass.h" />
@@ -188,7 +189,7 @@
     <ClInclude Include="TextRenderClass.h" />
     <ClInclude Include="TextureClass.h" />
     <ClInclude Include="TimerClass.h" />
-    <ClInclude Include="AffineClass.h" />
+    <ClInclude Include="GameObjectClass.h" />
     <ClInclude Include="TypeConverterClass.h" />
     <ClInclude Include="typedef.h" />
   </ItemGroup>
@@ -202,12 +203,13 @@
     <ClCompile Include="FPSClass.cpp" />
     <ClCompile Include="FrustumClass.cpp" />
     <ClCompile Include="GraphicsClass.cpp" />
-    <ClCompile Include="IActorControlClass.cpp" />
+    <ClCompile Include="IMoveClass.cpp" />
+    <ClCompile Include="IObjectClass.cpp" />
     <ClCompile Include="IAffineControlClass.cpp" />
     <ClCompile Include="ICollisionContorlClass.cpp" />
     <ClCompile Include="IMGUIClass.cpp" />
     <ClCompile Include="InputClass.cpp" />
-    <ClCompile Include="IObjectMoveableClass.cpp" />
+    <ClCompile Include="MoveClass.cpp" />
     <ClCompile Include="LightClass.cpp" />
     <ClCompile Include="ModelClass.cpp" />
     <ClCompile Include="ModelManagerClass.cpp" />
@@ -228,7 +230,7 @@
     <ClCompile Include="TextRenderClass.cpp" />
     <ClCompile Include="TextureClass.cpp" />
     <ClCompile Include="TimerClass.cpp" />
-    <ClCompile Include="AffineClass.cpp" />
+    <ClCompile Include="GameObjectClass.cpp" />
     <ClCompile Include="TypeConverterClass.cpp" />
   </ItemGroup>
   <ItemGroup>

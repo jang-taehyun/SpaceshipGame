@@ -1,15 +1,24 @@
 #include "pch.h"
-#include "TypeConverter.h"
-#include "AffineClass.h"
+#include "TypeConverterClass.h"
+#include "GameObjectClass.h"
 
-AffineClass::AffineClass(const AffineInfo& affine)
+const DirectX::XMFLOAT4X4& GameObjectClass::GetAffineMatrix() const
 {
-	Initialize(affine);
+	DirectX::XMMATRIX affine;
+	DirectX::XMFLOAT4X4 ret;
+
+	// affine matrix = scale * rotate * pos
+	affine = TypeConverterClass::XMFLOAT4toXMMATRIX(m_Position, m_Rotation, m_Scale);
+
+	// XMMATRIX 타입을 XMFLOAT4X4 타입으로 변환 후 반환 //
+	DirectX::XMStoreFloat4x4(&ret, affine);
+	return ret;
 }
 
-void AffineClass::GetDirectionVectors(DirectX::XMVECTOR& forward, DirectX::XMVECTOR& right, DirectX::XMVECTOR& up)
+void GameObjectClass::GetDirectionVectors(DirectX::XMFLOAT4& forward, DirectX::XMFLOAT4& right, DirectX::XMFLOAT4& up) const
 {
 	float pitch, yaw, roll;
+	DirectX::XMVECTOR f, r, u;
 	DirectX::XMMATRIX RotationMatrix;
 
 	// 해당 물체의 local space의 rotate matrix를 이용해, forward, right, up vector 계산 //
@@ -21,12 +30,17 @@ void AffineClass::GetDirectionVectors(DirectX::XMVECTOR& forward, DirectX::XMVEC
 
 	// 해당 객체의 local 좌표계의 축(forward, right, up vector) 추출
 	// 추출 시에 vector 정규화를 하고 추출
-	forward = DirectX::XMVector3Normalize(RotationMatrix.r[2]);
-	right = DirectX::XMVector3Normalize(RotationMatrix.r[0]);
-	up = DirectX::XMVector3Normalize(RotationMatrix.r[1]);
+	f = DirectX::XMVector3Normalize(RotationMatrix.r[2]);
+	r = DirectX::XMVector3Normalize(RotationMatrix.r[0]);
+	u = DirectX::XMVector3Normalize(RotationMatrix.r[1]);
+
+	// XMFLAOT4 형식으로 저장
+	DirectX::XMStoreFloat4(&forward, f);
+	DirectX::XMStoreFloat4(&right, r);
+	DirectX::XMStoreFloat4(&up, u);
 }
 
-const DirectX::XMFLOAT4& AffineClass::GetForwardVector() const
+const DirectX::XMFLOAT4& GameObjectClass::GetForwardVector() const
 {
 	float pitch, yaw, roll;
 	DirectX::XMMATRIX RotationMatrix;
@@ -48,7 +62,7 @@ const DirectX::XMFLOAT4& AffineClass::GetForwardVector() const
 	return ret;
 }
 
-const DirectX::XMFLOAT4& AffineClass::GetRightVector() const
+const DirectX::XMFLOAT4& GameObjectClass::GetRightVector() const
 {
 	float pitch, yaw, roll;
 	DirectX::XMMATRIX RotationMatrix;
@@ -70,7 +84,7 @@ const DirectX::XMFLOAT4& AffineClass::GetRightVector() const
 	return ret;
 }
 
-const DirectX::XMFLOAT4& AffineClass::GetUpVector() const
+const DirectX::XMFLOAT4& GameObjectClass::GetUpVector() const
 {
 	float pitch, yaw, roll;
 	DirectX::XMMATRIX RotationMatrix;
@@ -90,24 +104,4 @@ const DirectX::XMFLOAT4& AffineClass::GetUpVector() const
 	DirectX::XMStoreFloat4(&ret, up);
 
 	return ret;
-}
-
-const DirectX::XMFLOAT4X4& AffineClass::GetAffine() const
-{
-	DirectX::XMMATRIX affine;
-	DirectX::XMFLOAT4X4 ret;
-
-	// affine matrix = scale * rotate * pos
-	affine = TypeConverter::XMFLOAT4toXMMATRIX(m_Position, m_Rotation, m_Scaling);
-
-	// XMMATRIX 타입을 XMFLOAT4X4 타입으로 변환 후 반환 //
-	DirectX::XMStoreFloat4x4(&ret, affine);
-	return ret;
-}
-
-void AffineClass::Initialize(const AffineInfo& affine)
-{
-	m_Position = affine.position;
-	m_Rotation = affine.rotation;
-	m_Scaling = affine.scale;
 }

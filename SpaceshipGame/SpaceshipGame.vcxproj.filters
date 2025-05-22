@@ -107,29 +107,38 @@
     <Filter Include="TextRenderClass">
       <UniqueIdentifier>{60015bc3-ca0b-4bf3-9efb-6b5fa100c17f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Actor\IActorControlClass">
-      <UniqueIdentifier>{f700590f-9ef5-45ee-a39d-ac7ad4006c01}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ActorManagerClass">
       <UniqueIdentifier>{f76564fc-c875-488a-bc4b-f72ebb04c305}</UniqueIdentifier>
     </Filter>
     <Filter Include="Affine">
       <UniqueIdentifier>{383ce90a-46d7-4511-9780-bc79d489ac21}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Affine\AffineClass">
-      <UniqueIdentifier>{f4cfa62f-a1db-4c9f-9081-a3a827113035}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Affine\IAffineControlClass">
       <UniqueIdentifier>{580b2aea-f030-4206-8f4c-782262c456a1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="IObjectMoveableClass">
-      <UniqueIdentifier>{c97a22e4-4436-4cea-af92-7c967892cd3b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Affine\ICollisionContorlClass">
       <UniqueIdentifier>{ce04e28a-0279-4617-9ec5-845e5e46a44b}</UniqueIdentifier>
     </Filter>
     <Filter Include="TypeConverter">
       <UniqueIdentifier>{7ea17dcf-82ce-46e2-a0c9-180b1f84633a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object">
+      <UniqueIdentifier>{eb4a0ca8-ca9c-488c-9f94-66bbc7834886}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\IObjectClass">
+      <UniqueIdentifier>{f700590f-9ef5-45ee-a39d-ac7ad4006c01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\GameObjectClass">
+      <UniqueIdentifier>{f4cfa62f-a1db-4c9f-9081-a3a827113035}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Move">
+      <UniqueIdentifier>{cf3ff131-5342-40bf-a8be-428422776552}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Move\IMoveClass">
+      <UniqueIdentifier>{763ed01c-234e-4ea4-8cc5-ce67575b9462}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Move\MoveClass">
+      <UniqueIdentifier>{c97a22e4-4436-4cea-af92-7c967892cd3b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -226,11 +235,11 @@
     <ClInclude Include="SceneManagerClass.h">
       <Filter>SceneManagerClass</Filter>
     </ClInclude>
-    <ClInclude Include="IActorControlClass.h">
-      <Filter>Actor\IActorControlClass</Filter>
+    <ClInclude Include="IObjectClass.h">
+      <Filter>Object\IObjectClass</Filter>
     </ClInclude>
-    <ClInclude Include="AffineClass.h">
-      <Filter>Affine\AffineClass</Filter>
+    <ClInclude Include="GameObjectClass.h">
+      <Filter>Object\GameObjectClass</Filter>
     </ClInclude>
     <ClInclude Include="IAffineControlClass.h">
       <Filter>Affine\IAffineControlClass</Filter>
@@ -238,11 +247,14 @@
     <ClInclude Include="ICollisionContorlClass.h">
       <Filter>Affine\ICollisionContorlClass</Filter>
     </ClInclude>
-    <ClInclude Include="IObjectMoveableClass.h">
-      <Filter>IObjectMoveableClass</Filter>
+    <ClInclude Include="MoveClass.h">
+      <Filter>Move\MoveClass</Filter>
     </ClInclude>
     <ClInclude Include="TypeConverterClass.h">
       <Filter>TypeConverter</Filter>
+    </ClInclude>
+    <ClInclude Include="IMoveClass.h">
+      <Filter>Move\IMoveClass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -324,11 +336,11 @@
     <ClCompile Include="SceneManagerClass.cpp">
       <Filter>SceneManagerClass</Filter>
     </ClCompile>
-    <ClCompile Include="IActorControlClass.cpp">
-      <Filter>Actor\IActorControlClass</Filter>
+    <ClCompile Include="IObjectClass.cpp">
+      <Filter>Object\IObjectClass</Filter>
     </ClCompile>
-    <ClCompile Include="AffineClass.cpp">
-      <Filter>Affine\AffineClass</Filter>
+    <ClCompile Include="GameObjectClass.cpp">
+      <Filter>Object\GameObjectClass</Filter>
     </ClCompile>
     <ClCompile Include="IAffineControlClass.cpp">
       <Filter>Affine\IAffineControlClass</Filter>
@@ -336,11 +348,14 @@
     <ClCompile Include="ICollisionContorlClass.cpp">
       <Filter>Affine\ICollisionContorlClass</Filter>
     </ClCompile>
-    <ClCompile Include="IObjectMoveableClass.cpp">
-      <Filter>IObjectMoveableClass</Filter>
+    <ClCompile Include="MoveClass.cpp">
+      <Filter>Move\MoveClass</Filter>
     </ClCompile>
     <ClCompile Include="TypeConverterClass.cpp">
       <Filter>TypeConverter</Filter>
+    </ClCompile>
+    <ClCompile Include="IMoveClass.cpp">
+      <Filter>Move\IMoveClass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

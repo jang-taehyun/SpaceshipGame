@@ -1,7 +1,7 @@
 #include "pch.h"
-#include "IObjectMoveableClass.h"
+#include "MoveClass.h"
 
-const DirectX::XMFLOAT4& IObjectMoveableClass::Move(const DirectX::XMFLOAT4& curPosition, const DirectX::XMFLOAT4& vector, const MoveState& state, const float& frame_time, const bool& IsKeyDown)
+const DirectX::XMFLOAT4& MoveClass::Move(const DirectX::XMFLOAT4& curPosition, const DirectX::XMFLOAT4& vector, const MoveState& state, const float& frame_time, const bool& IsKeyDown)
 {
 	DirectX::XMFLOAT4 ret;
 	float speed = 0.f;
@@ -32,7 +32,7 @@ const DirectX::XMFLOAT4& IObjectMoveableClass::Move(const DirectX::XMFLOAT4& cur
 	return ret;
 }
 
-const DirectX::XMFLOAT4& IObjectMoveableClass::Rotate(const DirectX::XMFLOAT4& rotate, const long& MouseX, const long& MouseY, const float& frame_time, const bool& IsKeyDown)
+const DirectX::XMFLOAT4& MoveClass::Rotate(const DirectX::XMFLOAT4& rotate, const long& MouseX, const long& MouseY, const float& frame_time, const bool& IsKeyDown)
 {
 	DirectX::XMFLOAT4 ret = rotate;
 	float speed = 0.f;
@@ -51,7 +51,17 @@ const DirectX::XMFLOAT4& IObjectMoveableClass::Rotate(const DirectX::XMFLOAT4& r
 }
 
 
-DirectX::XMFLOAT4& IObjectMoveableClass::MoveLeft(const DirectX::XMFLOAT4& curPosition, const DirectX::XMFLOAT4& RightVector, const float& speed)
+MoveClass& MoveClass::operator=(const MoveClass& other)
+{
+	// TODO: 여기에 return 문을 삽입합니다.
+}
+
+MoveClass& MoveClass::operator=(const MoveClass&& other)
+{
+	// TODO: 여기에 return 문을 삽입합니다.
+}
+
+DirectX::XMFLOAT4& MoveClass::MoveLeft(const DirectX::XMFLOAT4& curPosition, const DirectX::XMFLOAT4& RightVector, const float& speed)
 {
 	using namespace DirectX;
 
@@ -66,7 +76,7 @@ DirectX::XMFLOAT4& IObjectMoveableClass::MoveLeft(const DirectX::XMFLOAT4& curPo
 	return ret;
 }
 
-DirectX::XMFLOAT4& IObjectMoveableClass::MoveRight(const DirectX::XMFLOAT4& curPosition, const DirectX::XMFLOAT4& RightVector, const float& speed)
+DirectX::XMFLOAT4& MoveClass::MoveRight(const DirectX::XMFLOAT4& curPosition, const DirectX::XMFLOAT4& RightVector, const float& speed)
 {
 	using namespace DirectX;
 
@@ -81,7 +91,7 @@ DirectX::XMFLOAT4& IObjectMoveableClass::MoveRight(const DirectX::XMFLOAT4& curP
 	return ret;
 }
 
-DirectX::XMFLOAT4& IObjectMoveableClass::MoveForward(const DirectX::XMFLOAT4& curPosition, const DirectX::XMFLOAT4& ForwardVector, const float& speed)
+DirectX::XMFLOAT4& MoveClass::MoveForward(const DirectX::XMFLOAT4& curPosition, const DirectX::XMFLOAT4& ForwardVector, const float& speed)
 {
 	using namespace DirectX;
 
@@ -96,7 +106,7 @@ DirectX::XMFLOAT4& IObjectMoveableClass::MoveForward(const DirectX::XMFLOAT4& cu
 	return ret;
 }
 
-DirectX::XMFLOAT4& IObjectMoveableClass::MoveBackward(const DirectX::XMFLOAT4& curPosition, const DirectX::XMFLOAT4& ForwardVector, const float& speed)
+DirectX::XMFLOAT4& MoveClass::MoveBackward(const DirectX::XMFLOAT4& curPosition, const DirectX::XMFLOAT4& ForwardVector, const float& speed)
 {
 	using namespace DirectX;
 
@@ -111,7 +121,7 @@ DirectX::XMFLOAT4& IObjectMoveableClass::MoveBackward(const DirectX::XMFLOAT4& c
 	return ret;
 }
 
-const float& IObjectMoveableClass::ComputeMoveSpeed(const float& frame_time, const bool& IsKeyDown)
+const float& MoveClass::ComputeMoveSpeed(const float& frame_time, const bool& IsKeyDown)
 {
 	float ret = m_PrevMoveSpeed;
 
@@ -139,7 +149,7 @@ const float& IObjectMoveableClass::ComputeMoveSpeed(const float& frame_time, con
 	return ret;
 }
 
-const float& IObjectMoveableClass::ComputeRotateSpeed(const float& frame_time, const bool& IsKeyDown)
+const float& MoveClass::ComputeRotateSpeed(const float& frame_time, const bool& IsKeyDown)
 {
 	float ret = m_PrevRotateSpeed;
 
