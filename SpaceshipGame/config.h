@@ -11,6 +11,9 @@ const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
 
+// MOUSE 감도 설정 //
+float MOUSE_SENSITIVITY = 0.0015f;
+
 // position 상태 정보 //
 enum class MoveState
 {

@@ -17,6 +17,14 @@ public:
 	inline const DirectX::XMFLOAT4& GetRotation() const { return m_Rotation; }
 	inline const DirectX::XMFLOAT4& GetScaling() const { return m_Scaling; }
 
+	void GetDirectionVectors(DirectX::XMVECTOR& forward, DirectX::XMVECTOR& right, DirectX::XMVECTOR& up);
+
+	const DirectX::XMFLOAT4& GetForwardVector() const;
+	const DirectX::XMFLOAT4& GetRightVector() const;
+	const DirectX::XMFLOAT4& GetUpVector() const;
+
+	const DirectX::XMFLOAT4X4& GetAffine() const;
+
 	// Setter //
 
 	inline void SetPosition(const DirectX::XMFLOAT4& pos) { m_Position = pos; }

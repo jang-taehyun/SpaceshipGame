@@ -1,12 +1,11 @@
 #include "pch.h"
 #include "IAffineControlClass.h"
 #include "ICollisionContorlClass.h"
-
 #include "ActorClass.h"
 
 static ErrorContent e;
 
-ActorClass::ActorClass(const AffineInfo& ModelAffine, const AffineInfo& CollisionAffine, const ModelIDs ModelID = ModelIDs::DEFAULT_SPACESHIP)
+ActorClass::ActorClass(const AffineInfo& ModelAffine, const AffineInfo& CollisionAffine, const ModelIDs ModelID = ModelIDs::DEFAULT_SPACESHIP) : m_ModelID(ModelID)
 {
 	HRESULT result = S_OK;
 
@@ -33,9 +32,7 @@ HRESULT ActorClass::Initailize(const AffineInfo& ModelAffine, const AffineInfo& 
 	// 에러 메세지 초기화 //
 	e.title = _T("ActorClass Initailize()");
 
-	m_ModelID = ModelID;
-
-	// IAffineControlClass 인스턴스 생성 //
+	// actor의 affine 관련 인터페이스(m_AffineInterface) 생성 //
 	m_AffineInterface = new IAffineControlClass(ModelAffine);
 	if (!m_AffineInterface)
 	{
@@ -44,7 +41,7 @@ HRESULT ActorClass::Initailize(const AffineInfo& ModelAffine, const AffineInfo& 
 		return E_FAIL;
 	}
 	
-	// ICollisionContorlClass 인스턴스 생성 //
+	// collision 관련 인터페이스 생성 //
 	m_CollisionInterface = new ICollisionContorlClass(CollisionAffine);
 	if (!m_CollisionInterface)
 	{
@@ -60,7 +57,11 @@ void ActorClass::Shutdown()
 {
 	if (m_CollisionInterface)
 	{
-		delete m_CollisionInterface;
+		ICollisionContorlClass* tmp = static_cast<ICollisionContorlClass*>(m_CollisionInterface);
+
+		delete tmp;
+
+		tmp = nullptr;
 		m_CollisionInterface = nullptr;
 	}
 

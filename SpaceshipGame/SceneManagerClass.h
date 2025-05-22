@@ -7,7 +7,7 @@ class ActorManagerClass;
 class SceneManagerClass
 {
 public:
-	explicit SceneManagerClass();
+	SceneManagerClass();
 	virtual ~SceneManagerClass();
 
 public:

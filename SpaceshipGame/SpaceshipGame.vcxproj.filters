@@ -122,14 +122,14 @@
     <Filter Include="Affine\IAffineControlClass">
       <UniqueIdentifier>{580b2aea-f030-4206-8f4c-782262c456a1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Collision">
-      <UniqueIdentifier>{592442fa-c2c6-4422-948c-691ec3714668}</UniqueIdentifier>
+    <Filter Include="IObjectMoveableClass">
+      <UniqueIdentifier>{c97a22e4-4436-4cea-af92-7c967892cd3b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Collision\CollisionClass">
-      <UniqueIdentifier>{987c6e2a-d1cd-47be-b20d-921047896965}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Collision\ICollisionContorlClass">
+    <Filter Include="Affine\ICollisionContorlClass">
       <UniqueIdentifier>{ce04e28a-0279-4617-9ec5-845e5e46a44b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TypeConverter">
+      <UniqueIdentifier>{7ea17dcf-82ce-46e2-a0c9-180b1f84633a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -235,11 +235,14 @@
     <ClInclude Include="IAffineControlClass.h">
       <Filter>Affine\IAffineControlClass</Filter>
     </ClInclude>
-    <ClInclude Include="CollisionClass.h">
-      <Filter>Collision\CollisionClass</Filter>
-    </ClInclude>
     <ClInclude Include="ICollisionContorlClass.h">
-      <Filter>Collision\ICollisionContorlClass</Filter>
+      <Filter>Affine\ICollisionContorlClass</Filter>
+    </ClInclude>
+    <ClInclude Include="IObjectMoveableClass.h">
+      <Filter>IObjectMoveableClass</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeConverterClass.h">
+      <Filter>TypeConverter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -330,11 +333,14 @@
     <ClCompile Include="IAffineControlClass.cpp">
       <Filter>Affine\IAffineControlClass</Filter>
     </ClCompile>
-    <ClCompile Include="CollisionClass.cpp">
-      <Filter>Collision\CollisionClass</Filter>
-    </ClCompile>
     <ClCompile Include="ICollisionContorlClass.cpp">
-      <Filter>Collision\ICollisionContorlClass</Filter>
+      <Filter>Affine\ICollisionContorlClass</Filter>
+    </ClCompile>
+    <ClCompile Include="IObjectMoveableClass.cpp">
+      <Filter>IObjectMoveableClass</Filter>
+    </ClCompile>
+    <ClCompile Include="TypeConverterClass.cpp">
+      <Filter>TypeConverter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

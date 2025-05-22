@@ -157,7 +157,6 @@
     <ClInclude Include="ActorClass.h" />
     <ClInclude Include="ActorManagerClass.h" />
     <ClInclude Include="CameraClass.h" />
-    <ClInclude Include="CollisionClass.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="CPUClass.h" />
     <ClInclude Include="CubeModelClass.h" />
@@ -171,6 +170,7 @@
     <ClInclude Include="ICollisionContorlClass.h" />
     <ClInclude Include="IMGUIClass.h" />
     <ClInclude Include="InputClass.h" />
+    <ClInclude Include="IObjectMoveableClass.h" />
     <ClInclude Include="LightClass.h" />
     <ClInclude Include="ModelClass.h" />
     <ClInclude Include="ModelManagerClass.h" />
@@ -189,13 +189,13 @@
     <ClInclude Include="TextureClass.h" />
     <ClInclude Include="TimerClass.h" />
     <ClInclude Include="AffineClass.h" />
+    <ClInclude Include="TypeConverterClass.h" />
     <ClInclude Include="typedef.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ActorClass.cpp" />
     <ClCompile Include="ActorManagerClass.cpp" />
     <ClCompile Include="CameraClass.cpp" />
-    <ClCompile Include="CollisionClass.cpp" />
     <ClCompile Include="CPUClass.cpp" />
     <ClCompile Include="CubeModelClass.cpp" />
     <ClCompile Include="D3DClass.cpp" />
@@ -207,6 +207,7 @@
     <ClCompile Include="ICollisionContorlClass.cpp" />
     <ClCompile Include="IMGUIClass.cpp" />
     <ClCompile Include="InputClass.cpp" />
+    <ClCompile Include="IObjectMoveableClass.cpp" />
     <ClCompile Include="LightClass.cpp" />
     <ClCompile Include="ModelClass.cpp" />
     <ClCompile Include="ModelManagerClass.cpp" />
@@ -228,6 +229,7 @@
     <ClCompile Include="TextureClass.cpp" />
     <ClCompile Include="TimerClass.cpp" />
     <ClCompile Include="AffineClass.cpp" />
+    <ClCompile Include="TypeConverterClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SpaceshipGame.rc" />

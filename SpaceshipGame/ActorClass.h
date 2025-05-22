@@ -1,16 +1,21 @@
 #pragma once
 
-class ICollisionContorlClass;
+/**
+* ActorClass 개요
+* - actor의 affine과 관련된 interface 관리
+* - actor의 collision과 관련된 interface 관리
+*/
+
 class IAffineControlClass;
 
 class ActorClass
 {
 public:
-	explicit ActorClass(const AffineInfo& ModelAffine, const AffineInfo& CollisionAffine, const ModelIDs ModelID = ModelIDs::DEFAULT_SPACESHIP);
+	ActorClass(const AffineInfo& ModelAffine, const AffineInfo& CollisionAffine, const ModelIDs ModelID = ModelIDs::DEFAULT_SPACESHIP);
 	virtual ~ActorClass();
 
-	inline IAffineControlClass* const& GetAffine() const { return m_AffineInterface; }
-	inline ICollisionContorlClass* const& GetCollision() const { return m_CollisionInterface; }
+	inline IAffineControlClass* const& GetAffineInterface() const { return m_AffineInterface; }
+	inline IAffineControlClass* const& GetCollisionInterface() const { return m_CollisionInterface; }
 	inline const ModelIDs& GetModelID() const { return m_ModelID; }
 
 private:
@@ -18,8 +23,8 @@ private:
 	void Shutdown();
 
 private:
-	IAffineControlClass* m_AffineInterface = nullptr;
-	ICollisionContorlClass* m_CollisionInterface = nullptr;
+	IAffineControlClass* m_AffineInterface = nullptr;			// actor의 affine 관련 인터페이스
+	IAffineControlClass* m_CollisionInterface = nullptr;		// collision 관련 인터페이스
 	ModelIDs m_ModelID = ModelIDs::DEFAULT_SPACESHIP;
 
 public:

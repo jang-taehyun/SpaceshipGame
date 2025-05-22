@@ -2,68 +2,28 @@
 
 /**
 * ICollisionContorlClass 개요
-* - CollisionClass의 interface
 * - 충돌 검사
-* - Affine 관련 연산 실행
-*	- forward, backward, left, right 이동 실행
-*	- rotate 실행
-*	- affine matrix 연산 및 리턴
-* - CollisionClass 인스턴스 반환
+* - 충돌체 색상 관리
 */
 
-#include <SimpleMath.h>
 #include <DirectXCollision.h>
 
-class CollisionClass;
+#include "IAffineControlClass.h"
 
-class ICollisionContorlClass
+class ICollisionContorlClass : public IAffineControlClass
 {
 public:
 	explicit ICollisionContorlClass(const AffineInfo& affine);
-	virtual ~ICollisionContorlClass();
+	virtual ~ICollisionContorlClass() = default;
 
-	const DirectX::ContainmentType& GetCollideState(const DirectX::BoundingOrientedBox* const& collision);
-	const DirectX::ContainmentType& GetCollideState(const DirectX::SimpleMath::Ray* const& ray);
+	const DirectX::XMFLOAT4& GetCollisionColor() const { return m_Color; }
+	void SetCollisionColor(const DirectX::XMFLOAT4& color) { m_Color = color; }
 
-	inline const DirectX::BoundingOrientedBox* const& GetCollision() const;
-
-	DirectX::XMFLOAT4X4& GetAffineMatrix() const;
-
-	void MoveCollision(const MoveState& state, const float& frame_time, const bool& IsKeyDown);
-	void RotateCollision(const long& MouseX, const long& MouseY, const float& frame_time, const bool& IsKeyDown);
-
-	inline const float& GetMoveSpeed() const { return m_MoveSpeed; }
-	inline const float& GetRoteteSpeed() const { return m_RotateSpeed; }
-
-	inline const float& GetKeyboardSensitivity() const { return m_KeyboardSensitivity; }
-	inline const float& GetMouseSensitivity() const { return m_MouseSensitivity; }
-
-	inline void SetMoveSpeed(const float& value) { m_MoveSpeed = value; }
-	inline void SetRoteteSpeed(const float& value) { m_RotateSpeed = value; }
-
-	inline void SetKeyboardSensitivity(const float& value) { m_KeyboardSensitivity = value; }
-	inline void SetMouseSensitivity(const float& value) { m_MouseSensitivity = value; }
+	const DirectX::ContainmentType& GetCollideStateBetweenOBBAndOBB(const AffineInfo& affine);
+	const DirectX::ContainmentType& GetCollideStateBetweenRayAndOBB(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& forward, float& CollideDistance);
 
 private:
-	HRESULT Initialize(const AffineInfo& affine);
-	void Shutdown();
-
-	DirectX::XMFLOAT4& MoveLeft(const DirectX::XMVECTOR& RightVector);
-	DirectX::XMFLOAT4& MoveRight(const DirectX::XMVECTOR& RightVector);
-	DirectX::XMFLOAT4& MoveForward(const DirectX::XMVECTOR& ForwardVector);
-	DirectX::XMFLOAT4& MoveBackward(const DirectX::XMVECTOR& ForwardVector);
-
-	void ComputeMoveSpeed(const float& frame_time, const bool& IsKeyDown);
-	void ComputeRotateSpeed(const float& frame_time, const bool& IsKeyDown);
-
-private:
-	CollisionClass* m_Collision = nullptr;
-
-	float m_KeyboardSensitivity = 0.1f;
-	float m_MouseSensitivity = 0.0015f;
-
-	float m_RotateSpeed = 0.f;
-	float m_MoveSpeed = 0.f;
+	DirectX::XMFLOAT4 m_Color = DirectX::XMFLOAT4(0.f, 0.f, 1.f, 0.f);								// collision 색상
 
 public:
 	ICollisionContorlClass() = delete;

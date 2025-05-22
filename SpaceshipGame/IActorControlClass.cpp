@@ -28,39 +28,35 @@ IActorControlClass::~IActorControlClass()
 
 void IActorControlClass::Move(const MoveState& state, const float& frame_time, const bool& IsKeyDown)
 {
-	m_Actor->GetAffine()->MoveActor(state, frame_time, IsKeyDown);
-	m_Actor->GetCollision()->MoveCollision(state, frame_time, IsKeyDown);
+	m_Actor->GetAffineInterface()->Move(state, frame_time, IsKeyDown);
+	m_Actor->GetCollisionInterface()->Move(state, frame_time, IsKeyDown);
 }
 
 void IActorControlClass::Rotate(const long& MouseX, const long& MouseY, const float& frame_time, const bool& IsKeyDown)
 {
-	m_Actor->GetAffine()->RotateActor(MouseX, MouseY, frame_time, IsKeyDown);
-	m_Actor->GetCollision()->RotateCollision(MouseX, MouseY, frame_time, IsKeyDown);
+	m_Actor->GetAffineInterface()->Rotate(MouseX, MouseY, frame_time, IsKeyDown);
+	m_Actor->GetCollisionInterface()->Rotate(MouseX, MouseY, frame_time, IsKeyDown);
 }
 
-const DirectX::ContainmentType& IActorControlClass::GetCollideState(const DirectX::BoundingOrientedBox* const& collision)
+const DirectX::ContainmentType& IActorControlClass::GetCollideState(const AffineInfo& affine)
 {
-	return m_Actor->GetCollision()->GetCollideState(collision);
+	return static_cast<ICollisionContorlClass*>((m_Actor->GetCollisionInterface()))->GetCollideStateBetweenOBBAndOBB(affine);
 }
 
-const DirectX::ContainmentType& IActorControlClass::GetCollideState(const DirectX::SimpleMath::Ray* const& ray)
+const DirectX::ContainmentType& IActorControlClass::GetCollideState(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& forward, float& CollideDistance)
 {
-	return m_Actor->GetCollision()->GetCollideState(ray);
+	return static_cast<ICollisionContorlClass*>((m_Actor->GetCollisionInterface()))->GetCollideStateBetweenRayAndOBB(position, forward, CollideDistance);
 }
 
-inline const DirectX::BoundingOrientedBox* const& IActorControlClass::GetCollision() const
-{
-	return m_Actor->GetCollision()->GetCollision();
-}
 
 inline const DirectX::XMFLOAT4X4& IActorControlClass::GetActorAffineMatrix() const
 {
-	return m_Actor->GetAffine()->GetAffineMatrix();
+	return m_Actor->GetAffineInterface()->GetAffineMatrix();
 }
 
 inline const DirectX::XMFLOAT4X4& IActorControlClass::GetCollisionAffineMatrix() const
 {
-	return m_Actor->GetCollision()->GetAffineMatrix();
+	return static_cast<ICollisionContorlClass*>((m_Actor->GetCollisionInterface()))->GetAffineMatrix();
 }
 
 HRESULT IActorControlClass::Initailize(const AffineInfo& ModelAffine, const AffineInfo& CollisionAffine, const ModelIDs ModelID)
