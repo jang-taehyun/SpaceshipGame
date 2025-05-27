@@ -165,18 +165,22 @@
     <ClInclude Include="FPSClass.h" />
     <ClInclude Include="FrustumClass.h" />
     <ClInclude Include="GraphicsClass.h" />
+    <ClInclude Include="ICollisionClass.h" />
     <ClInclude Include="IMoveClass.h" />
     <ClInclude Include="IObjectClass.h" />
     <ClInclude Include="IAffineControlClass.h" />
     <ClInclude Include="ICollisionContorlClass.h" />
     <ClInclude Include="IMGUIClass.h" />
     <ClInclude Include="InputClass.h" />
+    <ClInclude Include="IRotateClass.h" />
+    <ClInclude Include="MoveableObjectClass.h" />
     <ClInclude Include="MoveClass.h" />
     <ClInclude Include="LightClass.h" />
     <ClInclude Include="ModelClass.h" />
     <ClInclude Include="ModelManagerClass.h" />
     <ClInclude Include="ColorShaderClass.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="RotateClass.h" />
     <ClInclude Include="SceneManagerClass.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ShaderClass.h" />
@@ -203,12 +207,15 @@
     <ClCompile Include="FPSClass.cpp" />
     <ClCompile Include="FrustumClass.cpp" />
     <ClCompile Include="GraphicsClass.cpp" />
+    <ClCompile Include="ICollisionClass.cpp" />
     <ClCompile Include="IMoveClass.cpp" />
     <ClCompile Include="IObjectClass.cpp" />
     <ClCompile Include="IAffineControlClass.cpp" />
     <ClCompile Include="ICollisionContorlClass.cpp" />
     <ClCompile Include="IMGUIClass.cpp" />
     <ClCompile Include="InputClass.cpp" />
+    <ClCompile Include="IRotateClass.cpp" />
+    <ClCompile Include="MoveableObjectClass.cpp" />
     <ClCompile Include="MoveClass.cpp" />
     <ClCompile Include="LightClass.cpp" />
     <ClCompile Include="ModelClass.cpp" />
@@ -221,6 +228,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="RotateClass.cpp" />
     <ClCompile Include="SceneManagerClass.cpp" />
     <ClCompile Include="ShaderClass.cpp" />
     <ClCompile Include="SoundClass.cpp" />

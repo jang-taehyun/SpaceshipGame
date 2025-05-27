@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "TypeConverter.h"
+#include "TypeConverterClass.h"
 #include "ICollisionContorlClass.h"
 
 ICollisionContorlClass::ICollisionContorlClass(const AffineInfo& affine) : IAffineControlClass(affine) {}
@@ -7,13 +7,13 @@ ICollisionContorlClass::ICollisionContorlClass(const AffineInfo& affine) : IAffi
 const DirectX::ContainmentType& ICollisionContorlClass::GetCollideStateBetweenOBBAndOBB(const AffineInfo& affine)
 {
 	// 자신의 OBB 박스 생성 //
-	DirectX::BoundingOrientedBox itself(TypeConverter::XMFLOAT4toXMFLOAT3(GetPosition()),
-		TypeConverter::XMFLOAT4toXMFLOAT3(GetScaling()),
+	DirectX::BoundingOrientedBox itself(TypeConverterClass::XMFLOAT4toXMFLOAT3(GetPosition()),
+		TypeConverterClass::XMFLOAT4toXMFLOAT3(GetScaling()),
 		GetRotation());
 
 	// 충돌 검사 대상의 OBB 박스 생성 //
-	DirectX::BoundingOrientedBox other(TypeConverter::XMFLOAT4toXMFLOAT3(affine.position),
-		TypeConverter::XMFLOAT4toXMFLOAT3(affine.scale),
+	DirectX::BoundingOrientedBox other(TypeConverterClass::XMFLOAT4toXMFLOAT3(affine.position),
+		TypeConverterClass::XMFLOAT4toXMFLOAT3(affine.scale),
 		affine.rotation);
 
 	// 충돌 검사 //
@@ -42,8 +42,8 @@ const DirectX::ContainmentType& ICollisionContorlClass::GetCollideStateBetweenRa
 		return DirectX::ContainmentType::DISJOINT;
 
 	// 자신의 OBB 박스 설정 //
-	itself.Center = TypeConverter::XMFLOAT4toXMFLOAT3(GetPosition());
-	itself.Extents = TypeConverter::XMFLOAT4toXMFLOAT3(GetScaling());
+	itself.Center = TypeConverterClass::XMFLOAT4toXMFLOAT3(GetPosition());
+	itself.Extents = TypeConverterClass::XMFLOAT4toXMFLOAT3(GetScaling());
 	itself.Orientation = GetRotation();
 
 	// 충돌 검사 //

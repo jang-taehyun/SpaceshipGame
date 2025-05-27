@@ -25,29 +25,14 @@ public:
 	// scale 반환
 	virtual inline const DirectX::XMFLOAT4& GetScale() const override { return m_Scale; }
 
-	// 방향 벡터(forward vector, right vector, up vector) 반환
-	virtual void GetDirectionVectors(DirectX::XMFLOAT4& forward, DirectX::XMFLOAT4& right, DirectX::XMFLOAT4& up) const override;
-
-	// forward vector 반환
-	virtual const DirectX::XMFLOAT4& GetForwardVector() const override;
-
-	// right vector 반환
-	virtual const DirectX::XMFLOAT4& GetRightVector() const override;
-
-	// up vector 반환
-	virtual const DirectX::XMFLOAT4& GetUpVector() const override;
-
 	virtual inline void SetPosition(const DirectX::XMFLOAT4& pos) override { m_Position = pos; };													// position 대입
-	virtual inline void SetPosition(const float& x, const float& y, const float& z) override { m_Position = DirectX::XMFLOAT4(x, y, z, 1.f); }		// position 대입
-	virtual inline void SetPosition(const float&& x, const float&& y, const float&& z) override { m_Position = DirectX::XMFLOAT4(x, y, z, 1.f); }	// position 대입
+	virtual inline void SetPosition(const float x, const float y, const float z) override { m_Position = DirectX::XMFLOAT4(x, y, z, 1.f); }			// position 대입
 
 	virtual inline void SetRotation(const DirectX::XMFLOAT4& rot) override { m_Rotation = rot; }													// rotation 대입
-	virtual inline void SetRotation(const float& x, const float& y, const float& z) override { m_Rotation = DirectX::XMFLOAT4(x, y, z, 1.f); }		// rotation 대입
-	virtual inline void SetRotation(const float&& x, const float&& y, const float&& z) override { m_Rotation = DirectX::XMFLOAT4(x, y, z, 1.f); }	// rotation 대입
+	virtual inline void SetRotation(const float x, const float y, const float z) override { m_Rotation = DirectX::XMFLOAT4(x, y, z, 1.f); }			// rotation 대입
 
 	virtual inline void SetScale(const DirectX::XMFLOAT4& scale) override { m_Scale = scale; }														// scale 대입
-	virtual inline void SetScale(const float& x, const float& y, const float& z) override { m_Scale = DirectX::XMFLOAT4(x, y, z, 1.f); }			// rotation 대입
-	virtual inline void SetScale(const float&& x, const float&& y, const float&& z) override { m_Scale = DirectX::XMFLOAT4(x, y, z, 1.f); }			// rotation 대입
+	virtual inline void SetScale(const float x, const float y, const float z) override { m_Scale = DirectX::XMFLOAT4(x, y, z, 1.f); }				// scale 대입
 
 private:
 

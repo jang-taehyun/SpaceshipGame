@@ -1,6 +1,16 @@
 #include "pch.h"
 #include "MoveClass.h"
 
+MoveClass::MoveClass(const float& speed)
+{
+	m_MoveSpeed = speed;
+}
+
+MoveClass::MoveClass(const float&& speed)
+{
+	m_MoveSpeed = speed;
+}
+
 const DirectX::XMFLOAT4& MoveClass::Move(const DirectX::XMFLOAT4& curPosition, const DirectX::XMFLOAT4& vector, const MoveState& state, const float& frame_time, const bool& IsKeyDown)
 {
 	DirectX::XMFLOAT4 ret;
@@ -32,34 +42,98 @@ const DirectX::XMFLOAT4& MoveClass::Move(const DirectX::XMFLOAT4& curPosition, c
 	return ret;
 }
 
-const DirectX::XMFLOAT4& MoveClass::Rotate(const DirectX::XMFLOAT4& rotate, const long& MouseX, const long& MouseY, const float& frame_time, const bool& IsKeyDown)
+
+void MoveClass::GetDirectionVectors(DirectX::XMFLOAT4& forward, DirectX::XMFLOAT4& right, DirectX::XMFLOAT4& up) const
 {
-	DirectX::XMFLOAT4 ret = rotate;
-	float speed = 0.f;
+	float pitch, yaw, roll;
+	DirectX::XMVECTOR f, r, u;
+	DirectX::XMMATRIX RotationMatrix;
 
-	// speed 계산 //
-	speed = ComputeRotateSpeed(frame_time, IsKeyDown);
+	// 해당 물체의 local space의 rotate matrix를 이용해, forward, right, up vector 계산 //
+	// rotate matrix 생성
+	pitch = m_Rotation.x;
+	yaw = m_Rotation.y;
+	roll = m_Rotation.z;
+	RotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
 
-	// yaw, pitch 업데이트 //
-	// yaw
-	ret.y += ((float)MouseX * speed);
-	// pitch
-	ret.x += ((float)MouseY * speed);
+	// 해당 객체의 local 좌표계의 축(forward, right, up vector) 추출
+	// 추출 시에 vector 정규화를 하고 추출
+	f = DirectX::XMVector3Normalize(RotationMatrix.r[2]);
+	r = DirectX::XMVector3Normalize(RotationMatrix.r[0]);
+	u = DirectX::XMVector3Normalize(RotationMatrix.r[1]);
 
-	// 변경된 rotate 반환 //
+	// XMFLAOT4 형식으로 저장
+	DirectX::XMStoreFloat4(&forward, f);
+	DirectX::XMStoreFloat4(&right, r);
+	DirectX::XMStoreFloat4(&up, u);
+}
+
+const DirectX::XMFLOAT4& MoveClass::GetForwardVector() const
+{
+	float pitch, yaw, roll;
+	DirectX::XMMATRIX RotationMatrix;
+	DirectX::XMVECTOR forward;
+	DirectX::XMFLOAT4 ret;
+
+	// 해당 물체의 local space의 rotate matrix를 이용해, forward vector 계산 //
+	// rotate matrix 생성
+	pitch = m_Rotation.x;
+	yaw = m_Rotation.y;
+	roll = m_Rotation.z;
+	RotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+
+	// 해당 객체의 local 좌표계의 축(forward vector) 추출
+	// 추출 시에 vector 정규화를 하고 추출
+	forward = DirectX::XMVector3Normalize(RotationMatrix.r[2]);
+	DirectX::XMStoreFloat4(&ret, forward);
+
 	return ret;
 }
 
-
-MoveClass& MoveClass::operator=(const MoveClass& other)
+const DirectX::XMFLOAT4& MoveClass::GetRightVector() const
 {
-	// TODO: 여기에 return 문을 삽입합니다.
+	float pitch, yaw, roll;
+	DirectX::XMMATRIX RotationMatrix;
+	DirectX::XMVECTOR right;
+	DirectX::XMFLOAT4 ret;
+
+	// 해당 물체의 local space의 rotate matrix를 이용해, right vector 계산 //
+	// rotate matrix 생성
+	pitch = m_Rotation.x;
+	yaw = m_Rotation.y;
+	roll = m_Rotation.z;
+	RotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+
+	// 해당 객체의 local 좌표계의 축(right vector) 추출
+	// 추출 시에 vector 정규화를 하고 추출
+	right = DirectX::XMVector3Normalize(RotationMatrix.r[0]);
+	DirectX::XMStoreFloat4(&ret, right);
+
+	return ret;
 }
 
-MoveClass& MoveClass::operator=(const MoveClass&& other)
+const DirectX::XMFLOAT4& MoveClass::GetUpVector() const
 {
-	// TODO: 여기에 return 문을 삽입합니다.
+	float pitch, yaw, roll;
+	DirectX::XMMATRIX RotationMatrix;
+	DirectX::XMVECTOR up;
+	DirectX::XMFLOAT4 ret;
+
+	// 해당 물체의 local space의 rotate matrix를 이용해, up vector 계산 //
+	// rotate matrix 생성
+	pitch = m_Rotation.x;
+	yaw = m_Rotation.y;
+	roll = m_Rotation.z;
+	RotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+
+	// 해당 객체의 local 좌표계의 축(up vector) 추출
+	// 추출 시에 vector 정규화를 하고 추출
+	up = DirectX::XMVector3Normalize(RotationMatrix.r[1]);
+	DirectX::XMStoreFloat4(&ret, up);
+
+	return ret;
 }
+
 
 DirectX::XMFLOAT4& MoveClass::MoveLeft(const DirectX::XMFLOAT4& curPosition, const DirectX::XMFLOAT4& RightVector, const float& speed)
 {
@@ -145,34 +219,6 @@ const float& MoveClass::ComputeMoveSpeed(const float& frame_time, const bool& Is
 	}
 
 	m_PrevMoveSpeed = ret;
-
-	return ret;
-}
-
-const float& MoveClass::ComputeRotateSpeed(const float& frame_time, const bool& IsKeyDown)
-{
-	float ret = m_PrevRotateSpeed;
-
-	if (IsKeyDown)
-	{
-		ret += (frame_time * MOUSE_SENSITIVITY * m_RotateSpeed);
-
-		if (ret > (frame_time * MOUSE_SENSITIVITY * m_RotateSpeed))
-		{
-			ret = frame_time * MOUSE_SENSITIVITY * m_RotateSpeed;
-		}
-	}
-	else
-	{
-		ret -= (frame_time * MOUSE_SENSITIVITY * m_RotateSpeed);
-
-		if (ret < 0.f)
-		{
-			ret = 0.f;
-		}
-	}
-
-	m_PrevRotateSpeed = ret;
 
 	return ret;
 }

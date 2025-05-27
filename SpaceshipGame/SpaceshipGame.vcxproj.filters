@@ -56,9 +56,6 @@
     <Filter Include="Debugging\IMGUIClass">
       <UniqueIdentifier>{9769faa4-fe27-4ad5-9210-4d7a9cb01ff2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Actor">
-      <UniqueIdentifier>{0a67d35f-767e-4a98-b7e5-36269d24aa24}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Model\ModelManager">
       <UniqueIdentifier>{1f0abbbd-4932-423d-8fbb-340e55c207dd}</UniqueIdentifier>
     </Filter>
@@ -98,9 +95,6 @@
     <Filter Include="Model\Spaceship\SpaceshipShaderClass">
       <UniqueIdentifier>{c9ce7fe0-dc45-431a-9878-9c4b6c77d898}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Actor\ActorClass">
-      <UniqueIdentifier>{24aabe3a-49bc-4ae5-80f5-f47d9bdbc317}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SceneManagerClass">
       <UniqueIdentifier>{53171791-417b-4d08-a31a-c30fbf724969}</UniqueIdentifier>
     </Filter>
@@ -139,6 +133,27 @@
     </Filter>
     <Filter Include="Move\MoveClass">
       <UniqueIdentifier>{c97a22e4-4436-4cea-af92-7c967892cd3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rotate">
+      <UniqueIdentifier>{70012fa5-5275-4fac-bf21-c31419aceb2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rotate\IRotateClass">
+      <UniqueIdentifier>{da1ed222-7c63-4f07-b4f3-31b71975eff7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rotate\RotateClass">
+      <UniqueIdentifier>{2d87847b-117f-4e2f-99ca-c78b13518f48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\MoveableObjectClass">
+      <UniqueIdentifier>{f5b1d2f9-1a43-414f-abda-8a6a5e623cca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\ActorClass">
+      <UniqueIdentifier>{24aabe3a-49bc-4ae5-80f5-f47d9bdbc317}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collision">
+      <UniqueIdentifier>{c8682463-6382-41fc-9793-f45f39e533bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collision\ICollisionClass">
+      <UniqueIdentifier>{77b89d0e-2fcb-4721-b3d2-4d3a2d97e604}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -227,7 +242,7 @@
       <Filter>Model\Cube\CubeShaderClass</Filter>
     </ClInclude>
     <ClInclude Include="ActorClass.h">
-      <Filter>Actor\ActorClass</Filter>
+      <Filter>Object\ActorClass</Filter>
     </ClInclude>
     <ClInclude Include="ActorManagerClass.h">
       <Filter>ActorManagerClass</Filter>
@@ -255,6 +270,18 @@
     </ClInclude>
     <ClInclude Include="IMoveClass.h">
       <Filter>Move\IMoveClass</Filter>
+    </ClInclude>
+    <ClInclude Include="IRotateClass.h">
+      <Filter>Rotate\IRotateClass</Filter>
+    </ClInclude>
+    <ClInclude Include="RotateClass.h">
+      <Filter>Rotate\RotateClass</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveableObjectClass.h">
+      <Filter>Object\MoveableObjectClass</Filter>
+    </ClInclude>
+    <ClInclude Include="ICollisionClass.h">
+      <Filter>Collision\ICollisionClass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -328,7 +355,7 @@
       <Filter>Model\Cube\CubeShaderClass</Filter>
     </ClCompile>
     <ClCompile Include="ActorClass.cpp">
-      <Filter>Actor\ActorClass</Filter>
+      <Filter>Object\ActorClass</Filter>
     </ClCompile>
     <ClCompile Include="ActorManagerClass.cpp">
       <Filter>ActorManagerClass</Filter>
@@ -356,6 +383,18 @@
     </ClCompile>
     <ClCompile Include="IMoveClass.cpp">
       <Filter>Move\IMoveClass</Filter>
+    </ClCompile>
+    <ClCompile Include="IRotateClass.cpp">
+      <Filter>Rotate\IRotateClass</Filter>
+    </ClCompile>
+    <ClCompile Include="RotateClass.cpp">
+      <Filter>Rotate\RotateClass</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveableObjectClass.cpp">
+      <Filter>Object\MoveableObjectClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ICollisionClass.cpp">
+      <Filter>Collision\ICollisionClass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
