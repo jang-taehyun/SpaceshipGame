@@ -35,7 +35,7 @@ enum class CollisionState
 // scene 정보 //
 enum class SceneState
 {
-	NONE = 0, LOADING = 1, MATCH = 2, INGAME = 3,
+	START = 0, LOADING = 1, MATCH = 2, INGAME = 3,
 };
 
 // Text 정보 //
