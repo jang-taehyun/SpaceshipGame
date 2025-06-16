@@ -11,22 +11,21 @@ class LightClass;
 
 class InputClass;
 class SoundClass;
-class ActorClass;
 
 class GraphicsClass
 {
 public:
-	explicit GraphicsClass(const int& ScreenWidth, const int& ScreenHeight, const HWND& hwnd);
+	GraphicsClass(int ScreenWidth, int ScreenHeight, HWND hwnd);
 	virtual ~GraphicsClass();
 
-	HRESULT Frame(ActorManagerClass* const& actor_manager, SoundClass* const& sound, const int& fps, const int& cpu_usage, const std::wstring& scene_info);
+	HRESULT Frame(ActorManagerClass* actor_manager, SoundClass* sound, int fps, int cpu_usage, const std::wstring& scene_info);
 
-	inline CameraClass* const& GetCamera() const { return m_Camera; }
+	inline const CameraClass* GetCamera() const { return m_Camera; }
 
 private:
-	HRESULT Initialize(const int& ScreenWidth, const int& ScreenHeight, const HWND& hwnd);
+	HRESULT Initialize(int ScreenWidth, int ScreenHeight, HWND hwnd);
 	void Shutdown();
-	HRESULT Render(ActorManagerClass* const& actor_manager, SoundClass* const& sound, const int& fps, const int& cpu_usage, const std::wstring& scene_info);
+	HRESULT Render(ActorManagerClass* actor_manager, SoundClass* sound, int fps, int cpu_usage, const std::wstring& scene_info);
 
 private:
 	static bool IsInitialize;
@@ -42,6 +41,8 @@ private:
 	IMGUIClass* m_IMGUI = nullptr;
 
 public:
-	GraphicsClass() = delete;
 	GraphicsClass(const GraphicsClass& other) = delete;
+	GraphicsClass(GraphicsClass&& other) = delete;
+	GraphicsClass& operator=(const GraphicsClass& other) = delete;
+	GraphicsClass& operator=(GraphicsClass&& other) = delete;
 };

@@ -1,11 +1,10 @@
 #include "pch.h"
-#include "ColorClass.h"
 #include "D3DClass.h"
 
 bool D3DClass::IsInitialize = false;
 static ErrorContent e;
 
-D3DClass::D3DClass(const int& ScreenWidth, const int& ScreenHeight, const bool& VSYNC, const HWND& hwnd, const bool& FullScreen, const float& ScreenDepth, const float& ScreenNear)
+D3DClass::D3DClass(HWND hwnd, int ScreenWidth, int ScreenHeight, float ScreenDepth, float ScreenNear, bool VSYNC, bool FullScreen)
 {
 	HRESULT result = S_OK;
 
@@ -19,7 +18,7 @@ D3DClass::D3DClass(const int& ScreenWidth, const int& ScreenHeight, const bool& 
 		throw e;
 	}
 
-	result = Initialize(ScreenWidth, ScreenHeight, VSYNC, hwnd, FullScreen, ScreenDepth, ScreenNear);
+	result = Initialize(hwnd, ScreenWidth, ScreenHeight, ScreenDepth, ScreenNear, VSYNC, FullScreen);
 	if (FAILED(result))
 	{
 		Shutdown();
@@ -35,7 +34,7 @@ D3DClass::~D3DClass()
 	IsInitialize = false;
 }
 
-HRESULT D3DClass::Initialize(const int& ScreenWidth, const int& ScreenHeight, const bool& VSYNC, const HWND& hwnd, const bool& FullScreen, const float& ScreenDepth, const float& ScreenNear)
+HRESULT D3DClass::Initialize(HWND hwnd, int ScreenWidth, int ScreenHeight, float ScreenDepth, float ScreenNear, bool VSYNC, bool FullScreen)
 {
 	HRESULT result = S_OK;
 	int Numerator = 0, Denominator = 0;
@@ -55,7 +54,7 @@ HRESULT D3DClass::Initialize(const int& ScreenWidth, const int& ScreenHeight, co
 	}
 
 	// 2. Swap chain 설정 및 Swap chain, Device, Device context 생성
-	result = CreateSwapChainDeviceDeviceContext(ScreenWidth, ScreenHeight, Numerator, Denominator, hwnd, FullScreen);
+	result = CreateSwapChainDeviceDeviceContext(hwnd, ScreenWidth, ScreenHeight, Numerator, Denominator, FullScreen);
 	if (FAILED(result))
 	{
 		e.contents = _T("Swap chain 설정 및 Swap chain, Device, Device context 생성 실패");
@@ -114,87 +113,21 @@ void D3DClass::Shutdown()
 	// swap chain 해제 시에, 윈도우 모드로 설정하지 않으면 해제할 때 예외가 발생
 	if (m_SwapChain)
 		m_SwapChain->SetFullscreenState(false, NULL);
-
-	if (m_AlphaDisableBlendingState)
-	{
-		m_AlphaDisableBlendingState->Release();
-		m_AlphaDisableBlendingState = nullptr;
-	}
-
-	if (m_AlphaEnableBlendingState)
-	{
-		m_AlphaEnableBlendingState->Release();
-		m_AlphaEnableBlendingState = nullptr;
-	}
-
-	if (m_RasterizerState)
-	{
-		m_RasterizerState->Release();
-		m_RasterizerState = nullptr;
-	}
-
-	if (m_DepthStencilView)
-	{
-		m_DepthStencilView->Release();
-		m_DepthStencilView = nullptr;
-	}
-
-	if (m_DepthDisabledStencilState)
-	{
-		m_DepthDisabledStencilState->Release();
-		m_DepthDisabledStencilState = nullptr;
-	}
-
-	if (m_DepthStencilState)
-	{
-		m_DepthStencilState->Release();
-		m_DepthStencilState = nullptr;
-	}
-
-	if (m_DepthStencilBuffer)
-	{
-		m_DepthStencilBuffer->Release();
-		m_DepthStencilBuffer = nullptr;
-	}
-
-	if (m_RenderTargetView)
-	{
-		m_RenderTargetView->Release();
-		m_RenderTargetView = nullptr;
-	}
-
-	if (m_DeviceContext)
-	{
-		m_DeviceContext->Release();
-		m_DeviceContext = nullptr;
-	}
-
-	if (m_Device)
-	{
-		m_Device->Release();
-		m_Device = nullptr;
-	}
-
-	if (m_SwapChain)
-	{
-		m_SwapChain->Release();
-		m_SwapChain = nullptr;
-	}
 }
 
-void D3DClass::BeginScene(const ColorClass& color)
+void D3DClass::BeginScene(DirectX::XMFLOAT4 color)
 {
 	// back buffer를 지울 색상 설정
-	float background[4] = { color.GetColorRed(), color.GetColorGreen(), color.GetColorBlue(), color.GetColorAlpha() };
+	float background[4] = { color.x, color.y, color.z, color.w };
 
 	// back buffer 초기화
-	m_DeviceContext->ClearRenderTargetView(m_RenderTargetView, background);
+	m_DeviceContext->ClearRenderTargetView(m_RenderTargetView.Get(), background);
 
 	// depth buffer 초기화
-	m_DeviceContext->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH, 1.f, 0);
+	m_DeviceContext->ClearDepthStencilView(m_DepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.f, 0);
 }
 
-void D3DClass::EndScene()
+void D3DClass::EndScene() const
 {
 	if (m_VSYNC_Enabled)
 	{
@@ -208,70 +141,46 @@ void D3DClass::EndScene()
 	}
 }
 
-void D3DClass::TurnDepthBufferOn()
+void D3DClass::TurnDepthBufferOn() const
 {
-	m_DeviceContext->OMSetDepthStencilState(m_DepthStencilState, 1);
+	m_DeviceContext->OMSetDepthStencilState(m_DepthStencilState.Get(), 1);
 }
 
-void D3DClass::TurnDepthBufferOff()
+void D3DClass::TurnDepthBufferOff() const
 {
-	m_DeviceContext->OMSetDepthStencilState(m_DepthDisabledStencilState, 1);
+	m_DeviceContext->OMSetDepthStencilState(m_DepthDisabledStencilState.Get(), 1);
 }
 
-void D3DClass::TurnOnAlphaBlending()
+void D3DClass::TurnOnAlphaBlending() const
 {
 	// blend factor를 설정하고, alpha blending state 활성화 //
 	float BlendFactor[4] = { 0.f, 0.f, 0.f, 0.f };
-	m_DeviceContext->OMSetBlendState(m_AlphaEnableBlendingState, BlendFactor, 0xffffffff);
+	m_DeviceContext->OMSetBlendState(m_AlphaEnableBlendingState.Get(), BlendFactor, 0xffffffff);
 }
 
-void D3DClass::TurnOffAlphaBlending()
+void D3DClass::TurnOffAlphaBlending() const
 {
 	// blend factor를 설정하고, alpha blending state 비활성화 //
 	float BlendFactor[4] = { 0.f, 0.f, 0.f, 0.f };
-	m_DeviceContext->OMSetBlendState(m_AlphaDisableBlendingState, BlendFactor, 0xffffffff);
+	m_DeviceContext->OMSetBlendState(m_AlphaDisableBlendingState.Get(), BlendFactor, 0xffffffff);
 }
 
-HRESULT D3DClass::GetRefreshRate(const int& ScreenWidth, const int& ScreenHeight, int& Numerator, int& Denominator)
+HRESULT D3DClass::GetRefreshRate(int ScreenWidth, int ScreenHeight, int& Numerator, int& Denominator)
 {
 	HRESULT result = S_OK;
-	IDXGIFactory* Factory = nullptr;			// DXGI factory
-	IDXGIAdapter* Adapter = nullptr;			// 기본 그래픽 카드
-	IDXGIOutput* AdapterOutput = nullptr;		// 기본 모니터
-	unsigned int ModeCount = 0;					// display mode의 개수
-	DXGI_MODE_DESC* DisplayModeList = nullptr;	// display mode의 정보를 담은 배열
+	Microsoft::WRL::ComPtr<IDXGIFactory> Factory = nullptr;				// DXGI factory
+	Microsoft::WRL::ComPtr<IDXGIAdapter> Adapter = nullptr;				// 기본 그래픽 카드
+	Microsoft::WRL::ComPtr<IDXGIOutput> AdapterOutput = nullptr;		// 기본 모니터
+	unsigned int ModeCount = 0, CombinationCount = 0;					// format에 맞는 display mode의 개수, 디스플레이 모드에 대한 조합의 개수
+	DXGI_MODE_DESC* DisplayModeList = nullptr;							// display mode의 정보를 담은 배열
 
 	// 에러 메세지 초기화 //
 	e.title = _T("D3DClass GetRefreshRate()");
 
 	// DXGI factory 생성 //
-	result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&Factory);
+	result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)Factory.GetAddressOf());
 	if (FAILED(result))
 	{
-		if (DisplayModeList)
-		{
-			delete[] DisplayModeList;
-			DisplayModeList = nullptr;
-		}
-		
-		if (AdapterOutput)
-		{
-			AdapterOutput->Release();
-			AdapterOutput = nullptr;
-		}
-
-		if (Adapter)
-		{
-			Adapter->Release();
-			Adapter = nullptr;
-		}
-
-		if (Factory)
-		{
-			Factory->Release();
-			Factory = nullptr;
-		}
-		
 		e.contents = _T("DXGI factory 생성 실패");
 		e.errorCode = result;
 		return result;
@@ -282,30 +191,6 @@ HRESULT D3DClass::GetRefreshRate(const int& ScreenWidth, const int& ScreenHeight
 	result = Factory->EnumAdapters(0, &Adapter);
 	if (FAILED(result))
 	{
-		if (DisplayModeList)
-		{
-			delete[] DisplayModeList;
-			DisplayModeList = nullptr;
-		}
-
-		if (AdapterOutput)
-		{
-			AdapterOutput->Release();
-			AdapterOutput = nullptr;
-		}
-
-		if (Adapter)
-		{
-			Adapter->Release();
-			Adapter = nullptr;
-		}
-
-		if (Factory)
-		{
-			Factory->Release();
-			Factory = nullptr;
-		}
-
 		e.contents = _T("기본 그래픽카드 조회 실패");
 		e.errorCode = result;
 		return result;
@@ -315,30 +200,6 @@ HRESULT D3DClass::GetRefreshRate(const int& ScreenWidth, const int& ScreenHeight
 	result = Adapter->EnumOutputs(0, &AdapterOutput);
 	if (FAILED(result))
 	{
-		if (DisplayModeList)
-		{
-			delete[] DisplayModeList;
-			DisplayModeList = nullptr;
-		}
-
-		if (AdapterOutput)
-		{
-			AdapterOutput->Release();
-			AdapterOutput = nullptr;
-		}
-
-		if (Adapter)
-		{
-			Adapter->Release();
-			Adapter = nullptr;
-		}
-
-		if (Factory)
-		{
-			Factory->Release();
-			Factory = nullptr;
-		}
-
 		e.contents = _T("기본 모니터 조회 실패");
 		e.errorCode = result;
 		return result;
@@ -348,61 +209,20 @@ HRESULT D3DClass::GetRefreshRate(const int& ScreenWidth, const int& ScreenHeight
 	result = AdapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &ModeCount, NULL);
 	if (FAILED(result))
 	{
-		if (DisplayModeList)
-		{
-			delete[] DisplayModeList;
-			DisplayModeList = nullptr;
-		}
-
-		if (AdapterOutput)
-		{
-			AdapterOutput->Release();
-			AdapterOutput = nullptr;
-		}
-
-		if (Adapter)
-		{
-			Adapter->Release();
-			Adapter = nullptr;
-		}
-
-		if (Factory)
-		{
-			Factory->Release();
-			Factory = nullptr;
-		}
-
 		e.contents = _T("DXGI_FORMAT_R8G8B8A8_UNORM 표시 형식에 맞는 모드 수 조회 실패");
 		e.errorCode = result;
 		return result;
 	}
 
 	// 디스플레이 모드에 대한 모든 조합을 구하기 //
-	DisplayModeList = new DXGI_MODE_DESC[ModeCount];
+	CombinationCount = ModeCount;
+	DisplayModeList = new DXGI_MODE_DESC[CombinationCount];
 	if (!DisplayModeList)
 	{
 		if (DisplayModeList)
 		{
 			delete[] DisplayModeList;
 			DisplayModeList = nullptr;
-		}
-
-		if (AdapterOutput)
-		{
-			AdapterOutput->Release();
-			AdapterOutput = nullptr;
-		}
-
-		if (Adapter)
-		{
-			Adapter->Release();
-			Adapter = nullptr;
-		}
-
-		if (Factory)
-		{
-			Factory->Release();
-			Factory = nullptr;
 		}
 
 		e.contents = _T("display mode의 정보를 담을 배열 생성 실패");
@@ -418,89 +238,32 @@ HRESULT D3DClass::GetRefreshRate(const int& ScreenWidth, const int& ScreenHeight
 			DisplayModeList = nullptr;
 		}
 
-		if (AdapterOutput)
-		{
-			AdapterOutput->Release();
-			AdapterOutput = nullptr;
-		}
-
-		if (Adapter)
-		{
-			Adapter->Release();
-			Adapter = nullptr;
-		}
-
-		if (Factory)
-		{
-			Factory->Release();
-			Factory = nullptr;
-		}
-
 		e.contents = _T("디스플레이 모드에 대한 모든 조합 조회 실패");
 		e.errorCode = result;
 		return result;
 	}
 
 	// 모든 조합에서 윈도우의 가로, 세로 길이에 맞는 디스플레이 모드를 찾고, FPS의 분모, 분자 값 저장 //
-	for (unsigned int i = 0; i < ModeCount; ++i)
+	for (int i = 0; i < CombinationCount; ++i)
 	{
-		if (DisplayModeList[i].Width == (unsigned int)ScreenWidth && DisplayModeList[i].Height == (unsigned int)ScreenHeight)
+		if (DisplayModeList[i].Width == (unsigned int)ScreenWidth)
 		{
-			Numerator = DisplayModeList[i].RefreshRate.Numerator;
-			Denominator = DisplayModeList[i].RefreshRate.Denominator;
+			if (DisplayModeList[i].Height == (unsigned int)ScreenHeight)
+			{
+				Numerator = DisplayModeList[i].RefreshRate.Numerator;
+				Denominator = DisplayModeList[i].RefreshRate.Denominator;
+			}
 		}
 	}
 
-	// 그래픽카드 정보 가져오기 //
-	result = GetVideoCardDescription(Adapter);
-	if (FAILED(result))
-	{
-		if (DisplayModeList)
-		{
-			delete[] DisplayModeList;
-			DisplayModeList = nullptr;
-		}
-
-		if (AdapterOutput)
-		{
-			AdapterOutput->Release();
-			AdapterOutput = nullptr;
-		}
-
-		if (Adapter)
-		{
-			Adapter->Release();
-			Adapter = nullptr;
-		}
-
-		if (Factory)
-		{
-			Factory->Release();
-			Factory = nullptr;
-		}
-
-		e.contents = _T("그래픽카드 정보 가져오기 실패");
-		e.errorCode = result;
-		return result;
-	}
-
-	// 디스플레이 모드 리스트, adapter, factory 객체 해제 //
+	// 디스플레이 모드 리스트 해제 //
 	delete[] DisplayModeList;
 	DisplayModeList = nullptr;
-
-	AdapterOutput->Release();
-	AdapterOutput = nullptr;
-
-	Adapter->Release();
-	Adapter = nullptr;
-
-	Factory->Release();
-	Factory = nullptr;
 
 	return result;
 }
 
-HRESULT D3DClass::CreateSwapChainDeviceDeviceContext(const int& ScreenWidth, const int& ScreenHeight, const int& Numerator, const int& Denominator, const HWND& hwnd, const bool& FullScreen)
+HRESULT D3DClass::CreateSwapChainDeviceDeviceContext(HWND hwnd, int ScreenWidth, int ScreenHeight, int Numerator, int Denominator, bool FullScreen)
 {
 	HRESULT result = S_OK;
 	DXGI_SWAP_CHAIN_DESC SwapChainDesc;				// swap chain 설정 정보
@@ -556,7 +319,7 @@ HRESULT D3DClass::CreateSwapChainDeviceDeviceContext(const int& ScreenWidth, con
 	FeatureLevel = D3D_FEATURE_LEVEL_11_0;
 
 	// swap chain, device, device context 생성 //
-	result = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &FeatureLevel, 1, D3D11_SDK_VERSION, &SwapChainDesc, &m_SwapChain, &m_Device, NULL, &m_DeviceContext);
+	result = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &FeatureLevel, 1, D3D11_SDK_VERSION, &SwapChainDesc, m_SwapChain.GetAddressOf(), m_Device.GetAddressOf(), NULL, m_DeviceContext.GetAddressOf());
 	if (FAILED(result))
 	{
 		e.contents = _T("swap chain, device, device context 생성 실패");
@@ -570,13 +333,13 @@ HRESULT D3DClass::CreateSwapChainDeviceDeviceContext(const int& ScreenWidth, con
 HRESULT D3DClass::SetAndCreateRenderTargetView()
 {
 	HRESULT result = S_OK;
-	ID3D11Texture2D* BackBufferPtr = nullptr;			// back buffer의 포인터
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> BackBufferPtr = nullptr;			// back buffer의 포인터
 
 	// 에러 메세지 초기화 //
 	e.title = _T("D3DClass SetAndCreateRenderTargetView()");
 
 	// back buffer의 pointer 가져오기 //
-	result = m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&BackBufferPtr);
+	result = m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)BackBufferPtr.GetAddressOf());
 	if (FAILED(result))
 	{
 		e.contents = _T("back buffer의 pointer 가져오기 실패");
@@ -585,7 +348,7 @@ HRESULT D3DClass::SetAndCreateRenderTargetView()
 	}
 
 	// render target view를 생성하고, render target view가 back buffer를 가르키도록 설정 //
-	result = m_Device->CreateRenderTargetView(BackBufferPtr, NULL, &m_RenderTargetView);
+	result = m_Device->CreateRenderTargetView(BackBufferPtr.Get(), NULL, m_RenderTargetView.GetAddressOf());
 	if (FAILED(result))
 	{
 		e.contents = _T("render target view 생성, render target view가 back buffer를 가르키도록 설정 실패");
@@ -600,7 +363,7 @@ HRESULT D3DClass::SetAndCreateRenderTargetView()
 	return result;
 }
 
-HRESULT D3DClass::SetDepthAndStencil(const int& ScreenWidth, const int& ScreenHeight)
+HRESULT D3DClass::SetDepthAndStencil(int ScreenWidth, int ScreenHeight)
 {
 	HRESULT result = S_OK;
 	D3D11_TEXTURE2D_DESC DepthBufferDesc;					// depth buffer 설정 정보
@@ -628,7 +391,7 @@ HRESULT D3DClass::SetDepthAndStencil(const int& ScreenWidth, const int& ScreenHe
 	DepthBufferDesc.MiscFlags = 0;
 
 	// depth buffer를 texture 형식으로 생성 //
-	result = m_Device->CreateTexture2D(&DepthBufferDesc, NULL, &m_DepthStencilBuffer);
+	result = m_Device->CreateTexture2D(&DepthBufferDesc, NULL, m_DepthStencilBuffer.GetAddressOf());
 	if (FAILED(result))
 	{
 		e.contents = _T("depth buffer 생성 실패");
@@ -658,7 +421,7 @@ HRESULT D3DClass::SetDepthAndStencil(const int& ScreenWidth, const int& ScreenHe
 	DepthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
 	// depth stencil state 생성(depth buffer를 활성화한 depth stencil state) //
-	result = m_Device->CreateDepthStencilState(&DepthStencilDesc, &m_DepthStencilState);
+	result = m_Device->CreateDepthStencilState(&DepthStencilDesc, m_DepthStencilState.GetAddressOf());
 	if (FAILED(result))
 	{
 		e.contents = _T("depth stencil state 생성(depth buffer를 활성화한 depth stencil state) 실패");
@@ -670,7 +433,7 @@ HRESULT D3DClass::SetDepthAndStencil(const int& ScreenWidth, const int& ScreenHe
 	DepthStencilDesc.DepthEnable = false;
 
 	// depth stencil state 생성(depth buffer를 비활성화한 depth stencil state) //
-	result = m_Device->CreateDepthStencilState(&DepthStencilDesc, &m_DepthDisabledStencilState);
+	result = m_Device->CreateDepthStencilState(&DepthStencilDesc, m_DepthDisabledStencilState.GetAddressOf());
 	if (FAILED(result))
 	{
 		e.contents = _T("depth stencil state 생성(depth buffer를 비활성화한 depth stencil state) 실패");
@@ -679,7 +442,7 @@ HRESULT D3DClass::SetDepthAndStencil(const int& ScreenWidth, const int& ScreenHe
 	}
 
 	// depth stencil state(depth buffer를 활성화한 depth stencil state)를 device context에 붙이기 //
-	m_DeviceContext->OMSetDepthStencilState(m_DepthStencilState, 1);
+	m_DeviceContext->OMSetDepthStencilState(m_DepthStencilState.Get(), 1);
 
 	// depth stencil view 설정 //
 	DepthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -687,7 +450,7 @@ HRESULT D3DClass::SetDepthAndStencil(const int& ScreenWidth, const int& ScreenHe
 	DepthStencilViewDesc.Texture2D.MipSlice = 0;
 
 	// depth stencil view 생성 // 
-	result = m_Device->CreateDepthStencilView(m_DepthStencilBuffer, &DepthStencilViewDesc, &m_DepthStencilView);
+	result = m_Device->CreateDepthStencilView(m_DepthStencilBuffer.Get(), &DepthStencilViewDesc, m_DepthStencilView.GetAddressOf());
 	if (FAILED(result))
 	{
 		e.contents = _T("depth stencil view 생성 실패");
@@ -696,7 +459,7 @@ HRESULT D3DClass::SetDepthAndStencil(const int& ScreenWidth, const int& ScreenHe
 	}
 
 	// render target view와 depth stencil view를 출력 렌더링 파이프라인에 바인드 //
-	m_DeviceContext->OMSetRenderTargets(1, &m_RenderTargetView, m_DepthStencilView);
+	m_DeviceContext->OMSetRenderTargets(1, m_RenderTargetView.GetAddressOf(), m_DepthStencilView.Get());
 
 	return result;
 }
@@ -723,7 +486,7 @@ HRESULT D3DClass::SetRasterizer()
 	RasterizerDesc.SlopeScaledDepthBias = 0.0f;
 
 	// Rasterizer state 생성 //
-	result = m_Device->CreateRasterizerState(&RasterizerDesc, &m_RasterizerState);
+	result = m_Device->CreateRasterizerState(&RasterizerDesc, m_RasterizerState.GetAddressOf());
 	if (FAILED(result))
 	{
 		e.contents = _T("Rasterizer state 생성 실패");
@@ -732,12 +495,12 @@ HRESULT D3DClass::SetRasterizer()
 	}
 
 	// Device context에서 Rasterizer state를 설정 //
-	m_DeviceContext->RSSetState(m_RasterizerState);
+	m_DeviceContext->RSSetState(m_RasterizerState.Get());
 
 	return result;
 }
 
-void D3DClass::SetViewport(const int& ScreenWidth, const int& ScreenHeight)
+void D3DClass::SetViewport(int ScreenWidth, int ScreenHeight)
 {
 	D3D11_VIEWPORT Viewport;				// view port 설정 정보
 
@@ -753,7 +516,7 @@ void D3DClass::SetViewport(const int& ScreenWidth, const int& ScreenHeight)
 	m_DeviceContext->RSSetViewports(1, &Viewport);
 }
 
-void D3DClass::SetMatrix(const int& ScreenWidth, const int& ScreenHeight, const float& ScreenDepth, const float& ScreenNear)
+void D3DClass::SetMatrix(int ScreenWidth, int ScreenHeight, float ScreenDepth, float ScreenNear)
 {
 	// Projection matrix의 시야각(Field of view), 화면 비율(aspect) 설정 //
 	float FieldOfView = DirectX::XM_PI / 4.f;
@@ -761,9 +524,6 @@ void D3DClass::SetMatrix(const int& ScreenWidth, const int& ScreenHeight, const 
 
 	// Projection matrix 생성 //
 	m_ProjectionMatrix = DirectX::XMMatrixPerspectiveFovLH(FieldOfView, ScreenAspect, ScreenNear, ScreenDepth);
-
-	// World matrix을 항등 행렬로 생성 //
-	m_WorlMatrix = DirectX::XMMatrixIdentity();
 
 	// Ortho matrix(직교 투영 행렬) 생성 //
 	m_OrthoMatrix = DirectX::XMMatrixOrthographicLH((float)ScreenWidth, (float)ScreenHeight, ScreenNear, ScreenDepth);
@@ -789,7 +549,7 @@ HRESULT D3DClass::SetAlphaBlendState()
 	AlphaBlendStateDesc.RenderTarget[0].RenderTargetWriteMask = 0x0f;
 
 	// alpha blend state 생성(blend 활성화) //
-	result = m_Device->CreateBlendState(&AlphaBlendStateDesc, &m_AlphaEnableBlendingState);
+	result = m_Device->CreateBlendState(&AlphaBlendStateDesc, m_AlphaEnableBlendingState.GetAddressOf());
 	if (FAILED(result))
 	{
 		e.contents = _T("alpha blend state 생성(blend 활성화) 실패");
@@ -799,44 +559,11 @@ HRESULT D3DClass::SetAlphaBlendState()
 
 	// alpha blend state 생성(blend 비활성화) //
 	AlphaBlendStateDesc.RenderTarget[0].BlendEnable = FALSE;
-	result = m_Device->CreateBlendState(&AlphaBlendStateDesc, &m_AlphaDisableBlendingState);
+	result = m_Device->CreateBlendState(&AlphaBlendStateDesc, m_AlphaDisableBlendingState.GetAddressOf());
 	if (FAILED(result))
 	{
 		e.contents = _T("alpha blend state 생성(blend 비활성화) 실패");
 		e.errorCode = result;
-		return result;
-	}
-
-	return result;
-}
-
-HRESULT D3DClass::GetVideoCardDescription(IDXGIAdapter* const& Adapter)
-{
-	HRESULT result = S_OK;
-	DXGI_ADAPTER_DESC AdapterDesc;			// 그래픽카드 정보
-	size_t StringLength = 0;				// 그래픽카드 정보의 길이
-
-	// 에러 메세지 초기화 //
-	e.title = _T("D3DClass GetVideoCardDescription()");
-
-	// 그래픽카드의 정보 가져오기 //
-	result = Adapter->GetDesc(&AdapterDesc);
-	if (FAILED(result))
-	{
-		e.contents = _T("그래픽카드의 정보 가져오기 실패");
-		e.errorCode = result;
-		return result;
-	}
-
-	// 그래픽카드 메모리를 MB 단위로 저장 //
-	m_VideoCardMemory = (int)(AdapterDesc.DedicatedVideoMemory / 1024 / 1024);
-
-	// 그래픽카드 정보 복사 //
-	StringLength = 0;
-	if (wcstombs_s(&StringLength, m_VideoCardDescription, 128, AdapterDesc.Description, 128))
-	{
-		e.contents = _T("그래픽카드 정보 복사 실패");
-		e.errorCode = E_FAIL;
 		return result;
 	}
 

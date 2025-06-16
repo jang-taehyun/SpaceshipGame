@@ -5,16 +5,16 @@
 class SoundClass
 {
 public:
-	explicit SoundClass();
+	SoundClass();
 	virtual ~SoundClass();
 
 	HRESULT Frame();
 
-	bool IsBackgoundPlay() { return m_BackgroundSound->GetState() == DirectX::SoundState::PLAYING; }
-	bool IsEffectPlay() { return m_EffectSound->GetState() == DirectX::SoundState::PLAYING; }
+	inline bool IsBackgoundPlay() const { return m_BackgroundSound->GetState() == DirectX::SoundState::PLAYING; }
+	inline bool IsEffectPlay() const { return m_EffectSound->GetState() == DirectX::SoundState::PLAYING; }
 
-	HRESULT PlayWaveFile(const SoundInfo info);
-	HRESULT StopWaveFile(const SoundInfo info);
+	HRESULT PlayWaveFile(SoundInfo info) const;
+	HRESULT StopWaveFile(SoundInfo info) const;
 
 private:
 	HRESULT Initialize();
@@ -36,4 +36,7 @@ private:
 
 public:
 	SoundClass(const SoundClass& other) = delete;
+	SoundClass(SoundClass&& other) = delete;
+	SoundClass& operator=(const SoundClass& other) = delete;
+	SoundClass& operator=(SoundClass&& other) = delete;
 };

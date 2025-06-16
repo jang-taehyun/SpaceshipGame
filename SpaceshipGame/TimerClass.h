@@ -3,12 +3,12 @@
 class TimerClass
 {
 public:
-	explicit TimerClass();
+	TimerClass();
 	virtual ~TimerClass();
 
 	void Frame();
 
-	inline const float GetTime() const { return (m_Frequency ? m_FrameTime : -1.f); }
+	inline float GetTime() const { return (m_Frequency ? m_FrameTime : -1.f); }
 
 private:
 	void Initialize();
@@ -23,4 +23,5 @@ private:
 
 public:
 	TimerClass(const TimerClass& other) = delete;
+	TimerClass(TimerClass&& other) = delete;
 };

@@ -41,9 +41,6 @@
     <Filter Include="Default\header">
       <UniqueIdentifier>{4cdff5a3-8c3f-4636-bd3a-5b4c64260d22}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CameraClass">
-      <UniqueIdentifier>{6d70804d-61ec-47a6-9770-f8b84460eb0e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="FrustumClass">
       <UniqueIdentifier>{cbac6ccf-be28-4f73-9f9b-51c9b43e22fa}</UniqueIdentifier>
     </Filter>
@@ -104,15 +101,6 @@
     <Filter Include="ActorManagerClass">
       <UniqueIdentifier>{f76564fc-c875-488a-bc4b-f72ebb04c305}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Affine">
-      <UniqueIdentifier>{383ce90a-46d7-4511-9780-bc79d489ac21}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Affine\IAffineControlClass">
-      <UniqueIdentifier>{580b2aea-f030-4206-8f4c-782262c456a1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Affine\ICollisionContorlClass">
-      <UniqueIdentifier>{ce04e28a-0279-4617-9ec5-845e5e46a44b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="TypeConverter">
       <UniqueIdentifier>{7ea17dcf-82ce-46e2-a0c9-180b1f84633a}</UniqueIdentifier>
     </Filter>
@@ -149,11 +137,38 @@
     <Filter Include="Object\ActorClass">
       <UniqueIdentifier>{24aabe3a-49bc-4ae5-80f5-f47d9bdbc317}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\CameraClass">
+      <UniqueIdentifier>{6d70804d-61ec-47a6-9770-f8b84460eb0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ComputeDirectionVectorClass">
+      <UniqueIdentifier>{61644cc4-b24f-455b-886a-f2cf3007bc93}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Collision">
-      <UniqueIdentifier>{c8682463-6382-41fc-9793-f45f39e533bc}</UniqueIdentifier>
+      <UniqueIdentifier>{6ff18a9d-ee6c-4589-bbed-2df641444493}</UniqueIdentifier>
     </Filter>
     <Filter Include="Collision\ICollisionClass">
-      <UniqueIdentifier>{77b89d0e-2fcb-4721-b3d2-4d3a2d97e604}</UniqueIdentifier>
+      <UniqueIdentifier>{547d56bb-9a13-4d40-bbec-4bc1b73844d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collision\CollisionClass">
+      <UniqueIdentifier>{d0a59b05-b414-423d-a754-8ad2c466fccc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Text">
+      <UniqueIdentifier>{903a94af-6dc9-4e45-862b-fedb1ea0a84b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Text\TextManagerClass">
+      <UniqueIdentifier>{1811e15d-182a-4003-acfb-7130b808f53a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Text\ITextClass">
+      <UniqueIdentifier>{fd3e58b8-c9e0-4f63-acb2-7de96291bff1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Text\TextClass">
+      <UniqueIdentifier>{ac3c10fe-0906-439d-9f98-5886c7e4d60a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{23ab21c9-df38-4029-affc-f68bcbc7f411}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\ISceneClass">
+      <UniqueIdentifier>{0b17f4ca-87da-469e-b2b7-b4b4d63ac0bd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -197,7 +212,7 @@
       <Filter>Default\header</Filter>
     </ClInclude>
     <ClInclude Include="CameraClass.h">
-      <Filter>CameraClass</Filter>
+      <Filter>Object\CameraClass</Filter>
     </ClInclude>
     <ClInclude Include="FrustumClass.h">
       <Filter>FrustumClass</Filter>
@@ -256,12 +271,6 @@
     <ClInclude Include="GameObjectClass.h">
       <Filter>Object\GameObjectClass</Filter>
     </ClInclude>
-    <ClInclude Include="IAffineControlClass.h">
-      <Filter>Affine\IAffineControlClass</Filter>
-    </ClInclude>
-    <ClInclude Include="ICollisionContorlClass.h">
-      <Filter>Affine\ICollisionContorlClass</Filter>
-    </ClInclude>
     <ClInclude Include="MoveClass.h">
       <Filter>Move\MoveClass</Filter>
     </ClInclude>
@@ -280,8 +289,26 @@
     <ClInclude Include="MoveableObjectClass.h">
       <Filter>Object\MoveableObjectClass</Filter>
     </ClInclude>
+    <ClInclude Include="CollisionClass.h">
+      <Filter>Collision\CollisionClass</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputeDirectionVectorClass.h">
+      <Filter>ComputeDirectionVectorClass</Filter>
+    </ClInclude>
     <ClInclude Include="ICollisionClass.h">
       <Filter>Collision\ICollisionClass</Filter>
+    </ClInclude>
+    <ClInclude Include="TextManagerClass.h">
+      <Filter>Text\TextManagerClass</Filter>
+    </ClInclude>
+    <ClInclude Include="ITextClass.h">
+      <Filter>Text\ITextClass</Filter>
+    </ClInclude>
+    <ClInclude Include="TextClass.h">
+      <Filter>Text\TextClass</Filter>
+    </ClInclude>
+    <ClInclude Include="ISceneClass.h">
+      <Filter>Scene\ISceneClass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -316,7 +343,7 @@
       <Filter>Default\header</Filter>
     </ClCompile>
     <ClCompile Include="CameraClass.cpp">
-      <Filter>CameraClass</Filter>
+      <Filter>Object\CameraClass</Filter>
     </ClCompile>
     <ClCompile Include="FrustumClass.cpp">
       <Filter>FrustumClass</Filter>
@@ -369,12 +396,6 @@
     <ClCompile Include="GameObjectClass.cpp">
       <Filter>Object\GameObjectClass</Filter>
     </ClCompile>
-    <ClCompile Include="IAffineControlClass.cpp">
-      <Filter>Affine\IAffineControlClass</Filter>
-    </ClCompile>
-    <ClCompile Include="ICollisionContorlClass.cpp">
-      <Filter>Affine\ICollisionContorlClass</Filter>
-    </ClCompile>
     <ClCompile Include="MoveClass.cpp">
       <Filter>Move\MoveClass</Filter>
     </ClCompile>
@@ -393,8 +414,26 @@
     <ClCompile Include="MoveableObjectClass.cpp">
       <Filter>Object\MoveableObjectClass</Filter>
     </ClCompile>
+    <ClCompile Include="CollisionClass.cpp">
+      <Filter>Collision\CollisionClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputeDirectionVectorClass.cpp">
+      <Filter>ComputeDirectionVectorClass</Filter>
+    </ClCompile>
     <ClCompile Include="ICollisionClass.cpp">
       <Filter>Collision\ICollisionClass</Filter>
+    </ClCompile>
+    <ClCompile Include="TextManagerClass.cpp">
+      <Filter>Text\TextManagerClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ITextClass.cpp">
+      <Filter>Text\ITextClass</Filter>
+    </ClCompile>
+    <ClCompile Include="TextClass.cpp">
+      <Filter>Text\TextClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ISceneClass.cpp">
+      <Filter>Scene\ISceneClass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

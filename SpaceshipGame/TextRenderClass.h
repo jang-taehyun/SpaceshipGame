@@ -3,22 +3,23 @@
 #include <SpriteFont.h>
 
 class D3DClass;
+class TextManagerClass;
+class ITextClass;
 
 class TextRenderClass
 {
 public:
-	explicit TextRenderClass(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext);
+	TextRenderClass(const ID3D11Device* Device, const ID3D11DeviceContext* DeviceContext);
 	virtual ~TextRenderClass();
 
-	void Render(D3DClass* const& DirectX3D, const std::wstring& text, const DirectX::XMFLOAT2& pos, const DirectX::XMFLOAT4& color);
+	void Render(const D3DClass* DirectX3D, const TextManagerClass* TextManager);
 
 private:
-	HRESULT Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext);
-	void Shutdown();
+	HRESULT Initialize(const ID3D11Device* Device, const ID3D11DeviceContext* DeviceContext);
 
-	void BeginRender(D3DClass* const& DirectX3D);
-	void Rendering(const std::wstring& text, const DirectX::XMFLOAT2& pos, const DirectX::XMFLOAT4& color);
-	void EndRender(D3DClass* const& DirectX3D);
+	void BeginRender(const D3DClass* DirectX3D);
+	void Rendering(const ITextClass* Text);
+	void EndRender(const D3DClass* DirectX3D);
 
 private:
 	static bool IsInitialize;
@@ -27,6 +28,8 @@ private:
 	std::unique_ptr<DirectX::SpriteBatch> m_SpriteBatch;
 
 public:
-	TextRenderClass() = delete;
 	TextRenderClass(const TextRenderClass& other) = delete;
+	TextRenderClass(TextRenderClass&& other) = delete;
+	TextRenderClass& operator=(const TextRenderClass& other) = delete;
+	TextRenderClass& operator=(TextRenderClass&& other) = delete;
 };

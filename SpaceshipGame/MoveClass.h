@@ -11,28 +11,23 @@ class MoveClass : public IMoveClass
 {
 public:
 	MoveClass() = default;
-	explicit MoveClass(const float& speed);
-	explicit MoveClass(const float&& speed);
-	MoveClass(const MoveClass& other) = default;
+	explicit MoveClass(float speed);
 	virtual ~MoveClass() = default;
 
-	const DirectX::XMFLOAT4& Move(const DirectX::XMFLOAT4& curPosition, const DirectX::XMFLOAT4& vector, const MoveState& state, const float& frame_time, const bool& IsKeyDown) override;
+	DirectX::XMFLOAT4 Move(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 rotate, MoveState state, float frame_time, bool IsKeyDown) override;
 	
-	inline const float& GetMoveSpeed() const override { return m_MoveSpeed; }
-	inline void SetMoveSpeed(const float& value) override { m_MoveSpeed = value; }
+	inline float GetMoveSpeed() const override { return m_MoveSpeed; }
+	inline void SetMoveSpeed(float value) override { m_MoveSpeed = value; }
+
+	virtual std::unique_ptr<IMoveClass> Clone() const override;
 
 private:
-	virtual void GetDirectionVectors(DirectX::XMFLOAT4& forward, DirectX::XMFLOAT4& right, DirectX::XMFLOAT4& up) const override;
-	virtual const DirectX::XMFLOAT4& GetForwardVector() const override;
-	virtual const DirectX::XMFLOAT4& GetRightVector() const override;
-	virtual const DirectX::XMFLOAT4& GetUpVector() const override;
+	DirectX::XMFLOAT4 MoveLeft(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 RightVector, float speed) const;
+	DirectX::XMFLOAT4 MoveRight(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 RightVector, float speed) const;
+	DirectX::XMFLOAT4 MoveForward(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 ForwardVector, float speed) const;
+	DirectX::XMFLOAT4 MoveBackward(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 ForwardVector, float speed) const;
 
-	DirectX::XMFLOAT4& MoveLeft(const DirectX::XMFLOAT4& curPosition, const DirectX::XMFLOAT4& RightVector, const float& speed) override;
-	DirectX::XMFLOAT4& MoveRight(const DirectX::XMFLOAT4& curPosition, const DirectX::XMFLOAT4& RightVector, const float& speed) override;
-	DirectX::XMFLOAT4& MoveForward(const DirectX::XMFLOAT4& curPosition, const DirectX::XMFLOAT4& ForwardVector, const float& speed) override;
-	DirectX::XMFLOAT4& MoveBackward(const DirectX::XMFLOAT4& curPosition, const DirectX::XMFLOAT4& ForwardVector, const float& speed) override;
-
-	const float& ComputeMoveSpeed(const float& frame_time, const bool& IsKeyDown) override;
+	float ComputeMoveSpeed(float frame_time, bool IsKeyDown);
 
 private:
 	float m_MoveSpeed = 1.f;

@@ -2,15 +2,18 @@
 #include "TypeConverterClass.h"
 #include "GameObjectClass.h"
 
-const DirectX::XMFLOAT4X4& GameObjectClass::GetAffineMatrix() const
+GameObjectClass::GameObjectClass(const AffineInfo& affine) : m_Affine(affine) {}
+
+DirectX::XMFLOAT4X4& GameObjectClass::GetAffineMatrix() const
 {
 	DirectX::XMMATRIX affine;
 	DirectX::XMFLOAT4X4 ret;
 
 	// affine matrix = scale * rotate * pos
-	affine = TypeConverterClass::XMFLOAT4toXMMATRIX(m_Position, m_Rotation, m_Scale);
+	affine = TypeConverterClass::XMFLOAT4toXMMATRIX(m_Affine.position, m_Affine.rotation, m_Affine.scale);
 
-	// XMMATRIX 타입을 XMFLOAT4X4 타입으로 변환 후 반환 //
+	// XMMATRIX 타입을 XMFLOAT4X4 타입으로 변환 //
 	DirectX::XMStoreFloat4x4(&ret, affine);
+
 	return ret;
 }

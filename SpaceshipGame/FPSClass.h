@@ -3,14 +3,14 @@
 class FPSClass
 {
 public:
-	explicit FPSClass();
+	FPSClass();
 	virtual ~FPSClass();
 
 	void Frame();
 	
 	// Getter //
 
-	inline const int& GetFPS() const { return m_FPS; }
+	inline int GetFPS() const { return m_FPS; }
 
 private:
 	void Initialize();
@@ -24,4 +24,5 @@ private:
 
 public:
 	FPSClass(const FPSClass& other) = delete;
+	FPSClass(FPSClass&& other) = delete;
 };

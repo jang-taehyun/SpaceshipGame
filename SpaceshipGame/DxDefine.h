@@ -19,3 +19,7 @@
 #include <d3dcompiler.h>
 #include <directxmath.h>
 #include <dinput.h>
+
+// Microsoft ComPtr Æ÷ÇÔ //
+#include <wrl.h>
+// #include <wrl/client.h>

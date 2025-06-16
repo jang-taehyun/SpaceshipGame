@@ -19,13 +19,12 @@ public:
 
 	LRESULT CALLBACK MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
 
-	inline const FPSClass* const& GetFPS() const { return m_FPS; }
-	inline const CPUClass* const& GetCPU() const { return m_CPU; }
-	inline const TimerClass* const& GetTimer() const { return m_Timer; }
+	inline const FPSClass* GetFPS() const { return m_FPS.get(); }
+	inline const CPUClass* GetCPU() const { return m_CPU.get(); }
+	inline const TimerClass* GetTimer() const { return m_Timer.get(); }
 
 private:
 	HRESULT Initialize();
-	void Shutdown();
 
 	HRESULT Frame();
 	void InitializeWindows(int& ScreenWidth, int& ScreenHeight);
@@ -38,19 +37,22 @@ private:
 	HINSTANCE m_hinstance = 0;
 	HWND m_hwnd = 0;
 
-	InputClass* m_Input = nullptr;
-	GraphicsClass* m_Graphics = nullptr;
-	SoundClass* m_Sound = nullptr;
+	std::unique_ptr<InputClass> m_Input = nullptr;
+	std::unique_ptr<GraphicsClass> m_Graphics = nullptr;
+	std::unique_ptr<SoundClass> m_Sound = nullptr;
 
-	FPSClass* m_FPS = nullptr;
-	CPUClass* m_CPU = nullptr;
-	TimerClass* m_Timer = nullptr;
+	std::unique_ptr<FPSClass> m_FPS = nullptr;
+	std::unique_ptr<CPUClass> m_CPU = nullptr;
+	std::unique_ptr<TimerClass> m_Timer = nullptr;
 
-	ActorManagerClass* m_ActorManager = nullptr;
-	ProcessManagerClass* m_ProcessManager = nullptr;
+	std::unique_ptr<ActorManagerClass> m_ActorManager = nullptr;
+	std::unique_ptr<ProcessManagerClass> m_ProcessManager = nullptr;
 
 public:
 	SystemClass(const SystemClass& other) = delete;
+	SystemClass(SystemClass&& other) = delete;
+	SystemClass& operator=(const SystemClass& other) = delete;
+	SystemClass& operator=(SystemClass&& other) = delete;
 };
 
 // 윈도우 종료 또는 닫히는 메세지 처리

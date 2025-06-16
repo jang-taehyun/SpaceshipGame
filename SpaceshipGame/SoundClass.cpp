@@ -95,11 +95,12 @@ void SoundClass::Shutdown()
 HRESULT SoundClass::InitializeAudioEngine()
 {
 	HRESULT result = S_OK;
+	DirectX::AUDIO_ENGINE_FLAGS AudioEngineFlag;
 
 	// 에러 메세지 초기화 //
 	e.title = _T("SoundClass InitializeAudioEngine()");
 
-	// Audio Engine 생성 //
+	// sound 관련 COM 객체 초기화 //
 	result = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 	if (FAILED(result))
 	{
@@ -107,12 +108,13 @@ HRESULT SoundClass::InitializeAudioEngine()
 		return result;
 	}
 
-	DirectX::AUDIO_ENGINE_FLAGS AudioEngineFlag = DirectX::AUDIO_ENGINE_FLAGS::AudioEngine_Default;
+	AudioEngineFlag = DirectX::AUDIO_ENGINE_FLAGS::AudioEngine_Default;
 
 #ifdef _DEBUG
 	AudioEngineFlag |= DirectX::AUDIO_ENGINE_FLAGS::AudioEngine_Debug;
 #endif
 
+	// Audio Engine 생성 //
 	m_AudioEngine = std::make_unique<DirectX::AudioEngine>(AudioEngineFlag);
 
 	return result;
@@ -125,7 +127,7 @@ HRESULT SoundClass::LoadWaveFile()
 	// 에러 메세지 초기화 //
 	e.title = _T("SoundClass LoadWaveFile()");
 
-	// wave 파일을 load //
+	// wave 파일을 load하면서 sound effect 객체 생성 //
 	m_Effect = std::make_unique<DirectX::SoundEffect>(m_AudioEngine.get(), EffectSoundInfo.filename.c_str());
 	m_Background = std::make_unique<DirectX::SoundEffect>(m_AudioEngine.get(), BackgroundSoundInfo.filename.c_str());
 
@@ -136,7 +138,7 @@ HRESULT SoundClass::LoadWaveFile()
 	return result;
 }
 
-HRESULT SoundClass::PlayWaveFile(const SoundInfo info)
+HRESULT SoundClass::PlayWaveFile(SoundInfo info) const
 {
 	HRESULT result = S_OK;
 
@@ -158,7 +160,7 @@ HRESULT SoundClass::PlayWaveFile(const SoundInfo info)
 	return result;
 }
 
-HRESULT SoundClass::StopWaveFile(const SoundInfo info)
+HRESULT SoundClass::StopWaveFile(SoundInfo info) const
 {
 	HRESULT result = S_OK;
 

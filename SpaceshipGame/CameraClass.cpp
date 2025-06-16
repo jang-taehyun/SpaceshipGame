@@ -1,69 +1,28 @@
 #include "pch.h"
+#include "ComputeDirectionVectorClass.h"
 #include "CameraClass.h"
 
-static ErrorContent e;
-
-CameraClass::CameraClass(const AffineInfo& affine)
+DirectX::XMFLOAT4X4& CameraClass::Render() const
 {
-	HRESULT result = S_OK;
-
-	result = Initialize(affine);
-	if (FAILED(result))
-	{
-		Shutdown();
-		throw e;
-	}
-}
-
-CameraClass::~CameraClass()
-{
-	Shutdown();
-}
-
-HRESULT CameraClass::Initialize(const AffineInfo& affine)
-{
-	HRESULT result = S_OK;
-
-	// 에러 메세지 초기화 //
-	e.title = _T("CameraClass Initialize()");
-
-	m_Affine = new AffineClass(affine);
-	if (!m_Affine)
-	{
-		e.contents = _T("TransformClass 인스턴스 생성 실패");
-		e.errorCode = E_FAIL;
-		return E_FAIL;
-	}
-
-	Render();
-
-	return result;
-}
-
-void CameraClass::Shutdown()
-{
-	if (m_Affine)
-	{
-		delete m_Affine;
-		m_Affine = nullptr;
-	}
-}
-
-void CameraClass::Render()
-{
-	DirectX::XMVECTOR position, target;
-	DirectX::XMVECTOR forward, up;
+	DirectX::XMVECTOR position, forward, target, up;
+	DirectX::XMFLOAT4 ForwardVector, UpVector, tmp;
+	DirectX::XMMATRIX viewMatrix;
+	DirectX::XMFLOAT4X4 ret;
 
 	// 카메라의 local 좌표계의 축 추출 //
-	forward = m_Affine->GetForwardVector();
-	up = m_Affine->GetUpVector();
+	ComputeDirectionVectorClass::GetDirectionVectors(GetRotation(), ForwardVector, tmp, UpVector);
+	forward = DirectX::XMLoadFloat4(&ForwardVector);
+	up = DirectX::XMLoadFloat4(&UpVector);
 
 	// 카메라의 world 좌표계의 position 추출 //
-	position = DirectX::XMLoadFloat4(&(m_Affine->GetPosition()));
+	position = DirectX::XMLoadFloat4(&(GetPosition()));
 
 	// target vector 계산 //
 	target = DirectX::XMVectorAdd(position, forward);
 
 	// view matrix 생성 //
-	m_ViewMatrix = DirectX::XMMatrixLookAtLH(position, target, up);
+	viewMatrix = DirectX::XMMatrixLookAtLH(position, target, up);
+	DirectX::XMStoreFloat4x4(&ret, viewMatrix);
+
+	return ret;
 }

@@ -1,75 +1,78 @@
 #include "pch.h"
 #include "IMoveClass.h"
 #include "IRotateClass.h"
+#include "MoveClass.h"
+#include "RotateClass.h"
 #include "MoveableObjectClass.h"
 
-MoveableObjectClass::MoveableObjectClass(IMoveClass* const& move, IRotateClass* const& rotate)
-{
-	m_Move = move;
-	m_Rotate = rotate;
-}
+MoveableObjectClass::MoveableObjectClass(const AffineInfo& affine, std::unique_ptr<IMoveClass> move, std::unique_ptr<IRotateClass> rotate) : GameObjectClass(affine), m_Move(std::move(move)), m_Rotate(std::move(rotate)) {}
+MoveableObjectClass::MoveableObjectClass(const MoveableObjectClass& other) : GameObjectClass(other), m_Move(std::move(other.GetMoveObject()->Clone())), m_Rotate(other.GetRotateObject()->Clone()) {}
+MoveableObjectClass::MoveableObjectClass(MoveableObjectClass&& other) noexcept : GameObjectClass(std::move(other)), m_Move(std::move(other.m_Move)), m_Rotate(std::move(other.m_Rotate)) {}
 
-MoveableObjectClass::MoveableObjectClass(IMoveClass* const&& move, IRotateClass* const&& rotate)
-{
-	m_Move = move;
-	m_Rotate = rotate;
-}
-
-MoveableObjectClass::~MoveableObjectClass()
-{
-	Shutdown();
-}
-
-void MoveableObjectClass::Move(const MoveState& state, const float& frame_time, const bool& IsKeyDown)
+void MoveableObjectClass::Move(MoveState state, float frame_time, bool IsKeyDown)
 {
 	if (!m_Move)
 		return;
 
 	// 최종적으로 계산된 position으로 교체 //
 	DirectX::XMFLOAT4 pos;
-	
-	switch (state)
-	{
-	case MoveState::MOVE_FORWARD:
-	case MoveState::MOVE_BACKWARD:
-		pos = m_Move->Move(GetPosition(), GetForwardVector(), state, frame_time, IsKeyDown);
-		break;
-	case MoveState::MOVE_LEFT:
-	case MoveState::MOVE_RIGHT:
-		pos = m_Move->Move(GetPosition(), GetRightVector(), state, frame_time, IsKeyDown);
-		break;
-	default:
-		pos = m_Move->Move(GetPosition(), GetUpVector(), state, frame_time, IsKeyDown);
-		break;
-	}
-
+	pos = m_Move->Move(GetPosition(), GetRotation(), state, frame_time, IsKeyDown);
 	SetPosition(pos);
 }
 
-void MoveableObjectClass::Rotate(const long& MouseX, const long& MouseY, const float& frame_time, const bool& IsKeyDown)
+void MoveableObjectClass::Rotate(long MouseX, long MouseY, float frame_time, bool IsKeyDown)
 {
 	if (!m_Rotate)
 		return;
 
 	// 최종적으로 계산된 rotation으로 교체 //
 	DirectX::XMFLOAT4 rot;
-
-	m_Rotate->Rotate(GetRotation(), MouseX, MouseY, frame_time, IsKeyDown);
-
+	rot = m_Rotate->Rotate(GetRotation(), MouseX, MouseY, frame_time, IsKeyDown);
 	SetRotation(rot);
 }
 
-void MoveableObjectClass::Shutdown()
+MoveableObjectClass& MoveableObjectClass::operator=(const MoveableObjectClass& other)
 {
-	if (m_Move)
-	{
-		delete m_Move;
-		m_Move = nullptr;
-	}
+	// 자기 자신인지 검사 //
+	if (this == &other)
+		return *this;
 
-	if (m_Rotate)
+	if (other.m_Move)
 	{
-		delete m_Rotate;
-		m_Rotate = nullptr;
+		if (!(this->m_Move))
+			this->m_Move = other.m_Move->Clone();
+		else
+			*m_Move = *(other.m_Move);
 	}
+	else
+		this->m_Move.reset();
+
+	if (other.m_Rotate)
+	{
+		if (!m_Rotate)
+			m_Rotate = other.m_Rotate->Clone();
+		else
+			*m_Rotate = *(other.m_Rotate);
+	}
+	else
+		this->m_Rotate.reset();
+
+	return *this;
+}
+
+MoveableObjectClass& MoveableObjectClass::operator=(MoveableObjectClass&& other) noexcept
+{
+	// 자기 자신인지 검사 //
+	if (this == &other)
+		return *this;
+
+	this->m_Move = std::move(other.m_Move);
+	this->m_Rotate = std::move(other.m_Rotate);
+
+	return *this;
+}
+
+inline std::unique_ptr<IObjectClass> MoveableObjectClass::Clone() const
+{
+	return std::make_unique<MoveableObjectClass>(*this);
 }

@@ -11,37 +11,29 @@
 class GameObjectClass : public IObjectClass
 {
 public:
+	GameObjectClass() = default;
+	explicit GameObjectClass(const AffineInfo& affine);
 	virtual ~GameObjectClass() = default;
 
-	// affine matrxi(world matrix) 반환
-	virtual const DirectX::XMFLOAT4X4& GetAffineMatrix() const override;
+	virtual DirectX::XMFLOAT4X4& GetAffineMatrix() const override;																	// affine matrxi(world matrix) 반환
+	virtual const AffineInfo& GetAffine() const override { return m_Affine; }														// affine 데이터 반환
 
-	// position 반환
-	virtual inline const DirectX::XMFLOAT4& GetPosition() const override { return m_Position; }
+	virtual inline DirectX::XMFLOAT4 GetPosition() const override { return  m_Affine.position; }									// position 반환
+	virtual inline DirectX::XMFLOAT4 GetRotation() const override { return m_Affine.rotation; }										// rotation 반환
+	virtual inline DirectX::XMFLOAT4 GetScale() const override { return m_Affine.scale; }											// scale 반환
 
-	// rotation 반환
-	virtual inline const DirectX::XMFLOAT4& GetRotation() const override { return m_Rotation; }
+	virtual inline void SetPosition(DirectX::XMFLOAT4 pos) override { m_Affine.position = pos; };									// position 대입
+	virtual inline void SetPosition(float x, float y, float z) override { m_Affine.position = DirectX::XMFLOAT4(x, y, z, 1.f); }	// position 대입
 
-	// scale 반환
-	virtual inline const DirectX::XMFLOAT4& GetScale() const override { return m_Scale; }
+	virtual inline void SetRotation(DirectX::XMFLOAT4 rot) override { m_Affine.rotation = rot; }									// rotation 대입
+	virtual inline void SetRotation(float x, float y, float z) override { m_Affine.rotation = DirectX::XMFLOAT4(x, y, z, 1.f); }	// rotation 대입
 
-	virtual inline void SetPosition(const DirectX::XMFLOAT4& pos) override { m_Position = pos; };													// position 대입
-	virtual inline void SetPosition(const float x, const float y, const float z) override { m_Position = DirectX::XMFLOAT4(x, y, z, 1.f); }			// position 대입
+	virtual inline void SetScale(DirectX::XMFLOAT4 scale) override { m_Affine.scale = scale; }										// scale 대입
+	virtual inline void SetScale(float x, float y, float z) override { m_Affine.scale = DirectX::XMFLOAT4(x, y, z, 1.f); }			// scale 대입
 
-	virtual inline void SetRotation(const DirectX::XMFLOAT4& rot) override { m_Rotation = rot; }													// rotation 대입
-	virtual inline void SetRotation(const float x, const float y, const float z) override { m_Rotation = DirectX::XMFLOAT4(x, y, z, 1.f); }			// rotation 대입
-
-	virtual inline void SetScale(const DirectX::XMFLOAT4& scale) override { m_Scale = scale; }														// scale 대입
-	virtual inline void SetScale(const float x, const float y, const float z) override { m_Scale = DirectX::XMFLOAT4(x, y, z, 1.f); }				// scale 대입
+	virtual inline std::unique_ptr<IObjectClass> Clone() const override { return std::make_unique<GameObjectClass>(*this); }
 
 private:
-
-	// 멤버 변수, 리소스 해제
-	virtual void Shutdown() = 0;
-
-private:
-	DirectX::XMFLOAT4 m_Position = { 0.f, 0.f, 0.f, 1.f };
-	DirectX::XMFLOAT4 m_Rotation = { 1.f, 1.f, 1.f, 1.f };
-	DirectX::XMFLOAT4 m_Scale = { 1.f, 1.f, 1.f, 1.f };
+	AffineInfo m_Affine = { DirectX::XMFLOAT4(0.f, 0.f, 0.f, 0.f),  DirectX::XMFLOAT4(0.f, 0.f, 0.f, 0.f), DirectX::XMFLOAT4(0.f, 0.f, 0.f, 0.f) };
 };
 

@@ -1,12 +1,14 @@
 #include "pch.h"
 #include <SimpleMath.h>
 #include "D3DClass.h"
+#include "TextManagerClass.h"
+#include "ITextClass.h"
 #include "TextRenderClass.h"
 
 bool TextRenderClass::IsInitialize = false;
 static ErrorContent e;
 
-TextRenderClass::TextRenderClass(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext)
+TextRenderClass::TextRenderClass(const ID3D11Device* Device, const ID3D11DeviceContext* DeviceContext)
 {
 	HRESULT result = S_OK;
 
@@ -22,21 +24,17 @@ TextRenderClass::TextRenderClass(ID3D11Device* const& Device, ID3D11DeviceContex
 
 	result = Initialize(Device, DeviceContext);
 	if (FAILED(result))
-	{
-		Shutdown();
 		throw e;
-	}
 
 	IsInitialize = true;
 }
 
 TextRenderClass::~TextRenderClass()
 {
-	Shutdown();
 	IsInitialize = false;
 }
 
-HRESULT TextRenderClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext)
+HRESULT TextRenderClass::Initialize(const ID3D11Device* Device, const ID3D11DeviceContext* DeviceContext)
 {
 	HRESULT result = S_OK;
 
@@ -54,7 +52,7 @@ HRESULT TextRenderClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceCon
 
 	// bitmap 폰트를 draw할 SpriteBatch 객체 생성 //
 	m_SpriteBatch = std::make_unique<DirectX::SpriteBatch>(DeviceContext);
-	if (!m_SpriteBatch.get())
+	if (!m_SpriteBatch)
 	{
 		e.contents = _T("sprite batch 객체 생성 실패");
 		e.errorCode = E_FAIL;
@@ -64,20 +62,7 @@ HRESULT TextRenderClass::Initialize(ID3D11Device* const& Device, ID3D11DeviceCon
 	return result;
 }
 
-void TextRenderClass::Shutdown()
-{
-	if (m_SpriteBatch)
-	{
-		m_SpriteBatch.reset();
-	}
-	
-	if (m_Font)
-	{
-		m_Font.reset();
-	}
-}
-
-void TextRenderClass::BeginRender(D3DClass* const& DirectX3D)
+void TextRenderClass::BeginRender(const D3DClass* DirectX3D)
 {
 	// depth buffer 비활성화, alpha blend state 활성화
 	DirectX3D->TurnDepthBufferOff();
@@ -87,17 +72,18 @@ void TextRenderClass::BeginRender(D3DClass* const& DirectX3D)
 	m_SpriteBatch->Begin();
 }
 
-void TextRenderClass::Rendering(const std::wstring& text, const DirectX::XMFLOAT2& pos, const DirectX::XMFLOAT4& color)
+void TextRenderClass::Rendering(const ITextClass* Text)
 {
-	DirectX::SimpleMath::Vector2 FontPos = pos;
-	DirectX::XMVECTOR FontColor = DirectX::XMLoadFloat4(&color);
+	DirectX::SimpleMath::Vector2 FontPos = Text->GetTextPosition();
+	DirectX::XMVECTOR FontColor = DirectX::XMLoadFloat4(&(Text->GetTextColor()));
+
 	FontPos.x /= 2.f;
 	FontPos.y /= 2.f;
 
-	m_Font->DrawString(m_SpriteBatch.get(), text.c_str(), FontPos, FontColor);
+	m_Font->DrawString(m_SpriteBatch.get(), Text->GetText().c_str(), FontPos, FontColor, 0.f, DirectX::XMFLOAT2(0.f, 0.f), Text->GetTextSize());
 }
 
-void TextRenderClass::EndRender(D3DClass* const& DirectX3D)
+void TextRenderClass::EndRender(const D3DClass* DirectX3D)
 {
 	// Sprite batch 렌더링 종료
 	m_SpriteBatch->End();
@@ -107,9 +93,13 @@ void TextRenderClass::EndRender(D3DClass* const& DirectX3D)
 	DirectX3D->TurnDepthBufferOn();
 }
 
-void TextRenderClass::Render(D3DClass* const& DirectX3D, const std::wstring& text, const DirectX::XMFLOAT2& pos, const DirectX::XMFLOAT4& color)
+void TextRenderClass::Render(const D3DClass* DirectX3D, const TextManagerClass* TextManager)
 {
 	BeginRender(DirectX3D);
-	Rendering(text, pos, color);
+
+	for (int i = 0; i < TextManager->GetTextObjectCount(); ++i)
+		if (!(TextManager->GetTextObject(i)))
+			Rendering(TextManager->GetTextObject(i));
+
 	EndRender(DirectX3D);
 }

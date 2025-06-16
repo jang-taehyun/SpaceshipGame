@@ -11,18 +11,18 @@ class RotateClass : public IRotateClass
 {
 public:
 	RotateClass() = default;
-	explicit RotateClass(const float& speed);
-	explicit RotateClass(const float&& speed);
-	RotateClass(const RotateClass& other) = default;
+	explicit RotateClass(float speed);
 	virtual ~RotateClass() = default;
 
-	const DirectX::XMFLOAT4& Rotate(const DirectX::XMFLOAT4& rotate, const long& MouseX, const long& MouseY, const float& frame_time, const bool& IsKeyDown) override;
+	DirectX::XMFLOAT4 Rotate(DirectX::XMFLOAT4 rotate, long MouseX, long MouseY, float frame_time, bool IsKeyDown) override;
 
-	inline const float& GetRoteteSpeed() const override { return m_RotateSpeed; }
-	inline void SetRoteteSpeed(const float& value) override { m_RotateSpeed = value; }
+	inline float GetRoteteSpeed() const override { return m_RotateSpeed; }
+	inline void SetRoteteSpeed(float value) override { m_RotateSpeed = value; }
+
+	virtual std::unique_ptr<IRotateClass> Clone() const override;
 
 private:
-	const float& ComputeRotateSpeed(const float& frame_time, const bool& IsKeyDown) override;
+	float ComputeRotateSpeed(float frame_time, bool IsKeyDown) override;
 
 private:
 	float m_RotateSpeed = 1.f;

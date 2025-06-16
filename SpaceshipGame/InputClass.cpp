@@ -4,7 +4,7 @@
 bool InputClass::IsInitailize = false;
 static ErrorContent e;
 
-InputClass::InputClass(const HINSTANCE& hinstance, const HWND& hwnd, const int& ScreenWidth, const int& ScreenHeight)
+InputClass::InputClass(HINSTANCE hinstance, HWND hwnd, int ScreenWidth, int ScreenHeight)
 {
 	HRESULT result = S_OK;
 
@@ -34,7 +34,7 @@ InputClass::~InputClass()
 	IsInitailize = false;
 }
 
-HRESULT InputClass::Initialize(const HINSTANCE& hinstance, const HWND& hwnd, const int& ScreenWidth, const int& ScreenHeight)
+HRESULT InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int ScreenWidth, int ScreenHeight)
 {
 	HRESULT result = S_OK;
 
@@ -46,7 +46,7 @@ HRESULT InputClass::Initialize(const HINSTANCE& hinstance, const HWND& hwnd, con
 	m_ScreenWidth = ScreenWidth;
 
 	// Direct input interface 초기화 //
-	result = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_DirectInput, NULL);
+	result = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)m_DirectInput.GetAddressOf(), NULL);
 	if (FAILED(result))
 	{
 		e.contents = _T("Direct input interface 생성 실패");
@@ -56,7 +56,7 @@ HRESULT InputClass::Initialize(const HINSTANCE& hinstance, const HWND& hwnd, con
 
 	// 키보드의 Direct input interface 초기화 //
 	// 키보드의 Direct input interface 초기화
-	result = m_DirectInput->CreateDevice(GUID_SysKeyboard, &m_Keyboard, NULL);
+	result = m_DirectInput->CreateDevice(GUID_SysKeyboard, m_Keyboard.GetAddressOf(), NULL);
 	if (FAILED(result))
 	{
 		e.contents = _T("키보드의 Direct input interface 초기화 실패");
@@ -93,7 +93,7 @@ HRESULT InputClass::Initialize(const HINSTANCE& hinstance, const HWND& hwnd, con
 
 
 	// 마우스의 Direct input interface 초기화 //
-	result = m_DirectInput->CreateDevice(GUID_SysMouse, &m_Mouse, NULL);
+	result = m_DirectInput->CreateDevice(GUID_SysMouse, m_Mouse.GetAddressOf(), NULL);
 	if (FAILED(result))
 	{
 		e.contents = _T("마우스의 Direct input interface 초기화 실패");
@@ -134,24 +134,10 @@ HRESULT InputClass::Initialize(const HINSTANCE& hinstance, const HWND& hwnd, con
 void InputClass::Shutdown()
 {
 	if (m_Mouse)
-	{
 		m_Mouse->Unacquire();
-		m_Mouse->Release();
-		m_Mouse = nullptr;
-	}
 
 	if (m_Keyboard)
-	{
 		m_Keyboard->Unacquire();
-		m_Keyboard->Release();
-		m_Keyboard = nullptr;
-	}
-
-	if (m_DirectInput)
-	{
-		m_DirectInput->Release();
-		m_DirectInput = nullptr;
-	}
 }
 
 HRESULT InputClass::Frame()

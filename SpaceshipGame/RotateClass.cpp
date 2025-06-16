@@ -1,17 +1,9 @@
 #include "pch.h"
 #include "RotateClass.h"
 
-RotateClass::RotateClass(const float& speed)
-{
-	m_RotateSpeed = speed;
-}
+RotateClass::RotateClass(float speed) : m_RotateSpeed(speed) {}
 
-RotateClass::RotateClass(const float&& speed)
-{
-	m_RotateSpeed = speed;
-}
-
-const DirectX::XMFLOAT4& RotateClass::Rotate(const DirectX::XMFLOAT4& rotate, const long& MouseX, const long& MouseY, const float& frame_time, const bool& IsKeyDown)
+DirectX::XMFLOAT4 RotateClass::Rotate(DirectX::XMFLOAT4 rotate, long MouseX, long MouseY, float frame_time, bool IsKeyDown)
 {
 	DirectX::XMFLOAT4 ret = rotate;
 	float speed = 0.f;
@@ -29,7 +21,12 @@ const DirectX::XMFLOAT4& RotateClass::Rotate(const DirectX::XMFLOAT4& rotate, co
 	return ret;
 }
 
-const float& RotateClass::ComputeRotateSpeed(const float& frame_time, const bool& IsKeyDown)
+std::unique_ptr<IRotateClass> RotateClass::Clone() const
+{
+	return std::make_unique<RotateClass>(*this);
+}
+
+float RotateClass::ComputeRotateSpeed(float frame_time, bool IsKeyDown)
 {
 	float ret = m_PrevRotateSpeed;
 

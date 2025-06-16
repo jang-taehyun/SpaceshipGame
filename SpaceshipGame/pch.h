@@ -20,15 +20,15 @@
 // C 런타임 헤더 //
 #include <stdlib.h>				// C 언어 표준 라이브러리
 #include <malloc.h>				// dynamic allocate
-#include <memory.h>				// 메모리 관련
+#include <memory>				// 메모리 관련
 
 // C++ header //
 #include <string>
 #include <vector>
 
 // direct sound 관련 //
-#include <stdio.h>
-#include <mmsystem.h>
+// #include <stdio.h>
+// #include <mmsystem.h>
 
 #ifndef UNICODE
 #define UNICODE

@@ -157,6 +157,7 @@
     <ClInclude Include="ActorClass.h" />
     <ClInclude Include="ActorManagerClass.h" />
     <ClInclude Include="CameraClass.h" />
+    <ClInclude Include="ComputeDirectionVectorClass.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="CPUClass.h" />
     <ClInclude Include="CubeModelClass.h" />
@@ -168,11 +169,12 @@
     <ClInclude Include="ICollisionClass.h" />
     <ClInclude Include="IMoveClass.h" />
     <ClInclude Include="IObjectClass.h" />
-    <ClInclude Include="IAffineControlClass.h" />
-    <ClInclude Include="ICollisionContorlClass.h" />
     <ClInclude Include="IMGUIClass.h" />
     <ClInclude Include="InputClass.h" />
     <ClInclude Include="IRotateClass.h" />
+    <ClInclude Include="CollisionClass.h" />
+    <ClInclude Include="ISceneClass.h" />
+    <ClInclude Include="ITextClass.h" />
     <ClInclude Include="MoveableObjectClass.h" />
     <ClInclude Include="MoveClass.h" />
     <ClInclude Include="LightClass.h" />
@@ -190,6 +192,8 @@
     <ClInclude Include="SpaceshipShaderClass.h" />
     <ClInclude Include="SystemClass.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TextClass.h" />
+    <ClInclude Include="TextManagerClass.h" />
     <ClInclude Include="TextRenderClass.h" />
     <ClInclude Include="TextureClass.h" />
     <ClInclude Include="TimerClass.h" />
@@ -201,6 +205,7 @@
     <ClCompile Include="ActorClass.cpp" />
     <ClCompile Include="ActorManagerClass.cpp" />
     <ClCompile Include="CameraClass.cpp" />
+    <ClCompile Include="ComputeDirectionVectorClass.cpp" />
     <ClCompile Include="CPUClass.cpp" />
     <ClCompile Include="CubeModelClass.cpp" />
     <ClCompile Include="D3DClass.cpp" />
@@ -210,11 +215,12 @@
     <ClCompile Include="ICollisionClass.cpp" />
     <ClCompile Include="IMoveClass.cpp" />
     <ClCompile Include="IObjectClass.cpp" />
-    <ClCompile Include="IAffineControlClass.cpp" />
-    <ClCompile Include="ICollisionContorlClass.cpp" />
     <ClCompile Include="IMGUIClass.cpp" />
     <ClCompile Include="InputClass.cpp" />
     <ClCompile Include="IRotateClass.cpp" />
+    <ClCompile Include="CollisionClass.cpp" />
+    <ClCompile Include="ISceneClass.cpp" />
+    <ClCompile Include="ITextClass.cpp" />
     <ClCompile Include="MoveableObjectClass.cpp" />
     <ClCompile Include="MoveClass.cpp" />
     <ClCompile Include="LightClass.cpp" />
@@ -235,6 +241,8 @@
     <ClCompile Include="SpaceshipModelClass.cpp" />
     <ClCompile Include="SpaceshipShaderClass.cpp" />
     <ClCompile Include="SystemClass.cpp" />
+    <ClCompile Include="TextClass.cpp" />
+    <ClCompile Include="TextManagerClass.cpp" />
     <ClCompile Include="TextRenderClass.cpp" />
     <ClCompile Include="TextureClass.cpp" />
     <ClCompile Include="TimerClass.cpp" />

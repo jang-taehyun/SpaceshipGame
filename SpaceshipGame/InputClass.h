@@ -9,7 +9,7 @@ private:
 	};
 
 public:
-	explicit InputClass(const HINSTANCE& hinstance, const HWND& hwnd, const int& ScreenWidth, const int& ScreenHeight);
+	InputClass(HINSTANCE hinstance, HWND hwnd, int ScreenWidth, int ScreenHeight);
 	virtual ~InputClass();
 	
 	HRESULT Frame();
@@ -38,7 +38,7 @@ public:
 	inline void GetMouseMoveDelta(long& MouseX, long& MouseY) const { MouseX = m_MouseState.lX; MouseY = m_MouseState.lY; }
 
 private:
-	HRESULT Initialize(const HINSTANCE& hinstance, const HWND& hwnd, const int& ScreenWidth, const int& ScreenHeight);
+	HRESULT Initialize(HINSTANCE hinstance, HWND hwnd, int ScreenWidth, int ScreenHeight);
 	void Shutdown();
 
 	HRESULT ReadKeyboard();
@@ -48,12 +48,12 @@ private:
 private:
 	static bool IsInitailize;
 
-	IDirectInput8* m_DirectInput = nullptr;
-	IDirectInputDevice8* m_Keyboard = nullptr;
-	IDirectInputDevice8* m_Mouse = nullptr;
+	Microsoft::WRL::ComPtr<IDirectInput8> m_DirectInput = nullptr;
+	Microsoft::WRL::ComPtr<IDirectInputDevice8> m_Keyboard = nullptr;
+	Microsoft::WRL::ComPtr<IDirectInputDevice8> m_Mouse = nullptr;
 
 	unsigned char m_KeyboardState[256] = { 0, };
-	DIMOUSESTATE m_MouseState;
+	DIMOUSESTATE m_MouseState = { 0, };
 
 	int m_ScreenWidth = 0;
 	int m_ScreenHeight = 0;
@@ -61,6 +61,8 @@ private:
 	int m_MouseY = 0;
 
 public:
-	InputClass() = delete;
 	InputClass(const InputClass& other) = delete;
+	InputClass(InputClass&& other) = delete;
+	InputClass& operator=(const InputClass& other) = delete;
+	InputClass& operator=(InputClass&& other) = delete;
 };

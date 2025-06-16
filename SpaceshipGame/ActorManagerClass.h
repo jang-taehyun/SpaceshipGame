@@ -2,37 +2,37 @@
 
 /**
 * ActorManagerClass 개요
-* - Scene 내에 존재하는 actor의 interface(behavior) 관리
 */
 
-const static int ACTOR_MAX_COUNT = 6;
+class IObjectClass;
 
-class IActorControlClass;
+const static int ACTOR_MAX_COUNT = 6;
 
 class ActorManagerClass
 {
 public:
-	ActorManagerClass(const AffineInfo* const& ActorAffines, const AffineInfo* const& CollisionAffines, const ModelIDs* const& ModelIDs, const int& ActorCount, const int& PlayerIdx);
+	ActorManagerClass(const AffineInfo* ActorAffines, const AffineInfo* CollisionAffines, const ModelIDs* ModelIDs, int ActorCount, int PlayerIdx);
 	virtual ~ActorManagerClass();
 
-	inline IActorControlClass* const& GetPlayerInterface() const { return m_ActorInterfaces[m_PlayerIdx]; }
-	inline const int& GetActorInterfaceCount() const { return m_ActorCount; }
+	inline const IObjectClass* GetPlayerInterface() const { return m_ActorInterfaces[m_PlayerIdx].get(); }
+	inline int GetActorInterfaceCount() const { return m_ActorCount; }
 
-	IActorControlClass* const& operator[](int idx) const;
+	const IObjectClass* operator[](int idx) const;
 
 private:
-	HRESULT Initialize(const AffineInfo* const& ActorAffines, const AffineInfo* const& CollisionAffines, const ModelIDs* const& ModelIDs, const int& ActorCount, const int& PlayerIdx);
-	void Shutdown();
+	HRESULT Initialize(const AffineInfo* ActorAffines, const AffineInfo* CollisionAffines, const ModelIDs* ModelIDs);
 
 private:
 	static bool IsInitialize;
 
-	IActorControlClass* m_ActorInterfaces[ACTOR_MAX_COUNT] = { nullptr, };
+	std::unique_ptr<IObjectClass> m_ActorInterfaces[ACTOR_MAX_COUNT] = { nullptr, };
 	int m_ActorCount = 0;
 	int m_PlayerIdx = 0;
 
 public:
-	ActorManagerClass() = delete;
 	ActorManagerClass(const ActorManagerClass& other) = delete;
+	ActorManagerClass(ActorManagerClass&& other) = delete;
+	ActorManagerClass& operator=(const ActorManagerClass& other) = delete;
+	ActorManagerClass& operator=(ActorManagerClass&& other) = delete;
 };
 

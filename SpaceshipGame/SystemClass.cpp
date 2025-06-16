@@ -28,17 +28,14 @@ SystemClass::SystemClass()
 
 	result = Initialize();
 	if (FAILED(result))
-	{
-		Shutdown();
 		throw e;
-	}
 
 	IsInitialize = true;
 }
 
 SystemClass::~SystemClass()
 {
-	Shutdown();
+	ShutdownWindows();
 	IsInitialize = false;
 }
 
@@ -55,64 +52,64 @@ HRESULT SystemClass::Initialize()
 	InitializeWindows(ScreenWidth, ScreenHeight);
 
 	// 객체 생성 및 초기화 //
-	m_Input = new InputClass(m_hinstance, m_hwnd, ScreenWidth, ScreenHeight);
-	if (!m_Input)
+	m_Input = std::make_unique<InputClass>(m_hinstance, m_hwnd, ScreenWidth, ScreenHeight);
+	if (!m_Input.get())
 	{
 		e.contents = _T("InputClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
 
-	m_Graphics = new GraphicsClass(ScreenWidth, ScreenHeight, m_hwnd);
-	if (!m_Graphics)
+	m_Graphics = std::make_unique<GraphicsClass>(ScreenWidth, ScreenHeight, m_hwnd);
+	if (!m_Graphics.get())
 	{
 		e.contents = _T("GraphicsClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
 
-	m_Sound = new SoundClass();
-	if (!m_Sound)
+	m_Sound = std::make_unique<SoundClass>();
+	if (!m_Sound.get())
 	{
 		e.contents = _T("SoundClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
 
-	m_FPS = new FPSClass;
-	if (!m_FPS)
+	m_FPS = std::make_unique<FPSClass>();
+	if (!m_FPS.get())
 	{
 		e.contents = _T("FPSClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
 
-	m_CPU = new CPUClass;
-	if (!m_CPU)
+	m_CPU = std::make_unique<CPUClass>();
+	if (!m_CPU.get())
 	{
 		e.contents = _T("CPUClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
 
-	m_Timer = new TimerClass;
-	if (!m_Timer)
+	m_Timer = std::make_unique<TimerClass>();
+	if (!m_Timer.get())
 	{
 		e.contents = _T("TimerClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
 
-	m_ActorManager = new ActorManagerClass;
-	if (!m_ActorManager)
+	m_ActorManager = std::make_unique<ActorManagerClass>();
+	if (!m_ActorManager.get())
 	{
 		e.contents = _T("ActorManagerClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
 
-	m_ProcessManager = new ProcessManagerClass;
-	if (!m_ProcessManager)
+	m_ProcessManager = std::make_unique<ProcessManagerClass>();
+	if (!m_ProcessManager.get())
 	{
 		e.contents = _T("ProcessManagerClass 인스턴스 생성 실패");
 		e.errorCode = E_FAIL;
@@ -120,59 +117,6 @@ HRESULT SystemClass::Initialize()
 	}
 
 	return result;
-}
-
-void SystemClass::Shutdown()
-{
-	if (m_ProcessManager)
-	{
-		delete m_ProcessManager;
-		m_ProcessManager = nullptr;
-	}
-
-	if (m_ActorManager)
-	{
-		delete m_ActorManager;
-		m_ActorManager = nullptr;
-	}
-
-	if (m_Timer)
-	{
-		delete m_Timer;
-		m_Timer = nullptr;
-	}
-
-	if (m_CPU)
-	{
-		delete m_CPU;
-		m_CPU = nullptr;
-	}
-
-	if (m_FPS)
-	{
-		delete m_FPS;
-		m_FPS = nullptr;
-	}
-
-	if (m_Sound)
-	{
-		delete m_Sound;
-		m_Sound = nullptr;
-	}
-
-	if (m_Graphics)
-	{
-		delete m_Graphics;
-		m_Graphics = nullptr;
-	}
-
-	if (m_Input)
-	{
-		delete m_Input;
-		m_Input = nullptr;
-	}
-
-	ShutdownWindows();
 }
 
 void SystemClass::Run()

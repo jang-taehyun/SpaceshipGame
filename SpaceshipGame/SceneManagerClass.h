@@ -11,7 +11,7 @@ public:
 	virtual ~SceneManagerClass();
 
 public:
-	HRESULT Frame(ActorManagerClass* const& actor_manager, CameraClass* const& camera, const InputClass* const& input, const float& frame_time);
+	HRESULT Frame(const ActorManagerClass* actor_manager, const CameraClass* camera, const InputClass* input, float frame_time);
 	const std::wstring& GetSceneString() const { return m_SceneString; }
 
 private:
@@ -28,11 +28,15 @@ private:
 
 private:
 	static bool IsInitialize;
+
 	bool m_IsShowingCursor = true;
 	std::wstring m_SceneString = _T("");
 	SceneState m_SceneState = SceneState::NONE;
 
 public:
 	SceneManagerClass(const SceneManagerClass& other) = delete;
+	SceneManagerClass(SceneManagerClass&& other) = delete;
+	SceneManagerClass& operator=(const SceneManagerClass& other) = delete;
+	SceneManagerClass& operator=(SceneManagerClass&& other) = delete;
 };
 

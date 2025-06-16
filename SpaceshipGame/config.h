@@ -38,6 +38,12 @@ enum class SceneState
 	NONE = 0, LOADING = 1, MATCH = 2, INGAME = 3,
 };
 
+// Text 정보 //
+enum class TextFlag
+{
+	DEFAULT = 1,
+};
+
 // sound 파일 정보 //
 enum class SoundInfo
 {

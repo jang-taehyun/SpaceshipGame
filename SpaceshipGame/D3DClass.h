@@ -1,112 +1,93 @@
 #pragma once
 
-class ColorClass;
-
 class D3DClass
 {
 public:
-	explicit D3DClass(const int& ScreenWidth, const int& ScreenHeight, const bool& VSYNC, const HWND& hwnd, const bool& FullScreen, const float& ScreenDepth, const float& ScreenNear);
+	D3DClass(HWND hwnd, int ScreenWidth, int ScreenHeight, float ScreenDepth, float ScreenNear, bool VSYNC, bool FullScreen);
 	virtual ~D3DClass();
 
 	// back buffer를 지우는 함수 //
-	void BeginScene(const ColorClass& color);
+	void BeginScene(DirectX::XMFLOAT4 color);
 	
 	// 화면에 back buffer의 내용을 표시하는 함수
-	void EndScene();
+	void EndScene() const;
 
-	// Getter //
-
-	inline ID3D11Device* const& GetDevice() const { return m_Device; }
-	inline ID3D11DeviceContext* const& GetDeviceContext() const { return m_DeviceContext; }
-	inline void GetVideoCardInfo(char* GraphicCardName, int& Memory)
-	{
-		strcpy_s(GraphicCardName, 128, m_VideoCardDescription);
-		Memory = m_VideoCardMemory;
-	}
-
-	// Setter //
+	inline const ID3D11Device* GetDevice() const { return m_Device.Get(); }
+	inline const ID3D11DeviceContext* GetDeviceContext() const { return m_DeviceContext.Get(); }
 
 	inline const DirectX::XMMATRIX& GetProjectionMatrix() { return m_ProjectionMatrix; }
-	inline const DirectX::XMMATRIX& GetWorldMatrix() { return m_WorlMatrix; }
 	inline const DirectX::XMMATRIX& GetOrthoMatrix() { return m_OrthoMatrix; }
 
+	void TurnDepthBufferOn() const;
+	void TurnDepthBufferOff() const;
 
-	void TurnDepthBufferOn();
-	void TurnDepthBufferOff();
-
-	void TurnOnAlphaBlending();
-	void TurnOffAlphaBlending();
+	void TurnOnAlphaBlending() const;
+	void TurnOffAlphaBlending() const;
 
 private:
 	// D3D 객체 초기화 함수 //
-	HRESULT Initialize(const int& ScreenWidth, const int& ScreenHeight, const bool& VSYNC, const HWND& hwnd, const bool& FullScreen, const float& ScreenDepth, const float& ScreenNear);
+	HRESULT Initialize(HWND hwnd, int ScreenWidth, int ScreenHeight, float ScreenDepth, float ScreenNear, bool VSYNC, bool FullScreen);
 
 	// D3D 객체 내부 리소스 정리 함수 //
 	void Shutdown();
 
 	// 적절한 디스플레이 모드를 찾는 함수
-	HRESULT GetRefreshRate(const int& ScreenWidth, const int& ScreenHeight, int& Numerator, int & Denominator);
+	HRESULT GetRefreshRate(int ScreenWidth, int ScreenHeight, int& Numerator, int & Denominator);
 
 	// Swap chain 설정 및 Swap chain, Device, Device context 생성하는 함수
-	HRESULT CreateSwapChainDeviceDeviceContext(const int& ScreenWidth, const int& ScreenHeight, const int& Numerator, const int& Denominator, const HWND& hwnd, const bool& FullScreen);
+	HRESULT CreateSwapChainDeviceDeviceContext(HWND hwnd, int ScreenWidth, int ScreenHeight, int Numerator, int Denominator, bool FullScreen);
 
 	// Render target view 생성 및 설정하는 함수
 	HRESULT SetAndCreateRenderTargetView();
 
 	// Depth, Stencil 설정 함수
-	HRESULT SetDepthAndStencil(const int& ScreenWidth, const int& ScreenHeight);
+	HRESULT SetDepthAndStencil(int ScreenWidth, int ScreenHeight);
 
 	// Rasterizer 설정 함수
 	HRESULT SetRasterizer();
 
 	// 렌더링을 위한 Viewport 설정 함수
-	void SetViewport(const int& ScreenWidth, const int& ScreenHeight);
+	void SetViewport(int ScreenWidth, int ScreenHeight);
 
 	// Matrix 설정 함수
-	void SetMatrix(const int& ScreenWidth, const int& ScreenHeight, const float& ScreenDepth, const float& ScreenNear);
+	void SetMatrix(int ScreenWidth, int ScreenHeight, float ScreenDepth, float ScreenNear);
 
 	// alpha blending state 설정 함수
 	HRESULT SetAlphaBlendState();
-
-	// video card 정보를 GPU로부터 받아오는 함수
-	HRESULT GetVideoCardDescription(IDXGIAdapter* const& Adapter);
 
 private:
 	static bool IsInitialize;
 
 	bool m_VSYNC_Enabled = false;
 
-	// about graphics card
-	int m_VideoCardMemory = 0;
-	char m_VideoCardDescription[128] = { 0, };
-
 	// swap chain
-	IDXGISwapChain* m_SwapChain = nullptr;
+	Microsoft::WRL::ComPtr<IDXGISwapChain> m_SwapChain = nullptr;
 
 	// device, device context, render target view
-	ID3D11Device* m_Device = nullptr;
-	ID3D11DeviceContext* m_DeviceContext = nullptr;
-	ID3D11RenderTargetView* m_RenderTargetView = nullptr;
+	Microsoft::WRL::ComPtr<ID3D11Device> m_Device = nullptr;
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_DeviceContext = nullptr;
+	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_RenderTargetView = nullptr;
 
 	// depth stencil
-	ID3D11Texture2D* m_DepthStencilBuffer = nullptr;
-	ID3D11DepthStencilState* m_DepthStencilState = nullptr;
-	ID3D11DepthStencilState* m_DepthDisabledStencilState = nullptr;
-	ID3D11DepthStencilView* m_DepthStencilView = nullptr;
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> m_DepthStencilBuffer = nullptr;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_DepthStencilState = nullptr;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_DepthDisabledStencilState = nullptr;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_DepthStencilView = nullptr;
 
 	// rasterizer
-	ID3D11RasterizerState* m_RasterizerState = nullptr;
+	Microsoft::WRL::ComPtr <ID3D11RasterizerState> m_RasterizerState = nullptr;
 
 	// matrix
-	DirectX::XMMATRIX m_ProjectionMatrix;
-	DirectX::XMMATRIX m_WorlMatrix;
-	DirectX::XMMATRIX m_OrthoMatrix;
+	DirectX::XMMATRIX m_ProjectionMatrix = DirectX::XMMatrixIdentity();
+	DirectX::XMMATRIX m_OrthoMatrix = DirectX::XMMatrixIdentity();
 
 	// alpha blending
-	ID3D11BlendState* m_AlphaEnableBlendingState = nullptr;
-	ID3D11BlendState* m_AlphaDisableBlendingState = nullptr;
+	Microsoft::WRL::ComPtr<ID3D11BlendState> m_AlphaEnableBlendingState = nullptr;
+	Microsoft::WRL::ComPtr<ID3D11BlendState> m_AlphaDisableBlendingState = nullptr;
 
 public:
-	D3DClass() = delete;
 	D3DClass(const D3DClass& other) = delete;
+	D3DClass(D3DClass&& other) = delete;
+	D3DClass& operator=(const D3DClass& other) = delete;
+	D3DClass& operator=(D3DClass&& other) = delete;
 };

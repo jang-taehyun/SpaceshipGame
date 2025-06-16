@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "TypeConverterClass.h"
 
-DirectX::XMFLOAT4& TypeConverterClass::XMFLOAT3toXMFLOAT4(const DirectX::XMFLOAT3& target)
+DirectX::XMFLOAT4 TypeConverterClass::XMFLOAT3toXMFLOAT4(DirectX::XMFLOAT3 target)
 {
 	DirectX::XMFLOAT4 ret;
 
@@ -13,7 +13,7 @@ DirectX::XMFLOAT4& TypeConverterClass::XMFLOAT3toXMFLOAT4(const DirectX::XMFLOAT
 	return ret;
 }
 
-DirectX::XMFLOAT3& TypeConverterClass::XMFLOAT4toXMFLOAT3(const DirectX::XMFLOAT4& target)
+DirectX::XMFLOAT3 TypeConverterClass::XMFLOAT4toXMFLOAT3(DirectX::XMFLOAT4 target)
 {
 	DirectX::XMFLOAT3 ret;
 
@@ -24,7 +24,7 @@ DirectX::XMFLOAT3& TypeConverterClass::XMFLOAT4toXMFLOAT3(const DirectX::XMFLOAT
 	return ret;
 }
 
-DirectX::XMMATRIX& TypeConverterClass::XMFLOAT4toXMMATRIX(const DirectX::XMFLOAT4& operand1, const DirectX::XMFLOAT4& operand2, const DirectX::XMFLOAT4& operand3)
+DirectX::XMMATRIX TypeConverterClass::XMFLOAT4toXMMATRIX(DirectX::XMFLOAT4 operand1, DirectX::XMFLOAT4 operand2, DirectX::XMFLOAT4 operand3)
 {
 	using namespace DirectX;
 
@@ -37,9 +37,9 @@ DirectX::XMMATRIX& TypeConverterClass::XMFLOAT4toXMMATRIX(const DirectX::XMFLOAT
 	VOperand2 = XMLoadFloat4(&operand2);
 	VOperand3 = XMLoadFloat4(&operand3);
 
-	MOperand1 = XMMatrixTranslationFromVector(VOperand1);
-	MOperand2 = XMMatrixRotationQuaternion(VOperand2);
-	MOperand3 = XMMatrixScalingFromVector(VOperand3);
+	MOperand1 = (DirectX::XMVector3Equal(VOperand1, DirectX::XMVectorZero()) ? DirectX::XMMatrixIdentity() : XMMatrixTranslationFromVector(VOperand1));
+	MOperand2 = (DirectX::XMVector3Equal(VOperand2, DirectX::XMVectorZero()) ? DirectX::XMMatrixIdentity() : XMMatrixRotationQuaternion(VOperand2));
+	MOperand3 = (DirectX::XMVector3Equal(VOperand3, DirectX::XMVectorZero()) ? DirectX::XMMatrixIdentity() : XMMatrixScalingFromVector(VOperand3));
 
 	ret = MOperand3 * MOperand2 * MOperand1;
 

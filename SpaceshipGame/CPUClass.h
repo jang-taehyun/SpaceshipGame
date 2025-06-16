@@ -6,13 +6,13 @@
 class CPUClass
 {
 public:
-	explicit CPUClass();
+	CPUClass();
 	virtual ~CPUClass();
 	
 	void Frame();
 
 	// Getter //
-	inline const long long& GetCPUPercentage() const { return m_CPUUsage; }
+	inline long long GetCPUPercentage() const { return m_CPUUsage; }
 
 private:
 	HRESULT Initialize();
@@ -29,4 +29,5 @@ private:
 
 public:
 	CPUClass(const CPUClass& other) = delete;
+	CPUClass(CPUClass&& other) = delete;
 };
