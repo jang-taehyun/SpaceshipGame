@@ -170,6 +170,18 @@
     <Filter Include="Scene\StartScene">
       <UniqueIdentifier>{da32d0ad-f6df-4498-bed4-8d63d4cd2b81}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene\BaseScene">
+      <UniqueIdentifier>{4dc4adbc-2e37-479f-96b5-da1563c621ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{64a20a66-22a4-4764-8639-ea400df12e13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIClass">
+      <UniqueIdentifier>{fa978969-405e-4c45-b51a-55111d050c5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\BackgroundClass">
+      <UniqueIdentifier>{d0e8d5d5-7b01-490a-8d81-b9d780db12be}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemClass.h">
@@ -313,6 +325,15 @@
     <ClInclude Include="StartScene.h">
       <Filter>Scene\StartScene</Filter>
     </ClInclude>
+    <ClInclude Include="BaseSceneClass.h">
+      <Filter>Scene\BaseScene</Filter>
+    </ClInclude>
+    <ClInclude Include="UIClass.h">
+      <Filter>UI\UIClass</Filter>
+    </ClInclude>
+    <ClInclude Include="BackgroundClass.h">
+      <Filter>UI\BackgroundClass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -440,6 +461,15 @@
     </ClCompile>
     <ClCompile Include="StartScene.cpp">
       <Filter>Scene\StartScene</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseSceneClass.cpp">
+      <Filter>Scene\BaseScene</Filter>
+    </ClCompile>
+    <ClCompile Include="UIClass.cpp">
+      <Filter>UI\UIClass</Filter>
+    </ClCompile>
+    <ClCompile Include="BackgroundClass.cpp">
+      <Filter>UI\BackgroundClass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

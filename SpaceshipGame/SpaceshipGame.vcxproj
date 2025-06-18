@@ -80,7 +80,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)DirectXTK\DirectXTK\Src;$(SolutionDir)IMGUI_library\header;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)DirectXTK\DirectXTK\Inc;$(SolutionDir)IMGUI_library\header;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)DirectXTK\DirectXTK\Bin\Desktop_2022\x64\Debug;$(SolutionDir)IMGUI_library\lib\x64;$(LibraryPath)</LibraryPath>
     <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
@@ -156,6 +156,8 @@
   <ItemGroup>
     <ClInclude Include="ActorClass.h" />
     <ClInclude Include="ActorManagerClass.h" />
+    <ClInclude Include="BackgroundClass.h" />
+    <ClInclude Include="BaseSceneClass.h" />
     <ClInclude Include="CameraClass.h" />
     <ClInclude Include="ComputeDirectionVectorClass.h" />
     <ClInclude Include="config.h" />
@@ -201,10 +203,13 @@
     <ClInclude Include="GameObjectClass.h" />
     <ClInclude Include="TypeConverterClass.h" />
     <ClInclude Include="typedef.h" />
+    <ClInclude Include="UIClass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ActorClass.cpp" />
     <ClCompile Include="ActorManagerClass.cpp" />
+    <ClCompile Include="BackgroundClass.cpp" />
+    <ClCompile Include="BaseSceneClass.cpp" />
     <ClCompile Include="CameraClass.cpp" />
     <ClCompile Include="ComputeDirectionVectorClass.cpp" />
     <ClCompile Include="CPUClass.cpp" />
@@ -250,6 +255,7 @@
     <ClCompile Include="TimerClass.cpp" />
     <ClCompile Include="GameObjectClass.cpp" />
     <ClCompile Include="TypeConverterClass.cpp" />
+    <ClCompile Include="UIClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SpaceshipGame.rc" />
