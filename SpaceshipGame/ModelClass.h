@@ -1,76 +1,53 @@
 #pragma once
 
-#include "TextureClass.h"
+#include "IModelClass.h"
 
-class ModelLoaderClass;
-class ShaderClass;
-class LightClass;
-class CameraClass;
-
-class ModelClass
+namespace Graphic
 {
-protected:
-	struct VertexType
+	namespace Loader
 	{
-		DirectX::XMFLOAT3 position;
-		DirectX::XMFLOAT2 texture;
-		DirectX::XMFLOAT3 normal;
-	};
+		template<typename VertexType>
+		class ModelLoaderClass;
+	}
+}
 
-	struct ModelType
+namespace Graphic
+{
+	namespace Model
 	{
-		float x, y, z;
-		float tu, tv;
-		float nx, ny, nz;
-	};
+		template<typename VertexType>
+		class ModelClass : public IModelClass
+		{
+		public:
+			ModelClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, ID ModelID);
+			virtual ~ModelClass() = default;
 
-public:
-	explicit ModelClass(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const ModelInfo& info);
-	virtual ~ModelClass();
+			void RenderMesh(ID3D11DeviceContext* DeviceContext, int MeshIdx) override;
+			inline ULONG GetIndexCount(int idx) const override { assert(idx < m_MeshCount); return m_MeshesIndexCount[idx]; }
+			inline ULONG GetVertexCount(int idx) const { assert(idx < m_MeshCount); return m_MeshesVertexCount[idx]; }
+			inline const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& GetMaterial(int idx) const { assert(idx < m_MeshCount); return m_Materials[idx]; }
 
-	HRESULT Render(ID3D11DeviceContext* const& DeviceContext, const TransformMatrixData& transform, const LightClass* const& light, const CameraClass* const& camera);
+		private:
+			HRESULT Initialize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext) override;
+			HRESULT InitializeBuffers(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Graphic::Loader::ModelLoaderClass<VertexType>& loader);
+			void InitializeMaterials(Loader::ModelLoaderClass<VertexType>& loader);
 
-	inline const int& GetIndexCount() const { return m_IndexCount; }
-	inline const ID3D11ShaderResourceView* const& GetTexture(const int idx = 0) { return m_Texture->GetTexture(idx); }
-	inline const std::vector<ID3D11ShaderResourceView*>& GetTextureArray() { return m_Texture->GetTextures(); }
-	inline ShaderClass* const& GetShader() { return m_Shader; }
+		private:
+			ID m_ModelID = ID::DEFAULT_SPACESHIP;
 
-private:
-	HRESULT Initialize(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const ModelInfo& info);
-	HRESULT LoadModel(const std::wstring& FileName);
-	HRESULT LoadTexture(ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext, const std::vector<std::wstring>& FileNames);
-	
-	virtual HRESULT InitializeShader(const HWND& hwnd, ID3D11Device* const& Device, const ShaderFileInfo& info) = 0;
-	virtual HRESULT RenderShader(ID3D11DeviceContext* const& DeviceContext, const TransformMatrixData& transform, const LightClass* const& light, const CameraClass* const& camera) = 0;
+			UINT m_MeshCount = 0;
+			std::vector<Microsoft::WRL::ComPtr<ID3D11Buffer>> m_VertexBuffer;						// vertex buffer
+			std::vector<Microsoft::WRL::ComPtr<ID3D11Buffer>> m_IndexBuffer;						// index buffer
+			std::vector<ULONG> m_MeshesVertexCount;													// 각 mesh에 있는 vertex 데이터의 개수
+			std::vector<ULONG> m_MeshesIndexCount;													// 각 mesh에 있는 index 데이터의 개수
 
-	void Shutdown();
-	void ShutdownBuffers();
-	void ReleaseTexture();
-	virtual void ReleaseShader() = 0;
-	void ReleaseModel();
+			std::vector<std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>> m_Materials;	// 각 mesh에서 사용하는 material 데이터들
 
-protected:
-	HRESULT InitializeBuffers(ID3D11Device* const& Device);
-
-protected:
-	virtual void SetBuffers(ID3D11DeviceContext* const& DeviceContext);
-	inline ID3D11Buffer* const& GetVertexBuffer() const { return m_VertexBuffer; }
-	inline ID3D11Buffer* const& GetIndexBuffer() const { return m_IndexBuffer; }
-
-private:
-	ID3D11Buffer* m_VertexBuffer = nullptr;
-	ID3D11Buffer* m_IndexBuffer = nullptr;
-	
-	int m_VertexCount = 0;
-	int m_IndexCount = 0;
-
-	ModelType* m_Model = nullptr;
-	TextureClass* m_Texture = nullptr;
-
-protected:
-	ShaderClass* m_Shader = nullptr;
-
-public:
-	ModelClass() = delete;
-	ModelClass(const ModelClass& other) = delete;
-};
+		public:
+			ModelClass(const ModelClass& other) = delete;
+			ModelClass(ModelClass&& other) noexcept = delete;
+			ModelClass& operator=(const ModelClass& other) = delete;
+			ModelClass& operator=(ModelClass&& other) noexcept = delete;
+		};
+	}
+}

@@ -65,7 +65,7 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 {
 	HRESULT result = S_OK;
 	float ScalingFactor = 0.5f;
-	AffineInfo affine;
+	AffineInfo affine = {};
 	DirectX::XMMATRIX BaseViewMatrix;
 	DirectX::XMFLOAT4 AmbientColor = DirectX::XMFLOAT4(0.15f, 0.15f, 0.15f, 1.f);;
 	DirectX::XMFLOAT4 DiffuseColor = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);;
@@ -216,7 +216,7 @@ HRESULT GraphicsClass::Render(ActorManagerClass* const& actor_manager, SoundClas
 {
 	HRESULT result = S_OK;
 	DirectX::XMMATRIX OrthoMatrix;
-	TransformMatrixData transform;
+	TransformMatrixData transform = {};
 	ColorClass background;
 
 	// 에러 메세지 초기화 //

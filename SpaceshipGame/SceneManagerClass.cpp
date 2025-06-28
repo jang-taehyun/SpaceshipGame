@@ -6,10 +6,10 @@
 #include "ActorManagerClass.h"
 #include "SceneManagerClass.h"
 
-bool SceneManagerClass::IsInitialize = false;
+bool Scene::SceneManagerClass::IsInitialize = false;
 static ErrorContent e;
 
-SceneManagerClass::SceneManagerClass()
+Scene::SceneManagerClass::SceneManagerClass()
 {
 	HRESULT result = S_OK;
 
@@ -26,12 +26,12 @@ SceneManagerClass::SceneManagerClass()
 	IsInitialize = true;
 }
 
-SceneManagerClass::~SceneManagerClass()
+Scene::SceneManagerClass::~SceneManagerClass()
 {
 	IsInitialize = false;
 }
 
-HRESULT SceneManagerClass::Frame(ActorManagerClass* const& actor_manager, CameraClass* const& camera, const InputClass* const& input, const float& frame_time)
+HRESULT Scene::SceneManagerClass::Frame(ActorManagerClass* const& actor_manager, CameraClass* const& camera, const InputClass* const& input, const float& frame_time)
 {
 	HRESULT result = S_OK;
 
@@ -57,7 +57,7 @@ HRESULT SceneManagerClass::Frame(ActorManagerClass* const& actor_manager, Camera
 	return result;
 }
 
-HRESULT SceneManagerClass::ProcessCamera(CameraClass* const& camera, const InputClass* const& input, const float& frame_time)
+HRESULT Scene::SceneManagerClass::ProcessCamera(CameraClass* const& camera, const InputClass* const& input, const float& frame_time)
 {
 	HRESULT result = S_OK;
 
@@ -78,7 +78,7 @@ HRESULT SceneManagerClass::ProcessCamera(CameraClass* const& camera, const Input
 	return result;
 }
 
-HRESULT SceneManagerClass::ProcessActor(ActorManagerClass* const& actor_manager, const InputClass* const& input, const float& frame_time)
+HRESULT Scene::SceneManagerClass::ProcessActor(ActorManagerClass* const& actor_manager, const InputClass* const& input, const float& frame_time)
 {
 	HRESULT result = S_OK;
 
@@ -104,7 +104,7 @@ HRESULT SceneManagerClass::ProcessActor(ActorManagerClass* const& actor_manager,
 	return result;
 }
 
-void SceneManagerClass::ProcessSceneInfo()
+void Scene::SceneManagerClass::ProcessSceneInfo()
 {
 	switch (m_SceneState)
 	{
@@ -123,12 +123,12 @@ void SceneManagerClass::ProcessSceneInfo()
 	}
 }
 
-void SceneManagerClass::UpdateCameraFrameTime(CameraClass* const& camera, const float& frame_time)
+void Scene::SceneManagerClass::UpdateCameraFrameTime(CameraClass* const& camera, const float& frame_time)
 {
 	camera->GetAffineObject()->SetFrameTime(frame_time);
 }
 
-HRESULT SceneManagerClass::UpdateCameraAffine(CameraClass* const& camera, const InputClass* const& input)
+HRESULT Scene::SceneManagerClass::UpdateCameraAffine(CameraClass* const& camera, const InputClass* const& input)
 {
 	HRESULT result = S_OK;
 	bool KeyDown = false;
@@ -206,13 +206,13 @@ HRESULT SceneManagerClass::UpdateCameraAffine(CameraClass* const& camera, const 
 	return result;
 }
 
-void SceneManagerClass::UpdateObjectFrameTime(ActorManagerClass* const& actor_manager, const float& frame_time)
+void Scene::SceneManagerClass::UpdateObjectFrameTime(ActorManagerClass* const& actor_manager, const float& frame_time)
 {
 	actor_manager->GetPlayerObject()->GetAffineObject()->SetFrameTime(frame_time);
 	actor_manager->GetPlayerObject()->GetCollision()->GetAffineObject()->SetFrameTime(frame_time);
 }
 
-HRESULT SceneManagerClass::UpdateActorCollisionState(ActorManagerClass* const& actor_manager, const InputClass* const& input)
+HRESULT Scene::SceneManagerClass::UpdateActorCollisionState(ActorManagerClass* const& actor_manager, const InputClass* const& input)
 {
 	HRESULT result = S_OK;
 	DirectX::XMFLOAT4 color;
@@ -243,7 +243,7 @@ HRESULT SceneManagerClass::UpdateActorCollisionState(ActorManagerClass* const& a
 	return result;
 }
 
-HRESULT SceneManagerClass::UpdateActorAffine(ActorManagerClass* const& actor_manager, const InputClass* const& input)
+HRESULT Scene::SceneManagerClass::UpdateActorAffine(ActorManagerClass* const& actor_manager, const InputClass* const& input)
 {
 	HRESULT result = S_OK;
 	bool KeyDown = false;

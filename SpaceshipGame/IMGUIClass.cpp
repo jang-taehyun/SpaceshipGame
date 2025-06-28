@@ -17,10 +17,10 @@
 
 #include "IMGUIClass.h"
 
-bool IMGUIClass::IsInitialize = false;
+bool Graphic::IMGUIClass::IsInitialize = false;
 static ErrorContent e;
 
-IMGUIClass::IMGUIClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeivceContext)
+Graphic::IMGUIClass::IMGUIClass(HWND hwnd, const ID3D11Device* Device, const ID3D11DeviceContext* DeivceContext)
 {
 	HRESULT result = S_OK;
 
@@ -38,13 +38,13 @@ IMGUIClass::IMGUIClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* Dei
 	IsInitialize = true;
 }
 
-IMGUIClass::~IMGUIClass()
+Graphic::IMGUIClass::~IMGUIClass()
 {
 	Shutdown();
 	IsInitialize = false;
 }
 
-void IMGUIClass::Initialize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeivceContext)
+void Graphic::IMGUIClass::Initialize(HWND hwnd, const ID3D11Device* Device, const ID3D11DeviceContext* DeivceContext)
 {
 	ImVec2 cur;
 	m_WindowsCount = MaxIMGUIWindowsCount;
@@ -56,7 +56,7 @@ void IMGUIClass::Initialize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGui_ImplWin32_Init(hwnd);
-	ImGui_ImplDX11_Init(Device, DeivceContext);
+	ImGui_ImplDX11_Init(const_cast<ID3D11Device*>(Device), const_cast<ID3D11DeviceContext*>(DeivceContext));
 
 	// Font 및 테마 설정 //
 	ImGuiIO& io = ImGui::GetIO();
@@ -76,14 +76,14 @@ void IMGUIClass::Initialize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext
 	}
 }
 
-void IMGUIClass::Shutdown()
+void Graphic::IMGUIClass::Shutdown()
 {
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
 }
 
-void IMGUIClass::Render(ActorManagerClass* actor_manager, LightClass* light, SoundClass* sound, IObjectClass* camera, int fps, int cpu_usage)
+void Graphic::IMGUIClass::Render(Object::ActorManagerClass* actor_manager, LightClass* light, Sound::SoundClass* sound, Object::IObjectClass* camera, int fps, int cpu_usage)
 {
 	// IMGUI 렌더링 준비 //
 	ImGui_ImplDX11_NewFrame();
@@ -97,7 +97,7 @@ void IMGUIClass::Render(ActorManagerClass* actor_manager, LightClass* light, Sou
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
-void IMGUIClass::SetUI(ActorManagerClass* actor_manager, LightClass* light, SoundClass* sound, IObjectClass* camera, int fps, int cpu_usage)
+void Graphic::IMGUIClass::SetUI(Object::ActorManagerClass* actor_manager, LightClass* light, Sound::SoundClass* sound, Object::IObjectClass* camera, int fps, int cpu_usage)
 {
 	std::string title = u8"FPS, CPU 사용량";
 	SetFPSCPUUsage(title, 0, fps, cpu_usage);
@@ -125,7 +125,7 @@ void IMGUIClass::SetUI(ActorManagerClass* actor_manager, LightClass* light, Soun
 	}
 }
 
-void IMGUIClass::SetFPSCPUUsage(const std::string& title, int IMGUI_Window_idx, int fps, int cpu_usage)
+void Graphic::IMGUIClass::SetFPSCPUUsage(const std::string& title, int IMGUI_Window_idx, int fps, int cpu_usage)
 {
 	std::string contents;
 
@@ -145,7 +145,7 @@ void IMGUIClass::SetFPSCPUUsage(const std::string& title, int IMGUI_Window_idx, 
 	ImGui::End();
 }
 
-void IMGUIClass::SetCameraInfo(const std::string& title, int IMGUI_Window_idx, IObjectClass* camera)
+void Graphic::IMGUIClass::SetCameraInfo(const std::string& title, int IMGUI_Window_idx, Object::IObjectClass* camera)
 {
 	bool IsPress = false;
 	std::string contents;
@@ -184,7 +184,7 @@ void IMGUIClass::SetCameraInfo(const std::string& title, int IMGUI_Window_idx, I
 	ImGui::End();
 }
 
-void IMGUIClass::SetSoundInfo(const std::string& title, int IMGUI_Window_idx, SoundClass* sound)
+void Graphic::IMGUIClass::SetSoundInfo(const std::string& title, int IMGUI_Window_idx, Sound::SoundClass* sound)
 {
 	bool IsPress = false;
 
@@ -197,9 +197,9 @@ void IMGUIClass::SetSoundInfo(const std::string& title, int IMGUI_Window_idx, So
 	if (IsPress)
 	{
 		if (sound->IsBackgoundPlay())
-			sound->StopWaveFile(SoundInfo::BACKGROUND);
+			sound->StopWaveFile(Sound::ID::BACKGROUND);
 		else
-			sound->PlayWaveFile(SoundInfo::BACKGROUND);
+			sound->PlayWaveFile(Sound::ID::BACKGROUND);
 	}
 
 	// effect 오디오 //
@@ -207,15 +207,15 @@ void IMGUIClass::SetSoundInfo(const std::string& title, int IMGUI_Window_idx, So
 	if (IsPress)
 	{
 		if (sound->IsEffectPlay())
-			sound->StopWaveFile(SoundInfo::EFFECT);
+			sound->StopWaveFile(Sound::ID::EFFECT);
 		else
-			sound->PlayWaveFile(SoundInfo::EFFECT);
+			sound->PlayWaveFile(Sound::ID::EFFECT);
 	}
 
 	ImGui::End();
 }
 
-void IMGUIClass::SetLightInfo(const std::string& title, int IMGUI_Window_idx, LightClass* light)
+void Graphic::IMGUIClass::SetLightInfo(const std::string& title, int IMGUI_Window_idx, LightClass* light)
 {
 	static DirectX::XMFLOAT4 origin_ambient = light->GetAmbientColor();
 	static DirectX::XMFLOAT4 origin_diffuse = light->GetDiffuseColor();
@@ -290,7 +290,7 @@ void IMGUIClass::SetLightInfo(const std::string& title, int IMGUI_Window_idx, Li
 	ImGui::End();
 }
 
-void IMGUIClass::SetActorInfo(const std::string& title, int IMGUI_Window_idx, IObjectClass* actor)
+void Graphic::IMGUIClass::SetActorInfo(const std::string& title, int IMGUI_Window_idx, Object::IObjectClass* actor)
 {
 	float value[4] = { 0.f, };
 	bool IsPress = false;
@@ -329,45 +329,45 @@ void IMGUIClass::SetActorInfo(const std::string& title, int IMGUI_Window_idx, IO
 		actor->SetScale(value[0], value[1], value[2]);
 
 	// collision position
-	value[0] = static_cast<ActorClass*>(actor)->GetCollision()->GetPosition().x;
-	value[1] = static_cast<ActorClass*>(actor)->GetCollision()->GetPosition().y;
-	value[2] = static_cast<ActorClass*>(actor)->GetCollision()->GetPosition().z;
+	value[0] = static_cast<Object::ActorClass*>(actor)->GetCollision()->GetPosition().x;
+	value[1] = static_cast<Object::ActorClass*>(actor)->GetCollision()->GetPosition().y;
+	value[2] = static_cast<Object::ActorClass*>(actor)->GetCollision()->GetPosition().z;
 	ImGui::Text(u8"충돌체 위치");
 	ImGui::SameLine();
 	if (ImGui::SliderFloat3(u8"##4", value, -100.0f, 100.f))
-		static_cast<ActorClass*>(actor)->SetPosition(value[0], value[1], value[2]);
+		static_cast<Object::ActorClass*>(actor)->SetPosition(value[0], value[1], value[2]);
 
 	// collision rotate
-	value[0] = static_cast<ActorClass*>(actor)->GetCollision()->GetPosition().x;
-	value[1] = static_cast<ActorClass*>(actor)->GetCollision()->GetPosition().y;
-	value[2] = static_cast<ActorClass*>(actor)->GetCollision()->GetPosition().z;
+	value[0] = static_cast<Object::ActorClass*>(actor)->GetCollision()->GetPosition().x;
+	value[1] = static_cast<Object::ActorClass*>(actor)->GetCollision()->GetPosition().y;
+	value[2] = static_cast<Object::ActorClass*>(actor)->GetCollision()->GetPosition().z;
 	ImGui::Text(u8"충돌체 회전");
 	ImGui::SameLine();
 	if (ImGui::SliderFloat3(u8"##5", value, -100.0f, 100.f))
-		static_cast<ActorClass*>(actor)->SetRotation(value[0], value[1], value[2]);
+		static_cast<Object::ActorClass*>(actor)->SetRotation(value[0], value[1], value[2]);
 
 	// collision scale
-	value[0] = static_cast<ActorClass*>(actor)->GetCollision()->GetPosition().x;
-	value[1] = static_cast<ActorClass*>(actor)->GetCollision()->GetPosition().y;
-	value[2] = static_cast<ActorClass*>(actor)->GetCollision()->GetPosition().z;
+	value[0] = static_cast<Object::ActorClass*>(actor)->GetCollision()->GetPosition().x;
+	value[1] = static_cast<Object::ActorClass*>(actor)->GetCollision()->GetPosition().y;
+	value[2] = static_cast<Object::ActorClass*>(actor)->GetCollision()->GetPosition().z;
 	ImGui::Text(u8"충돌체 크기");
 	ImGui::SameLine();
 	if (ImGui::SliderFloat3(u8"##6", value, -100.0f, 100.f))
-		static_cast<ActorClass*>(actor)->SetScale(value[0], value[1], value[2]);
+		static_cast<Object::ActorClass*>(actor)->SetScale(value[0], value[1], value[2]);
 
 	// 이동 speed UI //
 	ImGui::Text(u8"이동 속도");
 	ImGui::SameLine();
-	speed = static_cast<MoveableObjectClass*>(actor)->GetMoveObject()->GetMoveSpeed();
+	speed = static_cast<Object::MoveableObjectClass*>(actor)->GetMoveObject()->GetMoveSpeed();
 	if (ImGui::SliderFloat(u8"##7", &speed, 0.0f, 0.1f))
-		static_cast<MoveableObjectClass*>(actor)->GetMoveObject()->SetMoveSpeed(speed);
+		static_cast<Object::MoveableObjectClass*>(actor)->GetMoveObject()->SetMoveSpeed(speed);
 
 	// 회전 speed UI //
 	ImGui::Text(u8"회전 속도");
 	ImGui::SameLine();
-	speed = static_cast<MoveableObjectClass*>(actor)->GetRotateObject()->GetRoteteSpeed();
+	speed = static_cast<Object::MoveableObjectClass*>(actor)->GetRotateObject()->GetRoteteSpeed();
 	if (ImGui::SliderFloat(u8"##8", &speed, 0.0f, 0.002f, "%.10f"))
-		static_cast<MoveableObjectClass*>(actor)->GetRotateObject()->SetRoteteSpeed(speed);
+		static_cast<Object::MoveableObjectClass*>(actor)->GetRotateObject()->SetRoteteSpeed(speed);
 
 	ImGui::End();
 }

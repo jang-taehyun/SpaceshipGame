@@ -1,11 +1,10 @@
 #include "pch.h"
-#include <fstream>
 #include "SoundClass.h"
 
-bool SoundClass::IsInitailize = false;
+bool Sound::SoundClass::IsInitailize = false;
 static ErrorContent e;
 
-SoundClass::SoundClass()
+Sound::SoundClass::SoundClass()
 {
 	HRESULT result = S_OK;
 
@@ -29,13 +28,13 @@ SoundClass::SoundClass()
 	IsInitailize = true;
 }
 
-SoundClass::~SoundClass()
+Sound::SoundClass::~SoundClass()
 {
 	Shutdown();
 	IsInitailize = false;
 }
 
-HRESULT SoundClass::Frame()
+HRESULT Sound::SoundClass::Frame()
 {
 	HRESULT result = S_OK;
 
@@ -54,7 +53,7 @@ HRESULT SoundClass::Frame()
 	return result;
 }
 
-HRESULT SoundClass::Initialize()
+HRESULT Sound::SoundClass::Initialize()
 {
 	HRESULT result = S_OK;
 
@@ -74,7 +73,7 @@ HRESULT SoundClass::Initialize()
 	return result;
 }
 
-void SoundClass::Shutdown()
+void Sound::SoundClass::Shutdown()
 {
 	if (m_EffectSound)
 		m_EffectSound->Stop();
@@ -92,7 +91,7 @@ void SoundClass::Shutdown()
 	CoUninitialize();
 }
 
-HRESULT SoundClass::InitializeAudioEngine()
+HRESULT Sound::SoundClass::InitializeAudioEngine()
 {
 	HRESULT result = S_OK;
 	DirectX::AUDIO_ENGINE_FLAGS AudioEngineFlag;
@@ -120,7 +119,7 @@ HRESULT SoundClass::InitializeAudioEngine()
 	return result;
 }
 
-HRESULT SoundClass::LoadWaveFile()
+HRESULT Sound::SoundClass::LoadWaveFile()
 {
 	HRESULT result = S_OK;
 
@@ -128,8 +127,8 @@ HRESULT SoundClass::LoadWaveFile()
 	e.title = _T("SoundClass LoadWaveFile()");
 
 	// wave 颇老阑 load窍搁辑 sound effect 按眉 积己 //
-	m_Effect = std::make_unique<DirectX::SoundEffect>(m_AudioEngine.get(), EffectSoundInfo.filename.c_str());
-	m_Background = std::make_unique<DirectX::SoundEffect>(m_AudioEngine.get(), BackgroundSoundInfo.filename.c_str());
+	m_Effect = std::make_unique<DirectX::SoundEffect>(m_AudioEngine.get(), Sound::SoundList.at(ID::EFFECT));
+	m_Background = std::make_unique<DirectX::SoundEffect>(m_AudioEngine.get(), Sound::SoundList.at(ID::BACKGROUND));
 
 	// sound effect instance 积己 //
 	m_EffectSound = m_Effect->CreateInstance();
@@ -138,7 +137,7 @@ HRESULT SoundClass::LoadWaveFile()
 	return result;
 }
 
-HRESULT SoundClass::PlayWaveFile(SoundInfo info) const
+HRESULT Sound::SoundClass::PlayWaveFile(ID info) const
 {
 	HRESULT result = S_OK;
 
@@ -147,10 +146,10 @@ HRESULT SoundClass::PlayWaveFile(SoundInfo info) const
 
 	switch (info)
 	{
-	case SoundInfo::BACKGROUND:
+	case ID::BACKGROUND:
 		m_BackgroundSound->Play();
 		break;
-	case SoundInfo::EFFECT:
+	case ID::EFFECT:
 		m_EffectSound->Play();
 		break;
 	default:
@@ -160,7 +159,7 @@ HRESULT SoundClass::PlayWaveFile(SoundInfo info) const
 	return result;
 }
 
-HRESULT SoundClass::StopWaveFile(SoundInfo info) const
+HRESULT Sound::SoundClass::StopWaveFile(ID info) const
 {
 	HRESULT result = S_OK;
 
@@ -173,11 +172,11 @@ HRESULT SoundClass::StopWaveFile(SoundInfo info) const
 
 	switch (info)
 	{
-	case SoundInfo::BACKGROUND:
+	case ID::BACKGROUND:
 		if(m_BackgroundSound->GetState() == DirectX::SoundState::PLAYING)
 			m_BackgroundSound->Stop();
 		break;
-	case SoundInfo::EFFECT:
+	case ID::EFFECT:
 		if (m_EffectSound->GetState() == DirectX::SoundState::PLAYING)
 			m_EffectSound->Stop();
 		break;

@@ -1,26 +1,38 @@
 #pragma once
 
-#include <map>
-
-class ModelClass;
-
-class ModelManagerClass
+namespace Graphic
 {
-public:
-	explicit ModelManagerClass(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext);
-	virtual ~ModelManagerClass();
+	namespace Model
+	{
+		class IModelClass;
+	}
+}
 
-	ModelClass* const GetModel(ModelIDs id);
+namespace Graphic
+{
+	namespace Model
+	{
+		class ModelManagerClass
+		{
+		public:
+			ModelManagerClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext);
+			virtual ~ModelManagerClass();
 
-private:
-	HRESULT Initailize(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext);
-	void Shutdown();
+			const IModelClass* GetModel(Graphic::Model::ID id) const;
 
-private:
-	static bool IsInitialize;
-	std::map<ModelIDs, ModelClass*> m_ModelList;
+		private:
+			HRESULT Initailize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext);
+			void Shutdown();
 
-public:
-	ModelManagerClass(const ModelManagerClass& other) = delete;
-};
+		private:
+			static bool IsInitialize;
+			std::map<Graphic::Model::ID, std::unique_ptr<IModelClass>> m_ModelList;
 
+		public:
+			ModelManagerClass(const ModelManagerClass& other) = delete;
+			ModelManagerClass(ModelManagerClass&& other) = delete;
+			ModelManagerClass& operator=(const ModelManagerClass& other) = delete;
+			ModelManagerClass& operator=(ModelManagerClass&& other) = delete;
+		};
+	}
+}

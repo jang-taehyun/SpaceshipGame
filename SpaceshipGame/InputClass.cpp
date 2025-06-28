@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "InputClass.h"
 
-bool InputClass::IsInitailize = false;
+bool System::InputClass::IsInitailize = false;
 static ErrorContent e;
 
-InputClass::InputClass(HINSTANCE hinstance, HWND hwnd, int ScreenWidth, int ScreenHeight)
+System::InputClass::InputClass(HINSTANCE hinstance, HWND hwnd, int ScreenWidth, int ScreenHeight)
 {
 	HRESULT result = S_OK;
 
@@ -28,13 +28,13 @@ InputClass::InputClass(HINSTANCE hinstance, HWND hwnd, int ScreenWidth, int Scre
 	IsInitailize = true;
 }
 
-InputClass::~InputClass()
+System::InputClass::~InputClass()
 {
 	Shutdown();
 	IsInitailize = false;
 }
 
-HRESULT InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int ScreenWidth, int ScreenHeight)
+HRESULT System::InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int ScreenWidth, int ScreenHeight)
 {
 	HRESULT result = S_OK;
 
@@ -131,7 +131,7 @@ HRESULT InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int ScreenWidth, 
 	return result;
 }
 
-void InputClass::Shutdown()
+void System::InputClass::Shutdown()
 {
 	if (m_Mouse)
 		m_Mouse->Unacquire();
@@ -140,7 +140,7 @@ void InputClass::Shutdown()
 		m_Keyboard->Unacquire();
 }
 
-HRESULT InputClass::Frame()
+HRESULT System::InputClass::Frame()
 {
 	HRESULT result = S_OK;
 
@@ -162,7 +162,7 @@ HRESULT InputClass::Frame()
 	return result;
 }
 
-HRESULT InputClass::ReadKeyboard()
+HRESULT System::InputClass::ReadKeyboard()
 {
 	HRESULT result = S_OK;
 
@@ -188,7 +188,7 @@ HRESULT InputClass::ReadKeyboard()
 	return S_OK;
 }
 
-HRESULT InputClass::ReadMouse()
+HRESULT System::InputClass::ReadMouse()
 {
 	HRESULT result = S_OK;
 
@@ -214,7 +214,7 @@ HRESULT InputClass::ReadMouse()
 	return S_OK;
 }
 
-void InputClass::ProcessInput()
+void System::InputClass::ProcessInput()
 {
 	m_MouseX += m_MouseState.lX;
 	m_MouseY += m_MouseState.lY;

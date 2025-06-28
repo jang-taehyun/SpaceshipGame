@@ -6,12 +6,14 @@
 
 #include "MoveableObjectClass.h"
 
-class CameraClass : public MoveableObjectClass
+namespace Object
 {
-public:
-	CameraClass() = default;
-	virtual ~CameraClass() = default;
+	class CameraClass : public MoveableObjectClass
+	{
+	public:
+		CameraClass() = default;
+		virtual ~CameraClass() = default;
 
-	DirectX::XMFLOAT4X4& Render() const;
-};
-
+		DirectX::XMFLOAT4X4 Render() const;
+	};
+}

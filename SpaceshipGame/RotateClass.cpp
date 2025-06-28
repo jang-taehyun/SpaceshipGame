@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "RotateClass.h"
 
-RotateClass::RotateClass(float speed) : m_RotateSpeed(speed) {}
+Object::RotateClass::RotateClass(float speed) : m_RotateSpeed(speed) {}
 
-DirectX::XMFLOAT4 RotateClass::Rotate(DirectX::XMFLOAT4 rotate, long MouseX, long MouseY, float frame_time, bool IsKeyDown)
+DirectX::XMFLOAT4 Object::RotateClass::Rotate(DirectX::XMFLOAT4 rotate, long MouseX, long MouseY, float frame_time, bool IsKeyDown)
 {
 	DirectX::XMFLOAT4 ret = rotate;
 	float speed = 0.f;
@@ -21,27 +21,27 @@ DirectX::XMFLOAT4 RotateClass::Rotate(DirectX::XMFLOAT4 rotate, long MouseX, lon
 	return ret;
 }
 
-std::unique_ptr<IRotateClass> RotateClass::Clone() const
+std::unique_ptr<Object::IRotateClass> Object::RotateClass::Clone() const
 {
 	return std::make_unique<RotateClass>(*this);
 }
 
-float RotateClass::ComputeRotateSpeed(float frame_time, bool IsKeyDown)
+float Object::RotateClass::ComputeRotateSpeed(float frame_time, bool IsKeyDown)
 {
 	float ret = m_PrevRotateSpeed;
 
 	if (IsKeyDown)
 	{
-		ret += (frame_time * MOUSE_SENSITIVITY * m_RotateSpeed);
+		ret += (frame_time * System::MOUSE_SENSITIVITY * m_RotateSpeed);
 
-		if (ret > (frame_time * MOUSE_SENSITIVITY * m_RotateSpeed))
+		if (ret > (frame_time * System::MOUSE_SENSITIVITY * m_RotateSpeed))
 		{
-			ret = frame_time * MOUSE_SENSITIVITY * m_RotateSpeed;
+			ret = frame_time * System::MOUSE_SENSITIVITY * m_RotateSpeed;
 		}
 	}
 	else
 	{
-		ret -= (frame_time * MOUSE_SENSITIVITY * m_RotateSpeed);
+		ret -= (frame_time * System::MOUSE_SENSITIVITY * m_RotateSpeed);
 
 		if (ret < 0.f)
 		{

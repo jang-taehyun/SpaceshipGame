@@ -1,26 +1,27 @@
 #pragma once
 
-#include <map>
+namespace Text { class ITextClass; }
 
-class ITextClass;
-
-class TextManagerClass
+namespace Text
 {
-public:
-	TextManagerClass();
-	virtual ~TextManagerClass() = default;
+	class TextManagerClass
+	{
+	public:
+		TextManagerClass();
+		virtual ~TextManagerClass();
 
-	const ITextClass* GetTextObject(int idx) const;
-	inline int GetTextObjectCount() const { return m_Texts.size(); }
+		const ITextClass* GetTextObject(int idx) const;
+		inline UINT GetTextObjectCount() const { return static_cast<UINT>(m_Texts.size()); }
 
-private:
-	static bool IsInitialize;
-	std::map<TextFlag, std::unique_ptr<ITextClass>> m_Texts;
+	private:
+		static bool IsInitialize;
+		std::vector<std::unique_ptr<ITextClass>> m_Texts;
 
-public:
-	TextManagerClass(const TextManagerClass& other) = delete;
-	TextManagerClass(TextManagerClass&& other) = delete;
-	TextManagerClass& operator=(const TextManagerClass& other) = delete;
-	TextManagerClass& operator=(TextManagerClass&& other) = delete;
-};
+	public:
+		TextManagerClass(const TextManagerClass& other) = delete;
+		TextManagerClass(TextManagerClass&& other) = delete;
+		TextManagerClass& operator=(const TextManagerClass& other) = delete;
+		TextManagerClass& operator=(TextManagerClass&& other) = delete;
+	};
 
+}

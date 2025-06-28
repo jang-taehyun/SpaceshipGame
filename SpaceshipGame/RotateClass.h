@@ -7,25 +7,27 @@
 
 #include "IRotateClass.h"
 
-class RotateClass : public IRotateClass
+namespace Object
 {
-public:
-	RotateClass() = default;
-	explicit RotateClass(float speed);
-	virtual ~RotateClass() = default;
+	class RotateClass : public IRotateClass
+	{
+	public:
+		RotateClass() = default;
+		explicit RotateClass(float speed);
+		virtual ~RotateClass() = default;
 
-	DirectX::XMFLOAT4 Rotate(DirectX::XMFLOAT4 rotate, long MouseX, long MouseY, float frame_time, bool IsKeyDown) override;
+		DirectX::XMFLOAT4 Rotate(DirectX::XMFLOAT4 rotate, long MouseX, long MouseY, float frame_time, bool IsKeyDown) override;
 
-	inline float GetRoteteSpeed() const override { return m_RotateSpeed; }
-	inline void SetRoteteSpeed(float value) override { m_RotateSpeed = value; }
+		inline float GetRoteteSpeed() const override { return m_RotateSpeed; }
+		inline void SetRoteteSpeed(float value) override { m_RotateSpeed = value; }
 
-	virtual std::unique_ptr<IRotateClass> Clone() const override;
+		virtual std::unique_ptr<IRotateClass> Clone() const override;
 
-private:
-	float ComputeRotateSpeed(float frame_time, bool IsKeyDown) override;
+	private:
+		float ComputeRotateSpeed(float frame_time, bool IsKeyDown) override;
 
-private:
-	float m_RotateSpeed = 1.f;
-	float m_PrevRotateSpeed = 0.f;
-};
-
+	private:
+		float m_RotateSpeed = 1.f;
+		float m_PrevRotateSpeed = 0.f;
+	};
+}

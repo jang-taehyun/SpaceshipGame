@@ -7,30 +7,32 @@
 
 #include "IMoveClass.h"
 
-class MoveClass : public IMoveClass
+namespace Object
 {
-public:
-	MoveClass() = default;
-	explicit MoveClass(float speed);
-	virtual ~MoveClass() = default;
+	class MoveClass : public IMoveClass
+	{
+	public:
+		MoveClass() = default;
+		explicit MoveClass(float speed);
+		virtual ~MoveClass() = default;
 
-	DirectX::XMFLOAT4 Move(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 rotate, MoveState state, float frame_time, bool IsKeyDown) override;
-	
-	inline float GetMoveSpeed() const override { return m_MoveSpeed; }
-	inline void SetMoveSpeed(float value) override { m_MoveSpeed = value; }
+		DirectX::XMFLOAT4 Move(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 rotate, MoveState state, float frame_time, bool IsKeyDown) override;
 
-	virtual std::unique_ptr<IMoveClass> Clone() const override;
+		inline float GetMoveSpeed() const override { return m_MoveSpeed; }
+		inline void SetMoveSpeed(float value) override { m_MoveSpeed = value; }
 
-private:
-	DirectX::XMFLOAT4 MoveLeft(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 RightVector, float speed) const;
-	DirectX::XMFLOAT4 MoveRight(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 RightVector, float speed) const;
-	DirectX::XMFLOAT4 MoveForward(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 ForwardVector, float speed) const;
-	DirectX::XMFLOAT4 MoveBackward(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 ForwardVector, float speed) const;
+		virtual std::unique_ptr<IMoveClass> Clone() const override;
 
-	float ComputeMoveSpeed(float frame_time, bool IsKeyDown);
+	private:
+		DirectX::XMFLOAT4 MoveLeft(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 RightVector, float speed) const;
+		DirectX::XMFLOAT4 MoveRight(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 RightVector, float speed) const;
+		DirectX::XMFLOAT4 MoveForward(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 ForwardVector, float speed) const;
+		DirectX::XMFLOAT4 MoveBackward(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 ForwardVector, float speed) const;
 
-private:
-	float m_MoveSpeed = 1.f;
-	float m_PrevMoveSpeed = 0.f;
-};
+		float ComputeMoveSpeed(float frame_time, bool IsKeyDown);
 
+	private:
+		float m_MoveSpeed = 1.f;
+		float m_PrevMoveSpeed = 0.f;
+	};
+}

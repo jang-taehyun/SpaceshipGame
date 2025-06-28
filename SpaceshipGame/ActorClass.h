@@ -6,29 +6,31 @@
 
 #include "MoveableObjectClass.h"
 
-class ICollisionClass;
+namespace Object { class ICollisionClass; }
 
-class ActorClass : public MoveableObjectClass
+namespace Object
 {
-public:
-	ActorClass(const AffineInfo& affine, std::unique_ptr<IMoveClass> move, std::unique_ptr<IRotateClass> rotate, std::unique_ptr<ICollisionClass> collision, ModelIDs ModelID);
-	ActorClass(const ActorClass& other);
-	ActorClass(ActorClass&& other) noexcept;
-	virtual ~ActorClass() = default;
+	class ActorClass : public MoveableObjectClass
+	{
+	public:
+		ActorClass(const AffineInfo& affine, std::unique_ptr<IMoveClass> move, std::unique_ptr<IRotateClass> rotate, std::unique_ptr<ICollisionClass> collision, Graphic::Model::ID ModelID);
+		ActorClass(const ActorClass& other);
+		ActorClass(ActorClass&& other) noexcept;
+		virtual ~ActorClass() = default;
 
-	virtual void Move(MoveState state, float frame_time, bool IsKeyDown) override;
-	virtual void Rotate(long MouseX, long MouseY, float frame_time, bool IsKeyDown) override;
+		virtual void Move(MoveState state, float frame_time, bool IsKeyDown) override;
+		virtual void Rotate(long MouseX, long MouseY, float frame_time, bool IsKeyDown) override;
 
-	inline ModelIDs GetModelID() const { return m_ModelID; }
-	inline std::unique_ptr<IObjectClass> const& GetCollision() const { return m_Collision; }
+		inline Graphic::Model::ID GetModelID() const { return m_ModelID; }
+		inline std::unique_ptr<IObjectClass> const& GetCollision() const { return m_Collision; }
 
-	ActorClass& operator=(const ActorClass& other);
-	ActorClass& operator=(ActorClass&& other) noexcept;
+		ActorClass& operator=(const ActorClass& other);
+		ActorClass& operator=(ActorClass&& other) noexcept;
 
-	virtual inline std::unique_ptr<IObjectClass> Clone() const override;
+		virtual inline std::unique_ptr<IObjectClass> Clone() const override;
 
-private:
-	std::unique_ptr<IObjectClass> m_Collision = nullptr;
-	ModelIDs m_ModelID = ModelIDs::DEFAULT_SPACESHIP;
-};
-
+	private:
+		std::unique_ptr<IObjectClass> m_Collision = nullptr;
+		Graphic::Model::ID m_ModelID = Graphic::Model::ID::DEFAULT_SPACESHIP;
+	};
+}

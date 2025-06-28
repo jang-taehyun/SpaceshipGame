@@ -5,11 +5,11 @@
 #include "CollisionClass.h"
 #include "ActorClass.h"
 
-ActorClass::ActorClass(const AffineInfo& affine, std::unique_ptr<IMoveClass> move, std::unique_ptr<IRotateClass> rotate, std::unique_ptr<ICollisionClass> collision, ModelIDs ModelID) : MoveableObjectClass(affine, std::move(move), std::move(rotate)), m_Collision(std::move(collision)), m_ModelID(ModelID) {}
-ActorClass::ActorClass(const ActorClass& other) : MoveableObjectClass(other), m_Collision(other.m_Collision->Clone()), m_ModelID(other.m_ModelID) {}
-ActorClass::ActorClass(ActorClass&& other) noexcept : MoveableObjectClass(std::move(other)), m_Collision(std::move(other.m_Collision)), m_ModelID(other.m_ModelID) {}
+Object::ActorClass::ActorClass(const AffineInfo& affine, std::unique_ptr<IMoveClass> move, std::unique_ptr<IRotateClass> rotate, std::unique_ptr<ICollisionClass> collision, Graphic::Model::ID ModelID) : MoveableObjectClass(affine, std::move(move), std::move(rotate)), m_Collision(std::move(collision)), m_ModelID(ModelID) {}
+Object::ActorClass::ActorClass(const ActorClass& other) : MoveableObjectClass(other), m_Collision(other.m_Collision->Clone()), m_ModelID(other.m_ModelID) {}
+Object::ActorClass::ActorClass(ActorClass&& other) noexcept : MoveableObjectClass(std::move(other)), m_Collision(std::move(other.m_Collision)), m_ModelID(other.m_ModelID) {}
 
-void ActorClass::Move(MoveState state, float frame_time, bool IsKeyDown)
+void Object::ActorClass::Move(MoveState state, float frame_time, bool IsKeyDown)
 {
 	DirectX::XMFLOAT4 pos;
 
@@ -27,7 +27,7 @@ void ActorClass::Move(MoveState state, float frame_time, bool IsKeyDown)
 	m_Collision->SetPosition(pos);
 }
 
-void ActorClass::Rotate(long MouseX, long MouseY, float frame_time, bool IsKeyDown)
+void Object::ActorClass::Rotate(long MouseX, long MouseY, float frame_time, bool IsKeyDown)
 {
 	DirectX::XMFLOAT4 rot;
 
@@ -45,7 +45,7 @@ void ActorClass::Rotate(long MouseX, long MouseY, float frame_time, bool IsKeyDo
 	m_Collision->SetRotation(rot);
 }
 
-ActorClass& ActorClass::operator=(const ActorClass& other)
+Object::ActorClass& Object::ActorClass::operator=(const ActorClass& other)
 {
 	if (this == &other)
 		return *this;
@@ -60,7 +60,7 @@ ActorClass& ActorClass::operator=(const ActorClass& other)
 	return *this;
 }
 
-ActorClass& ActorClass::operator=(ActorClass&& other) noexcept
+Object::ActorClass& Object::ActorClass::operator=(ActorClass&& other) noexcept
 {
 	if (this == &other)
 		return *this;
@@ -75,7 +75,7 @@ ActorClass& ActorClass::operator=(ActorClass&& other) noexcept
 	return *this;
 }
 
-inline std::unique_ptr<IObjectClass> ActorClass::Clone() const
+inline std::unique_ptr<Object::IObjectClass> Object::ActorClass::Clone() const
 {
 	return std::make_unique<ActorClass>(*this);
 }

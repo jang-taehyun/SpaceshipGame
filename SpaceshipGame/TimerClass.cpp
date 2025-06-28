@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "TimerClass.h"
 
-bool TimerClass::IsInitialize = false;
+bool System::TimerClass::IsInitialize = false;
 static ErrorContent e;
 
-TimerClass::TimerClass()
+System::TimerClass::TimerClass()
 {
 	// 에러 메세지 초기화 //
 	e.title = _T("TimerClass Constructor");
@@ -20,12 +20,12 @@ TimerClass::TimerClass()
 	IsInitialize = true;
 }
 
-TimerClass::~TimerClass()
+System::TimerClass::~TimerClass()
 {
 	IsInitialize = false;
 }
 
-void TimerClass::Initialize()
+void System::TimerClass::Initialize()
 {
 	// 에러 메세지 초기화 //
 	e.title = _T("TimerClass Initialize()");
@@ -46,7 +46,7 @@ void TimerClass::Initialize()
 	QueryPerformanceCounter((LARGE_INTEGER*)&m_StartTime);
 }
 
-void TimerClass::Frame()
+void System::TimerClass::Frame()
 {
 	INT64 CurrentTime = 0;
 

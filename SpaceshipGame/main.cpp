@@ -14,7 +14,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 
 	try
 	{
-		SystemClass system;
+		System::SystemClass system;
 		system.Run();
 	}
 	catch (ErrorContent e)

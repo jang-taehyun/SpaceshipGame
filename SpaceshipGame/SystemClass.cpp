@@ -6,13 +6,12 @@
 #include "CPUClass.h"
 #include "TimerClass.h"
 #include "ActorManagerClass.h"
-#include "ProcessManagerClass.h"
 #include "SystemClass.h"
 
-bool SystemClass::IsInitialize = false;
+bool System::SystemClass::IsInitialize = false;
 static ErrorContent e;
 
-SystemClass::SystemClass()
+System::SystemClass::SystemClass()
 {	
 	HRESULT result = S_OK;
 
@@ -33,13 +32,13 @@ SystemClass::SystemClass()
 	IsInitialize = true;
 }
 
-SystemClass::~SystemClass()
+System::SystemClass::~SystemClass()
 {
 	ShutdownWindows();
 	IsInitialize = false;
 }
 
-HRESULT SystemClass::Initialize()
+HRESULT System::SystemClass::Initialize()
 {
 	HRESULT result = S_OK;
 	int ScreenWidth = WIDTH;
@@ -119,7 +118,7 @@ HRESULT SystemClass::Initialize()
 	return result;
 }
 
-void SystemClass::Run()
+void System::SystemClass::Run()
 {
 	HRESULT result = S_OK;
 	MSG msg;
@@ -158,12 +157,12 @@ void SystemClass::Run()
 	}
 }
 
-LRESULT SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
+LRESULT System::SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
 	return DefWindowProc(hwnd, umsg, wparam, lparam);
 }
 
-HRESULT SystemClass::Frame()
+HRESULT System::SystemClass::Frame()
 {
 	HRESULT result = S_OK;
 
@@ -195,7 +194,7 @@ HRESULT SystemClass::Frame()
 	return result;
 }
 
-void SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)
+void System::SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)
 {
 	int width = 0, height = 0, PosX = 0, PosY = 0;
 
@@ -208,7 +207,7 @@ void SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)
 	// windows 클래스 정보 설정 및 등록
 	m_applicationName = _T("SpaceshipGame");
 
-	WNDCLASSEX wc;
+	WNDCLASSEX wc = {};
 	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wc.lpfnWndProc = WndProc;
 	wc.cbClsExtra = 0;
@@ -273,7 +272,7 @@ void SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)
 	SetCursorPos(GetSystemMetrics(SM_CXSCREEN) / 2, GetSystemMetrics(SM_CYSCREEN) / 2);
 }
 
-void SystemClass::ShutdownWindows()
+void System::SystemClass::ShutdownWindows()
 {
 	// 풀스크린 모드라면, 디스플레이 설정을 초기화
 	if (FULL_SCREEN)
@@ -294,7 +293,7 @@ void SystemClass::ShutdownWindows()
 // IMGUI WndProcHandler
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
 
-static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
+static LRESULT CALLBACK System::WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, umessage, wparam, lparam))
 		return 0;
@@ -312,6 +311,6 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM 
 		return 0;
 	}
 	default:
-		return ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
+		return System::ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
 	}
 }

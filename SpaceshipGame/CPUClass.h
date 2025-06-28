@@ -3,31 +3,36 @@
 #pragma comment(lib, "pdh.lib")
 #include <pdh.h>
 
-class CPUClass
+namespace System
 {
-public:
-	CPUClass();
-	virtual ~CPUClass();
-	
-	void Frame();
+	class CPUClass
+	{
+	public:
+		CPUClass();
+		virtual ~CPUClass();
 
-	// Getter //
-	inline long long GetCPUPercentage() const { return m_CPUUsage; }
+		void Frame();
 
-private:
-	HRESULT Initialize();
-	void Shutdown();
+		// Getter //
+		inline long long GetCPUPercentage() const { return m_CPUUsage; }
 
-private:
-	static bool IsInitialize;
+	private:
+		HRESULT Initialize();
+		void Shutdown();
 
-	bool m_CanReadCPU = false;
-	HQUERY m_QueryHandle = 0;
-	HCOUNTER m_CounterHandle = 0;
-	unsigned long long m_LastSampleTime = 0;
-	long long m_CPUUsage = 0;
+	private:
+		static bool IsInitialize;
 
-public:
-	CPUClass(const CPUClass& other) = delete;
-	CPUClass(CPUClass&& other) = delete;
-};
+		bool m_CanReadCPU = false;
+		HQUERY m_QueryHandle = 0;
+		HCOUNTER m_CounterHandle = 0;
+		unsigned long long m_LastSampleTime = 0;
+		long long m_CPUUsage = 0;
+
+	public:
+		CPUClass(const CPUClass& other) = delete;
+		CPUClass(CPUClass&& other) = delete;
+		CPUClass& operator=(const CPUClass& other) = delete;
+		CPUClass& operator=(CPUClass&& other) = delete;
+	};
+}

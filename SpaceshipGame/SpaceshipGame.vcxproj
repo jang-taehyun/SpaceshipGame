@@ -80,8 +80,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)DirectXTK\DirectXTK\Inc;$(SolutionDir)IMGUI_library\header;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)DirectXTK\DirectXTK\Bin\Desktop_2022\x64\Debug;$(SolutionDir)IMGUI_library\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)assimp\build\include;$(SolutionDir)assimp\include;$(SolutionDir)DirectXTK\Inc;$(SolutionDir)IMGUI_library\header;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)assimp\build\lib\Debug;$(SolutionDir)assimp\build\bin\Debug;$(SolutionDir)DirectXTK\Bin\Desktop_2022\x64\Debug;$(SolutionDir)IMGUI_library\lib\x64;$(LibraryPath)</LibraryPath>
     <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -169,6 +169,7 @@
     <ClInclude Include="FrustumClass.h" />
     <ClInclude Include="GraphicsClass.h" />
     <ClInclude Include="ICollisionClass.h" />
+    <ClInclude Include="IModelClass.h" />
     <ClInclude Include="IMoveClass.h" />
     <ClInclude Include="IObjectClass.h" />
     <ClInclude Include="IMGUIClass.h" />
@@ -177,12 +178,15 @@
     <ClInclude Include="CollisionClass.h" />
     <ClInclude Include="ISceneClass.h" />
     <ClInclude Include="ITextClass.h" />
+    <ClInclude Include="IUIClass.h" />
+    <ClInclude Include="ModelLoaderClass.h" />
     <ClInclude Include="MoveableObjectClass.h" />
     <ClInclude Include="MoveClass.h" />
     <ClInclude Include="LightClass.h" />
     <ClInclude Include="ModelClass.h" />
     <ClInclude Include="ModelManagerClass.h" />
     <ClInclude Include="ColorShaderClass.h" />
+    <ClInclude Include="PTN_DNSR_ModelLoaderClass.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="RotateClass.h" />
     <ClInclude Include="SceneManagerClass.h" />
@@ -190,20 +194,20 @@
     <ClInclude Include="ShaderClass.h" />
     <ClInclude Include="SoundClass.h" />
     <ClInclude Include="SpaceshipGame.h" />
-    <ClInclude Include="SpaceshipModelClass.h" />
-    <ClInclude Include="SpaceshipShaderClass.h" />
-    <ClInclude Include="StartScene.h" />
+    <ClInclude Include="StartSceneClass.h" />
     <ClInclude Include="SystemClass.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TextClass.h" />
     <ClInclude Include="TextManagerClass.h" />
-    <ClInclude Include="TextRenderClass.h" />
     <ClInclude Include="TextureClass.h" />
     <ClInclude Include="TimerClass.h" />
     <ClInclude Include="GameObjectClass.h" />
     <ClInclude Include="TypeConverterClass.h" />
     <ClInclude Include="typedef.h" />
     <ClInclude Include="UIClass.h" />
+    <ClInclude Include="UIManagerClass.h" />
+    <ClInclude Include="UIRenderClass.h" />
+    <ClInclude Include="UITextureManagerClass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ActorClass.cpp" />
@@ -219,6 +223,7 @@
     <ClCompile Include="FrustumClass.cpp" />
     <ClCompile Include="GraphicsClass.cpp" />
     <ClCompile Include="ICollisionClass.cpp" />
+    <ClCompile Include="IModelClass.cpp" />
     <ClCompile Include="IMoveClass.cpp" />
     <ClCompile Include="IObjectClass.cpp" />
     <ClCompile Include="IMGUIClass.cpp" />
@@ -227,12 +232,15 @@
     <ClCompile Include="CollisionClass.cpp" />
     <ClCompile Include="ISceneClass.cpp" />
     <ClCompile Include="ITextClass.cpp" />
+    <ClCompile Include="IUIClass.cpp" />
+    <ClCompile Include="ModelLoaderClass.cpp" />
     <ClCompile Include="MoveableObjectClass.cpp" />
     <ClCompile Include="MoveClass.cpp" />
     <ClCompile Include="LightClass.cpp" />
     <ClCompile Include="ModelClass.cpp" />
     <ClCompile Include="ModelManagerClass.cpp" />
     <ClCompile Include="ColorShaderClass.cpp" />
+    <ClCompile Include="PTN_DNSR_ModelLoaderClass.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -244,18 +252,18 @@
     <ClCompile Include="SceneManagerClass.cpp" />
     <ClCompile Include="ShaderClass.cpp" />
     <ClCompile Include="SoundClass.cpp" />
-    <ClCompile Include="SpaceshipModelClass.cpp" />
-    <ClCompile Include="SpaceshipShaderClass.cpp" />
-    <ClCompile Include="StartScene.cpp" />
+    <ClCompile Include="StartSceneClass.cpp" />
     <ClCompile Include="SystemClass.cpp" />
     <ClCompile Include="TextClass.cpp" />
     <ClCompile Include="TextManagerClass.cpp" />
-    <ClCompile Include="TextRenderClass.cpp" />
     <ClCompile Include="TextureClass.cpp" />
     <ClCompile Include="TimerClass.cpp" />
     <ClCompile Include="GameObjectClass.cpp" />
     <ClCompile Include="TypeConverterClass.cpp" />
     <ClCompile Include="UIClass.cpp" />
+    <ClCompile Include="UIManagerClass.cpp" />
+    <ClCompile Include="UIRenderClass.cpp" />
+    <ClCompile Include="UITextureManagerClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SpaceshipGame.rc" />

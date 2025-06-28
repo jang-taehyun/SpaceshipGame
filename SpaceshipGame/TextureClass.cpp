@@ -6,7 +6,7 @@
 
 static ErrorContent e;
 
-TextureClass::TextureClass(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::wstring& FileName)
+Graphic::Texture::TextureClass::TextureClass(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::wstring& FileName)
 {
 	HRESULT result = S_OK;
 
@@ -18,38 +18,34 @@ TextureClass::TextureClass(ID3D11Device* Device, ID3D11DeviceContext* DeviceCont
 		throw e;
 }
 
-TextureClass::TextureClass(const TextureClass& other) : m_Height(other.m_Height), m_Width(other.m_Width)
+Graphic::Texture::TextureClass::TextureClass(const TextureClass& other)
 {
 	other.m_Texture.CopyTo(m_Texture.GetAddressOf());
 }
 
-TextureClass::TextureClass(TextureClass&& other) noexcept : m_Height(other.m_Height), m_Width(other.m_Width), m_Texture(std::move(other.m_Texture)) {}
+Graphic::Texture::TextureClass::TextureClass(TextureClass&& other) noexcept : m_Texture(std::move(other.m_Texture)) {}
 
-TextureClass& TextureClass::operator=(const TextureClass& other)
+Graphic::Texture::TextureClass& Graphic::Texture::TextureClass::operator=(const TextureClass& other)
 {
 	if (this == &other)
 		return *this;
 
-	this->m_Height = other.m_Height;
-	this->m_Width = other.m_Width;
 	other.m_Texture.CopyTo(this->m_Texture.ReleaseAndGetAddressOf());
 
 	return *this;
 }
 
-TextureClass& TextureClass::operator=(TextureClass&& other) noexcept
+Graphic::Texture::TextureClass& Graphic::Texture::TextureClass::operator=(TextureClass&& other) noexcept
 {
 	if (this == &other)
 		return *this;
 
-	this->m_Height = other.m_Height;
-	this->m_Width = other.m_Width;
 	this->m_Texture = std::move(other.m_Texture);
 
 	return *this;
 }
 
-HRESULT TextureClass::Initialize(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::wstring& FileName)
+HRESULT Graphic::Texture::TextureClass::Initialize(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::wstring& FileName)
 {
 	HRESULT result = S_OK;
 	std::wstring Extension;
@@ -80,7 +76,7 @@ HRESULT TextureClass::Initialize(ID3D11Device* Device, ID3D11DeviceContext* Devi
 	return Load(Device, DeviceContext, FileName, Extension);
 }
 
-HRESULT TextureClass::Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::wstring& FileName, const std::wstring& Extension)
+HRESULT Graphic::Texture::TextureClass::Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::wstring& FileName, const std::wstring& Extension)
 {
 	HRESULT result = S_OK;
 
@@ -116,32 +112,33 @@ HRESULT TextureClass::Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceCont
 	return result;
 }
 
-HRESULT TextureClass::LoadTarga(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::wstring& FileName)
+HRESULT Graphic::Texture::TextureClass::LoadTarga(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::wstring& FileName)
 {
 	HRESULT result = S_OK;
 	std::unique_ptr<char> image;
+	UINT width = 0, height = 0;
 
 	// 에러 메세지 초기화 //
 	e.title = _T("TextureClass LoadTarga()");
 
 	// TGA 파일을 메모리에 load //
-	image = std::move(LoadTargaFile(FileName));
+	image = std::move(LoadTargaFile(FileName, height, width));
 	if (!image)
 		return E_FAIL;
 
 	// 메모리에 load한 TGA 파일을 이용해 shader resource view 생성 //
-	result = CreateShaderResourceView(Device, DeviceContext, std::move(image));
+	result = CreateShaderResourceView(Device, DeviceContext, std::move(image), height, width);
 
 	return result;
 }
 
-HRESULT TextureClass::LoadWIC(ID3D11Device* Device, const std::wstring& FileName)
+HRESULT Graphic::Texture::TextureClass::LoadWIC(ID3D11Device* Device, const std::wstring& FileName)
 {
 	HRESULT result = S_OK;
 
 	// 에러 메세지 초기화 //
 	e.title = _T("TextureClass LoadPNG()");
-
+	
 	result = DirectX::CreateWICTextureFromFile(Device, FileName.c_str(), nullptr, m_Texture.GetAddressOf());
 	if (FAILED(result))
 	{
@@ -153,7 +150,7 @@ HRESULT TextureClass::LoadWIC(ID3D11Device* Device, const std::wstring& FileName
 	return result;
 }
 
-HRESULT TextureClass::LoadDDS(ID3D11Device* Device, const std::wstring& FileName)
+HRESULT Graphic::Texture::TextureClass::LoadDDS(ID3D11Device* Device, const std::wstring& FileName)
 {
 	HRESULT result = S_OK;
 
@@ -171,7 +168,7 @@ HRESULT TextureClass::LoadDDS(ID3D11Device* Device, const std::wstring& FileName
 	return result;
 }
 
-std::unique_ptr<char> TextureClass::LoadTargaFile(const std::wstring& FileName)
+std::unique_ptr<char> Graphic::Texture::TextureClass::LoadTargaFile(const std::wstring& FileName, UINT& Height, UINT& Width)
 {
 	HRESULT result = S_OK;
 	std::ifstream FileIn;
@@ -203,8 +200,8 @@ std::unique_ptr<char> TextureClass::LoadTargaFile(const std::wstring& FileName)
 	}
 
 	// targa 파일의 header에서 중요 정보 가져오기 //
-	m_Height = TargaFileHeader.height;
-	m_Width = TargaFileHeader.width;
+	Height = TargaFileHeader.height;
+	Width = TargaFileHeader.width;
 	bpp = TargaFileHeader.bpp;
 
 	// targa 파일이 32 bit인지 24 bit인지 확인 //
@@ -217,7 +214,7 @@ std::unique_ptr<char> TextureClass::LoadTargaFile(const std::wstring& FileName)
 	}
 
 	// 32 bit 이미지 데이터의 크기 계산 //
-	ImageSize = m_Width * m_Height * 4;
+	ImageSize = Width * Height * 4;
 
 	// targa 이미지 데이터용 메모리 할당 및 targa 이미지 데이터 읽기 //
 	TargaImage = std::make_unique<char>(ImageSize);
@@ -233,10 +230,10 @@ std::unique_ptr<char> TextureClass::LoadTargaFile(const std::wstring& FileName)
 	// targa 이미지 파일 닫기 //
 	FileIn.close();
 
-	return TargaImage;
+	return std::move(TargaImage);
 }
 
-HRESULT TextureClass::CreateShaderResourceView(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, std::unique_ptr<char> ImageData)
+HRESULT Graphic::Texture::TextureClass::CreateShaderResourceView(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, std::unique_ptr<char> ImageData, UINT Height, UINT Width)
 {
 	HRESULT result = S_OK;
 	D3D11_TEXTURE2D_DESC TextureDesc;							// texture 설정 정보
@@ -251,8 +248,8 @@ HRESULT TextureClass::CreateShaderResourceView(ID3D11Device* Device, ID3D11Devic
 	
 	// 빈 texture 생성 //
 	// texure 구조체 설정
-	TextureDesc.Height = m_Height;
-	TextureDesc.Width = m_Width;
+	TextureDesc.Height = Height;
+	TextureDesc.Width = Width;
 	TextureDesc.MipLevels = 0;
 	TextureDesc.ArraySize = 1;
 	TextureDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
@@ -276,7 +273,7 @@ HRESULT TextureClass::CreateShaderResourceView(ID3D11Device* Device, ID3D11Devic
 
 	// 이미지 데이터의 width의 크기(바이트 크기) 구하기
 	// 이미지는 RGBA 형식이므로, 한 pixel의 크기는 4byte
-	RowPitch = (m_Width * 4) * sizeof(char);
+	RowPitch = (Width * 4) * sizeof(char);
 
 	// 이미지 데이터를 texture에 복사
 	DeviceContext->UpdateSubresource(texture.Get(), 0, NULL, ImageData.get(), RowPitch, 0);

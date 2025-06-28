@@ -1,159 +1,208 @@
 #pragma once
+
+#include <map>
 #include "typedef.h"
 
-// 해상도 //
-const int WIDTH = 1200;
-const int HEIGHT = 800;
-
-// Graphics 설정 //
-const bool FULL_SCREEN = false;
-const bool VSYNC_ENABLED = true;
-const float SCREEN_DEPTH = 1000.0f;
-const float SCREEN_NEAR = 0.1f;
-
-// MOUSE 감도 설정 //
-float MOUSE_SENSITIVITY = 0.0015f;
-
-// position 상태 정보 //
-enum class MoveState
+namespace System
 {
-	MOVE_FORWARD, MOVE_BACKWARD, MOVE_RIGHT, MOVE_LEFT,
-};
+	// 해상도 //
+	const int WIDTH = 1200;
+	const int HEIGHT = 800;
 
-// rotation 상태 정보 //
-enum class RotationState
+	// Graphics 설정 //
+	const bool FULL_SCREEN = false;
+	const bool VSYNC_ENABLED = true;
+	const float SCREEN_DEPTH = 1000.0f;
+	const float SCREEN_NEAR = 0.1f;
+
+	// MOUSE 감도 설정 //
+	float MOUSE_SENSITIVITY = 0.0015f;
+}
+
+// object 관련
+namespace Object
 {
-	ROTATE_UP, ROTATE_DOWN, ROTATE_RIGHT, ROTATE_LEFT,
-};
+	// 최대 object의 개수 //
+	const int OBJECT_MAX_COUNT = 6;
 
-// collision 상태 정보 //
-enum class CollisionState
+	// 이동 상태 정보 //
+	enum class MoveState
+	{
+		MOVE_FORWARD, MOVE_BACKWARD, MOVE_RIGHT, MOVE_LEFT,
+	};
+
+	// collision 상태 정보 //
+	enum class CollisionState
+	{
+		NONE = 0, OBB_HIT = 1, RAY_HIT = 2,
+	};
+}
+
+
+// scene 관련 //
+namespace Scene
 {
-	NONE = 0, OBB_HIT = 1, RAY_HIT = 2,
-};
+	enum class SceneState
+	{
+		NONE = 0, START = 1, LOADING = 2, LOGIN, MATCH, INGAME,
+	};
+}
 
-// scene 정보 //
-enum class SceneState
+
+// UI 관련 //
+namespace UI
 {
-	NONE = 0, START = 1, LOADING = 2, MATCH, INGAME,
-};
+	// UI의 ID //
+	enum class ID
+	{
+		NONE = 0, START_BACKGROUND = 1, START_BUTTON = 2, LOADING_BACKGROUND = 4,
+	};
+}
 
-// Text 정보 //
-enum class TextFlag
+
+// Text 관련 //
+namespace Text
 {
-	DEFAULT = 1,
-};
+	enum class TextFlag
+	{
+		DEFAULT = 1,
+	};
 
-// sound 파일 정보 //
-enum class SoundInfo
+	// font 파일 정보 //
+	const std::wstring FontFileName = _T("./resource/굴림.spritefont");
+}
+
+
+// sound 관련 //
+namespace Sound
 {
-	BACKGROUND, EFFECT, 
-};
-const SoundFileInfo BackgroundSoundInfo = { _T("./data/dedede.wav") };
-const SoundFileInfo EffectSoundInfo = { _T("./data/sound01.wav") };
+	enum class ID
+	{
+		BACKGROUND, EFFECT,
+	};
 
-// font 파일 정보 //
-const std::wstring FontFileName = _T("./resource/굴림.spritefont");
+	const std::map<ID, const std::wstring> SoundList =
+	{
+		{ ID::BACKGROUND, _T("./data/dedede.wav") },
+		{ ID::EFFECT, _T("./data/sound01.wav") }
+	};
+}
 
-// 3D object 파일 정보 //
-const std::wstring SpaceModelFileName = _T("./data/aircraft.txt");
-const std::vector<std::wstring> SpaceTextureFileNames =
+// Graphic 관련 //
+namespace Graphic
 {
-	_T("./data/aircraft.jpg")
-};
+	// 3D model 관련 //
+	namespace Model
+	{
+		enum class ID
+		{
+			DEFAULT_SPACESHIP,
+			COLLISION,
+		};
+
+		const std::map<ID, const std::wstring> ModelList = {
+			{ ID::COLLISION, _T("./data/cube.txt") },
+			{ ID::DEFAULT_SPACESHIP, _T("./data/aircraft.txt") },
+		};
+
+		// PTN vertex type //
+		struct PTN_VertexType
+		{
+			DirectX::XMFLOAT3 position;
+			DirectX::XMFLOAT2 texture;
+			DirectX::XMFLOAT3 normal;
+		};
+	}
 
 
-const std::wstring CubeModelFileName = _T("./data/cube.txt");
-const std::vector<std::wstring> CubeTextureFileNames =
-{
-	_T("./data/stone01.tga"),
-	_T("./data/dirt01.dds"),
-};
+	namespace Texture
+	{
+		// UI의 texture ID //
+		enum class UITextureID
+		{
+			NONE = 0, START_BACKGROUND = 1, START_BUTTON = 2, LOADING_BACKGROUND = 4,
+		};
 
-// 3D object 모델 관련 flag //
-const int NUMBER_OF_ALL_MODELS = 2;
-enum class ModelIDs
-{
-	DEFAULT_SPACESHIP,
-	DEFAULT_CUBE,
-};
+		// UI texture의 파일 정보 //
+		const std::map<UITextureID, const std::wstring> UITextureList =
+		{
+			{ UITextureID::START_BACKGROUND, _T("./resource/StartBackground.jpg") },
+			{ UITextureID::START_BUTTON, _T("./resource/button.png") }
+		};
+	}
 
-// shader 관련 정보 //
-const ShaderFileInfo AlphaMapShaderInfo =
-{
-	_T("./shader/vertex/alphamap.vs"),
-	_T("./shader/pixel/alphamap.ps"),
-	"AlphaMapVertexShader",
-	"AlphaMapPixelShader"
-};
 
-const ShaderFileInfo TextureShaderInfo =
-{
-	_T("./shader/vertex/texture.vs"),
-	_T("./shader/pixel/texture.ps"),
-	"TextureVertexShader",
-	"TexturePixelShader"
-};
+	namespace Shader
+	{
+		enum class ID
+		{
+			DEFAULT, ALPHA_MAP, TEXTURE, MULTI_TEXTURE, LIGHT, LIGHT_MAP, SPACESHIP, CUBE,
+		};
 
-const ShaderFileInfo MultiTextureShaderInfo =
-{
-	_T("./shader/vertex/multitexture.vs"),
-	_T("./shader/pixel/multitexture.ps"),
-	"MultiTextureVertexShader",
-	"MultiTexturePixelShader"
-};
+		const ShaderFileInfo AlphaMapShaderInfo =
+		{
+			_T("./shader/vertex/alphamap.vs"),
+			_T("./shader/pixel/alphamap.ps"),
+			"AlphaMapVertexShader",
+			"AlphaMapPixelShader"
+		};
 
-const ShaderFileInfo LightShaderInfo =
-{
-	_T("./shader/vertex/light.vs"),
-	_T("./shader/pixel/light.ps"),
-	"LightVertexShader",
-	"LightPixelShader"
-};
+		const ShaderFileInfo TextureShaderInfo =
+		{
+			_T("./shader/vertex/texture.vs"),
+			_T("./shader/pixel/texture.ps"),
+			"TextureVertexShader",
+			"TexturePixelShader"
+		};
 
-const ShaderFileInfo LightMapShaderInfo =
-{
-	_T("./shader/vertex/lightmap.vs"),
-	_T("./shader/pixel/lightmap.ps"),
-	"LightMapVertexShader",
-	"LightMapPixelShader"
-};
+		const ShaderFileInfo MultiTextureShaderInfo =
+		{
+			_T("./shader/vertex/multitexture.vs"),
+			_T("./shader/pixel/multitexture.ps"),
+			"MultiTextureVertexShader",
+			"MultiTexturePixelShader"
+		};
 
-const ShaderFileInfo FontShaderInfo =
-{
-	_T("./shader/vertex/font.vs"),
-	_T("./shader/pixel/font.ps"),
-	"FontVertexShader",
-	"FontPixelShader"
-};
+		const ShaderFileInfo LightShaderInfo =
+		{
+			_T("./shader/vertex/light.vs"),
+			_T("./shader/pixel/light.ps"),
+			"LightVertexShader",
+			"LightPixelShader"
+		};
 
-const ShaderFileInfo SpaceshipShaderInfo =
-{
-	_T("./shader/vertex/Spaceship.vs"),
-	_T("./shader/pixel/Spaceship.ps"),
-	"SpaceshipVertexShader",
-	"SpaceshipPixelShader"
-};
+		const ShaderFileInfo LightMapShaderInfo =
+		{
+			_T("./shader/vertex/lightmap.vs"),
+			_T("./shader/pixel/lightmap.ps"),
+			"LightMapVertexShader",
+			"LightMapPixelShader"
+		};
 
-const ShaderFileInfo CubeShaderInfo =
-{
-	_T("./shader/vertex/color.vs"),
-	_T("./shader/pixel/color.ps"),
-	"ColorVertexShader",
-	"ColorPixelShader"
-};
+		const ShaderFileInfo SpaceshipShaderInfo =
+		{
+			_T("./shader/vertex/Spaceship.vs"),
+			_T("./shader/pixel/Spaceship.ps"),
+			"SpaceshipVertexShader",
+			"SpaceshipPixelShader"
+		};
 
-// 3D model 관련 정보들 //
-const ModelInfo SpaceshipModelInfo =
-{
-	SpaceModelFileName,
-	SpaceTextureFileNames,
-	SpaceshipShaderInfo
-};
+		const ShaderFileInfo CubeShaderInfo =
+		{
+			_T("./shader/vertex/color.vs"),
+			_T("./shader/pixel/color.ps"),
+			"ColorVertexShader",
+			"ColorPixelShader"
+		};
 
-const ModelInfo CubeModelInfo =
-{
-	CubeModelFileName,
-	CubeTextureFileNames,
-	CubeShaderInfo
-};
+		const std::map<ID, ShaderFileInfo> ShaderList = {
+			{ ID::ALPHA_MAP, AlphaMapShaderInfo },
+			{ ID::TEXTURE, TextureShaderInfo },
+			{ ID::MULTI_TEXTURE, MultiTextureShaderInfo },
+			{ ID::LIGHT, LightShaderInfo },
+			{ ID::LIGHT_MAP, LightMapShaderInfo },
+			{ ID::SPACESHIP, SpaceshipShaderInfo },
+			{ ID::CUBE, CubeShaderInfo },
+		};
+	}
+}

@@ -2,9 +2,9 @@
 #include "ComputeDirectionVectorClass.h"
 #include "MoveClass.h"
 
-MoveClass::MoveClass(float speed) : m_MoveSpeed(speed) {}
+Object::MoveClass::MoveClass(float speed) : m_MoveSpeed(speed) {}
 
-DirectX::XMFLOAT4 MoveClass::Move(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 rotate, MoveState state, float frame_time, bool IsKeyDown)
+DirectX::XMFLOAT4 Object::MoveClass::Move(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 rotate, MoveState state, float frame_time, bool IsKeyDown)
 {
 	DirectX::XMFLOAT4 ret;
 	DirectX::XMFLOAT4 vector;
@@ -40,12 +40,12 @@ DirectX::XMFLOAT4 MoveClass::Move(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOA
 	return ret;
 }
 
-std::unique_ptr<IMoveClass> MoveClass::Clone() const
+std::unique_ptr<Object::IMoveClass> Object::MoveClass::Clone() const
 {
 	return std::make_unique<MoveClass>(*this);
 }
 
-DirectX::XMFLOAT4 MoveClass::MoveLeft(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 RightVector, float speed) const
+DirectX::XMFLOAT4 Object::MoveClass::MoveLeft(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 RightVector, float speed) const
 {
 	using namespace DirectX;
 
@@ -60,7 +60,7 @@ DirectX::XMFLOAT4 MoveClass::MoveLeft(DirectX::XMFLOAT4 curPosition, DirectX::XM
 	return ret;
 }
 
-DirectX::XMFLOAT4 MoveClass::MoveRight(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 RightVector, float speed) const
+DirectX::XMFLOAT4 Object::MoveClass::MoveRight(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 RightVector, float speed) const
 {
 	using namespace DirectX;
 
@@ -75,7 +75,7 @@ DirectX::XMFLOAT4 MoveClass::MoveRight(DirectX::XMFLOAT4 curPosition, DirectX::X
 	return ret;
 }
 
-DirectX::XMFLOAT4 MoveClass::MoveForward(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 ForwardVector, float speed) const
+DirectX::XMFLOAT4 Object::MoveClass::MoveForward(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 ForwardVector, float speed) const
 {
 	using namespace DirectX;
 
@@ -90,7 +90,7 @@ DirectX::XMFLOAT4 MoveClass::MoveForward(DirectX::XMFLOAT4 curPosition, DirectX:
 	return ret;
 }
 
-DirectX::XMFLOAT4 MoveClass::MoveBackward(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 ForwardVector, float speed) const
+DirectX::XMFLOAT4 Object::MoveClass::MoveBackward(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 ForwardVector, float speed) const
 {
 	using namespace DirectX;
 
@@ -105,7 +105,7 @@ DirectX::XMFLOAT4 MoveClass::MoveBackward(DirectX::XMFLOAT4 curPosition, DirectX
 	return ret;
 }
 
-float MoveClass::ComputeMoveSpeed(float frame_time, bool IsKeyDown)
+float Object::MoveClass::ComputeMoveSpeed(float frame_time, bool IsKeyDown)
 {
 	float ret = m_PrevMoveSpeed;
 

@@ -6,42 +6,46 @@
 #include <imgui_impl_win32.h>
 #include <imgui_impl_dx11.h>
 
-const static int MaxIMGUIWindowsCount = 10;
-
-class IObjectClass;
-class SoundClass;
-class ModelClass;
+class Object::IObjectClass;
+class Sound::SoundClass;
 class LightClass;
-class ActorManagerClass;
+class Object::ActorManagerClass;
 
-class IMGUIClass
+namespace Graphic
 {
-public:
-	IMGUIClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeivceContext);
-	virtual ~IMGUIClass();
-	
-	void Render(ActorManagerClass* actor_manager, LightClass* light, SoundClass* sound, IObjectClass* camera, int fps, int cpu_usage);
+	const static int MaxIMGUIWindowsCount = 10;
 
-private:
-	void Initialize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeivceContext);
-	void Shutdown();
+	class IMGUIClass
+	{
+	public:
+		IMGUIClass(HWND hwnd, const ID3D11Device* Device, const ID3D11DeviceContext* DeivceContext);
+		virtual ~IMGUIClass();
 
-	void SetUI(ActorManagerClass* actor_manager, LightClass* light, SoundClass* sound, IObjectClass* camera, int fps, int cpu_usage);
-	
-	void SetFPSCPUUsage(const std::string& title, int IMGUI_Window_idx, int fps, int cpu_usage);
-	void SetCameraInfo(const std::string& title, int IMGUI_Window_idx, IObjectClass* camera);
-	void SetSoundInfo(const std::string& title, int IMGUI_Window_idx, SoundClass* sound);
-	void SetLightInfo(const std::string& title, int IMGUI_Window_idx, LightClass* light);
-	void SetActorInfo(const std::string& title, int IMGUI_Window_idx, IObjectClass* actor);
+		void Render(Object::ActorManagerClass* actor_manager, LightClass* light, Sound::SoundClass* sound, Object::IObjectClass* camera, int fps, int cpu_usage);
 
-private:
-	static bool IsInitialize;
+	private:
+		void Initialize(HWND hwnd, const ID3D11Device* Device, const ID3D11DeviceContext* DeivceContext);
+		void Shutdown();
 
-	ImVec2 m_WindowsSize;
-	ImVec2 m_WindowsPosition[MaxIMGUIWindowsCount];
-	int m_WindowsCount = 0;
+		void SetUI(Object::ActorManagerClass* actor_manager, LightClass* light, Sound::SoundClass* sound, Object::IObjectClass* camera, int fps, int cpu_usage);
 
-public:
-	IMGUIClass(const IMGUIClass& other) = delete;
-	IMGUIClass(IMGUIClass&& other) = delete;
-};
+		void SetFPSCPUUsage(const std::string& title, int IMGUI_Window_idx, int fps, int cpu_usage);
+		void SetCameraInfo(const std::string& title, int IMGUI_Window_idx, Object::IObjectClass* camera);
+		void SetSoundInfo(const std::string& title, int IMGUI_Window_idx, Sound::SoundClass* sound);
+		void SetLightInfo(const std::string& title, int IMGUI_Window_idx, LightClass* light);
+		void SetActorInfo(const std::string& title, int IMGUI_Window_idx, Object::IObjectClass* actor);
+
+	private:
+		static bool IsInitialize;
+
+		ImVec2 m_WindowsSize;
+		ImVec2 m_WindowsPosition[MaxIMGUIWindowsCount];
+		int m_WindowsCount = 0;
+
+	public:
+		IMGUIClass(const IMGUIClass& other) = delete;
+		IMGUIClass(IMGUIClass&& other) = delete;
+		IMGUIClass& operator=(const IMGUIClass& other) = delete;
+		IMGUIClass& operator=(IMGUIClass&& other) = delete;
+	};
+}

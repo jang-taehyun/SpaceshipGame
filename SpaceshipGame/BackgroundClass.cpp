@@ -1,9 +1,28 @@
 #include "pch.h"
 #include "BackgroundClass.h"
 
-BackgroundClass::BackgroundClass(const ID3D11Device* Device, const ID3D11DeviceContext* DeviceContext, const std::wstring& Filename, DirectX::XMFLOAT2 Position, float Rotation, DirectX::XMFLOAT2 Origin, DirectX::XMFLOAT2 Scale, DirectX::XMFLOAT4 Color) : UIClass(Device, DeviceContext, Filename, Position, Rotation, Origin, Scale, Color) {}
-
-void BackgroundClass::Render() const
+UI::BackgroundClass::BackgroundClass(Graphic::Texture::UITextureID  ID, DirectX::XMFLOAT4 color) : m_UITextureID(ID), m_Color(color)
 {
+	RECT rect;
+	int width = 0, height = 0, PosX = 0, PosY = 0;
 
+	if (System::FULL_SCREEN)
+	{
+		width = GetSystemMetrics(SM_CXSCREEN);
+		height = GetSystemMetrics(SM_CYSCREEN);
+	}
+	else
+	{
+		width = System::WIDTH;
+		height = System::HEIGHT;
+	}
+	
+	GetWindowRect(GetActiveWindow(), &rect);
+
+	PosX = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
+	PosY = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
+
+	m_Position = DirectX::XMFLOAT2(static_cast<float>(PosX), static_cast<float>(PosY));
 }
+
+void UI::BackgroundClass::Update(bool IsLeftMouseButtonPressed) {}

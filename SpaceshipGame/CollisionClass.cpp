@@ -2,18 +2,18 @@
 #include "TypeConverterClass.h"
 #include "CollisionClass.h"
 
-CollisionClass::CollisionClass(float range) : m_Range(range) {}
+Object::CollisionClass::CollisionClass(float range) : m_Range(range) {}
 
-DirectX::ContainmentType CollisionClass::GetCollideState(const AffineInfo& affine)
+DirectX::ContainmentType Object::CollisionClass::GetCollideState(const AffineInfo& affine)
 {
 	// 자신의 OBB 박스 생성 //
-	DirectX::BoundingOrientedBox itself(TypeConverterClass::XMFLOAT4toXMFLOAT3(GetPosition()),
-		TypeConverterClass::XMFLOAT4toXMFLOAT3(GetScale()),
+	DirectX::BoundingOrientedBox itself(Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(GetPosition()),
+		Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(GetScale()),
 		GetRotation());
 
 	// 충돌 검사 대상의 OBB 박스 생성 //
-	DirectX::BoundingOrientedBox other(TypeConverterClass::XMFLOAT4toXMFLOAT3(affine.position),
-		TypeConverterClass::XMFLOAT4toXMFLOAT3(affine.scale),
+	DirectX::BoundingOrientedBox other(Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(affine.position),
+		Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(affine.scale),
 		affine.rotation);
 
 	// 충돌 검사 //
@@ -28,7 +28,7 @@ DirectX::ContainmentType CollisionClass::GetCollideState(const AffineInfo& affin
 	return ret;
 }
 
-DirectX::ContainmentType CollisionClass::GetCollideState(DirectX::XMFLOAT4 position, DirectX::XMFLOAT4 forward)
+DirectX::ContainmentType Object::CollisionClass::GetCollideState(DirectX::XMFLOAT4 position, DirectX::XMFLOAT4 forward)
 {
 	DirectX::BoundingOrientedBox itself;
 	DirectX::XMVECTOR origin;
@@ -44,8 +44,8 @@ DirectX::ContainmentType CollisionClass::GetCollideState(DirectX::XMFLOAT4 posit
 	origin = DirectX::XMLoadFloat4(&position);
 
 	// 자신의 OBB 박스 설정 //
-	itself.Center = TypeConverterClass::XMFLOAT4toXMFLOAT3(GetPosition());
-	itself.Extents = TypeConverterClass::XMFLOAT4toXMFLOAT3(GetScale());
+	itself.Center = Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(GetPosition());
+	itself.Extents = Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(GetScale());
 	itself.Orientation = GetRotation();
 
 	// 충돌 검사 //
@@ -66,7 +66,7 @@ DirectX::ContainmentType CollisionClass::GetCollideState(DirectX::XMFLOAT4 posit
 	return ret;
 }
 
-inline std::unique_ptr<IObjectClass> CollisionClass::Clone() const
+inline std::unique_ptr<Object::IObjectClass> Object::CollisionClass::Clone() const
 {
 	return std::make_unique<CollisionClass>(*this);
 }

@@ -5,11 +5,11 @@
 #include "RotateClass.h"
 #include "MoveableObjectClass.h"
 
-MoveableObjectClass::MoveableObjectClass(const AffineInfo& affine, std::unique_ptr<IMoveClass> move, std::unique_ptr<IRotateClass> rotate) : GameObjectClass(affine), m_Move(std::move(move)), m_Rotate(std::move(rotate)) {}
-MoveableObjectClass::MoveableObjectClass(const MoveableObjectClass& other) : GameObjectClass(other), m_Move(std::move(other.GetMoveObject()->Clone())), m_Rotate(other.GetRotateObject()->Clone()) {}
-MoveableObjectClass::MoveableObjectClass(MoveableObjectClass&& other) noexcept : GameObjectClass(std::move(other)), m_Move(std::move(other.m_Move)), m_Rotate(std::move(other.m_Rotate)) {}
+Object::MoveableObjectClass::MoveableObjectClass(const AffineInfo& affine, std::unique_ptr<IMoveClass> move, std::unique_ptr<IRotateClass> rotate) : GameObjectClass(affine), m_Move(std::move(move)), m_Rotate(std::move(rotate)) {}
+Object::MoveableObjectClass::MoveableObjectClass(const MoveableObjectClass& other) : GameObjectClass(other), m_Move(std::move(other.GetMoveObject()->Clone())), m_Rotate(other.GetRotateObject()->Clone()) {}
+Object::MoveableObjectClass::MoveableObjectClass(MoveableObjectClass&& other) noexcept : GameObjectClass(std::move(other)), m_Move(std::move(other.m_Move)), m_Rotate(std::move(other.m_Rotate)) {}
 
-void MoveableObjectClass::Move(MoveState state, float frame_time, bool IsKeyDown)
+void Object::MoveableObjectClass::Move(MoveState state, float frame_time, bool IsKeyDown)
 {
 	if (!m_Move)
 		return;
@@ -20,7 +20,7 @@ void MoveableObjectClass::Move(MoveState state, float frame_time, bool IsKeyDown
 	SetPosition(pos);
 }
 
-void MoveableObjectClass::Rotate(long MouseX, long MouseY, float frame_time, bool IsKeyDown)
+void Object::MoveableObjectClass::Rotate(long MouseX, long MouseY, float frame_time, bool IsKeyDown)
 {
 	if (!m_Rotate)
 		return;
@@ -31,7 +31,7 @@ void MoveableObjectClass::Rotate(long MouseX, long MouseY, float frame_time, boo
 	SetRotation(rot);
 }
 
-MoveableObjectClass& MoveableObjectClass::operator=(const MoveableObjectClass& other)
+Object::MoveableObjectClass& Object::MoveableObjectClass::operator=(const MoveableObjectClass& other)
 {
 	// 자기 자신인지 검사 //
 	if (this == &other)
@@ -60,7 +60,7 @@ MoveableObjectClass& MoveableObjectClass::operator=(const MoveableObjectClass& o
 	return *this;
 }
 
-MoveableObjectClass& MoveableObjectClass::operator=(MoveableObjectClass&& other) noexcept
+Object::MoveableObjectClass& Object::MoveableObjectClass::operator=(MoveableObjectClass&& other) noexcept
 {
 	// 자기 자신인지 검사 //
 	if (this == &other)
@@ -72,7 +72,7 @@ MoveableObjectClass& MoveableObjectClass::operator=(MoveableObjectClass&& other)
 	return *this;
 }
 
-inline std::unique_ptr<IObjectClass> MoveableObjectClass::Clone() const
+inline std::unique_ptr<Object::IObjectClass> Object::MoveableObjectClass::Clone() const
 {
 	return std::make_unique<MoveableObjectClass>(*this);
 }

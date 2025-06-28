@@ -1,10 +1,11 @@
 #include "pch.h"
+#include <timeapi.h>
 #include "FPSClass.h"
 
-bool FPSClass::IsInitailize = false;
+bool System::FPSClass::IsInitailize = false;
 static ErrorContent e;
 
-FPSClass::FPSClass()
+System::FPSClass::FPSClass()
 {
 	HRESULT result = S_OK;
 
@@ -22,18 +23,18 @@ FPSClass::FPSClass()
 	IsInitailize = true;
 }
 
-FPSClass::~FPSClass()
+System::FPSClass::~FPSClass()
 {
 	IsInitailize = false;
 }
 
-void FPSClass::Initialize()
+void System::FPSClass::Initialize()
 {
 	// 시작 시간를 현재 시간으로 지정
 	m_StartTime = timeGetTime();
 }
 
-void FPSClass::Frame()
+void System::FPSClass::Frame()
 {
 	++m_Count;
 

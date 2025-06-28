@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "CPUClass.h"
 
-bool CPUClass::IsInitialize = false;
+bool System::CPUClass::IsInitialize = false;
 static ErrorContent e;
 
-CPUClass::CPUClass()
+System::CPUClass::CPUClass()
 {
 	HRESULT result = S_OK;
 
@@ -25,13 +25,13 @@ CPUClass::CPUClass()
 	IsInitialize = true;
 }
 
-CPUClass::~CPUClass()
+System::CPUClass::~CPUClass()
 {
 	Shutdown();
 	IsInitialize = false;
 }
 
-HRESULT CPUClass::Initialize()
+HRESULT System::CPUClass::Initialize()
 {
 	HRESULT result = S_OK;
 	PDH_STATUS Status;
@@ -64,7 +64,7 @@ HRESULT CPUClass::Initialize()
 	return result;
 }
 
-void CPUClass::Shutdown()
+void System::CPUClass::Shutdown()
 {
 	if (m_CanReadCPU || m_QueryHandle)
 	{
@@ -75,7 +75,7 @@ void CPUClass::Shutdown()
 	m_CanReadCPU = false;
 }
 
-void CPUClass::Frame()
+void System::CPUClass::Frame()
 {
 	PDH_FMT_COUNTERVALUE Value;
 

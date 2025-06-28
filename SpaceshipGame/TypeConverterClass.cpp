@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "TypeConverterClass.h"
 
-DirectX::XMFLOAT4 TypeConverterClass::XMFLOAT3toXMFLOAT4(DirectX::XMFLOAT3 target)
+DirectX::XMFLOAT4 Utility::TypeConverterClass::XMFLOAT3toXMFLOAT4(DirectX::XMFLOAT3 target)
 {
 	DirectX::XMFLOAT4 ret;
 
@@ -13,7 +13,7 @@ DirectX::XMFLOAT4 TypeConverterClass::XMFLOAT3toXMFLOAT4(DirectX::XMFLOAT3 targe
 	return ret;
 }
 
-DirectX::XMFLOAT3 TypeConverterClass::XMFLOAT4toXMFLOAT3(DirectX::XMFLOAT4 target)
+DirectX::XMFLOAT3 Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(DirectX::XMFLOAT4 target)
 {
 	DirectX::XMFLOAT3 ret;
 
@@ -24,7 +24,7 @@ DirectX::XMFLOAT3 TypeConverterClass::XMFLOAT4toXMFLOAT3(DirectX::XMFLOAT4 targe
 	return ret;
 }
 
-DirectX::XMMATRIX TypeConverterClass::XMFLOAT4toXMMATRIX(DirectX::XMFLOAT4 operand1, DirectX::XMFLOAT4 operand2, DirectX::XMFLOAT4 operand3)
+DirectX::XMMATRIX Utility::TypeConverterClass::XMFLOAT4toXMMATRIX(DirectX::XMFLOAT4 operand1, DirectX::XMFLOAT4 operand2, DirectX::XMFLOAT4 operand3)
 {
 	using namespace DirectX;
 

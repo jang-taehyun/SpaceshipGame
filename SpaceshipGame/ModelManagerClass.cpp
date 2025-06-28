@@ -1,93 +1,53 @@
 #include "pch.h"
-#include "SpaceshipModelClass.h"
+#include "ModelClass.h"
 #include "CubeModelClass.h"
 #include "ModelManagerClass.h"
 
-bool ModelManagerClass::IsInitialize = false;
-static ErrorContent e;
+bool Graphic::Model::ModelManagerClass::IsInitialize = false;
 
-ModelManagerClass::ModelManagerClass(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext)
+Graphic::Model::ModelManagerClass::ModelManagerClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext)
 {
-	HRESULT result = S_OK;
+	assert(IsInitialize);
 
-	// 에러 메세지 초기화 //
-	e.title = _T("ModelManagerClass constructor");
-
-	if (IsInitialize)
-	{
-		e.contents = _T("이미 ModelManagerClass 인스턴스가 존재합니다.");
-		e.errorCode = E_FAIL;
-		throw e;
-	}
-
-	result = Initailize(hwnd, Device, DeviceContext);
-	if (FAILED(result))
-	{
-		Shutdown();
-		throw e;
-	}
-
+	HRESULT result = Initailize(hwnd, Device, DeviceContext);
 	IsInitialize = true;
 }
 
-ModelManagerClass::~ModelManagerClass()
+Graphic::Model::ModelManagerClass::~ModelManagerClass()
 {
 	Shutdown();
 	IsInitialize = false;
 }
 
-ModelClass* const ModelManagerClass::GetModel(ModelIDs key)
+const Graphic::Model::IModelClass* Graphic::Model::ModelManagerClass::GetModel(Graphic::Model::ID key) const
 {
-	ModelClass* ret = nullptr;
-	std::map<ModelIDs, ModelClass*>::iterator iter;
+	std::map<Graphic::Model::ID, std::unique_ptr<IModelClass>>::const_iterator iter;
 	
 	iter = m_ModelList.find(key);
 	if (m_ModelList.end() == iter)
-		return ret;
+		return nullptr;
 
-	ret = iter->second;
-	return ret;
+	return iter->second.get();
 }
 
-HRESULT ModelManagerClass::Initailize(const HWND& hwnd, ID3D11Device* const& Device, ID3D11DeviceContext* const& DeviceContext)
+HRESULT Graphic::Model::ModelManagerClass::Initailize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext)
 {
 	HRESULT result = S_OK;
-	ModelClass* model = nullptr;
-
-	// 에러 메세지 초기화 //
-	e.title = _T("ModelManagerClass Initailize()");
+	std::unique_ptr<IModelClass> model = nullptr;
 
 	// model 객체 생성 및 map에 insert //
-	model = new SpaceshipModelClass(hwnd, Device, DeviceContext, SpaceshipModelInfo);
-	if (!model)
-	{
-		e.contents = _T("Model 인스턴스 생성 실패(spaceship)");
-		e.errorCode = E_FAIL;
-		return result;
-	}
-	m_ModelList.insert(std::make_pair(ModelIDs::DEFAULT_SPACESHIP, model));
+	model = std::make_unique<ModelClass<PTN_VertexType>>(hwnd, Device, DeviceContext, ID::DEFAULT_SPACESHIP);
+	assert(model);
+	m_ModelList.insert(std::make_pair(Graphic::Model::ID::DEFAULT_SPACESHIP, std::move(model)));
 
 	model = new CubeModelClass(hwnd, Device, DeviceContext, CubeModelInfo, DirectX::XMFLOAT4(0.f, 1.f, 0.f, 1.f));
-	if (!model)
-	{
-		e.contents = _T("Model 인스턴스 생성 실패(cube)");
-		e.errorCode = E_FAIL;
-		return result;
-	}
-	m_ModelList.insert(std::make_pair(ModelIDs::DEFAULT_CUBE, model));
+	assert(model);
+	m_ModelList.insert(std::make_pair(Graphic::Model::ID::COLLISION, model));
 
 	return result;
 }
 
-void ModelManagerClass::Shutdown()
+void Graphic::Model::ModelManagerClass::Shutdown()
 {
-	std::map<ModelIDs, ModelClass*>::iterator iter;
-
-	for (iter = m_ModelList.begin(); iter != m_ModelList.end(); ++iter)
-	{
-		delete iter->second;
-		iter->second = nullptr;
-	}
-
 	m_ModelList.clear();
 }

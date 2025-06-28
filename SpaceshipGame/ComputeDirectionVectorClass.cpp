@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ComputeDirectionVectorClass.h"
 
-void ComputeDirectionVectorClass::GetDirectionVectors(DirectX::XMFLOAT4 rotate, DirectX::XMFLOAT4 forward, DirectX::XMFLOAT4 right, DirectX::XMFLOAT4 up)
+void Object::ComputeDirectionVectorClass::GetDirectionVectors(DirectX::XMFLOAT4 rotate, DirectX::XMFLOAT4 forward, DirectX::XMFLOAT4 right, DirectX::XMFLOAT4 up)
 {
 	float pitch, yaw, roll;
 	DirectX::XMVECTOR f, r, u;
@@ -26,7 +26,7 @@ void ComputeDirectionVectorClass::GetDirectionVectors(DirectX::XMFLOAT4 rotate, 
 	DirectX::XMStoreFloat4(&up, u);
 }
 
-DirectX::XMFLOAT4 ComputeDirectionVectorClass::GetForwardVector(DirectX::XMFLOAT4 rotate)
+DirectX::XMFLOAT4 Object::ComputeDirectionVectorClass::GetForwardVector(DirectX::XMFLOAT4 rotate)
 {
 	float pitch, yaw, roll;
 	DirectX::XMMATRIX RotationMatrix;
@@ -48,7 +48,7 @@ DirectX::XMFLOAT4 ComputeDirectionVectorClass::GetForwardVector(DirectX::XMFLOAT
 	return ret;
 }
 
-DirectX::XMFLOAT4 ComputeDirectionVectorClass::GetRightVector(DirectX::XMFLOAT4 rotate)
+DirectX::XMFLOAT4 Object::ComputeDirectionVectorClass::GetRightVector(DirectX::XMFLOAT4 rotate)
 {
 	float pitch, yaw, roll;
 	DirectX::XMMATRIX RotationMatrix;
@@ -70,7 +70,7 @@ DirectX::XMFLOAT4 ComputeDirectionVectorClass::GetRightVector(DirectX::XMFLOAT4 
 	return ret;
 }
 
-DirectX::XMFLOAT4 ComputeDirectionVectorClass::GetUpVector(DirectX::XMFLOAT4 rotate)
+DirectX::XMFLOAT4 Object::ComputeDirectionVectorClass::GetUpVector(DirectX::XMFLOAT4 rotate)
 {
 	float pitch, yaw, roll;
 	DirectX::XMMATRIX RotationMatrix;
