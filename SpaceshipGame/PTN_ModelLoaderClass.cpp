@@ -1,0 +1,27 @@
+#include "pch.h"
+#include "PTN_ModelLoaderClass.h"
+
+Graphic::Loader::PTN_ModelLoaderClass::PTN_ModelLoaderClass(Model::ID ModelID) : ModelLoaderClass<Model::PTN_VertexType>(ModelID) {}
+
+std::vector<Graphic::Model::PTN_VertexType> Graphic::Loader::PTN_ModelLoaderClass::LoadVertexData(aiMesh* mesh)
+{
+	Model::PTN_VertexType vertex = {};
+	std::vector<Model::PTN_VertexType> vertices;					// mesh의 vertex 데이터들
+
+	for (unsigned int j = 0; j < mesh->mNumVertices; ++j)
+	{
+		vertex.position = DirectX::XMFLOAT3(mesh->mVertices[j].x, mesh->mVertices[j].y, mesh->mVertices[j].z);
+		vertex.texture = DirectX::XMFLOAT2(mesh->mTextureCoords[0][j].x, mesh->mTextureCoords[0][j].y);
+		vertex.normal = DirectX::XMFLOAT3(mesh->mNormals[j].x, mesh->mNormals[j].y, mesh->mNormals[j].z);
+
+		vertices.push_back(vertex);
+	}
+
+	return std::move(vertices);
+}
+
+HRESULT Graphic::Loader::PTN_ModelLoaderClass::LoadMaterial(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext)
+{
+	HRESULT result = S_OK;
+	return result;
+}

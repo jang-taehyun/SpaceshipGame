@@ -19,7 +19,7 @@ namespace Graphic
 		class ModelClass : public IModelClass
 		{
 		public:
-			ModelClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, ID ModelID);
+			ModelClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, ID ModelID, Loader::ModelLoaderClass<VertexType>* loader);
 			virtual ~ModelClass() = default;
 
 			void RenderMesh(ID3D11DeviceContext* DeviceContext, int MeshIdx) override;
@@ -28,9 +28,9 @@ namespace Graphic
 			inline const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& GetMaterial(int idx) const { assert(idx < m_MeshCount); return m_Materials[idx]; }
 
 		private:
-			HRESULT Initialize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext) override;
-			HRESULT InitializeBuffers(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Graphic::Loader::ModelLoaderClass<VertexType>& loader);
-			void InitializeMaterials(Loader::ModelLoaderClass<VertexType>& loader);
+			HRESULT Initialize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Loader::ModelLoaderClass<VertexType>* loader);
+			HRESULT InitializeBuffers(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Loader::ModelLoaderClass<VertexType>* loader);
+			void InitializeMaterials(Loader::ModelLoaderClass<VertexType>* loader);
 
 		private:
 			ID m_ModelID = ID::DEFAULT_SPACESHIP;

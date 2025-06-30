@@ -1,58 +1,65 @@
 #include "pch.h"
-#include "InputClass.h"
-#include "CameraClass.h"
-#include "ActorClass.h"
-#include "PlayerClass.h"
-#include "ActorManagerClass.h"
+#include "StartSceneClass.h"
 #include "SceneManagerClass.h"
 
 bool Scene::SceneManagerClass::IsInitialize = false;
-static ErrorContent e;
 
 Scene::SceneManagerClass::SceneManagerClass()
 {
-	HRESULT result = S_OK;
+	assert(IsInitialize);
 
-	// 에러 메세지, 변수 초기화 //
-	e.title = _T("SceneManagerClass Constructor");
-
-	if (IsInitialize)
-	{
-		e.contents = _T("이미 SceneManagerClass 인스턴스가 존재합니다.");
-		e.errorCode = E_FAIL;
-		throw e;
-	}
+	m_Scene = std::make_unique<StartSceneClass>(SceneState::START, SceneState::INGAME);
+	assert(m_Scene);
 
 	IsInitialize = true;
 }
 
 Scene::SceneManagerClass::~SceneManagerClass()
 {
+	// 마우스 커서를 보이게 하고 위치를 중앙으로 되돌리기 //
+	if (!m_IsShowingCursor)
+		ShowCursor(true);
+	SetCursorPos(GetSystemMetrics(SM_CXSCREEN) / 2, GetSystemMetrics(SM_CYSCREEN) / 2);
+
 	IsInitialize = false;
 }
 
-HRESULT Scene::SceneManagerClass::Frame(ActorManagerClass* const& actor_manager, CameraClass* const& camera, const InputClass* const& input, const float& frame_time)
+HRESULT Scene::SceneManagerClass::Frame(const System::InputClass* input, float frame_time)
 {
 	HRESULT result = S_OK;
 
-	// 에러 메세지, 변수 초기화 //
-	e.title = _T("SceneManagerClass Frame()");
+	if (m_Scene->IsSceneEnded())
+		ChangeScene();
 
-	result = ProcessCamera(camera, input, frame_time);
-	if (FAILED(result))
+	m_Scene->Frame(input, frame_time);
+
+	return result;
+}
+
+HRESULT Scene::SceneManagerClass::ChangeScene()
+{
+	HRESULT result = S_OK;
+	SceneState cur = m_Scene->GetNextSceneState();
+	SceneState next;
+
+	// scene 인스턴스 해제 //
+	m_Scene.reset();
+
+	// 다음 scene에 맞는 scene 인스턴스 생성 //
+	switch (cur)
 	{
-		throw e;
-		return result;
+	case SceneState::START:
+		next = SceneState::INGAME;
+		m_Scene = std::make_unique<>(cur, next);
+		break;
+	case SceneState::INGAME:
+		next = SceneState::INGAME;
+		m_Scene = std::make_unique<StartSceneClass>(cur, next);
+		break;
+	default:
+		assert(false);
 	}
-
-	result = ProcessActor(actor_manager, input, frame_time);
-	if (FAILED(result))
-	{
-		throw e;
-		return result;
-	}
-
-	ProcessSceneInfo();
+	assert(m_Scene);
 
 	return result;
 }

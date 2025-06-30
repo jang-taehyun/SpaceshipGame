@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "IObjectClass.h"
 #include "ActorClass.h"
+#include "CollisionClass.h"
+#include "MoveClass.h"
+#include "RotateClass.h"
 #include "ActorManagerClass.h"
 
 bool Object::ActorManagerClass::IsInitialize = false;
@@ -26,7 +29,7 @@ Object::ActorManagerClass::~ActorManagerClass()
 	IsInitialize = false;
 }
 
-const Object::IObjectClass* Object::ActorManagerClass::operator[](int idx) const
+Object::IObjectClass* Object::ActorManagerClass::operator[](int idx) const
 {
 	assert(idx >= m_ObjectCount);
 
@@ -36,11 +39,20 @@ const Object::IObjectClass* Object::ActorManagerClass::operator[](int idx) const
 HRESULT Object::ActorManagerClass::Initialize(const AffineInfo* ActorAffines, const AffineInfo* CollisionAffines, const Graphic::Model::ID* ModelIDs)
 {
 	HRESULT result = S_OK;
+	std::unique_ptr<IMoveClass> move = nullptr;
+	std::unique_ptr<IRotateClass> rotate = nullptr;
+	std::unique_ptr<IObjectClass> collision = nullptr;
 
 	// Actor 인터페이스 생성 //
 	for (int i = 0; i < m_ObjectCount; ++i)
 	{	
-		m_ObjectInterfaces[i] = std::make_unique<ActorClass>(ActorAffines[i], CollisionAffines[i], ModelIDs[i]);
+		// move, rotate, collision 인스턴스 생성
+		move = std::make_unique<MoveClass>();
+		rotate = std::make_unique<RotateClass>();
+		collision = std::make_unique<CollisionClass>(CollisionAffines[i]);
+
+		// actor 인스턴스 생성
+		m_ObjectInterfaces[i] = std::make_unique<ActorClass>(ActorAffines[i], move, rotate, collision, ModelIDs[i]);
 		assert(m_ObjectInterfaces[i]);
 	}
 

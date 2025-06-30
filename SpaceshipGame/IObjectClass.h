@@ -27,7 +27,7 @@ namespace Object
 		virtual inline void SetRotation(float x, float y, float z) = 0;			// rotation 대입
 
 		virtual inline void SetScale(DirectX::XMFLOAT4 scale) = 0;				// scale 대입
-		virtual inline void SetScale(float x, float y, float z) = 0;				// scale 대입
+		virtual inline void SetScale(float x, float y, float z) = 0;			// scale 대입
 
 		virtual inline std::unique_ptr<IObjectClass> Clone() const = 0;
 	};

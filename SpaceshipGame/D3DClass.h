@@ -14,8 +14,8 @@ namespace Graphic
 		// 화면에 back buffer의 내용을 표시하는 함수
 		void EndScene() const;
 
-		inline const ID3D11Device* GetDevice() const { return m_Device.Get(); }
-		inline const ID3D11DeviceContext* GetDeviceContext() const { return m_DeviceContext.Get(); }
+		inline ID3D11Device* GetDevice() const { return m_Device.Get(); }
+		inline ID3D11DeviceContext* GetDeviceContext() const { return m_DeviceContext.Get(); }
 
 		inline const DirectX::XMMATRIX& GetProjectionMatrix() { return m_ProjectionMatrix; }
 		inline const DirectX::XMMATRIX& GetOrthoMatrix() { return m_OrthoMatrix; }

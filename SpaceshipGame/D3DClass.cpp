@@ -2,29 +2,14 @@
 #include "D3DClass.h"
 
 bool Graphic::D3DClass::IsInitialize = false;
-static ErrorContent e;
 
 Graphic::D3DClass::D3DClass(HWND hwnd, int ScreenWidth, int ScreenHeight)
 {
 	HRESULT result = S_OK;
 
-	// 에러 메세지 초기화 //
-	e.title = _T("D3DClass Constructor");
-
-	if (IsInitialize)
-	{
-		e.contents = _T("이미 D3DClass 인스턴스가 존재합니다.");
-		e.errorCode = E_FAIL;
-		throw e;
-	}
+	assert(IsInitialize);
 
 	result = Initialize(hwnd, ScreenWidth, ScreenHeight);
-	if (FAILED(result))
-	{
-		Shutdown();
-		throw e;
-	}
-
 	IsInitialize = true;
 }
 
@@ -39,53 +24,25 @@ HRESULT Graphic::D3DClass::Initialize(HWND hwnd, int ScreenWidth, int ScreenHeig
 	HRESULT result = S_OK;
 	int Numerator = 0, Denominator = 0;
 
-	// 에러 메세지 초기화 //
-	e.title = _T("D3DClass Initialize()");
-
 	// 1. DirectX Graphics Infrastructure(DXGI)를 통해 적절한 디스플레이 모드 찾기 및 적용
 	result = GetRefreshRate(ScreenWidth, ScreenHeight, Numerator, Denominator);
-	if (FAILED(result))
-	{
-		e.contents = _T("적절한 디스플레이 모드 찾기 및 적용 실패");
-		e.errorCode = result;
-		return result;
-	}
+	assert(SUCCEEDED(result));
 
 	// 2. Swap chain 설정 및 Swap chain, Device, Device context 생성
 	result = CreateSwapChainDeviceDeviceContext(hwnd, ScreenWidth, ScreenHeight, Numerator, Denominator);
-	if (FAILED(result))
-	{
-		e.contents = _T("Swap chain 설정 및 Swap chain, Device, Device context 생성 실패");
-		e.errorCode = result;
-		return result;
-	}
+	assert(SUCCEEDED(result));
 
 	// 3. Render target view 생성 및 설정
 	result = SetAndCreateRenderTargetView();
-	if (FAILED(result))
-	{
-		e.contents = _T("Render target view 생성 및 설정 실패");
-		e.errorCode = result;
-		return result;
-	}
+	assert(SUCCEEDED(result));
 
 	// 4. Depth Stencil buffer 생성
 	result = SetDepthAndStencil(ScreenWidth, ScreenHeight);
-	if (FAILED(result))
-	{
-		e.contents = _T("Depth Stencil buffer 생성 실패");
-		e.errorCode = result;
-		return result;
-	}
+	assert(SUCCEEDED(result));
 
 	// 5. Rasterizer 설정
 	result = SetRasterizer();
-	if (FAILED(result))
-	{
-		e.contents = _T("Rasterizer 설정 실패");
-		e.errorCode = result;
-		return result;
-	}
+	assert(SUCCEEDED(result));
 	
 	// 6. 렌더링을 위한 Viewport 설정
 	SetViewport(ScreenWidth, ScreenHeight);
@@ -95,12 +52,7 @@ HRESULT Graphic::D3DClass::Initialize(HWND hwnd, int ScreenWidth, int ScreenHeig
 
 	// 8. alpha blending state 설정
 	result = SetAlphaBlendState();
-	if (FAILED(result))
-	{
-		e.contents = _T("alpha blending state 설정 실패");
-		e.errorCode = result;
-		return result;
-	}
+	assert(SUCCEEDED(result));
 
 	return result;
 }
@@ -172,62 +124,30 @@ HRESULT Graphic::D3DClass::GetRefreshRate(int ScreenWidth, int ScreenHeight, int
 	UINT ModeCount = 0, CombinationCount = 0;						// format에 맞는 display mode의 개수, 디스플레이 모드에 대한 조합의 개수
 	std::unique_ptr<DXGI_MODE_DESC[]> DisplayModeList = nullptr;	// display mode의 정보를 담은 배열
 
-	// 에러 메세지 초기화 //
-	e.title = _T("D3DClass GetRefreshRate()");
-
 	// DXGI factory 생성 //
 	result = CreateDXGIFactory(__uuidof(IDXGIFactory), reinterpret_cast<void**>(Factory.GetAddressOf()));
-	if (FAILED(result))
-	{
-		e.contents = _T("DXGI factory 생성 실패");
-		e.errorCode = result;
-		return result;
-	}
+	assert(SUCCEEDED(result));
 
 	// 기본 그래픽카드 및 기본 모니터 조회 //
 	// 기본 그래픽카드
 	result = Factory->EnumAdapters(0, Adapter.GetAddressOf());
-	if (FAILED(result))
-	{
-		e.contents = _T("기본 그래픽카드 조회 실패");
-		e.errorCode = result;
-		return result;
-	}
+	assert(SUCCEEDED(result));
 
 	// 기본 모니터
 	result = Adapter->EnumOutputs(0, AdapterOutput.GetAddressOf());
-	if (FAILED(result))
-	{
-		e.contents = _T("기본 모니터 조회 실패");
-		e.errorCode = result;
-		return result;
-	}
+	assert(SUCCEEDED(result));
 
 	// 모니터에서 DXGI_FORMAT_R8G8B8A8_UNORM 표시 형식에 맞는 모드 수 조회 //
 	result = AdapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &ModeCount, NULL);
-	if (FAILED(result))
-	{
-		e.contents = _T("DXGI_FORMAT_R8G8B8A8_UNORM 표시 형식에 맞는 모드 수 조회 실패");
-		e.errorCode = result;
-		return result;
-	}
+	assert(SUCCEEDED(result));
 
 	// 디스플레이 모드에 대한 모든 조합을 구하기 //
 	CombinationCount = ModeCount;
 	DisplayModeList = std::make_unique<DXGI_MODE_DESC[]>(CombinationCount);
-	if (!DisplayModeList)
-	{
-		e.contents = _T("display mode의 정보를 담을 배열 생성 실패");
-		e.errorCode = E_FAIL;
-		return E_FAIL;
-	}
+	assert(SUCCEEDED(result));
+
 	result = AdapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &ModeCount, DisplayModeList.get());
-	if (FAILED(result))
-	{
-		e.contents = _T("디스플레이 모드에 대한 모든 조합 조회 실패");
-		e.errorCode = result;
-		return result;
-	}
+	assert(SUCCEEDED(result));
 
 	// 모든 조합에서 윈도우의 가로, 세로 길이에 맞는 디스플레이 모드를 찾고, FPS의 분모, 분자 값 저장 //
 	for (UINT i = 0; i < CombinationCount; ++i)
@@ -248,14 +168,10 @@ HRESULT Graphic::D3DClass::GetRefreshRate(int ScreenWidth, int ScreenHeight, int
 HRESULT Graphic::D3DClass::CreateSwapChainDeviceDeviceContext(HWND hwnd, int ScreenWidth, int ScreenHeight, int Numerator, int Denominator)
 {
 	HRESULT result = S_OK;
-	DXGI_SWAP_CHAIN_DESC SwapChainDesc;				// swap chain 설정 정보
+	DXGI_SWAP_CHAIN_DESC SwapChainDesc = {};		// swap chain 설정 정보
 	D3D_FEATURE_LEVEL FeatureLevel;					// DirectX 버전 정보
 
-	// 에러 메세지 초기화 //
-	e.title = _T("D3DClass CreateSwapChainDeviceDeviceContext()");
-
 	// swap chain 설정 //
-	memset(&SwapChainDesc, 0, sizeof(DXGI_SWAP_CHAIN_DESC));
 	SwapChainDesc.BufferCount = 1;									// back buffer의 개수
 	SwapChainDesc.BufferDesc.Width = ScreenWidth;					// back buffer의 해상도
 	SwapChainDesc.BufferDesc.Height = ScreenHeight;
@@ -302,12 +218,7 @@ HRESULT Graphic::D3DClass::CreateSwapChainDeviceDeviceContext(HWND hwnd, int Scr
 
 	// swap chain, device, device context 생성 //
 	result = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &FeatureLevel, 1, D3D11_SDK_VERSION, &SwapChainDesc, m_SwapChain.GetAddressOf(), m_Device.GetAddressOf(), NULL, m_DeviceContext.GetAddressOf());
-	if (FAILED(result))
-	{
-		e.contents = _T("swap chain, device, device context 생성 실패");
-		e.errorCode = result;
-		return result;
-	}
+	assert(SUCCEEDED(result));
 
 	return result;
 }
@@ -317,30 +228,13 @@ HRESULT Graphic::D3DClass::SetAndCreateRenderTargetView()
 	HRESULT result = S_OK;
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> BackBufferPtr = nullptr;			// back buffer의 포인터
 
-	// 에러 메세지 초기화 //
-	e.title = _T("D3DClass SetAndCreateRenderTargetView()");
-
 	// back buffer의 pointer 가져오기 //
 	result = m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<LPVOID*>(BackBufferPtr.GetAddressOf()));
-	if (FAILED(result))
-	{
-		e.contents = _T("back buffer의 pointer 가져오기 실패");
-		e.errorCode = result;
-		return result;
-	}
+	assert(SUCCEEDED(result));
 
 	// render target view를 생성하고, render target view가 back buffer를 가르키도록 설정 //
 	result = m_Device->CreateRenderTargetView(BackBufferPtr.Get(), NULL, m_RenderTargetView.GetAddressOf());
-	if (FAILED(result))
-	{
-		e.contents = _T("render target view 생성, render target view가 back buffer를 가르키도록 설정 실패");
-		e.errorCode = result;
-		return result;
-	}
-
-	// back buffer 해제 //
-	BackBufferPtr->Release();
-	BackBufferPtr = nullptr;
+	assert(SUCCEEDED(result));
 
 	return result;
 }
@@ -348,16 +242,9 @@ HRESULT Graphic::D3DClass::SetAndCreateRenderTargetView()
 HRESULT Graphic::D3DClass::SetDepthAndStencil(int ScreenWidth, int ScreenHeight)
 {
 	HRESULT result = S_OK;
-	D3D11_TEXTURE2D_DESC DepthBufferDesc;					// depth buffer 설정 정보
-	D3D11_DEPTH_STENCIL_DESC DepthStencilDesc;				// depth stencil state 설정 정보
-	D3D11_DEPTH_STENCIL_VIEW_DESC DepthStencilViewDesc;		// depth stencil view 설정 정보
-
-	// 에러 메세지 초기화 //
-	e.title = _T("D3DClass SetDepthAndStencil()");
-
-	memset(&DepthBufferDesc, 0, sizeof(DepthBufferDesc));
-	memset(&DepthStencilDesc, 0, sizeof(DepthStencilDesc));
-	memset(&DepthStencilViewDesc, 0, sizeof(DepthStencilViewDesc));
+	D3D11_TEXTURE2D_DESC DepthBufferDesc = {};					// depth buffer 설정 정보
+	D3D11_DEPTH_STENCIL_DESC DepthStencilDesc = {};				// depth stencil state 설정 정보
+	D3D11_DEPTH_STENCIL_VIEW_DESC DepthStencilViewDesc = {};	// depth stencil view 설정 정보
 
 	// depth buffer 설정 //
 	DepthBufferDesc.Width = ScreenWidth;
@@ -374,12 +261,7 @@ HRESULT Graphic::D3DClass::SetDepthAndStencil(int ScreenWidth, int ScreenHeight)
 
 	// depth buffer를 texture 형식으로 생성 //
 	result = m_Device->CreateTexture2D(&DepthBufferDesc, NULL, m_DepthStencilBuffer.GetAddressOf());
-	if (FAILED(result))
-	{
-		e.contents = _T("depth buffer 생성 실패");
-		e.errorCode = result;
-		return result;
-	}
+	assert(SUCCEEDED(result));
 
 	// depth stencil state 설정(depth buffer를 활성화한 depth stencil state) //
 	DepthStencilDesc.DepthEnable = true;
@@ -404,24 +286,14 @@ HRESULT Graphic::D3DClass::SetDepthAndStencil(int ScreenWidth, int ScreenHeight)
 
 	// depth stencil state 생성(depth buffer를 활성화한 depth stencil state) //
 	result = m_Device->CreateDepthStencilState(&DepthStencilDesc, m_DepthStencilState.GetAddressOf());
-	if (FAILED(result))
-	{
-		e.contents = _T("depth stencil state 생성(depth buffer를 활성화한 depth stencil state) 실패");
-		e.errorCode = result;
-		return result;
-	}
+	assert(SUCCEEDED(result));
 
 	// depth stencil state 설정(depth buffer를 비활성화한 depth stencil state) //
 	DepthStencilDesc.DepthEnable = false;
 
 	// depth stencil state 생성(depth buffer를 비활성화한 depth stencil state) //
 	result = m_Device->CreateDepthStencilState(&DepthStencilDesc, m_DepthDisabledStencilState.GetAddressOf());
-	if (FAILED(result))
-	{
-		e.contents = _T("depth stencil state 생성(depth buffer를 비활성화한 depth stencil state) 실패");
-		e.errorCode = result;
-		return result;
-	}
+	assert(SUCCEEDED(result));
 
 	// depth stencil state(depth buffer를 활성화한 depth stencil state)를 device context에 붙이기 //
 	m_DeviceContext->OMSetDepthStencilState(m_DepthStencilState.Get(), 1);
@@ -433,12 +305,7 @@ HRESULT Graphic::D3DClass::SetDepthAndStencil(int ScreenWidth, int ScreenHeight)
 
 	// depth stencil view 생성 // 
 	result = m_Device->CreateDepthStencilView(m_DepthStencilBuffer.Get(), &DepthStencilViewDesc, m_DepthStencilView.GetAddressOf());
-	if (FAILED(result))
-	{
-		e.contents = _T("depth stencil view 생성 실패");
-		e.errorCode = result;
-		return result;
-	}
+	assert(SUCCEEDED(result));
 
 	// render target view와 depth stencil view를 출력 렌더링 파이프라인에 바인드 //
 	m_DeviceContext->OMSetRenderTargets(1, m_RenderTargetView.GetAddressOf(), m_DepthStencilView.Get());
@@ -449,13 +316,9 @@ HRESULT Graphic::D3DClass::SetDepthAndStencil(int ScreenWidth, int ScreenHeight)
 HRESULT Graphic::D3DClass::SetRasterizer()
 {
 	HRESULT result = S_OK;
-	D3D11_RASTERIZER_DESC RasterizerDesc;			// rasterizer 설정 정보
-
-	// 에러 메세지 초기화 //
-	e.title = _T("D3DClass SetRasterizer()");
+	D3D11_RASTERIZER_DESC RasterizerDesc = {};			// rasterizer 설정 정보
 
 	// Rasterizer 정보 입력 //
-	memset(&RasterizerDesc, 0, sizeof(D3D11_RASTERIZER_DESC));
 	RasterizerDesc.AntialiasedLineEnable = false;
 	RasterizerDesc.CullMode = D3D11_CULL_BACK;
 	RasterizerDesc.DepthBias = 0;
@@ -469,12 +332,7 @@ HRESULT Graphic::D3DClass::SetRasterizer()
 
 	// Rasterizer state 생성 //
 	result = m_Device->CreateRasterizerState(&RasterizerDesc, m_RasterizerState.GetAddressOf());
-	if (FAILED(result))
-	{
-		e.contents = _T("Rasterizer state 생성 실패");
-		e.errorCode = result;
-		return result;
-	}
+	assert(SUCCEEDED(result));
 
 	// Device context에서 Rasterizer state를 설정 //
 	m_DeviceContext->RSSetState(m_RasterizerState.Get());
@@ -484,7 +342,7 @@ HRESULT Graphic::D3DClass::SetRasterizer()
 
 void Graphic::D3DClass::SetViewport(int ScreenWidth, int ScreenHeight)
 {
-	D3D11_VIEWPORT Viewport = { 0, };				// view port 설정 정보
+	D3D11_VIEWPORT Viewport = {};						// view port 설정 정보
 
 	// Viewport 정보 설정 //
 	Viewport.Width = static_cast<float>(ScreenWidth);
@@ -514,13 +372,9 @@ void Graphic::D3DClass::SetMatrix(int ScreenWidth, int ScreenHeight)
 HRESULT Graphic::D3DClass::SetAlphaBlendState()
 {
 	HRESULT result = S_OK;
-	D3D11_BLEND_DESC AlphaBlendStateDesc;			// alpha blend state 설정 정보
-
-	// 에러 메세지 초기화 //
-	e.title = _T("D3DClass SetAlphaBlendState()");
+	D3D11_BLEND_DESC AlphaBlendStateDesc = {};			// alpha blend state 설정 정보
 
 	// alpha blend state 정보 입력 //
-	memset(&AlphaBlendStateDesc, 0, sizeof(AlphaBlendStateDesc));
 	AlphaBlendStateDesc.RenderTarget[0].BlendEnable = TRUE;
 	AlphaBlendStateDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
 	AlphaBlendStateDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
@@ -532,22 +386,12 @@ HRESULT Graphic::D3DClass::SetAlphaBlendState()
 
 	// alpha blend state 생성(blend 활성화) //
 	result = m_Device->CreateBlendState(&AlphaBlendStateDesc, m_AlphaEnableBlendingState.GetAddressOf());
-	if (FAILED(result))
-	{
-		e.contents = _T("alpha blend state 생성(blend 활성화) 실패");
-		e.errorCode = result;
-		return result;
-	}
+	assert(SUCCEEDED(result));
 
 	// alpha blend state 생성(blend 비활성화) //
 	AlphaBlendStateDesc.RenderTarget[0].BlendEnable = FALSE;
 	result = m_Device->CreateBlendState(&AlphaBlendStateDesc, m_AlphaDisableBlendingState.GetAddressOf());
-	if (FAILED(result))
-	{
-		e.contents = _T("alpha blend state 생성(blend 비활성화) 실패");
-		e.errorCode = result;
-		return result;
-	}
+	assert(SUCCEEDED(result));
 
 	return result;
 }

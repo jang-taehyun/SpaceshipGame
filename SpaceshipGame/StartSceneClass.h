@@ -1,24 +1,18 @@
 #pragma once
 
-#include "BaseSceneClass.h"
+#include "SceneClass.h"
 
 namespace System { class InputClass; }
 
 namespace Scene
 {
-	class StartSceneClass : public BaseSceneClass
+	class StartSceneClass : public SceneClass
 	{
 	public:
-		StartSceneClass() = default;
+		StartSceneClass(SceneState current, SceneState next);
 		virtual ~StartSceneClass() = default;
 
+		virtual void Frame(const System::InputClass* input, float frame_time) override;
 		virtual inline std::unique_ptr<ISceneClass> Clone() const override { return std::make_unique<StartSceneClass>(*this); }
-
-		virtual void Frame(const System::InputClass* input);
-
-	private:
-		SceneState m_CurrentSceneState = SceneState::START;
-		SceneState m_NextSceneState = SceneState::LOGIN;
 	};
-
 }

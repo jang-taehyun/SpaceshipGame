@@ -5,22 +5,11 @@
 #include "TypeConverterClass.h"
 #include "ShaderClass.h"
 
-Graphic::Shader::ShaderClass::ShaderClass(HWND hwnd, ID3D11Device* Device, const std::vector<std::string>& VertexDataSemantics, ID ShaderID) : m_ShaderID(ShaderID)
-{
-	HRESULT result = Initialize(hwnd, Device, VertexDataSemantics);
-	assert(SUCCEEDED(result));
-}
+template<typename ShaderBuffers>
+Graphic::Shader::ShaderClass<ShaderBuffers>::ShaderClass(ID ShaderID) : m_ShaderID(ShaderID) {}
 
-void Graphic::Shader::ShaderClass::BeginRender(ID3D11DeviceContext* DeviceContext, const TransformMatrixData& transform, const LightClass* light, const Object::IObjectClass* camera)
-{
-	// vertex shader, pixel shader, input layout 바인딩 //
-	BindShaderAndInputLayout(DeviceContext);
-
-	// shader에서 사용하는 buffer 설정 //
-	SetShaderBuffers(DeviceContext, transform, light, camera);
-}
-
-HRESULT Graphic::Shader::ShaderClass::Initialize(HWND hwnd, ID3D11Device* Device, const std::vector<std::string>& VertexDataSemantics)
+template<typename ShaderBuffers>
+HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::Initialize(HWND hwnd, ID3D11Device* Device, const std::vector<std::string>& VertexDataSemantics)
 {
 	HRESULT result = S_OK;
 	ShaderFileInfo info = ShaderList.at(m_ShaderID);
@@ -34,7 +23,18 @@ HRESULT Graphic::Shader::ShaderClass::Initialize(HWND hwnd, ID3D11Device* Device
 	return result;
 }
 
-HRESULT Graphic::Shader::ShaderClass::Render(ID3D11DeviceContext* DeviceContext, int IndexCount, const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& Material)
+template<typename ShaderBuffers>
+void Graphic::Shader::ShaderClass<ShaderBuffers>::BeginRender(ID3D11DeviceContext* DeviceContext, const ShaderBuffers& ShaderBufferDatas)
+{
+	// vertex shader, pixel shader, input layout 바인딩 //
+	BindShaderAndInputLayout(DeviceContext);
+
+	// shader에서 사용하는 buffer 설정 //
+	SetShaderBuffers(DeviceContext, ShaderBufferDatas);
+}
+
+template<typename ShaderBuffers>
+HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::Render(ID3D11DeviceContext* DeviceContext, int IndexCount, const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& Material)
 {
 	HRESULT result = S_OK;
 
@@ -49,7 +49,8 @@ HRESULT Graphic::Shader::ShaderClass::Render(ID3D11DeviceContext* DeviceContext,
 	return result;
 }
 
-HRESULT Graphic::Shader::ShaderClass::InitializeShader(HWND hwnd, ID3D11Device* Device, const std::vector<std::string>& VertexDataSemantics)
+template<typename ShaderBuffers>
+HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::InitializeShader(HWND hwnd, ID3D11Device* Device, const std::vector<std::string>& VertexDataSemantics)
 {
 	HRESULT result = S_OK;
 	ShaderFileInfo info = ShaderList.at(m_ShaderID);
@@ -88,14 +89,8 @@ HRESULT Graphic::Shader::ShaderClass::InitializeShader(HWND hwnd, ID3D11Device* 
 	// input layout 생성
 	result = CreateInputLayout(Device, VertexShaderBuffer.Get(), VertexDataSemantics);
 
-	// 행렬 상수 버퍼 생성 //
-	result = CreateConstantBuffer(Device, m_MatrixBuffer.GetAddressOf(), sizeof(MatrixBufferType));
-
-	// light 상수 버퍼 생성 //
-	result = CreateConstantBuffer(Device, m_LightBuffer.GetAddressOf(), sizeof(LightBufferType));
-
-	// camera 상수 버퍼 생성 //
-	result = CreateConstantBuffer(Device, m_CameraBuffer.GetAddressOf(), sizeof(CameraBufferType));
+	// shader에서 사용하는 buffer들 생성
+	result = CreateBuffers(Device);
 
 	// texture sampler state 생성 //
 	result = CreateTextureSamplerState(Device);
@@ -103,7 +98,8 @@ HRESULT Graphic::Shader::ShaderClass::InitializeShader(HWND hwnd, ID3D11Device* 
 	return result;
 }
 
-HRESULT Graphic::Shader::ShaderClass::CreateInputLayout(ID3D11Device* Device, ID3D10Blob* VertexShaderBuffer, const std::vector<std::string>& VertexDataSemantics)
+template<typename ShaderBuffers>
+HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::CreateInputLayout(ID3D11Device* Device, ID3D10Blob* VertexShaderBuffer, const std::vector<std::string>& VertexDataSemantics)
 {
 	HRESULT result = S_OK;
 	std::vector<D3D11_INPUT_ELEMENT_DESC> LayoutDesc;
@@ -136,31 +132,8 @@ HRESULT Graphic::Shader::ShaderClass::CreateInputLayout(ID3D11Device* Device, ID
 	return result;
 }
 
-HRESULT Graphic::Shader::ShaderClass::CreateConstantBuffer(ID3D11Device* Device, ID3D11Buffer** Buffer, UINT BufferSize)
-{
-	HRESULT result = S_OK;
-	D3D11_BUFFER_DESC ConstantBufferDesc;							// 상수 버퍼 정보
-
-	// 구조체 초기화 //
-	memset(&ConstantBufferDesc, 0, sizeof(ConstantBufferDesc));
-
-	// 상수 버퍼 생성 //
-	// 상수 버퍼 설정
-	ConstantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	ConstantBufferDesc.ByteWidth = BufferSize;
-	ConstantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	ConstantBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	ConstantBufferDesc.MiscFlags = 0;
-	ConstantBufferDesc.StructureByteStride = 0;
-
-	// 상수 버퍼 생성
-	result = Device->CreateBuffer(&ConstantBufferDesc, NULL, Buffer);
-	assert(SUCCEEDED(result));
-
-	return result;
-}
-
-HRESULT Graphic::Shader::ShaderClass::CreateTextureSamplerState(ID3D11Device* Device)
+template<typename ShaderBuffers>
+HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::CreateTextureSamplerState(ID3D11Device* Device)
 {
 	HRESULT result = S_OK;
 	D3D11_SAMPLER_DESC SamplerDesc;								// texture sampler state 설정 정보
@@ -191,126 +164,14 @@ HRESULT Graphic::Shader::ShaderClass::CreateTextureSamplerState(ID3D11Device* De
 	return result;
 }
 
-void Graphic::Shader::ShaderClass::OutputShaderErrorMessage(HWND hwnd, ID3D10Blob* ErrorMessage, const std::wstring& ShaderFileName)
+template<typename ShaderBuffers>
+void Graphic::Shader::ShaderClass<ShaderBuffers>::OutputShaderErrorMessage(HWND hwnd, ID3D10Blob* ErrorMessage, const std::wstring& ShaderFileName)
 {
 	MessageBox(hwnd, reinterpret_cast<const wchar_t*>(ErrorMessage->GetBufferPointer()), ShaderFileName.c_str(), MB_OK);
 }
 
-void Graphic::Shader::ShaderClass::SetShaderBuffers(ID3D11DeviceContext* DeviceContext, const TransformMatrixData& transform, const LightClass* light, const Object::IObjectClass* camera)
-{
-	HRESULT result = S_OK;
-	UINT SlotNum = 0;												// slot 번호
-
-	// matrix constant buffer의 내용 업데이트 //
-	// vertex shader에서 matrix constant buffer의 위치 : 0번
-	SlotNum = 0;
-	result = UpdateMatrixBuffer(DeviceContext, SlotNum, transform);
-
-	// light constant buffer의 내용 업데이트 //
-	// pixel shader에서 light constant buffer의 위치 : 0번
-	SlotNum = 0;
-	result = UpdateLightBuffer(DeviceContext, SlotNum, light);
-
-	// camera constant buffer의 내용 업데이트 //
-	// vertex shader에서 camera constant buffer의 위치 : 1번
-	SlotNum = 1;
-	result = UpdateCameraBuffer(DeviceContext, SlotNum, camera);
-}
-
-HRESULT Graphic::Shader::ShaderClass::UpdateMatrixBuffer(ID3D11DeviceContext* DeviceContext, UINT slot, const TransformMatrixData& transform)
-{
-	HRESULT result = S_OK;
-	D3D11_MAPPED_SUBRESOURCE MappedResource;						// lock
-	MatrixBufferType* DataPtr = nullptr;							// buffer의 포인터
-	DirectX::XMMATRIX worldMatrix;									// world
-	DirectX::XMMATRIX viewMatrix;									// view
-	DirectX::XMMATRIX projectionMatrix;								// projection
-
-	// 행렬들을 HLSL에 맞게 변환 //
-	// 행렬들을 transpose 연산하여 shader에서 사용할 수 있도록 한다.
-	worldMatrix = DirectX::XMMatrixTranspose(transform.world);
-	viewMatrix = DirectX::XMMatrixTranspose(transform.view);
-	projectionMatrix = DirectX::XMMatrixTranspose(transform.projection);
-
-	// matrix constant buffer의 내용을 CPU가 쓸 수 있도록 잠금 //
-	result = DeviceContext->Map(m_MatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource);
-	assert(SUCCEEDED(result));
-
-	// matrix constant buffer의 데이터에 대한 포인터를 가져오기 //
-	DataPtr = (MatrixBufferType*)MappedResource.pData;
-
-	// matrix constant buffer에 데이터(행렬) 복사
-	DataPtr->World = worldMatrix;
-	DataPtr->View = viewMatrix;
-	DataPtr->Projection = projectionMatrix;
-
-	// matrix constant buffer의 잠금을 푼다.
-	DeviceContext->Unmap(m_MatrixBuffer.Get(), 0);
-
-	// vertex shader에서 상수 버퍼의 위치 설정 및 matrix constant buffer의 내용 업데이트
-	DeviceContext->VSSetConstantBuffers(slot, 1, m_MatrixBuffer.GetAddressOf());
-
-	return result;
-}
-
-HRESULT Graphic::Shader::ShaderClass::UpdateLightBuffer(ID3D11DeviceContext* DeviceContext, UINT slot, const LightClass* light)
-{
-	HRESULT result = S_OK;
-	D3D11_MAPPED_SUBRESOURCE MappedResource;						// lock
-	LightBufferType* DataPtr = nullptr;								// buffer의 포인터
-
-	// 광원 상수 버퍼의 내용을 CPU가 쓸 수 있도록 잠금
-	result = DeviceContext->Map(m_LightBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource);
-	assert(SUCCEEDED(result));
-
-	// 광원 상수 버퍼의 데이터에 대한 포인터를 가져온다.
-	DataPtr = (LightBufferType*)MappedResource.pData;
-
-	// 광원 상수 버퍼에 데이터(행렬) 복사
-	DataPtr->AmbientColor = light->GetAmbientColor();
-	DataPtr->DiffuseColor = light->GetDiffuseColor();
-	DataPtr->LightDirection = Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(light->GetDirection());
-	DataPtr->padding1 = 0.f;
-	DataPtr->SpecularColor = light->GetSpecularColor();
-	DataPtr->SpecularPower = light->GetSpecularPower();
-	DataPtr->padding2[0] = { 0.f, };
-
-	// 광원 상수 버퍼의 잠금을 푼다.
-	DeviceContext->Unmap(m_LightBuffer.Get(), 0);
-
-	// pixel shader의 광원 상수 버퍼의 위치 설정 및 light constant buffer의 내용 업데이트
-	DeviceContext->PSSetConstantBuffers(slot, 1, m_LightBuffer.GetAddressOf());
-
-	return result;
-}
-
-HRESULT Graphic::Shader::ShaderClass::UpdateCameraBuffer(ID3D11DeviceContext* DeviceContext, UINT slot, const Object::IObjectClass* camera)
-{
-	HRESULT result = S_OK;
-	D3D11_MAPPED_SUBRESOURCE MappedResource;						// lock
-	CameraBufferType* DataPtr = nullptr;							// buffer의 포인터
-
-	// camera constant buffer의 내용을 CPU가 쓸 수 있도록 잠금 //
-	result = DeviceContext->Map(m_CameraBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource);
-	assert(SUCCEEDED(result));
-
-	// camera constant buffer의 데이터에 대한 포인터를 가져오기 //
-	DataPtr = (CameraBufferType*)MappedResource.pData;
-
-	// camera constant buffer에 데이터(행렬) 복사
-	DataPtr->CameraPosition = Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(static_cast<const Object::GameObjectClass*>(camera)->GetPosition());
-	DataPtr->padding = 0.f;
-
-	// camera constant buffer의 잠금을 푼다.
-	DeviceContext->Unmap(m_CameraBuffer.Get(), 0);
-
-	// vertex shader에서 상수 버퍼의 위치 설정 및 camera constant buffer의 내용 업데이트
-	DeviceContext->VSSetConstantBuffers(slot, 1, m_CameraBuffer.GetAddressOf());
-
-	return result;
-}
-
-void Graphic::Shader::ShaderClass::BindShaderAndInputLayout(ID3D11DeviceContext* DeviceContext)
+template<typename ShaderBuffers>
+void Graphic::Shader::ShaderClass<ShaderBuffers>::BindShaderAndInputLayout(ID3D11DeviceContext* DeviceContext)
 {
 	// vertex input layout 설정 //
 	DeviceContext->IASetInputLayout(m_Layout.Get());
@@ -321,4 +182,29 @@ void Graphic::Shader::ShaderClass::BindShaderAndInputLayout(ID3D11DeviceContext*
 
 	// pixel shader에서 사용할 sampler state 설정(SamplerState) //
 	DeviceContext->PSSetSamplers(0, 1, &m_SampleState);
+}
+
+template<typename ShaderBuffers>
+HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::CreateConstantBuffer(ID3D11Device* Device, ID3D11Buffer** Buffer, UINT BufferSize)
+{
+	HRESULT result = S_OK;
+	D3D11_BUFFER_DESC ConstantBufferDesc;							// 상수 버퍼 정보
+
+	// 구조체 초기화 //
+	memset(&ConstantBufferDesc, 0, sizeof(ConstantBufferDesc));
+
+	// 상수 버퍼 생성 //
+	// 상수 버퍼 설정
+	ConstantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	ConstantBufferDesc.ByteWidth = BufferSize;
+	ConstantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	ConstantBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	ConstantBufferDesc.MiscFlags = 0;
+	ConstantBufferDesc.StructureByteStride = 0;
+
+	// 상수 버퍼 생성
+	result = Device->CreateBuffer(&ConstantBufferDesc, NULL, Buffer);
+	assert(SUCCEEDED(result));
+
+	return result;
 }

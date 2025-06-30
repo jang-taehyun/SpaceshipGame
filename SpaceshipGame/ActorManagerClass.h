@@ -17,7 +17,7 @@ namespace Object
 		inline IObjectClass* GetPlayerInterface() const { return m_ObjectInterfaces[m_PlayerIdx].get(); }
 		inline int GetActorInterfaceCount() const { return m_ObjectCount; }
 
-		const IObjectClass* operator[](int idx) const;
+		IObjectClass* operator[](int idx) const;
 
 	private:
 		HRESULT Initialize(const AffineInfo* ActorAffines, const AffineInfo* CollisionAffines, const Graphic::Model::ID* ModelIDs);

@@ -29,8 +29,8 @@ namespace Object
 		virtual inline std::unique_ptr<IObjectClass> Clone() const override;
 
 	public:
-		inline std::unique_ptr<IMoveClass> const& GetMoveObject() const { return m_Move; }
-		inline std::unique_ptr<IRotateClass> const& GetRotateObject() const { return m_Rotate; }
+		inline IMoveClass* GetMoveObject() const { return m_Move.get(); }
+		inline IRotateClass* const& GetRotateObject() const { return m_Rotate.get(); }
 
 	private:
 		std::unique_ptr<IMoveClass> m_Move = nullptr;

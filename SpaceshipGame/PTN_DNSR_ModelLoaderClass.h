@@ -6,27 +6,15 @@ namespace Graphic
 {
 	namespace Loader
 	{
-		// PTN vertex type //
-		struct PTN_VertexType
-		{
-			DirectX::XMFLOAT3 position;
-			DirectX::XMFLOAT2 texture;
-			DirectX::XMFLOAT3 normal;
-		};
-
-		class PTN_ModelLoaderClass : public ModelLoaderClass<PTN_VertexType>
+		class PTN_DNSR_ModelLoaderClass : public ModelLoaderClass<Graphic::Model::PTN_VertexType>
 		{
 		public:
-			explicit PTN_ModelLoaderClass(const std::wstring& filename);
-			virtual ~PTN_ModelLoaderClass() = default;
-
-			virtual HRESULT Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext) override;
-
+			explicit PTN_DNSR_ModelLoaderClass(Model::ID ModelID);
+			virtual ~PTN_DNSR_ModelLoaderClass() = default;
+			
 		private:
-			virtual HRESULT LoadVertexData();
-			virtual HRESULT LoadMaterialData(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext);
-
-			virtual HRESULT LoadTexture(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& MaterialList, const aiString& TexturePath);
+			virtual std::vector<Graphic::Model::PTN_VertexType> LoadVertexData(aiMesh* mesh) override;
+			virtual HRESULT LoadMaterial(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext) override;
 		};
 	}
 }

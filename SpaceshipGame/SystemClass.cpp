@@ -5,29 +5,18 @@
 #include "FPSClass.h"
 #include "CPUClass.h"
 #include "TimerClass.h"
-#include "ActorManagerClass.h"
+#include "SceneManagerClass.h"
 #include "SystemClass.h"
 
 bool System::SystemClass::IsInitialize = false;
-static ErrorContent e;
 
 System::SystemClass::SystemClass()
 {	
 	HRESULT result = S_OK;
 
-	// 에러 메세지 초기화 //
-	e.title = _T("SystemClass Constructor");
-
-	if (IsInitialize)
-	{
-		e.contents = _T("이미 SystemClass 인스턴스가 존재합니다.");
-		e.errorCode = E_FAIL;
-		throw e;
-	}
+	assert(!IsInitialize);
 
 	result = Initialize();
-	if (FAILED(result))
-		throw e;
 
 	IsInitialize = true;
 }
@@ -44,87 +33,37 @@ HRESULT System::SystemClass::Initialize()
 	int ScreenWidth = WIDTH;
 	int ScreenHeight = HEIGHT;
 
-	// 에러 메세지 초기화 //
-	e.title = _T("SystemClass Initialize()");
-
 	// 윈도우의 가로, 세로 길이 초기화
 	InitializeWindows(ScreenWidth, ScreenHeight);
 
 	// 객체 생성 및 초기화 //
 	m_Input = std::make_unique<InputClass>(m_hinstance, m_hwnd, ScreenWidth, ScreenHeight);
-	if (!m_Input.get())
-	{
-		e.contents = _T("InputClass 인스턴스 생성 실패");
-		e.errorCode = E_FAIL;
-		return E_FAIL;
-	}
+	assert(!m_Input);
 
-	m_Graphics = std::make_unique<GraphicsClass>(ScreenWidth, ScreenHeight, m_hwnd);
-	if (!m_Graphics.get())
-	{
-		e.contents = _T("GraphicsClass 인스턴스 생성 실패");
-		e.errorCode = E_FAIL;
-		return E_FAIL;
-	}
+	m_Graphics = std::make_unique<Graphic::GraphicsClass>(ScreenWidth, ScreenHeight, m_hwnd);
+	assert(!m_Graphics);
 
-	m_Sound = std::make_unique<SoundClass>();
-	if (!m_Sound.get())
-	{
-		e.contents = _T("SoundClass 인스턴스 생성 실패");
-		e.errorCode = E_FAIL;
-		return E_FAIL;
-	}
+	m_Sound = std::make_unique<Sound::SoundClass>();
+	assert(!m_Sound);
 
 	m_FPS = std::make_unique<FPSClass>();
-	if (!m_FPS.get())
-	{
-		e.contents = _T("FPSClass 인스턴스 생성 실패");
-		e.errorCode = E_FAIL;
-		return E_FAIL;
-	}
+	assert(!m_FPS);
 
 	m_CPU = std::make_unique<CPUClass>();
-	if (!m_CPU.get())
-	{
-		e.contents = _T("CPUClass 인스턴스 생성 실패");
-		e.errorCode = E_FAIL;
-		return E_FAIL;
-	}
+	assert(!m_CPU);
 
 	m_Timer = std::make_unique<TimerClass>();
-	if (!m_Timer.get())
-	{
-		e.contents = _T("TimerClass 인스턴스 생성 실패");
-		e.errorCode = E_FAIL;
-		return E_FAIL;
-	}
+	assert(!m_Timer);
 
-	m_ActorManager = std::make_unique<ActorManagerClass>();
-	if (!m_ActorManager.get())
-	{
-		e.contents = _T("ActorManagerClass 인스턴스 생성 실패");
-		e.errorCode = E_FAIL;
-		return E_FAIL;
-	}
-
-	m_ProcessManager = std::make_unique<ProcessManagerClass>();
-	if (!m_ProcessManager.get())
-	{
-		e.contents = _T("ProcessManagerClass 인스턴스 생성 실패");
-		e.errorCode = E_FAIL;
-		return E_FAIL;
-	}
+	m_SceneManager = std::make_unique<Scene::SceneManagerClass>();
+	assert(!m_SceneManager);
 
 	return result;
 }
 
 void System::SystemClass::Run()
 {
-	HRESULT result = S_OK;
 	MSG msg;
-
-	// 에러 메세지 초기화 //
-	e.title = _T("SystemClass Run()");
 
 	// 메세지 구조체 초기화 //
 	memset(&msg, 0, sizeof(MSG));
@@ -143,13 +82,7 @@ void System::SystemClass::Run()
 		// frame 처리
 		else
 		{
-			result = Frame();
-			if (FAILED(result))
-			{
-				e.contents = _T("Frame() 처리 실패");
-				e.errorCode = result;
-				return;
-			}
+			Frame();
 		}
 
 		if (m_Input->IsEscapePressed())
@@ -166,9 +99,6 @@ HRESULT System::SystemClass::Frame()
 {
 	HRESULT result = S_OK;
 
-	// 에러 메세지 초기화 //
-	e.title = _T("SystemClass Frame()");
-
 	// Timer, FPS, CPU, Input, Sound, Process의 Frame() 진행 //
 	m_Timer->Frame();
 	m_FPS->Frame();
@@ -178,11 +108,11 @@ HRESULT System::SystemClass::Frame()
 	if (FAILED(result))
 		return result;
 
-	result = m_Sound->Frame();
+	result = m_SceneManager->Frame(m_Input.get(), m_FPS->GetFPS());
 	if (FAILED(result))
 		return result;
 
-	result = m_ProcessManager->Frame(m_ActorManager, m_Graphics->GetCamera(), m_Input, m_Timer->GetTime());
+	result = m_Sound->Frame();
 	if (FAILED(result))
 		return result;
 

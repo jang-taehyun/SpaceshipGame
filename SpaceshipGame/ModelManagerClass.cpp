@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ModelClass.h"
-#include "CubeModelClass.h"
+#include "PTN_DNSR_ModelLoaderClass.h"
+#include "PTN_ModelLoaderClass.h"
 #include "ModelManagerClass.h"
 
 bool Graphic::Model::ModelManagerClass::IsInitialize = false;
@@ -34,15 +35,27 @@ HRESULT Graphic::Model::ModelManagerClass::Initailize(HWND hwnd, ID3D11Device* D
 {
 	HRESULT result = S_OK;
 	std::unique_ptr<IModelClass> model = nullptr;
+	std::unique_ptr<Loader::IModelLoaderClass> loader = nullptr;
 
-	// model 按眉 积己 棺 map俊 insert //
-	model = std::make_unique<ModelClass<PTN_VertexType>>(hwnd, Device, DeviceContext, ID::DEFAULT_SPACESHIP);
+	// 扁夯 快林急 葛胆 按眉 积己 //
+	// model 按眉 积己
+	loader = std::make_unique<Loader::PTN_DNSR_ModelLoaderClass>(ID::DEFAULT_SPACESHIP);
+	model = std::make_unique<ModelClass<PTN_VertexType>>(hwnd, Device, DeviceContext, ID::DEFAULT_SPACESHIP, loader);
 	assert(model);
+
+	// map俊 insert
 	m_ModelList.insert(std::make_pair(Graphic::Model::ID::DEFAULT_SPACESHIP, std::move(model)));
+	loader.reset();
 
-	model = new CubeModelClass(hwnd, Device, DeviceContext, CubeModelInfo, DirectX::XMFLOAT4(0.f, 1.f, 0.f, 1.f));
+	// cube 葛胆 按眉 积己 //
+	// model 按眉 积己
+	loader = std::make_unique<Loader::PTN_ModelLoaderClass>(ID::COLLISION);
+	model = std::make_unique<ModelClass<PTN_VertexType>>(hwnd, Device, DeviceContext, ID::COLLISION, loader);
 	assert(model);
+
+	// map俊 insert
 	m_ModelList.insert(std::make_pair(Graphic::Model::ID::COLLISION, model));
+	loader.reset();
 
 	return result;
 }

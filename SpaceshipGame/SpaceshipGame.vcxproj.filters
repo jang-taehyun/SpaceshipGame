@@ -38,27 +38,6 @@
     <Filter Include="Light">
       <UniqueIdentifier>{e3f9a0a2-cb03-4a0d-b1b3-509bf3d96848}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Model\Cube">
-      <UniqueIdentifier>{43de61e0-d73d-4a1f-b024-b2e7dce79e48}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model\Cube\CubeModelClass">
-      <UniqueIdentifier>{9d79f49c-43c5-4c82-96ec-2aeee070b467}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model\Cube\CubeShaderClass">
-      <UniqueIdentifier>{ae9de815-ae4f-4a3d-8482-a59490cb4251}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model\Shader">
-      <UniqueIdentifier>{3cb280fe-6c0a-49f4-b5f8-76497f04f653}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model\Shader\VertexShader">
-      <UniqueIdentifier>{195d6403-ca2f-4171-97e3-ef9386624936}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model\Shader\PixelShader">
-      <UniqueIdentifier>{4cc13100-384c-4da9-8b21-9fc33c37ee45}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model\ShaderClass">
-      <UniqueIdentifier>{e536d068-4c88-4f1d-99c6-3fa9d3bbbab8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Model\ModelClass">
       <UniqueIdentifier>{193cacbb-0aa9-481f-9fab-e2a6ec264955}</UniqueIdentifier>
     </Filter>
@@ -107,9 +86,6 @@
     <Filter Include="TimerClass">
       <UniqueIdentifier>{3df7ed79-e5f2-4743-bfb1-8881499d389d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\BaseScene">
-      <UniqueIdentifier>{4dc4adbc-2e37-479f-96b5-da1563c621ba}</UniqueIdentifier>
-    </Filter>
     <Filter Include="UI">
       <UniqueIdentifier>{64a20a66-22a4-4764-8639-ea400df12e13}</UniqueIdentifier>
     </Filter>
@@ -155,12 +131,6 @@
     <Filter Include="Object\Rotate\RotateClass">
       <UniqueIdentifier>{2d87847b-117f-4e2f-99ca-c78b13518f48}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Object\Collision">
-      <UniqueIdentifier>{6ff18a9d-ee6c-4589-bbed-2df641444493}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Object\Collision\CollisionClass">
-      <UniqueIdentifier>{d0a59b05-b414-423d-a754-8ad2c466fccc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Object\ActorManagerClass">
       <UniqueIdentifier>{f76564fc-c875-488a-bc4b-f72ebb04c305}</UniqueIdentifier>
     </Filter>
@@ -169,9 +139,6 @@
     </Filter>
     <Filter Include="Object\0. IObjectClass">
       <UniqueIdentifier>{f700590f-9ef5-45ee-a39d-ac7ad4006c01}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Object\Collision\0. ICollisionClass">
-      <UniqueIdentifier>{547d56bb-9a13-4d40-bbec-4bc1b73844d3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Object\Move\0. IMoveClass">
       <UniqueIdentifier>{763ed01c-234e-4ea4-8cc5-ce67575b9462}</UniqueIdentifier>
@@ -182,9 +149,6 @@
     <Filter Include="Model\ModelLoader">
       <UniqueIdentifier>{b1154401-1419-4efb-8cf7-89d069b523ef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Model\ModelLoader\0. ModelLoaderClass">
-      <UniqueIdentifier>{dbdff2af-ae92-4b91-b2e6-aeac7c3519a1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Model\ModelLoader\PTN_DNSR_ModelLoaderClass">
       <UniqueIdentifier>{07a5c658-31e7-422f-802c-608f06544422}</UniqueIdentifier>
     </Filter>
@@ -193,6 +157,42 @@
     </Filter>
     <Filter Include="Model\0. IModelClass">
       <UniqueIdentifier>{4547406d-403f-47d8-afdd-277c4549538c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\CollisionClass">
+      <UniqueIdentifier>{d0a59b05-b414-423d-a754-8ad2c466fccc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\ModelLoader\0. IModelLoaderClass">
+      <UniqueIdentifier>{e26e0064-9ee6-438e-a644-4042d29bf531}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\ModelLoader\1. ModelLoaderClass">
+      <UniqueIdentifier>{dbdff2af-ae92-4b91-b2e6-aeac7c3519a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\ModelLoader\PTN_ModelLoaderClass">
+      <UniqueIdentifier>{fe3904ce-729d-450a-80a9-d238b278dbd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{3cb280fe-6c0a-49f4-b5f8-76497f04f653}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\1. ShaderCode">
+      <UniqueIdentifier>{32a771a3-bd20-432c-af74-e719d2774bfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\1. ShaderCode\VertexShader">
+      <UniqueIdentifier>{195d6403-ca2f-4171-97e3-ef9386624936}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\1. ShaderCode\PixelShader">
+      <UniqueIdentifier>{4cc13100-384c-4da9-8b21-9fc33c37ee45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\1. ShaderClass">
+      <UniqueIdentifier>{e536d068-4c88-4f1d-99c6-3fa9d3bbbab8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\0. IShaderClass">
+      <UniqueIdentifier>{3f56ea2e-a7b0-4cad-9ef4-2591bb318c71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\MLC_ShaderClass">
+      <UniqueIdentifier>{ee8da3a8-ed32-4843-b380-b7e93aa0ce67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\1. SceneClass">
+      <UniqueIdentifier>{4dc4adbc-2e37-479f-96b5-da1563c621ba}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -260,16 +260,10 @@
       <Filter>Model\ModelManager</Filter>
     </ClInclude>
     <ClInclude Include="ShaderClass.h">
-      <Filter>Model\ShaderClass</Filter>
-    </ClInclude>
-    <ClInclude Include="CubeModelClass.h">
-      <Filter>Model\Cube\CubeModelClass</Filter>
+      <Filter>Shader\1. ShaderClass</Filter>
     </ClInclude>
     <ClInclude Include="TextureClass.h">
       <Filter>TextureClass</Filter>
-    </ClInclude>
-    <ClInclude Include="ColorShaderClass.h">
-      <Filter>Model\Cube\CubeShaderClass</Filter>
     </ClInclude>
     <ClInclude Include="ActorClass.h">
       <Filter>Object\ActorClass</Filter>
@@ -305,13 +299,10 @@
       <Filter>Object\MoveableObjectClass</Filter>
     </ClInclude>
     <ClInclude Include="CollisionClass.h">
-      <Filter>Object\Collision\CollisionClass</Filter>
+      <Filter>Object\CollisionClass</Filter>
     </ClInclude>
     <ClInclude Include="ComputeDirectionVectorClass.h">
       <Filter>Object\ComputeDirectionVectorClass</Filter>
-    </ClInclude>
-    <ClInclude Include="ICollisionClass.h">
-      <Filter>Object\Collision\0. ICollisionClass</Filter>
     </ClInclude>
     <ClInclude Include="TextManagerClass.h">
       <Filter>Text\TextManagerClass</Filter>
@@ -328,8 +319,8 @@
     <ClInclude Include="StartSceneClass.h">
       <Filter>Scene\StartSceneClass</Filter>
     </ClInclude>
-    <ClInclude Include="BaseSceneClass.h">
-      <Filter>Scene\BaseScene</Filter>
+    <ClInclude Include="SceneClass.h">
+      <Filter>Scene\1. SceneClass</Filter>
     </ClInclude>
     <ClInclude Include="UIClass.h">
       <Filter>UI\UIClass</Filter>
@@ -347,7 +338,7 @@
       <Filter>UI\UIManager</Filter>
     </ClInclude>
     <ClInclude Include="ModelLoaderClass.h">
-      <Filter>Model\ModelLoader\0. ModelLoaderClass</Filter>
+      <Filter>Model\ModelLoader\1. ModelLoaderClass</Filter>
     </ClInclude>
     <ClInclude Include="PTN_DNSR_ModelLoaderClass.h">
       <Filter>Model\ModelLoader\PTN_DNSR_ModelLoaderClass</Filter>
@@ -357,6 +348,18 @@
     </ClInclude>
     <ClInclude Include="IModelClass.h">
       <Filter>Model\0. IModelClass</Filter>
+    </ClInclude>
+    <ClInclude Include="IModelLoaderClass.h">
+      <Filter>Model\ModelLoader\0. IModelLoaderClass</Filter>
+    </ClInclude>
+    <ClInclude Include="PTN_ModelLoaderClass.h">
+      <Filter>Model\ModelLoader\PTN_ModelLoaderClass</Filter>
+    </ClInclude>
+    <ClInclude Include="IShaderClass.h">
+      <Filter>Shader\0. IShaderClass</Filter>
+    </ClInclude>
+    <ClInclude Include="MLC_ShaderClass.h">
+      <Filter>Shader\MLC_ShaderClass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -409,16 +412,10 @@
       <Filter>Model\ModelManager</Filter>
     </ClCompile>
     <ClCompile Include="ShaderClass.cpp">
-      <Filter>Model\ShaderClass</Filter>
-    </ClCompile>
-    <ClCompile Include="CubeModelClass.cpp">
-      <Filter>Model\Cube\CubeModelClass</Filter>
+      <Filter>Shader\1. ShaderClass</Filter>
     </ClCompile>
     <ClCompile Include="TextureClass.cpp">
       <Filter>TextureClass</Filter>
-    </ClCompile>
-    <ClCompile Include="ColorShaderClass.cpp">
-      <Filter>Model\Cube\CubeShaderClass</Filter>
     </ClCompile>
     <ClCompile Include="ActorClass.cpp">
       <Filter>Object\ActorClass</Filter>
@@ -454,13 +451,10 @@
       <Filter>Object\MoveableObjectClass</Filter>
     </ClCompile>
     <ClCompile Include="CollisionClass.cpp">
-      <Filter>Object\Collision\CollisionClass</Filter>
+      <Filter>Object\CollisionClass</Filter>
     </ClCompile>
     <ClCompile Include="ComputeDirectionVectorClass.cpp">
       <Filter>Object\ComputeDirectionVectorClass</Filter>
-    </ClCompile>
-    <ClCompile Include="ICollisionClass.cpp">
-      <Filter>Object\Collision\0. ICollisionClass</Filter>
     </ClCompile>
     <ClCompile Include="TextManagerClass.cpp">
       <Filter>Text\TextManagerClass</Filter>
@@ -477,8 +471,8 @@
     <ClCompile Include="StartSceneClass.cpp">
       <Filter>Scene\StartSceneClass</Filter>
     </ClCompile>
-    <ClCompile Include="BaseSceneClass.cpp">
-      <Filter>Scene\BaseScene</Filter>
+    <ClCompile Include="SceneClass.cpp">
+      <Filter>Scene\1. SceneClass</Filter>
     </ClCompile>
     <ClCompile Include="UIClass.cpp">
       <Filter>UI\UIClass</Filter>
@@ -496,7 +490,7 @@
       <Filter>UI\UIManager</Filter>
     </ClCompile>
     <ClCompile Include="ModelLoaderClass.cpp">
-      <Filter>Model\ModelLoader\0. ModelLoaderClass</Filter>
+      <Filter>Model\ModelLoader\1. ModelLoaderClass</Filter>
     </ClCompile>
     <ClCompile Include="PTN_DNSR_ModelLoaderClass.cpp">
       <Filter>Model\ModelLoader\PTN_DNSR_ModelLoaderClass</Filter>
@@ -506,6 +500,18 @@
     </ClCompile>
     <ClCompile Include="IModelClass.cpp">
       <Filter>Model\0. IModelClass</Filter>
+    </ClCompile>
+    <ClCompile Include="IModelLoaderClass.cpp">
+      <Filter>Model\ModelLoader\0. IModelLoaderClass</Filter>
+    </ClCompile>
+    <ClCompile Include="PTN_ModelLoaderClass.cpp">
+      <Filter>Model\ModelLoader\PTN_ModelLoaderClass</Filter>
+    </ClCompile>
+    <ClCompile Include="IShaderClass.cpp">
+      <Filter>Shader\0. IShaderClass</Filter>
+    </ClCompile>
+    <ClCompile Include="MLC_ShaderClass.cpp">
+      <Filter>Shader\MLC_ShaderClass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -523,52 +529,52 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\pixel\alphamap.ps">
-      <Filter>Model\Shader\PixelShader</Filter>
+      <Filter>Shader\1. ShaderCode\PixelShader</Filter>
     </None>
     <None Include="shader\pixel\color.ps">
-      <Filter>Model\Shader\PixelShader</Filter>
+      <Filter>Shader\1. ShaderCode\PixelShader</Filter>
     </None>
     <None Include="shader\pixel\font.ps">
-      <Filter>Model\Shader\PixelShader</Filter>
+      <Filter>Shader\1. ShaderCode\PixelShader</Filter>
     </None>
     <None Include="shader\pixel\light.ps">
-      <Filter>Model\Shader\PixelShader</Filter>
+      <Filter>Shader\1. ShaderCode\PixelShader</Filter>
     </None>
     <None Include="shader\pixel\lightmap.ps">
-      <Filter>Model\Shader\PixelShader</Filter>
+      <Filter>Shader\1. ShaderCode\PixelShader</Filter>
     </None>
     <None Include="shader\pixel\multitexture.ps">
-      <Filter>Model\Shader\PixelShader</Filter>
+      <Filter>Shader\1. ShaderCode\PixelShader</Filter>
     </None>
     <None Include="shader\pixel\texture.ps">
-      <Filter>Model\Shader\PixelShader</Filter>
+      <Filter>Shader\1. ShaderCode\PixelShader</Filter>
     </None>
     <None Include="shader\vertex\alphamap.vs">
-      <Filter>Model\Shader\VertexShader</Filter>
+      <Filter>Shader\1. ShaderCode\VertexShader</Filter>
     </None>
     <None Include="shader\vertex\color.vs">
-      <Filter>Model\Shader\VertexShader</Filter>
+      <Filter>Shader\1. ShaderCode\VertexShader</Filter>
     </None>
     <None Include="shader\vertex\font.vs">
-      <Filter>Model\Shader\VertexShader</Filter>
+      <Filter>Shader\1. ShaderCode\VertexShader</Filter>
     </None>
     <None Include="shader\vertex\light.vs">
-      <Filter>Model\Shader\VertexShader</Filter>
+      <Filter>Shader\1. ShaderCode\VertexShader</Filter>
     </None>
     <None Include="shader\vertex\lightmap.vs">
-      <Filter>Model\Shader\VertexShader</Filter>
+      <Filter>Shader\1. ShaderCode\VertexShader</Filter>
     </None>
     <None Include="shader\vertex\multitexture.vs">
-      <Filter>Model\Shader\VertexShader</Filter>
+      <Filter>Shader\1. ShaderCode\VertexShader</Filter>
     </None>
     <None Include="shader\vertex\texture.vs">
-      <Filter>Model\Shader\VertexShader</Filter>
+      <Filter>Shader\1. ShaderCode\VertexShader</Filter>
     </None>
     <None Include="shader\pixel\Spaceship.ps">
-      <Filter>Model\Shader\PixelShader</Filter>
+      <Filter>Shader\1. ShaderCode\PixelShader</Filter>
     </None>
     <None Include="shader\vertex\Spaceship.vs">
-      <Filter>Model\Shader\VertexShader</Filter>
+      <Filter>Shader\1. ShaderCode\VertexShader</Filter>
     </None>
     <None Include="ClassDiagram.cd" />
   </ItemGroup>

@@ -13,7 +13,6 @@ namespace Object
 	class GameObjectClass : public IObjectClass
 	{
 	public:
-		GameObjectClass() = default;
 		explicit GameObjectClass(const AffineInfo& affine);
 		virtual ~GameObjectClass() = default;
 

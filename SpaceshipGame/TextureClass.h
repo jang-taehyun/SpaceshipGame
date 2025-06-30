@@ -22,7 +22,7 @@ namespace Graphic
 			TextureClass(TextureClass&& other) noexcept;
 			virtual ~TextureClass() = default;
 
-			inline const ID3D11ShaderResourceView* GetTexture() const { return m_Texture.Get(); }
+			inline ID3D11ShaderResourceView* GetTexture() const { return m_Texture.Get(); }
 
 			TextureClass& operator=(const TextureClass& other);
 			TextureClass& operator=(TextureClass&& other) noexcept;

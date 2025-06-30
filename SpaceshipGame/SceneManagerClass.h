@@ -1,8 +1,13 @@
 #pragma once
 
-class InputClass;
-class CameraClass;
-class ActorManagerClass;
+namespace System { class InputClass; }
+namespace Sound { class SoundClass; }
+namespace Object
+{
+	class CameraClass;
+	class ActorManagerClass;
+}
+namespace Scene { class ISceneClass; }
 
 namespace Scene
 {
@@ -13,27 +18,30 @@ namespace Scene
 		virtual ~SceneManagerClass();
 
 	public:
-		HRESULT Frame(const ActorManagerClass* actor_manager, const CameraClass* camera, const InputClass* input, float frame_time);
-		const std::wstring& GetSceneString() const { return m_SceneString; }
+		HRESULT Frame(const System::InputClass* input, float frame_time);
 
 	private:
-		HRESULT ProcessCamera(CameraClass* const& camera, const InputClass* const& input, const float& frame_time);
-		HRESULT ProcessActor(ActorManagerClass* const& actor_manager, const InputClass* const& input, const float& frame_time);
+		HRESULT ChangeScene();
+
+	private:
+		HRESULT ProcessCamera(const Object::CameraClass* camera, const System::InputClass* input, float frame_time);
+		HRESULT ProcessActor(const Object::ActorManagerClass* actor_manager, const System::InputClass* input, float frame_time);
 		void ProcessSceneInfo();
 
+		void UpdateCameraFrameTime(const Object::CameraClass* camera, float frame_time);
+		HRESULT UpdateCameraAffine(const Object::CameraClass* camera, const System::InputClass* input);
+		void UpdateObjectFrameTime(Object::ActorManagerClass* const& actor_manager, const float& frame_time);
+		HRESULT UpdateActorCollisionState(Object::ActorManagerClass* const& actor_manager, const System::InputClass* const& input);
+		HRESULT UpdateActorAffine(Object::ActorManagerClass* const& actor_manager, const InputClass* const& input);
+
 	private:
-		void UpdateCameraFrameTime(CameraClass* const& camera, const float& frame_time);
-		HRESULT UpdateCameraAffine(CameraClass* const& camera, const InputClass* const& input);
-		void UpdateObjectFrameTime(ActorManagerClass* const& actor_manager, const float& frame_time);
-		HRESULT UpdateActorCollisionState(ActorManagerClass* const& actor_manager, const InputClass* const& input);
-		HRESULT UpdateActorAffine(ActorManagerClass* const& actor_manager, const InputClass* const& input);
+		bool m_IsShowingCursor = true;
+		std::unique_ptr<Sound::SoundClass> m_Sound = nullptr;
+
 
 	private:
 		static bool IsInitialize;
-
-		bool m_IsShowingCursor = true;
-		std::wstring m_SceneString = _T("");
-		SceneState m_SceneState = SceneState::NONE;
+		std::unique_ptr<Scene::ISceneClass> m_Scene = nullptr;
 
 	public:
 		SceneManagerClass(const SceneManagerClass& other) = delete;

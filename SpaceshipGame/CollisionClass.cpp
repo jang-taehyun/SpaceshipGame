@@ -2,7 +2,7 @@
 #include "TypeConverterClass.h"
 #include "CollisionClass.h"
 
-Object::CollisionClass::CollisionClass(float range) : m_Range(range) {}
+Object::CollisionClass::CollisionClass(const AffineInfo& affine, float range) : GameObjectClass(affine), m_Range(range) {}
 
 DirectX::ContainmentType Object::CollisionClass::GetCollideState(const AffineInfo& affine)
 {
@@ -39,8 +39,7 @@ DirectX::ContainmentType Object::CollisionClass::GetCollideState(DirectX::XMFLOA
 
 	// ray의 forward vector 검사
 	vector = DirectX::XMLoadFloat4(&forward);
-	if (DirectX::XMVector3Equal(vector, DirectX::XMVectorZero()))
-		return DirectX::ContainmentType::DISJOINT;
+	assert(DirectX::XMVector3Equal(vector, DirectX::XMVectorZero()));
 	origin = DirectX::XMLoadFloat4(&position);
 
 	// 자신의 OBB 박스 설정 //

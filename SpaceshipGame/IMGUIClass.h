@@ -1,15 +1,20 @@
 #pragma once
 
-// IMGUI 관련 //
-#pragma comment(lib, "IMGUI_library.lib")
-#include <imgui.h>
-#include <imgui_impl_win32.h>
-#include <imgui_impl_dx11.h>
+// ImGui 관련 //
+#pragma comment(lib, "ImGui.lib")
 
-class Object::IObjectClass;
-class Sound::SoundClass;
-class LightClass;
-class Object::ActorManagerClass;
+#include <imgui.h>
+#include <backends/imgui_impl_win32.h>
+#include <backends/imgui_impl_dx11.h>
+
+namespace Graphic { class LightClass; }
+namespace Sound { class Sound::SoundClass; }
+namespace Object
+{
+	class Object::IObjectClass;
+	class Object::ActorManagerClass;
+}
+
 
 namespace Graphic
 {
@@ -18,13 +23,13 @@ namespace Graphic
 	class IMGUIClass
 	{
 	public:
-		IMGUIClass(HWND hwnd, const ID3D11Device* Device, const ID3D11DeviceContext* DeivceContext);
+		IMGUIClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeivceContext);
 		virtual ~IMGUIClass();
 
-		void Render(Object::ActorManagerClass* actor_manager, LightClass* light, Sound::SoundClass* sound, Object::IObjectClass* camera, int fps, int cpu_usage);
+		void Render(Object::ActorManagerClass* actor_manager, Graphic::LightClass* light, Sound::SoundClass* sound, Object::IObjectClass* camera, int fps, int cpu_usage);
 
 	private:
-		void Initialize(HWND hwnd, const ID3D11Device* Device, const ID3D11DeviceContext* DeivceContext);
+		void Initialize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeivceContext);
 		void Shutdown();
 
 		void SetUI(Object::ActorManagerClass* actor_manager, LightClass* light, Sound::SoundClass* sound, Object::IObjectClass* camera, int fps, int cpu_usage);

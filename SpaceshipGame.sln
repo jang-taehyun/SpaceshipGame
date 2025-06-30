@@ -5,13 +5,12 @@ VisualStudioVersion = 17.14.36203.30
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpaceshipGame", "SpaceshipGame\SpaceshipGame.vcxproj", "{053D3EF4-3512-4522-B598-4F1557B5357A}"
 	ProjectSection(ProjectDependencies) = postProject
-		{2C7AAC68-446B-4266-B509-048B55B8ADC6} = {2C7AAC68-446B-4266-B509-048B55B8ADC6}
 		{E0B52AE7-E160-4D32-BF3F-910B785E5A8E} = {E0B52AE7-E160-4D32-BF3F-910B785E5A8E}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IMGUI_library", "IMGUI_library\IMGUI_library.vcxproj", "{2C7AAC68-446B-4266-B509-048B55B8ADC6}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTK_Desktop_2022", "DirectXTK\DirectXTK_Desktop_2022.vcxproj", "{E0B52AE7-E160-4D32-BF3F-910B785E5A8E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGui", "IMGUI_Library\ImGui\ImGui.vcxproj", "{85152E01-1601-4ACF-8E37-391996CBADC7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,14 +28,6 @@ Global
 		{053D3EF4-3512-4522-B598-4F1557B5357A}.Release|x64.Build.0 = Release|x64
 		{053D3EF4-3512-4522-B598-4F1557B5357A}.Release|x86.ActiveCfg = Release|Win32
 		{053D3EF4-3512-4522-B598-4F1557B5357A}.Release|x86.Build.0 = Release|Win32
-		{2C7AAC68-446B-4266-B509-048B55B8ADC6}.Debug|x64.ActiveCfg = Debug|x64
-		{2C7AAC68-446B-4266-B509-048B55B8ADC6}.Debug|x64.Build.0 = Debug|x64
-		{2C7AAC68-446B-4266-B509-048B55B8ADC6}.Debug|x86.ActiveCfg = Debug|Win32
-		{2C7AAC68-446B-4266-B509-048B55B8ADC6}.Debug|x86.Build.0 = Debug|Win32
-		{2C7AAC68-446B-4266-B509-048B55B8ADC6}.Release|x64.ActiveCfg = Release|x64
-		{2C7AAC68-446B-4266-B509-048B55B8ADC6}.Release|x64.Build.0 = Release|x64
-		{2C7AAC68-446B-4266-B509-048B55B8ADC6}.Release|x86.ActiveCfg = Release|Win32
-		{2C7AAC68-446B-4266-B509-048B55B8ADC6}.Release|x86.Build.0 = Release|Win32
 		{E0B52AE7-E160-4D32-BF3F-910B785E5A8E}.Debug|x64.ActiveCfg = Debug|x64
 		{E0B52AE7-E160-4D32-BF3F-910B785E5A8E}.Debug|x64.Build.0 = Debug|x64
 		{E0B52AE7-E160-4D32-BF3F-910B785E5A8E}.Debug|x86.ActiveCfg = Debug|Win32
@@ -45,6 +36,14 @@ Global
 		{E0B52AE7-E160-4D32-BF3F-910B785E5A8E}.Release|x64.Build.0 = Release|x64
 		{E0B52AE7-E160-4D32-BF3F-910B785E5A8E}.Release|x86.ActiveCfg = Release|Win32
 		{E0B52AE7-E160-4D32-BF3F-910B785E5A8E}.Release|x86.Build.0 = Release|Win32
+		{85152E01-1601-4ACF-8E37-391996CBADC7}.Debug|x64.ActiveCfg = Debug|x64
+		{85152E01-1601-4ACF-8E37-391996CBADC7}.Debug|x64.Build.0 = Debug|x64
+		{85152E01-1601-4ACF-8E37-391996CBADC7}.Debug|x86.ActiveCfg = Debug|Win32
+		{85152E01-1601-4ACF-8E37-391996CBADC7}.Debug|x86.Build.0 = Debug|Win32
+		{85152E01-1601-4ACF-8E37-391996CBADC7}.Release|x64.ActiveCfg = Release|x64
+		{85152E01-1601-4ACF-8E37-391996CBADC7}.Release|x64.Build.0 = Release|x64
+		{85152E01-1601-4ACF-8E37-391996CBADC7}.Release|x86.ActiveCfg = Release|Win32
+		{85152E01-1601-4ACF-8E37-391996CBADC7}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

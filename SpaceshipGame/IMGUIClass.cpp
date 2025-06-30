@@ -18,21 +18,12 @@
 #include "IMGUIClass.h"
 
 bool Graphic::IMGUIClass::IsInitialize = false;
-static ErrorContent e;
 
-Graphic::IMGUIClass::IMGUIClass(HWND hwnd, const ID3D11Device* Device, const ID3D11DeviceContext* DeivceContext)
+Graphic::IMGUIClass::IMGUIClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeivceContext)
 {
 	HRESULT result = S_OK;
 
-	// 에러 메세지 초기화 //
-	e.title = _T("IMGUIClass Constructor");
-
-	if (IsInitialize)
-	{
-		e.contents = _T("이미 IMGUIClass 인스턴스가 존재합니다.");
-		e.errorCode = E_FAIL;
-		throw e;
-	}
+	assert(IsInitialize);
 
 	Initialize(hwnd, Device, DeivceContext);
 	IsInitialize = true;
@@ -44,13 +35,10 @@ Graphic::IMGUIClass::~IMGUIClass()
 	IsInitialize = false;
 }
 
-void Graphic::IMGUIClass::Initialize(HWND hwnd, const ID3D11Device* Device, const ID3D11DeviceContext* DeivceContext)
+void Graphic::IMGUIClass::Initialize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeivceContext)
 {
-	ImVec2 cur;
+	ImVec2 cur = {};
 	m_WindowsCount = MaxIMGUIWindowsCount;
-
-	// 에러 메세지 초기화 //
-	e.title = _T("IMGUIClass Initialize()");
 
 	// IMGUI 초기화 //
 	IMGUI_CHECKVERSION();
@@ -149,7 +137,7 @@ void Graphic::IMGUIClass::SetCameraInfo(const std::string& title, int IMGUI_Wind
 {
 	bool IsPress = false;
 	std::string contents;
-	DirectX::XMFLOAT4 value;
+	DirectX::XMFLOAT4 value = {};
 
 	// 카메라 위치, 회전 UI //
 	ImGui::SetNextWindowPos(m_WindowsPosition[IMGUI_Window_idx], ImGuiCond_Appearing);
@@ -294,7 +282,7 @@ void Graphic::IMGUIClass::SetActorInfo(const std::string& title, int IMGUI_Windo
 {
 	float value[4] = { 0.f, };
 	bool IsPress = false;
-	float speed;
+	float speed = 0.f;
 
 	// actor affine 관련 UI //
 	ImGui::SetNextWindowPos(m_WindowsPosition[IMGUI_Window_idx], ImGuiCond_Appearing);

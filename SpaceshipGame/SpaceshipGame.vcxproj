@@ -80,8 +80,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)assimp\build\include;$(SolutionDir)assimp\include;$(SolutionDir)DirectXTK\Inc;$(SolutionDir)IMGUI_library\header;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)assimp\build\lib\Debug;$(SolutionDir)assimp\build\bin\Debug;$(SolutionDir)DirectXTK\Bin\Desktop_2022\x64\Debug;$(SolutionDir)IMGUI_library\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)assimp\build\include;$(SolutionDir)assimp\include;$(SolutionDir)DirectXTK\Inc;$(SolutionDir)imgui;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)assimp\build\lib\Debug;$(SolutionDir)assimp\build\bin\Debug;$(SolutionDir)DirectXTK\Bin\Desktop_2022\x64\Debug;$(SolutionDir)IMGUI_Library\ImGui\lib\x64\Debug;$(LibraryPath)</LibraryPath>
     <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -157,19 +157,18 @@
     <ClInclude Include="ActorClass.h" />
     <ClInclude Include="ActorManagerClass.h" />
     <ClInclude Include="BackgroundClass.h" />
-    <ClInclude Include="BaseSceneClass.h" />
+    <ClInclude Include="SceneClass.h" />
     <ClInclude Include="CameraClass.h" />
     <ClInclude Include="ComputeDirectionVectorClass.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="CPUClass.h" />
-    <ClInclude Include="CubeModelClass.h" />
     <ClInclude Include="D3DClass.h" />
     <ClInclude Include="DxDefine.h" />
     <ClInclude Include="FPSClass.h" />
     <ClInclude Include="FrustumClass.h" />
     <ClInclude Include="GraphicsClass.h" />
-    <ClInclude Include="ICollisionClass.h" />
     <ClInclude Include="IModelClass.h" />
+    <ClInclude Include="IModelLoaderClass.h" />
     <ClInclude Include="IMoveClass.h" />
     <ClInclude Include="IObjectClass.h" />
     <ClInclude Include="IMGUIClass.h" />
@@ -177,17 +176,19 @@
     <ClInclude Include="IRotateClass.h" />
     <ClInclude Include="CollisionClass.h" />
     <ClInclude Include="ISceneClass.h" />
+    <ClInclude Include="IShaderClass.h" />
     <ClInclude Include="ITextClass.h" />
     <ClInclude Include="IUIClass.h" />
+    <ClInclude Include="MLC_ShaderClass.h" />
     <ClInclude Include="ModelLoaderClass.h" />
     <ClInclude Include="MoveableObjectClass.h" />
     <ClInclude Include="MoveClass.h" />
     <ClInclude Include="LightClass.h" />
     <ClInclude Include="ModelClass.h" />
     <ClInclude Include="ModelManagerClass.h" />
-    <ClInclude Include="ColorShaderClass.h" />
     <ClInclude Include="PTN_DNSR_ModelLoaderClass.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="PTN_ModelLoaderClass.h" />
     <ClInclude Include="RotateClass.h" />
     <ClInclude Include="SceneManagerClass.h" />
     <ClInclude Include="Resource.h" />
@@ -213,17 +214,16 @@
     <ClCompile Include="ActorClass.cpp" />
     <ClCompile Include="ActorManagerClass.cpp" />
     <ClCompile Include="BackgroundClass.cpp" />
-    <ClCompile Include="BaseSceneClass.cpp" />
+    <ClCompile Include="SceneClass.cpp" />
     <ClCompile Include="CameraClass.cpp" />
     <ClCompile Include="ComputeDirectionVectorClass.cpp" />
     <ClCompile Include="CPUClass.cpp" />
-    <ClCompile Include="CubeModelClass.cpp" />
     <ClCompile Include="D3DClass.cpp" />
     <ClCompile Include="FPSClass.cpp" />
     <ClCompile Include="FrustumClass.cpp" />
     <ClCompile Include="GraphicsClass.cpp" />
-    <ClCompile Include="ICollisionClass.cpp" />
     <ClCompile Include="IModelClass.cpp" />
+    <ClCompile Include="IModelLoaderClass.cpp" />
     <ClCompile Include="IMoveClass.cpp" />
     <ClCompile Include="IObjectClass.cpp" />
     <ClCompile Include="IMGUIClass.cpp" />
@@ -231,15 +231,16 @@
     <ClCompile Include="IRotateClass.cpp" />
     <ClCompile Include="CollisionClass.cpp" />
     <ClCompile Include="ISceneClass.cpp" />
+    <ClCompile Include="IShaderClass.cpp" />
     <ClCompile Include="ITextClass.cpp" />
     <ClCompile Include="IUIClass.cpp" />
+    <ClCompile Include="MLC_ShaderClass.cpp" />
     <ClCompile Include="ModelLoaderClass.cpp" />
     <ClCompile Include="MoveableObjectClass.cpp" />
     <ClCompile Include="MoveClass.cpp" />
     <ClCompile Include="LightClass.cpp" />
     <ClCompile Include="ModelClass.cpp" />
     <ClCompile Include="ModelManagerClass.cpp" />
-    <ClCompile Include="ColorShaderClass.cpp" />
     <ClCompile Include="PTN_DNSR_ModelLoaderClass.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -248,6 +249,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PTN_ModelLoaderClass.cpp" />
     <ClCompile Include="RotateClass.cpp" />
     <ClCompile Include="SceneManagerClass.cpp" />
     <ClCompile Include="ShaderClass.cpp" />

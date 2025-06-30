@@ -134,11 +134,13 @@ namespace Graphic
 
 	namespace Shader
 	{
+		// shader ID //
 		enum class ID
 		{
 			DEFAULT, ALPHA_MAP, TEXTURE, MULTI_TEXTURE, LIGHT, LIGHT_MAP, SPACESHIP, CUBE,
 		};
 
+		// File info //
 		const ShaderFileInfo AlphaMapShaderInfo =
 		{
 			_T("./shader/vertex/alphamap.vs"),
@@ -203,6 +205,39 @@ namespace Graphic
 			{ ID::LIGHT_MAP, LightMapShaderInfo },
 			{ ID::SPACESHIP, SpaceshipShaderInfo },
 			{ ID::CUBE, CubeShaderInfo },
+		};
+
+		// shader buffer type //
+		struct MatrixBufferType
+		{
+			DirectX::XMMATRIX World;
+			DirectX::XMMATRIX View;
+			DirectX::XMMATRIX Projection;
+		};
+
+		struct LightBufferType
+		{
+			DirectX::XMFLOAT4 AmbientColor;
+			DirectX::XMFLOAT4 DiffuseColor;
+			DirectX::XMFLOAT3 LightDirection;
+			float padding1 = 0.f;
+			DirectX::XMFLOAT4 SpecularColor;
+			float SpecularPower;
+			float padding2[3] = { 0.f, };
+		};
+
+		struct CameraBufferType
+		{
+			DirectX::XMFLOAT3 CameraPosition;
+			float padding;
+		};
+
+		// shader buffer ¸ðÀ½ //
+		struct MLC_ShaderBuffers
+		{
+			MatrixBufferType transform;
+			LightBufferType light;
+			CameraBufferType camera;
 		};
 	}
 }
