@@ -37,7 +37,7 @@ namespace Graphic
 			HRESULT LoadDDS(ID3D11Device* Device, const std::wstring& FileName);
 
 			std::unique_ptr<char> LoadTargaFile(const std::wstring& FileName, UINT& Height, UINT& Width);
-			HRESULT CreateShaderResourceView(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, std::unique_ptr<char> ImageData, UINT Height, UINT Width);
+			HRESULT CreateShaderResourceView(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, char* ImageData, UINT Height, UINT Width);
 
 		private:
 			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_Texture = nullptr;

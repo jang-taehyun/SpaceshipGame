@@ -108,9 +108,7 @@ HRESULT System::SystemClass::Frame()
 	if (FAILED(result))
 		return result;
 
-	result = m_SceneManager->Frame(m_Input.get(), m_FPS->GetFPS());
-	if (FAILED(result))
-		return result;
+	m_SceneManager->Frame(m_Input.get(), m_FPS->GetFPS());
 
 	result = m_Sound->Frame();
 	if (FAILED(result))

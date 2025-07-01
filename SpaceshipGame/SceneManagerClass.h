@@ -7,7 +7,11 @@ namespace Object
 	class CameraClass;
 	class ActorManagerClass;
 }
-namespace Scene { class ISceneClass; }
+namespace Scene
+{
+	class ISceneClass;
+	class SceneLoaderClass;
+}
 
 namespace Scene
 {
@@ -15,13 +19,13 @@ namespace Scene
 	{
 	public:
 		SceneManagerClass();
-		virtual ~SceneManagerClass();
+		~SceneManagerClass();
 
 	public:
-		HRESULT Frame(const System::InputClass* input, float frame_time);
+		void Frame(const System::InputClass* input, float frame_time);
 
 	private:
-		HRESULT ChangeScene();
+		void ChangeScene();
 
 	private:
 		HRESULT ProcessCamera(const Object::CameraClass* camera, const System::InputClass* input, float frame_time);
@@ -41,7 +45,8 @@ namespace Scene
 
 	private:
 		static bool IsInitialize;
-		std::unique_ptr<Scene::ISceneClass> m_Scene = nullptr;
+		std::unique_ptr<ISceneClass> m_Scene = nullptr;
+		std::unique_ptr<SceneLoaderClass> m_SceneLoader = nullptr;
 
 	public:
 		SceneManagerClass(const SceneManagerClass& other) = delete;

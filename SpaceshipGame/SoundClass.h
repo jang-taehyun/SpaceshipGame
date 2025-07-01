@@ -7,34 +7,19 @@ namespace Sound
 	class SoundClass
 	{
 	public:
-		SoundClass();
+		SoundClass(DirectX::AudioEngine* engine, ID SoundID, bool loop = false);
 		virtual ~SoundClass();
 
-		HRESULT Frame();
-
-		inline bool IsBackgoundPlay() const { return m_BackgroundSound->GetState() == DirectX::SoundState::PLAYING; }
-		inline bool IsEffectPlay() const { return m_EffectSound->GetState() == DirectX::SoundState::PLAYING; }
-
-		HRESULT PlayWaveFile(ID info) const;
-		HRESULT StopWaveFile(ID info) const;
+		void Play() const;
 
 	private:
-		HRESULT Initialize();
-		void Shutdown();
-
-		HRESULT InitializeAudioEngine();
-		HRESULT LoadWaveFile();
+		void LoadWaveFile(DirectX::AudioEngine* engine);
 
 	private:
-		static bool IsInitailize;
-
-		std::unique_ptr<DirectX::AudioEngine> m_AudioEngine;
-
+		ID m_ID = ID::NONE;
+		bool IsLoop = false;
 		std::unique_ptr<DirectX::SoundEffect> m_Effect;
-		std::unique_ptr<DirectX::SoundEffect> m_Background;
-
-		std::unique_ptr<DirectX::SoundEffectInstance> m_EffectSound;
-		std::unique_ptr<DirectX::SoundEffectInstance> m_BackgroundSound;
+		std::unique_ptr<DirectX::SoundEffectInstance> m_EffectInstance;
 
 	public:
 		SoundClass(const SoundClass& other) = delete;

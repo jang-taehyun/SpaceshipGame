@@ -1,8 +1,7 @@
 #pragma once
 
-#include <vector>
-
-class IUIClass;
+namespace System { class InputClass; }
+namespace UI { class IUIClass; }
 
 namespace UI
 {
@@ -13,7 +12,7 @@ namespace UI
 		virtual ~UIManagerClass();
 
 		void LoadUIs(Scene::SceneState scene_state);
-		void Update(bool IsLeftMouseButtonPressed) const;
+		void Update(const System::InputClass* input) const;
 
 	private:
 		void ReleaseUIs();

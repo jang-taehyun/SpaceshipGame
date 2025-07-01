@@ -3,22 +3,10 @@
 #include "UIManagerClass.h"
 
 bool UI::UIManagerClass::IsInitialize = false;
-static ErrorContent e;
 
 UI::UIManagerClass::UIManagerClass()
 {
-	HRESULT result = S_OK;
-
-	// 에러 메세지 초기화 //
-	e.title = _T("UIManagerClass Constructor");
-
-	if (IsInitialize)
-	{
-		e.contents = _T("이미 UIManagerClass 인스턴스가 존재합니다.");
-		e.errorCode = E_FAIL;
-		throw e;
-	}
-
+	assert(!IsInitialize);
 	IsInitialize = true;
 }
 
@@ -33,10 +21,10 @@ void UI::UIManagerClass::LoadUIs(Scene::SceneState scene_state)
 
 }
 
-void UI::UIManagerClass::Update(bool IsLeftMouseButtonPressed) const
+void UI::UIManagerClass::Update(const System::InputClass* input) const
 {
 	for (int i = 0; i < m_UIs.size(); ++i)
-		m_UIs[i]->Update(IsLeftMouseButtonPressed);
+		m_UIs[i]->Update(input);
 }
 
 void UI::UIManagerClass::ReleaseUIs()

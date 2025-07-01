@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "StartSceneClass.h"
+#include "SceneLoaderClass.h"
 #include "SceneManagerClass.h"
 
 bool Scene::SceneManagerClass::IsInitialize = false;
@@ -8,7 +9,9 @@ Scene::SceneManagerClass::SceneManagerClass()
 {
 	assert(IsInitialize);
 
-	m_Scene = std::make_unique<StartSceneClass>(SceneState::START, SceneState::INGAME);
+	m_SceneLoader = std::make_unique<SceneLoaderClass>();
+
+	m_Scene = std::move(m_SceneLoader->CreateScene(SceneState::START));
 	assert(m_Scene);
 
 	IsInitialize = true;
@@ -24,44 +27,24 @@ Scene::SceneManagerClass::~SceneManagerClass()
 	IsInitialize = false;
 }
 
-HRESULT Scene::SceneManagerClass::Frame(const System::InputClass* input, float frame_time)
+void Scene::SceneManagerClass::Frame(const System::InputClass* input, float frame_time)
 {
-	HRESULT result = S_OK;
-
 	if (m_Scene->IsSceneEnded())
+	{
 		ChangeScene();
-
-	m_Scene->Frame(input, frame_time);
-
-	return result;
+	}
+	else
+		m_Scene->Frame(input, frame_time);
 }
 
-HRESULT Scene::SceneManagerClass::ChangeScene()
+void Scene::SceneManagerClass::ChangeScene()
 {
-	HRESULT result = S_OK;
-	SceneState cur = m_Scene->GetNextSceneState();
-	SceneState next;
+	SceneState next = m_Scene->GetNextSceneState();
 
-	// scene 인스턴스 해제 //
 	m_Scene.reset();
 
-	// 다음 scene에 맞는 scene 인스턴스 생성 //
-	switch (cur)
-	{
-	case SceneState::START:
-		next = SceneState::INGAME;
-		m_Scene = std::make_unique<>(cur, next);
-		break;
-	case SceneState::INGAME:
-		next = SceneState::INGAME;
-		m_Scene = std::make_unique<StartSceneClass>(cur, next);
-		break;
-	default:
-		assert(false);
-	}
+	m_Scene = std::move(m_SceneLoader->CreateScene(next));
 	assert(m_Scene);
-
-	return result;
 }
 
 HRESULT Scene::SceneManagerClass::ProcessCamera(CameraClass* const& camera, const InputClass* const& input, const float& frame_time)

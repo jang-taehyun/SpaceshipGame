@@ -190,10 +190,12 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="PTN_ModelLoaderClass.h" />
     <ClInclude Include="RotateClass.h" />
+    <ClInclude Include="SceneLoaderClass.h" />
     <ClInclude Include="SceneManagerClass.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ShaderClass.h" />
     <ClInclude Include="SoundClass.h" />
+    <ClInclude Include="SoundManagerClass.h" />
     <ClInclude Include="SpaceshipGame.h" />
     <ClInclude Include="StartSceneClass.h" />
     <ClInclude Include="SystemClass.h" />
@@ -251,9 +253,11 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PTN_ModelLoaderClass.cpp" />
     <ClCompile Include="RotateClass.cpp" />
+    <ClCompile Include="SceneLoaderClass.cpp" />
     <ClCompile Include="SceneManagerClass.cpp" />
     <ClCompile Include="ShaderClass.cpp" />
     <ClCompile Include="SoundClass.cpp" />
+    <ClCompile Include="SoundManagerClass.cpp" />
     <ClCompile Include="StartSceneClass.cpp" />
     <ClCompile Include="SystemClass.cpp" />
     <ClCompile Include="TextClass.cpp" />

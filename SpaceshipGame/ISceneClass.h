@@ -17,6 +17,7 @@ namespace Scene
 		virtual inline std::unique_ptr<ISceneClass> Clone() const = 0;
 
 	protected:
+		virtual inline void SetNextScene(SceneState next) = 0;
 		virtual inline void SetSceneEnded() = 0;
 	};
 }

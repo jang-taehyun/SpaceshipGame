@@ -34,7 +34,7 @@ namespace Object
 	// collision 상태 정보 //
 	enum class CollisionState
 	{
-		NONE = 0, OBB_HIT = 1, RAY_HIT = 2,
+		NONE, OBB_HIT, RAY_HIT,
 	};
 }
 
@@ -44,7 +44,7 @@ namespace Scene
 {
 	enum class SceneState
 	{
-		NONE = 0, START = 1, LOADING = 2, LOGIN, MATCH, INGAME,
+		NONE, START, LOADING, LOGIN, MATCH, INGAME,
 	};
 }
 
@@ -55,7 +55,12 @@ namespace UI
 	// UI의 ID //
 	enum class ID
 	{
-		NONE = 0, START_BACKGROUND = 1, START_BUTTON = 2, LOADING_BACKGROUND = 4,
+		NONE, START_BACKGROUND, START_BUTTON, LOADING_BACKGROUND,
+	};
+
+	enum class State
+	{
+		NONE, ACTIVE, DEACTIVE, HOVER, ONCLICKED
 	};
 }
 
@@ -65,7 +70,7 @@ namespace Text
 {
 	enum class TextFlag
 	{
-		DEFAULT = 1,
+		DEFAULT,
 	};
 
 	// font 파일 정보 //
@@ -78,7 +83,7 @@ namespace Sound
 {
 	enum class ID
 	{
-		BACKGROUND, EFFECT,
+		NONE, BACKGROUND, EFFECT, HIT,
 	};
 
 	const std::map<ID, const std::wstring> SoundList =
@@ -96,8 +101,10 @@ namespace Graphic
 	{
 		enum class ID
 		{
+			NONE,
 			DEFAULT_SPACESHIP,
 			COLLISION,
+			ASTEROID,
 		};
 
 		const std::map<ID, const std::wstring> ModelList = {
@@ -120,7 +127,7 @@ namespace Graphic
 		// UI의 texture ID //
 		enum class UITextureID
 		{
-			NONE = 0, START_BACKGROUND = 1, START_BUTTON = 2, LOADING_BACKGROUND = 4,
+			NONE, START_BACKGROUND, START_BUTTON, LOADING_BACKGROUND,
 		};
 
 		// UI texture의 파일 정보 //
@@ -137,7 +144,7 @@ namespace Graphic
 		// shader ID //
 		enum class ID
 		{
-			DEFAULT, ALPHA_MAP, TEXTURE, MULTI_TEXTURE, LIGHT, LIGHT_MAP, SPACESHIP, CUBE,
+			NONE, DEFAULT, ALPHA_MAP, TEXTURE, MULTI_TEXTURE, LIGHT, LIGHT_MAP, SPACESHIP, CUBE,
 		};
 
 		// File info //

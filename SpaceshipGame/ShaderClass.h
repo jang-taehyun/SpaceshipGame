@@ -16,8 +16,10 @@ namespace Graphic
 			explicit ShaderClass(ID ShaderID);
 			virtual ~ShaderClass() = default;
 
+
 			// shader 객체 초기화 함수 //
 			virtual HRESULT Initialize(HWND hwnd, ID3D11Device* Device, const std::vector<std::string>& VertexDataSemantics) override;
+
 
 			// 렌더링 함수들 //
 			// 

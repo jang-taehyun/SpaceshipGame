@@ -10,9 +10,6 @@
     <Filter Include="InputClass">
       <UniqueIdentifier>{5f430cbf-7ff5-4b91-b373-d61465ca0a2e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SoundClass">
-      <UniqueIdentifier>{06399912-871c-4ba6-b921-ce80ecbcc14a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Default\리소스 파일">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -68,9 +65,6 @@
     <Filter Include="Text\TextManagerClass">
       <UniqueIdentifier>{1811e15d-182a-4003-acfb-7130b808f53a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Text\TextClass">
-      <UniqueIdentifier>{ac3c10fe-0906-439d-9f98-5886c7e4d60a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene">
       <UniqueIdentifier>{23ab21c9-df38-4029-affc-f68bcbc7f411}</UniqueIdentifier>
     </Filter>
@@ -88,9 +82,6 @@
     </Filter>
     <Filter Include="UI">
       <UniqueIdentifier>{64a20a66-22a4-4764-8639-ea400df12e13}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI\UIClass">
-      <UniqueIdentifier>{fa978969-405e-4c45-b51a-55111d050c5e}</UniqueIdentifier>
     </Filter>
     <Filter Include="UI\BackgroundClass">
       <UniqueIdentifier>{d0e8d5d5-7b01-490a-8d81-b9d780db12be}</UniqueIdentifier>
@@ -194,6 +185,27 @@
     <Filter Include="Scene\1. SceneClass">
       <UniqueIdentifier>{4dc4adbc-2e37-479f-96b5-da1563c621ba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\1. UIClass">
+      <UniqueIdentifier>{fa978969-405e-4c45-b51a-55111d050c5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Text\1. TextClass">
+      <UniqueIdentifier>{ac3c10fe-0906-439d-9f98-5886c7e4d60a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound">
+      <UniqueIdentifier>{06399912-871c-4ba6-b921-ce80ecbcc14a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound\SoundClass">
+      <UniqueIdentifier>{195c56a8-5d13-4637-acfe-61032bf76b5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound\SoundManagerClass">
+      <UniqueIdentifier>{31cd759a-f925-4fc7-9282-9361d6945a91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\SceneLoader">
+      <UniqueIdentifier>{01b8224c-b514-4184-ae31-0e66348d1575}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\SceneLoader\SceneLoaderClass">
+      <UniqueIdentifier>{9d956e3e-aba6-451a-999f-d62b6e81a747}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemClass.h">
@@ -213,9 +225,6 @@
     </ClInclude>
     <ClInclude Include="TimerClass.h">
       <Filter>TimerClass</Filter>
-    </ClInclude>
-    <ClInclude Include="SoundClass.h">
-      <Filter>SoundClass</Filter>
     </ClInclude>
     <ClInclude Include="D3DClass.h">
       <Filter>Graphics\D3DClass</Filter>
@@ -311,7 +320,7 @@
       <Filter>Text\0. ITextClass</Filter>
     </ClInclude>
     <ClInclude Include="TextClass.h">
-      <Filter>Text\TextClass</Filter>
+      <Filter>Text\1. TextClass</Filter>
     </ClInclude>
     <ClInclude Include="ISceneClass.h">
       <Filter>Scene\0. ISceneClass</Filter>
@@ -323,7 +332,7 @@
       <Filter>Scene\1. SceneClass</Filter>
     </ClInclude>
     <ClInclude Include="UIClass.h">
-      <Filter>UI\UIClass</Filter>
+      <Filter>UI\1. UIClass</Filter>
     </ClInclude>
     <ClInclude Include="BackgroundClass.h">
       <Filter>UI\BackgroundClass</Filter>
@@ -361,6 +370,15 @@
     <ClInclude Include="MLC_ShaderClass.h">
       <Filter>Shader\MLC_ShaderClass</Filter>
     </ClInclude>
+    <ClInclude Include="SoundClass.h">
+      <Filter>Sound\SoundClass</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundManagerClass.h">
+      <Filter>Sound\SoundManagerClass</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneLoaderClass.h">
+      <Filter>Scene\SceneLoader\SceneLoaderClass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -383,9 +401,6 @@
     </ClCompile>
     <ClCompile Include="TimerClass.cpp">
       <Filter>TimerClass</Filter>
-    </ClCompile>
-    <ClCompile Include="SoundClass.cpp">
-      <Filter>SoundClass</Filter>
     </ClCompile>
     <ClCompile Include="D3DClass.cpp">
       <Filter>Graphics\D3DClass</Filter>
@@ -463,7 +478,7 @@
       <Filter>Text\0. ITextClass</Filter>
     </ClCompile>
     <ClCompile Include="TextClass.cpp">
-      <Filter>Text\TextClass</Filter>
+      <Filter>Text\1. TextClass</Filter>
     </ClCompile>
     <ClCompile Include="ISceneClass.cpp">
       <Filter>Scene\0. ISceneClass</Filter>
@@ -475,7 +490,7 @@
       <Filter>Scene\1. SceneClass</Filter>
     </ClCompile>
     <ClCompile Include="UIClass.cpp">
-      <Filter>UI\UIClass</Filter>
+      <Filter>UI\1. UIClass</Filter>
     </ClCompile>
     <ClCompile Include="BackgroundClass.cpp">
       <Filter>UI\BackgroundClass</Filter>
@@ -512,6 +527,15 @@
     </ClCompile>
     <ClCompile Include="MLC_ShaderClass.cpp">
       <Filter>Shader\MLC_ShaderClass</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundClass.cpp">
+      <Filter>Sound\SoundClass</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundManagerClass.cpp">
+      <Filter>Sound\SoundManagerClass</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneLoaderClass.cpp">
+      <Filter>Scene\SceneLoader\SceneLoaderClass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

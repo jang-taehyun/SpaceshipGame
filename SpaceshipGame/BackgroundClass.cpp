@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "BackgroundClass.h"
 
-UI::BackgroundClass::BackgroundClass(Graphic::Texture::UITextureID  ID, DirectX::XMFLOAT4 color) : m_UITextureID(ID), m_Color(color)
+UI::BackgroundClass::BackgroundClass(Graphic::Texture::UITextureID ID, DirectX::XMFLOAT4 color) : UIClass(ID, DirectX::XMFLOAT2(0.f, 0.f), color)
 {
-	RECT rect;
+	RECT rect = {};
 	int width = 0, height = 0, PosX = 0, PosY = 0;
 
 	if (System::FULL_SCREEN)
@@ -22,7 +22,7 @@ UI::BackgroundClass::BackgroundClass(Graphic::Texture::UITextureID  ID, DirectX:
 	PosX = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
 	PosY = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
 
-	m_Position = DirectX::XMFLOAT2(static_cast<float>(PosX), static_cast<float>(PosY));
+	SetPosition(DirectX::XMFLOAT2(static_cast<float>(PosX), static_cast<float>(PosY)));
 }
 
-void UI::BackgroundClass::Update(bool IsLeftMouseButtonPressed) {}
+void UI::BackgroundClass::Update(const System::InputClass* input) {}
