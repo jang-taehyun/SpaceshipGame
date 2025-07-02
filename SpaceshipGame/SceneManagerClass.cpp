@@ -19,20 +19,13 @@ Scene::SceneManagerClass::SceneManagerClass()
 
 Scene::SceneManagerClass::~SceneManagerClass()
 {
-	// 마우스 커서를 보이게 하고 위치를 중앙으로 되돌리기 //
-	if (!m_IsShowingCursor)
-		ShowCursor(true);
-	SetCursorPos(GetSystemMetrics(SM_CXSCREEN) / 2, GetSystemMetrics(SM_CYSCREEN) / 2);
-
 	IsInitialize = false;
 }
 
 void Scene::SceneManagerClass::Frame(const System::InputClass* input, float frame_time)
 {
 	if (m_Scene->IsSceneEnded())
-	{
 		ChangeScene();
-	}
 	else
 		m_Scene->Frame(input, frame_time);
 }

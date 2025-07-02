@@ -38,10 +38,6 @@ namespace Scene
 		HRESULT UpdateActorCollisionState(Object::ActorManagerClass* const& actor_manager, const System::InputClass* const& input);
 		HRESULT UpdateActorAffine(Object::ActorManagerClass* const& actor_manager, const InputClass* const& input);
 
-	private:
-		bool m_IsShowingCursor = true;
-		std::unique_ptr<Sound::SoundClass> m_Sound = nullptr;
-
 
 	private:
 		static bool IsInitialize;

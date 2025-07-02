@@ -6,7 +6,7 @@ namespace Scene { class ISceneClass; }
 
 namespace Scene
 {
-	std::unique_ptr<ISceneClass> CreateStartScene(SceneState cur, SceneState next);
+	std::unique_ptr<ISceneClass> CreateStartScene(SceneState cur);
 
 	class SceneLoaderClass
 	{
@@ -14,11 +14,11 @@ namespace Scene
 		SceneLoaderClass();
 		virtual ~SceneLoaderClass();
 
-		std::unique_ptr<ISceneClass> CreateScene(SceneState cur, SceneState next);
+		std::unique_ptr<ISceneClass> CreateScene(SceneState cur);
 
 	private:
 		static bool IsInitailize;
 
-		std::map<SceneState, std::function<std::unique_ptr<ISceneClass>(SceneState, SceneState)>> m_Creator;
+		std::map<SceneState, std::function<std::unique_ptr<ISceneClass>(SceneState)>> m_Creator;
 	};
 }

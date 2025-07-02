@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "InputClass.h"
 #include "GraphicsClass.h"
-#include "SoundClass.h"
 #include "FPSClass.h"
 #include "CPUClass.h"
 #include "TimerClass.h"
@@ -12,12 +11,9 @@ bool System::SystemClass::IsInitialize = false;
 
 System::SystemClass::SystemClass()
 {	
-	HRESULT result = S_OK;
-
 	assert(!IsInitialize);
 
-	result = Initialize();
-
+	Initialize();
 	IsInitialize = true;
 }
 
@@ -27,9 +23,8 @@ System::SystemClass::~SystemClass()
 	IsInitialize = false;
 }
 
-HRESULT System::SystemClass::Initialize()
+void System::SystemClass::Initialize()
 {
-	HRESULT result = S_OK;
 	int ScreenWidth = WIDTH;
 	int ScreenHeight = HEIGHT;
 
@@ -43,9 +38,6 @@ HRESULT System::SystemClass::Initialize()
 	m_Graphics = std::make_unique<Graphic::GraphicsClass>(ScreenWidth, ScreenHeight, m_hwnd);
 	assert(!m_Graphics);
 
-	m_Sound = std::make_unique<Sound::SoundClass>();
-	assert(!m_Sound);
-
 	m_FPS = std::make_unique<FPSClass>();
 	assert(!m_FPS);
 
@@ -57,8 +49,6 @@ HRESULT System::SystemClass::Initialize()
 
 	m_SceneManager = std::make_unique<Scene::SceneManagerClass>();
 	assert(!m_SceneManager);
-
-	return result;
 }
 
 void System::SystemClass::Run()
@@ -95,11 +85,8 @@ LRESULT System::SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam,
 	return DefWindowProc(hwnd, umsg, wparam, lparam);
 }
 
-HRESULT System::SystemClass::Frame()
+void System::SystemClass::Frame()
 {
-	HRESULT result = S_OK;
-
-	// Timer, FPS, CPU, Input, Sound, Process의 Frame() 진행 //
 	m_Timer->Frame();
 	m_FPS->Frame();
 	m_CPU->Frame();
@@ -110,16 +97,7 @@ HRESULT System::SystemClass::Frame()
 
 	m_SceneManager->Frame(m_Input.get(), m_FPS->GetFPS());
 
-	result = m_Sound->Frame();
-	if (FAILED(result))
-		return result;
-
-	// Graphics의 Frame() 진행 //
-	result = m_Graphics->Frame(m_ActorManager, m_Sound, m_FPS->GetFPS(), (int)m_CPU->GetCPUPercentage(), m_ProcessManager->GetSceneString());
-	if (FAILED(result))
-		return result;
-
-	return result;
+	m_Graphics->Frame(m_ActorManager, m_Sound, m_FPS->GetFPS(), (int)m_CPU->GetCPUPercentage(), m_ProcessManager->GetSceneString());
 }
 
 void System::SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)

@@ -1,48 +1,46 @@
 #pragma once
 
-class D3DClass;
-class ModelManagerClass;
-class ActorManagerClass;
-class CameraClass;
-class TextRenderClass;
-class FrustumClass;
-class IMGUIClass;
-class LightClass;
-
-class InputClass;
-class SoundClass;
-
-class GraphicsClass
+namespace Graphic
 {
-public:
-	GraphicsClass(int ScreenWidth, int ScreenHeight, HWND hwnd);
-	virtual ~GraphicsClass();
+	class D3DClass;
+	class IMGUIClass;
+	class LightClass;
 
-	HRESULT Frame(ActorManagerClass* actor_manager, SoundClass* sound, int fps, int cpu_usage, const std::wstring& scene_info);
+	namespace Model { class ModelManagerClass; }
+}
 
-	inline const CameraClass* GetCamera() const { return m_Camera; }
+class FrustumClass;
 
-private:
-	HRESULT Initialize(int ScreenWidth, int ScreenHeight, HWND hwnd);
-	void Shutdown();
-	HRESULT Render(ActorManagerClass* actor_manager, SoundClass* sound, int fps, int cpu_usage, const std::wstring& scene_info);
+namespace Graphic
+{
+	class GraphicsClass
+	{
+	public:
+		GraphicsClass(int ScreenWidth, int ScreenHeight, HWND hwnd);
+		virtual ~GraphicsClass();
 
-private:
-	static bool IsInitialize;
+		void Frame(ActorManagerClass* actor_manager, SoundClass* sound, int fps, int cpu_usage, const std::wstring& scene_info);
 
-	D3DClass* m_D3D = nullptr;
+	private:
+		void Initialize(int ScreenWidth, int ScreenHeight, HWND hwnd);
+		HRESULT Render(ActorManagerClass* actor_manager, SoundClass* sound, int fps, int cpu_usage, const std::wstring& scene_info);
 
-	CameraClass* m_Camera = nullptr;
-	LightClass* m_Light = nullptr;
-	ModelManagerClass* m_ModelManager = nullptr;
-	
-	TextRenderClass* m_TextRender = nullptr;
-	FrustumClass* m_Frustum = nullptr;
-	IMGUIClass* m_IMGUI = nullptr;
+	private:
+		static bool IsInitialize;
 
-public:
-	GraphicsClass(const GraphicsClass& other) = delete;
-	GraphicsClass(GraphicsClass&& other) = delete;
-	GraphicsClass& operator=(const GraphicsClass& other) = delete;
-	GraphicsClass& operator=(GraphicsClass&& other) = delete;
-};
+		D3DClass* m_D3D = nullptr;
+
+		LightClass* m_Light = nullptr;
+		ModelManagerClass* m_ModelManager = nullptr;
+
+		TextRenderClass* m_TextRender = nullptr;
+		FrustumClass* m_Frustum = nullptr;
+		IMGUIClass* m_IMGUI = nullptr;
+
+	public:
+		GraphicsClass(const GraphicsClass& other) = delete;
+		GraphicsClass(GraphicsClass&& other) = delete;
+		GraphicsClass& operator=(const GraphicsClass& other) = delete;
+		GraphicsClass& operator=(GraphicsClass&& other) = delete;
+	};
+}

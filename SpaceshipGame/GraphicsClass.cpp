@@ -1,67 +1,32 @@
 #include "pch.h"
 
 #include "D3DClass.h"
-#include "CameraClass.h"
 #include "LightClass.h"
 
-#include "ColorClass.h"
-
-#include "ModelClass.h"
 #include "ModelManagerClass.h"
-
 #include "ActorManagerClass.h"
-#include "ActorClass.h"
-#include "PlayerClass.h"
 
-#include "AffineClass.h"
-#include "CollisionClass.h"
-
-#include "CubeModelClass.h"
-
-
-#include "InputClass.h"
-#include "SoundClass.h"
-
-#include "TextRenderClass.h"
 #include "FrustumClass.h"
 #include "IMGUIClass.h"
 
 #include "GraphicsClass.h"
 
-bool GraphicsClass::IsInitialize = false;
-static ErrorContent e;
+bool Graphic::GraphicsClass::IsInitialize = false;
 
-GraphicsClass::GraphicsClass(const int& ScreenWidth, const int& ScreenHeight, const HWND& hwnd)
+Graphic::GraphicsClass::GraphicsClass(int ScreenWidth, int ScreenHeight, HWND hwnd)
 {
-	HRESULT result = S_OK;
+	assert(!IsInitialize);
 
-	// 에러 메세지 초기화 //
-	e.title = _T("GraphicsClass Constructor");
-
-	if (IsInitialize)
-	{
-		e.contents = _T("이미 GraphicsClass 인스턴스가 존재합니다.");
-		e.errorCode = E_FAIL;
-		throw e;
-	}
-
-	result = Initialize(ScreenWidth, ScreenHeight, hwnd);
-	if (FAILED(result))
-	{
-		Shutdown();
-		throw e;
-	}
-
+	Initialize(ScreenWidth, ScreenHeight, hwnd);
 	IsInitialize = true;
 }
 
-GraphicsClass::~GraphicsClass()
+Graphic::GraphicsClass::~GraphicsClass()
 {
-	Shutdown();
 	IsInitialize = false;
 }
 
-HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeight, const HWND& hwnd)
+void Graphic::GraphicsClass::Initialize(int ScreenWidth, int ScreenHeight, HWND hwnd)
 {
 	HRESULT result = S_OK;
 	float ScalingFactor = 0.5f;
@@ -72,9 +37,6 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 	DirectX::XMFLOAT3 LightDirection = DirectX::XMFLOAT3(0.f, 0.f, 1.f);
 	DirectX::XMFLOAT4 SpecularColor = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);
 	float SpecularPower = 64.f;
-
-	// 에러 메세지 초기화 //
-	e.title = _T("GraphicsClass Initialize()");
 
 	// Direct3D 객체 생성 및 초기화 //
 	m_D3D = new D3DClass(ScreenWidth, ScreenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
@@ -144,61 +106,11 @@ HRESULT GraphicsClass::Initialize(const int& ScreenWidth, const int& ScreenHeigh
 		e.errorCode = E_FAIL;
 		return E_FAIL;
 	}
-
-	return result;
 }
 
-void GraphicsClass::Shutdown()
-{
-	if (m_Light)
-	{
-		delete m_Light;
-		m_Light = nullptr;
-	}
-
-	if (m_IMGUI)
-	{
-		delete m_IMGUI;
-		m_IMGUI = nullptr;
-	}
-
-	if (m_Frustum)
-	{
-		delete m_Frustum;
-		m_Frustum = nullptr;
-	}
-
-	if (m_TextRender)
-	{
-		delete m_TextRender;
-		m_TextRender = nullptr;
-	}
-
-	if (m_ModelManager)
-	{
-		delete m_ModelManager;
-		m_ModelManager = nullptr;
-	}
-
-	if (m_Camera)
-	{
-		delete m_Camera;
-		m_Camera = nullptr;
-	}
-
-	if (m_D3D)
-	{
-		delete m_D3D;
-		m_D3D = nullptr;
-	}
-}
-
-HRESULT GraphicsClass::Frame(ActorManagerClass* const& actor_manager, SoundClass* const& sound, const int& fps, const int& cpu_usage, const std::wstring& scene_info)
+void Graphic::GraphicsClass::Frame(ActorManagerClass* const& actor_manager, SoundClass* const& sound, const int& fps, const int& cpu_usage, const std::wstring& scene_info)
 {
 	HRESULT result = S_OK;
-
-	// 에러 메세지 초기화 //
-	e.title = _T("GraphicsClass Frame()");
 
 	// 렌더링 //
 	result = Render(actor_manager, sound, fps, cpu_usage, scene_info);
@@ -208,11 +120,9 @@ HRESULT GraphicsClass::Frame(ActorManagerClass* const& actor_manager, SoundClass
 		e.errorCode = result;
 		return result;
 	}
-
-	return result;
 }
 
-HRESULT GraphicsClass::Render(ActorManagerClass* const& actor_manager, SoundClass* const& sound, const int& fps, const int& cpu_usage, const std::wstring& scene_info)
+HRESULT Graphic::GraphicsClass::Render(ActorManagerClass* const& actor_manager, SoundClass* const& sound, const int& fps, const int& cpu_usage, const std::wstring& scene_info)
 {
 	HRESULT result = S_OK;
 	DirectX::XMMATRIX OrthoMatrix;

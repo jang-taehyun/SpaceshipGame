@@ -1,31 +1,13 @@
 #pragma once
 
-namespace Graphic
-{
-	class GraphicsClass;
-}
-
+namespace Graphic { class GraphicsClass; }
+namespace Scene { class SceneManagerClass; }
 namespace System
 {
 	class InputClass;
 	class FPSClass;
 	class CPUClass;
 	class TimerClass;
-}
-
-namespace Sound
-{
-	class SoundClass;
-}
-
-namespace Object
-{
-	class ActorManagerClass;
-}
-
-namespace Scene
-{
-	class SceneManagerClass;
 }
 
 namespace System
@@ -45,9 +27,9 @@ namespace System
 		inline const TimerClass* GetTimer() const { return m_Timer.get(); }
 
 	private:
-		HRESULT Initialize();
+		void Initialize();
 
-		HRESULT Frame();
+		void Frame();
 		void InitializeWindows(int& ScreenWidth, int& ScreenHeight);
 		void ShutdownWindows();
 
