@@ -10,11 +10,11 @@
 
 namespace Object
 {
-	class GameObjectClass : public IObjectClass
+	class ObjectClass : public IObjectClass
 	{
 	public:
-		explicit GameObjectClass(const AffineInfo& affine);
-		virtual ~GameObjectClass() = default;
+		explicit ObjectClass(const AffineInfo& affine);
+		virtual ~ObjectClass() = default;
 
 		virtual DirectX::XMFLOAT4X4 GetAffineMatrix() const override;																	// affine matrxi(world matrix) 반환
 		virtual const AffineInfo& GetAffine() const override { return m_Affine; }														// affine 데이터 반환
@@ -32,7 +32,7 @@ namespace Object
 		virtual inline void SetScale(DirectX::XMFLOAT4 scale) override { m_Affine.scale = scale; }										// scale 대입
 		virtual inline void SetScale(float x, float y, float z) override { m_Affine.scale = DirectX::XMFLOAT4(x, y, z, 1.f); }			// scale 대입
 
-		virtual inline std::unique_ptr<IObjectClass> Clone() const override { return static_cast<std::unique_ptr<IObjectClass>>(std::make_unique<GameObjectClass>(*this)); }
+		virtual inline std::unique_ptr<IObjectClass> Clone() const override = 0;
 
 	private:
 		AffineInfo m_Affine = { DirectX::XMFLOAT4(0.f, 0.f, 0.f, 0.f),  DirectX::XMFLOAT4(0.f, 0.f, 0.f, 0.f), DirectX::XMFLOAT4(0.f, 0.f, 0.f, 0.f) };

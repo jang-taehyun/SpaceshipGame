@@ -12,22 +12,17 @@ UI::UIManagerClass::UIManagerClass()
 
 UI::UIManagerClass::~UIManagerClass()
 {
-	ReleaseUIs();
+	Release();
 	IsInitialize = false;
 }
 
-void UI::UIManagerClass::LoadUIs(Scene::SceneState scene_state)
+UINT UI::UIManagerClass::LoadUIs(Scene::SceneState scene_state)
 {
 
 }
 
-void UI::UIManagerClass::Update(const System::InputClass* input) const
-{
-	for (int i = 0; i < m_UIs.size(); ++i)
-		m_UIs[i]->Update(input);
-}
-
-void UI::UIManagerClass::ReleaseUIs()
+void UI::UIManagerClass::Release()
 {
 	m_UIs.clear();
+	m_UITextureIDs = 0;
 }

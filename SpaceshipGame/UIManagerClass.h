@@ -11,15 +11,15 @@ namespace UI
 		UIManagerClass();
 		virtual ~UIManagerClass();
 
-		void LoadUIs(Scene::SceneState scene_state);
-		void Update(const System::InputClass* input) const;
+		UINT LoadUIs(Scene::SceneState scene_state);
+		void Release();
 
-	private:
-		void ReleaseUIs();
+		inline UINT GetTextureIDs() const { return m_UITextureIDs; }
 
 	private:
 		static bool IsInitialize;
 		std::vector<std::unique_ptr<IUIClass>> m_UIs;
+		UINT m_UITextureIDs = 0;
 
 	public:
 		UIManagerClass(const UIManagerClass& other) = delete;

@@ -1,12 +1,10 @@
 #pragma once
 
 namespace System { class InputClass; }
-namespace Sound { class SoundClass; }
-namespace Object
-{
-	class CameraClass;
-	class ActorManagerClass;
-}
+namespace Text { class TextManagerClass; }
+namespace UI { class UIManagerClass; }
+namespace Sound { class SoundManagerClass; }
+namespace Object { class ObjectManagerClass; }
 namespace Scene
 {
 	class ISceneClass;
@@ -24,25 +22,24 @@ namespace Scene
 	public:
 		void Frame(const System::InputClass* input, float frame_time);
 
+		virtual inline Text::TextManagerClass* GetTextManager() const;
+		virtual inline UI::UIManagerClass* GetUIManager() const;
+		virtual inline Object::ObjectManagerClass* GetObjectManager() const;
+		virtual inline Sound::SoundManagerClass* GetSoundManager() const;
+		virtual inline Object::IObjectClass* GetCamera() const;
+
 	private:
 		void ChangeScene();
-
-	private:
-		HRESULT ProcessCamera(const Object::CameraClass* camera, const System::InputClass* input, float frame_time);
-		HRESULT ProcessActor(const Object::ActorManagerClass* actor_manager, const System::InputClass* input, float frame_time);
-		void ProcessSceneInfo();
-
-		void UpdateCameraFrameTime(const Object::CameraClass* camera, float frame_time);
-		HRESULT UpdateCameraAffine(const Object::CameraClass* camera, const System::InputClass* input);
-		void UpdateObjectFrameTime(Object::ActorManagerClass* const& actor_manager, const float& frame_time);
-		HRESULT UpdateActorCollisionState(Object::ActorManagerClass* const& actor_manager, const System::InputClass* const& input);
-		HRESULT UpdateActorAffine(Object::ActorManagerClass* const& actor_manager, const InputClass* const& input);
-
 
 	private:
 		static bool IsInitialize;
 		std::unique_ptr<ISceneClass> m_Scene = nullptr;
 		std::unique_ptr<SceneLoaderClass> m_SceneLoader = nullptr;
+
+		std::unique_ptr<Text::TextManagerClass> m_TextManager = nullptr;
+		std::unique_ptr<UI::UIManagerClass> m_UIManager = nullptr;
+		std::unique_ptr<Sound::SoundManagerClass> m_SoundManager = nullptr;
+		std::unique_ptr<Object::ObjectManagerClass> m_ObjectManager = nullptr;
 
 	public:
 		SceneManagerClass(const SceneManagerClass& other) = delete;

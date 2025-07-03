@@ -10,7 +10,6 @@ namespace Graphic
 	}
 }
 
-
 namespace UI
 {
 	class UITextureManagerClass

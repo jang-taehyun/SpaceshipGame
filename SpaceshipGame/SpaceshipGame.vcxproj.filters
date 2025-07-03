@@ -47,12 +47,6 @@
     <Filter Include="Object">
       <UniqueIdentifier>{eb4a0ca8-ca9c-488c-9f94-66bbc7834886}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Object\GameObjectClass">
-      <UniqueIdentifier>{f4cfa62f-a1db-4c9f-9081-a3a827113035}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Object\MoveableObjectClass">
-      <UniqueIdentifier>{f5b1d2f9-1a43-414f-abda-8a6a5e623cca}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Object\ActorClass">
       <UniqueIdentifier>{24aabe3a-49bc-4ae5-80f5-f47d9bdbc317}</UniqueIdentifier>
     </Filter>
@@ -121,9 +115,6 @@
     </Filter>
     <Filter Include="Object\Rotate\RotateClass">
       <UniqueIdentifier>{2d87847b-117f-4e2f-99ca-c78b13518f48}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Object\ActorManagerClass">
-      <UniqueIdentifier>{f76564fc-c875-488a-bc4b-f72ebb04c305}</UniqueIdentifier>
     </Filter>
     <Filter Include="Object\ComputeDirectionVectorClass">
       <UniqueIdentifier>{61644cc4-b24f-455b-886a-f2cf3007bc93}</UniqueIdentifier>
@@ -206,6 +197,12 @@
     <Filter Include="Scene\SceneLoader\SceneLoaderClass">
       <UniqueIdentifier>{9d956e3e-aba6-451a-999f-d62b6e81a747}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\1. ObjectClass">
+      <UniqueIdentifier>{f4cfa62f-a1db-4c9f-9081-a3a827113035}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\ObjectManagerClass">
+      <UniqueIdentifier>{f76564fc-c875-488a-bc4b-f72ebb04c305}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemClass.h">
@@ -277,8 +274,8 @@
     <ClInclude Include="ActorClass.h">
       <Filter>Object\ActorClass</Filter>
     </ClInclude>
-    <ClInclude Include="ActorManagerClass.h">
-      <Filter>Object\ActorManagerClass</Filter>
+    <ClInclude Include="ObjectManagerClass.h">
+      <Filter>Object\ObjectManagerClass</Filter>
     </ClInclude>
     <ClInclude Include="SceneManagerClass.h">
       <Filter>Scene\SceneManagerClass</Filter>
@@ -286,8 +283,8 @@
     <ClInclude Include="IObjectClass.h">
       <Filter>Object\0. IObjectClass</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjectClass.h">
-      <Filter>Object\GameObjectClass</Filter>
+    <ClInclude Include="ObjectClass.h">
+      <Filter>Object\1. ObjectClass</Filter>
     </ClInclude>
     <ClInclude Include="MoveClass.h">
       <Filter>Object\Move\MoveClass</Filter>
@@ -303,9 +300,6 @@
     </ClInclude>
     <ClInclude Include="RotateClass.h">
       <Filter>Object\Rotate\RotateClass</Filter>
-    </ClInclude>
-    <ClInclude Include="MoveableObjectClass.h">
-      <Filter>Object\MoveableObjectClass</Filter>
     </ClInclude>
     <ClInclude Include="CollisionClass.h">
       <Filter>Object\CollisionClass</Filter>
@@ -435,8 +429,8 @@
     <ClCompile Include="ActorClass.cpp">
       <Filter>Object\ActorClass</Filter>
     </ClCompile>
-    <ClCompile Include="ActorManagerClass.cpp">
-      <Filter>Object\ActorManagerClass</Filter>
+    <ClCompile Include="ObjectManagerClass.cpp">
+      <Filter>Object\ObjectManagerClass</Filter>
     </ClCompile>
     <ClCompile Include="SceneManagerClass.cpp">
       <Filter>Scene\SceneManagerClass</Filter>
@@ -444,8 +438,8 @@
     <ClCompile Include="IObjectClass.cpp">
       <Filter>Object\0. IObjectClass</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjectClass.cpp">
-      <Filter>Object\GameObjectClass</Filter>
+    <ClCompile Include="ObjectClass.cpp">
+      <Filter>Object\1. ObjectClass</Filter>
     </ClCompile>
     <ClCompile Include="MoveClass.cpp">
       <Filter>Object\Move\MoveClass</Filter>
@@ -461,9 +455,6 @@
     </ClCompile>
     <ClCompile Include="RotateClass.cpp">
       <Filter>Object\Rotate\RotateClass</Filter>
-    </ClCompile>
-    <ClCompile Include="MoveableObjectClass.cpp">
-      <Filter>Object\MoveableObjectClass</Filter>
     </ClCompile>
     <ClCompile Include="CollisionClass.cpp">
       <Filter>Object\CollisionClass</Filter>

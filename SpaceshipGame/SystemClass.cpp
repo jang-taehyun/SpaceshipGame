@@ -91,12 +91,8 @@ void System::SystemClass::Frame()
 	m_FPS->Frame();
 	m_CPU->Frame();
 
-	result = m_Input->Frame();
-	if (FAILED(result))
-		return result;
-
+	m_Input->Frame();
 	m_SceneManager->Frame(m_Input.get(), m_FPS->GetFPS());
-
 	m_Graphics->Frame(m_ActorManager, m_Sound, m_FPS->GetFPS(), (int)m_CPU->GetCPUPercentage(), m_ProcessManager->GetSceneString());
 }
 

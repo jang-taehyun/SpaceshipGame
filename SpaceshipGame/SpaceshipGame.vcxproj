@@ -155,7 +155,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ActorClass.h" />
-    <ClInclude Include="ActorManagerClass.h" />
+    <ClInclude Include="ObjectManagerClass.h" />
     <ClInclude Include="BackgroundClass.h" />
     <ClInclude Include="SceneClass.h" />
     <ClInclude Include="CameraClass.h" />
@@ -181,7 +181,6 @@
     <ClInclude Include="IUIClass.h" />
     <ClInclude Include="MLC_ShaderClass.h" />
     <ClInclude Include="ModelLoaderClass.h" />
-    <ClInclude Include="MoveableObjectClass.h" />
     <ClInclude Include="MoveClass.h" />
     <ClInclude Include="LightClass.h" />
     <ClInclude Include="ModelClass.h" />
@@ -204,7 +203,7 @@
     <ClInclude Include="TextManagerClass.h" />
     <ClInclude Include="TextureClass.h" />
     <ClInclude Include="TimerClass.h" />
-    <ClInclude Include="GameObjectClass.h" />
+    <ClInclude Include="ObjectClass.h" />
     <ClInclude Include="TypeConverterClass.h" />
     <ClInclude Include="typedef.h" />
     <ClInclude Include="UIClass.h" />
@@ -214,7 +213,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ActorClass.cpp" />
-    <ClCompile Include="ActorManagerClass.cpp" />
+    <ClCompile Include="ObjectManagerClass.cpp" />
     <ClCompile Include="BackgroundClass.cpp" />
     <ClCompile Include="SceneClass.cpp" />
     <ClCompile Include="CameraClass.cpp" />
@@ -238,7 +237,6 @@
     <ClCompile Include="IUIClass.cpp" />
     <ClCompile Include="MLC_ShaderClass.cpp" />
     <ClCompile Include="ModelLoaderClass.cpp" />
-    <ClCompile Include="MoveableObjectClass.cpp" />
     <ClCompile Include="MoveClass.cpp" />
     <ClCompile Include="LightClass.cpp" />
     <ClCompile Include="ModelClass.cpp" />
@@ -264,7 +262,7 @@
     <ClCompile Include="TextManagerClass.cpp" />
     <ClCompile Include="TextureClass.cpp" />
     <ClCompile Include="TimerClass.cpp" />
-    <ClCompile Include="GameObjectClass.cpp" />
+    <ClCompile Include="ObjectClass.cpp" />
     <ClCompile Include="TypeConverterClass.cpp" />
     <ClCompile Include="UIClass.cpp" />
     <ClCompile Include="UIManagerClass.cpp" />

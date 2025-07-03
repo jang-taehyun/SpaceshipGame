@@ -4,11 +4,11 @@
 * ActorClass °³¿ä
 */
 
-#include "MoveableObjectClass.h"
+#include "ObjectClass.h"
 
 namespace Object
 {
-	class ActorClass : public MoveableObjectClass
+	class ActorClass : public ObjectClass
 	{
 	public:
 		ActorClass(const AffineInfo& affine, std::unique_ptr<IMoveClass> move, std::unique_ptr<IRotateClass> rotate, std::unique_ptr<IObjectClass> collision, Graphic::Model::ID ModelID);
@@ -16,8 +16,8 @@ namespace Object
 		ActorClass(ActorClass&& other) noexcept;
 		virtual ~ActorClass() = default;
 
-		virtual void Move(MoveState state, float frame_time, bool IsKeyDown) override;
-		virtual void Rotate(long MouseX, long MouseY, float frame_time, bool IsKeyDown) override;
+		virtual void Move(MoveState state, float frame_time, bool IsKeyDown);
+		virtual void Rotate(long MouseX, long MouseY, float frame_time, bool IsKeyDown);
 
 		inline Graphic::Model::ID GetModelID() const { return m_ModelID; }
 		inline IObjectClass* GetCollision() const { return m_Collision.get(); }
@@ -25,10 +25,13 @@ namespace Object
 		ActorClass& operator=(const ActorClass& other);
 		ActorClass& operator=(ActorClass&& other) noexcept;
 
-		virtual inline std::unique_ptr<IObjectClass> Clone() const override;
+		virtual inline std::unique_ptr<IObjectClass> Clone() const override { return std::make_unique<ActorClass>(*this); }
 
 	private:
+		std::unique_ptr<IMoveClass> m_Move = nullptr;
+		std::unique_ptr<IRotateClass> m_Rotate = nullptr;
 		std::unique_ptr<IObjectClass> m_Collision = nullptr;
-		Graphic::Model::ID m_ModelID = Graphic::Model::ID::DEFAULT_SPACESHIP;
+		
+		Graphic::Model::ID m_ModelID = Graphic::Model::ID::NONE;
 	};
 }

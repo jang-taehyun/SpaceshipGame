@@ -3,7 +3,7 @@
 #include "ModelClass.h"
 
 template<typename VertexType>
-Graphic::Model::ModelClass<VertexType>::ModelClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, ID ModelID, Loader::ModelLoaderClass<VertexType>* loader) : m_ModelID(ModelID)
+Graphic::Model::ModelClass<VertexType>::ModelClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, ID ModelID, Shader::ID ShaderID, Loader::ModelLoaderClass<VertexType>* loader) : m_ModelID(ModelID), m_ShaderID(ShaderID)
 {
 	HRESULT result = Initialize(hwnd, Device, DeviceContext, loader);
 }
@@ -35,11 +35,13 @@ HRESULT Graphic::Model::ModelClass<VertexType>::InitializeBuffers(ID3D11Device* 
 	HRESULT result = S_OK;
 	Microsoft::WRL::ComPtr<ID3D11Buffer> VertexBuffer;		// vertex buffer
 	Microsoft::WRL::ComPtr<ID3D11Buffer> IndexBuffer;		// index buffer
+	Microsoft::WRL::ComPtr<ID3D11Buffer> InstanceBuffer;	// instance buffer
 
 	D3D11_BUFFER_DESC VertexBufferDesc = {};				// vertex buffer의 설정 정보
 	D3D11_SUBRESOURCE_DATA VertexData = {};					// vertex 데이터를 가르키는 subresource 설정 정보
 	D3D11_BUFFER_DESC IndexBufferDesc = {};					// index buffer의 설정 정보
 	D3D11_SUBRESOURCE_DATA IndexData = {};					// index 데이터를 가르키는 subresource 설정 정보
+	D3D11_BUFFER_DESC InstanceBufferDesc = {};				// instance buffer의 설정 정보
 
 	std::vector<std::vector<VertexType>> VerticeDatas;		// 각 mesh의 vertex 데이터들
 	std::vector<std::vector<ULONG>> IndicesDatas;			// 각 mesh의 index 데이터들
@@ -94,6 +96,19 @@ HRESULT Graphic::Model::ModelClass<VertexType>::InitializeBuffers(ID3D11Device* 
 		m_IndexBuffer.push_back(std::move(IndexBuffer));
 	}
 
+	// instance buffer 생성 //
+	// instance buffer 설정
+	InstanceBuffer.Usage = D3D11_USAGE_DYNAMIC;
+	InstanceBuffer.ByteWidth = sizeof(DirectX::XMFLOAT4X4) * MAX_INSTANCE_COUNT;
+	InstanceBuffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	InstanceBuffer.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	InstanceBuffer.MiscFlags = 0;
+	InstanceBuffer.StructureByteStride = 0;
+
+	// instance buffer 생성
+	result = Device->CreateBuffer(&InstanceBuffer, nullptr, m_InstanceBuffer.GetAddressOf());
+	assert(SUCCEEDED(result));
+
 	return result;
 }
 
@@ -104,17 +119,40 @@ void Graphic::Model::ModelClass<VertexType>::InitializeMaterials(Loader::ModelLo
 }
 
 template<typename VertexType>
+void Graphic::Model::ModelClass<VertexType>::UpdateInstanceBuffer(ID3D11DeviceContext* DeviceContext)
+{
+	HRESULT result = S_OK;
+	D3D11_MAPPED_SUBRESOURCE MappedResource;			// lock
+	DirectX::XMFLOAT4X4* DataPtr = nullptr;				// buffer의 포인터
+
+	// instance buffer의 내용을 CPU가 쓸 수 있도록 잠금 //
+	result = DeviceContext->Map(m_InstanceBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource);
+	assert(SUCCEEDED(result));
+
+	// instance buffer의 데이터에 대한 포인터를 가져오기 //
+	DataPtr = static_cast<DirectX::XMFLOAT4X4*>(MappedResource.pData);
+
+	// instance buffer에 데이터 복사
+	std::copy(m_WorldMatrix.begin(), m_WorldMatrix.end(), DataPtr);
+
+	// matrix constant buffer의 잠금을 풀어 GPU에 반영
+	DeviceContext->Unmap(m_InstanceBuffer.Get(), 0);
+}
+
+template<typename VertexType>
 void Graphic::Model::ModelClass<VertexType>::RenderMesh(ID3D11DeviceContext* DeviceContext, int MeshIdx)
 {
 	assert(MeshIdx < m_MeshCount);
+	assert(m_WorldMatrix.size() < MAX_INSTANCE_COUNT);
 
-	// offset(오프셋)과 정점 데이터의 stride(단위) 설정 //
-	ULONG stride = static_cast<ULONG>(sizeof(VertexType));
-	ULONG offset = 0;
+	// offset(오프셋), 정점 데이터의 stride(단위), buffer 설정 //
+	ID3D11Buffer* buffers[2] = { m_VertexBuffer[MeshIdx].Get(), m_InstanceBuffer.Get()};
+	UINT stride[2] = { static_cast<UINT>(sizeof(VertexType)), static_cast<UINT>(sizeof(DirectX::XMFLOAT4X4)) };
+	UINT offset[2] = { 0, 0 };
 
-	// input assembler에서 vertex buffer, index buffer 활성화 //
-	DeviceContext->IASetVertexBuffers(0, 1, m_VertexBuffer[MeshIdx]->GetAddressOf(), &stride, &offset);
-	DeviceContext->IASetIndexBuffer(m_IndexBuffer[MeshIdx]->Get(), DXGI_FORMAT_R32_UINT, 0);
+	// input assembler에서 vertex buffer, instance buffer, index buffer 활성화 //
+	DeviceContext->IASetVertexBuffers(0, 2, buffers, stride, offset);
+	DeviceContext->IASetIndexBuffer(m_IndexBuffer[MeshIdx].Get(), DXGI_FORMAT_R32_UINT, 0);
 
 	// vertex buffer에서 그릴 object의 기본 도형 설정 //
 	DeviceContext->IASetPrimitiveTopology((m_ModelID == ID::COLLISION ? D3D11_PRIMITIVE_TOPOLOGY_LINELIST : D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));

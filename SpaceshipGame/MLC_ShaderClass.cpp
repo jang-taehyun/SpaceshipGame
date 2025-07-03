@@ -45,13 +45,11 @@ HRESULT Graphic::Shader::MLC_ShaderClass::UpdateMatrixBuffer(ID3D11DeviceContext
 	HRESULT result = S_OK;
 	D3D11_MAPPED_SUBRESOURCE MappedResource;			// lock
 	MatrixBufferType* DataPtr = nullptr;				// buffer의 포인터
-	DirectX::XMMATRIX worldMatrix;						// world
 	DirectX::XMMATRIX viewMatrix;						// view
 	DirectX::XMMATRIX projectionMatrix;					// projection
 
 	// 행렬들을 HLSL에 맞게 변환 //
 	// 행렬들을 transpose 연산하여 shader에서 사용할 수 있도록 한다.
-	worldMatrix = DirectX::XMMatrixTranspose(transform.World);
 	viewMatrix = DirectX::XMMatrixTranspose(transform.View);
 	projectionMatrix = DirectX::XMMatrixTranspose(transform.Projection);
 
@@ -63,11 +61,10 @@ HRESULT Graphic::Shader::MLC_ShaderClass::UpdateMatrixBuffer(ID3D11DeviceContext
 	DataPtr = static_cast<MatrixBufferType*>(MappedResource.pData);
 
 	// matrix constant buffer에 데이터(행렬) 복사
-	DataPtr->World = worldMatrix;
 	DataPtr->View = viewMatrix;
 	DataPtr->Projection = projectionMatrix;
 
-	// matrix constant buffer의 잠금을 푼다.
+	// matrix constant buffer의 잠금을 풀어 GPU에 반영
 	DeviceContext->Unmap(m_MatrixBuffer.Get(), 0);
 
 	// vertex shader에서 상수 버퍼의 위치 설정 및 matrix constant buffer의 내용 업데이트
@@ -98,7 +95,7 @@ HRESULT Graphic::Shader::MLC_ShaderClass::UpdateLightBuffer(ID3D11DeviceContext*
 	DataPtr->SpecularPower = light.SpecularPower;
 	DataPtr->padding2[0] = { 0.f, };
 
-	// 광원 상수 버퍼의 잠금을 푼다.
+	// 광원 상수 버퍼의 잠금을 풀어 GPU에 반영
 	DeviceContext->Unmap(m_LightBuffer.Get(), 0);
 
 	// pixel shader의 광원 상수 버퍼의 위치 설정 및 light constant buffer의 내용 업데이트
@@ -124,7 +121,7 @@ HRESULT Graphic::Shader::MLC_ShaderClass::UpdateCameraBuffer(ID3D11DeviceContext
 	DataPtr->CameraPosition = camera.CameraPosition;
 	DataPtr->padding = 0.f;
 
-	// camera constant buffer의 잠금을 푼다.
+	// camera constant buffer의 잠금을 풀어 GPU에 반영
 	DeviceContext->Unmap(m_CameraBuffer.Get(), 0);
 
 	// vertex shader에서 상수 버퍼의 위치 설정 및 camera constant buffer의 내용 업데이트

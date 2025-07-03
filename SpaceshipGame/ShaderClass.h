@@ -22,12 +22,12 @@ namespace Graphic
 
 
 			// 렌더링 함수들 //
-			// 
+
 			// 렌더링 준비 함수
 			void BeginRender(ID3D11DeviceContext* DeviceContext, const ShaderBuffers& ShaderBufferDatas);
 
 			// shader 렌더링 함수
-			virtual HRESULT Render(ID3D11DeviceContext* DeviceContext, int IndexCount, const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& Material) override;
+			virtual HRESULT Render(ID3D11DeviceContext* DeviceContext, int IndexCount, int InstanceCount, const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& Material) override;
 
 
 			// 초기화 관련 함수들 //

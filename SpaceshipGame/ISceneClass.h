@@ -6,7 +6,7 @@ namespace UI { class UIManagerClass; }
 namespace Sound { class SoundManagerClass; }
 namespace Object
 {
-	class ActorManagerClass;
+	class ObjectManagerClass;
 	class IObjectClass;
 }
 
@@ -21,18 +21,19 @@ namespace Scene
 		virtual inline SceneState GetNextSceneState() const = 0;
 		virtual inline bool IsSceneEnded() const = 0;
 
-		virtual void Frame(const System::InputClass* input, float frame_time) = 0;
-		virtual inline std::unique_ptr<ISceneClass> Clone() const = 0;
-
-		virtual inline Text::TextManagerClass* GetTextManager() const = 0;
-		virtual inline UI::UIManagerClass* GetUIManager() const = 0;
-		virtual inline Object::ActorManagerClass* GetActorManager() const = 0;
+		virtual inline UINT GetModelIDs() const = 0;
+		virtual inline UINT GetUITextureIDs() const = 0;
 
 		virtual inline Object::IObjectClass* GetCamera() const = 0;
 
+		virtual void Frame(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time) = 0;
+		virtual inline std::unique_ptr<ISceneClass> Clone() const = 0;
+
 	protected:
-		virtual inline Sound::SoundManagerClass* GetSoundManager() const = 0;
-		virtual inline void SetNextScene(SceneState next) = 0;
 		virtual inline void SetSceneEnded() = 0;
+
+		virtual inline void SetNextScene(SceneState next) = 0;
+		virtual inline void SetModelIDs(UINT IDs) = 0;
+		virtual inline void SetUITextureIDs(UINT IDs) = 0;
 	};
 }

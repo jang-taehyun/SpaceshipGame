@@ -34,7 +34,7 @@ void Graphic::Shader::ShaderClass<ShaderBuffers>::BeginRender(ID3D11DeviceContex
 }
 
 template<typename ShaderBuffers>
-HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::Render(ID3D11DeviceContext* DeviceContext, int IndexCount, const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& Material)
+HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::Render(ID3D11DeviceContext* DeviceContext, int IndexCount, int InstanceCount, const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& Material)
 {
 	HRESULT result = S_OK;
 
@@ -44,7 +44,7 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::Render(ID3D11DeviceContext*
 		DeviceContext->PSSetShaderResources(i, 1, Material[i].GetAddressOf());
 
 	// 렌더링 //
-	DeviceContext->DrawIndexed(IndexCount, 0, 0);
+	DeviceContext->DrawIndexedInstanced(IndexCount, InstanceCount, 0, 0, 0);
 
 	return result;
 }
@@ -121,6 +121,21 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::CreateInputLayout(ID3D11Dev
 		desc.AlignedByteOffset = (i ? D3D11_APPEND_ALIGNED_ELEMENT : 0);
 		desc.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 		desc.InstanceDataStepRate = 0;
+
+		LayoutDesc.push_back(desc);
+	}
+
+	// instance layout 설정
+	// instance layout은 world matrix만 있으므로 따로 처리
+	for (int i = 0; i < 4; ++i)
+	{
+		desc.SemanticName = "INSTANCE_WORLD_COLUMN0";
+		desc.SemanticIndex = i;
+		desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		desc.InputSlot = 1;
+		desc.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+		desc.InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+		desc.InstanceDataStepRate = 1;
 
 		LayoutDesc.push_back(desc);
 	}

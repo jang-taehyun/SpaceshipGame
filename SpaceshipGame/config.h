@@ -22,8 +22,13 @@ namespace System
 // object 관련
 namespace Object
 {
-	// 최대 object의 개수 //
-	const int OBJECT_MAX_COUNT = 6;
+	enum class ID
+	{
+		NONE,
+		PlAYER,
+		OTHER1, OTHER2, OTHER3, OTHER4,
+		ASTEROID1, ASTEROID2, ASTEROID3, ASTEROID4,
+	};
 
 	// 이동 상태 정보 //
 	enum class MoveState
@@ -68,13 +73,20 @@ namespace UI
 // Text 관련 //
 namespace Text
 {
-	enum class TextFlag
+	enum class TextID
 	{
-		DEFAULT,
+		NONE, Default, 
 	};
 
-	// font 파일 정보 //
-	const std::wstring FontFileName = _T("./resource/굴림.spritefont");
+	enum class FontID
+	{
+		NONE, Default, 
+	};
+
+	const std::map<FontID, const std::wstring> FontList =
+	{
+		{ FontID::Default, _T("./resource/굴림.spritefont") },
+	};
 }
 
 
@@ -144,7 +156,7 @@ namespace Graphic
 		// shader ID //
 		enum class ID
 		{
-			NONE, DEFAULT, ALPHA_MAP, TEXTURE, MULTI_TEXTURE, LIGHT, LIGHT_MAP, SPACESHIP, CUBE,
+			NONE, DEFAULT_SPACESHIP, ALPHA_MAP, TEXTURE, MULTI_TEXTURE, LIGHT, LIGHT_MAP, CUBE,
 		};
 
 		// File info //
@@ -205,19 +217,18 @@ namespace Graphic
 		};
 
 		const std::map<ID, ShaderFileInfo> ShaderList = {
+			{ ID::DEFAULT_SPACESHIP, SpaceshipShaderInfo },
 			{ ID::ALPHA_MAP, AlphaMapShaderInfo },
 			{ ID::TEXTURE, TextureShaderInfo },
 			{ ID::MULTI_TEXTURE, MultiTextureShaderInfo },
 			{ ID::LIGHT, LightShaderInfo },
 			{ ID::LIGHT_MAP, LightMapShaderInfo },
-			{ ID::SPACESHIP, SpaceshipShaderInfo },
 			{ ID::CUBE, CubeShaderInfo },
 		};
 
 		// shader buffer type //
 		struct MatrixBufferType
 		{
-			DirectX::XMMATRIX World;
 			DirectX::XMMATRIX View;
 			DirectX::XMMATRIX Projection;
 		};

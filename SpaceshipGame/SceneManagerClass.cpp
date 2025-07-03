@@ -1,5 +1,9 @@
 #include "pch.h"
-#include "StartSceneClass.h"
+#include "ObjectManagerClass.h"
+#include "TextManagerClass.h"
+#include "UIManagerClass.h"
+#include "SoundManagerClass.h"
+#include "ISceneClass.h"
 #include "SceneLoaderClass.h"
 #include "SceneManagerClass.h"
 
@@ -9,9 +13,22 @@ Scene::SceneManagerClass::SceneManagerClass()
 {
 	assert(IsInitialize);
 
-	m_SceneLoader = std::make_unique<SceneLoaderClass>();
+	m_ObjectManager = std::make_unique<Object::ObjectManagerClass>();
+	assert(m_ObjectManager);
 
-	m_Scene = std::move(m_SceneLoader->CreateScene(SceneState::START));
+	m_TextManager = std::make_unique<Text::TextManagerClass>();
+	assert(m_TextManager);
+
+	m_UIManager = std::make_unique<UI::UIManagerClass>();
+	assert(m_UIManager);
+
+	m_SoundManager = std::make_unique<Sound::SoundManagerClass>();
+	assert(m_SoundManager);
+
+	m_SceneLoader = std::make_unique<SceneLoaderClass>();
+	assert(m_SceneLoader);
+
+	m_Scene = std::move(m_SceneLoader->CreateScene(SceneState::START, m_ObjectManager.get(), m_TextManager.get(), m_UIManager.get(), m_SoundManager.get()));
 	assert(m_Scene);
 
 	IsInitialize = true;
@@ -27,7 +44,32 @@ void Scene::SceneManagerClass::Frame(const System::InputClass* input, float fram
 	if (m_Scene->IsSceneEnded())
 		ChangeScene();
 	else
-		m_Scene->Frame(input, frame_time);
+		m_Scene->Frame(input, m_ObjectManager.get(), m_TextManager.get(), m_UIManager.get(), m_SoundManager.get(), frame_time);
+}
+
+inline Text::TextManagerClass* Scene::SceneManagerClass::GetTextManager() const
+{
+	return m_TextManager.get();
+}
+
+inline UI::UIManagerClass* Scene::SceneManagerClass::GetUIManager() const
+{
+	return m_UIManager.get();
+}
+
+inline Object::ObjectManagerClass* Scene::SceneManagerClass::GetObjectManager() const
+{
+	return m_ObjectManager.get();
+}
+
+inline Sound::SoundManagerClass* Scene::SceneManagerClass::GetSoundManager() const
+{
+	return m_SoundManager.get();
+}
+
+inline Object::IObjectClass* Scene::SceneManagerClass::GetCamera() const
+{
+	return m_Scene->GetCamera();
 }
 
 void Scene::SceneManagerClass::ChangeScene()
@@ -36,7 +78,7 @@ void Scene::SceneManagerClass::ChangeScene()
 
 	m_Scene.reset();
 
-	m_Scene = std::move(m_SceneLoader->CreateScene(next));
+	m_Scene = std::move(m_SceneLoader->CreateScene(next, m_ObjectManager.get(), m_TextManager.get(), m_UIManager.get(), m_SoundManager.get()));
 	assert(m_Scene);
 }
 

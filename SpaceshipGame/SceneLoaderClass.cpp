@@ -4,9 +4,9 @@
 
 bool Scene::SceneLoaderClass::IsInitailize = false;
 
-std::unique_ptr<Scene::ISceneClass> Scene::CreateStartScene(SceneState cur)
+std::unique_ptr<Scene::ISceneClass> Scene::CreateStartScene(SceneState current, Object::ObjectManagerClass* actors, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds)
 {
-	return std::make_unique<StartSceneClass>(cur);
+	return std::make_unique<StartSceneClass>(current, actors, texts, UIs, sounds);
 }
 
 Scene::SceneLoaderClass::SceneLoaderClass()
@@ -21,12 +21,12 @@ Scene::SceneLoaderClass::~SceneLoaderClass()
 	IsInitailize = false;
 }
 
-std::unique_ptr<Scene::ISceneClass> Scene::SceneLoaderClass::CreateScene(SceneState cur)
+std::unique_ptr<Scene::ISceneClass> Scene::SceneLoaderClass::CreateScene(SceneState current, Object::ObjectManagerClass* actors, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds)
 {
-	std::map<SceneState, std::function<std::unique_ptr<ISceneClass>(SceneState)>>::iterator iter;
+	std::map<SceneState, std::function<std::unique_ptr<ISceneClass>(SceneState current, Object::ObjectManagerClass* actors, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds)>>::iterator iter;
 
-	iter = m_Creator.find(cur);
+	iter = m_Creator.find(current);
 	assert(m_Creator.end() != iter);
 
-	return iter->second(cur);
+	return iter->second(current, actors, texts, UIs, sounds);
 }

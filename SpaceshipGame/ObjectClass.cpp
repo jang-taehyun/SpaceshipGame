@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "TypeConverterClass.h"
-#include "GameObjectClass.h"
+#include "ObjectClass.h"
 
-Object::GameObjectClass::GameObjectClass(const AffineInfo& affine) : m_Affine(affine) {}
+Object::ObjectClass::ObjectClass(const AffineInfo& affine) : m_Affine(affine) {}
 
-DirectX::XMFLOAT4X4 Object::GameObjectClass::GetAffineMatrix() const
+DirectX::XMFLOAT4X4 Object::ObjectClass::GetAffineMatrix() const
 {
 	DirectX::XMMATRIX affine;
 	DirectX::XMFLOAT4X4 ret;
