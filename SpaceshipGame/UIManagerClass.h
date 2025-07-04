@@ -1,7 +1,11 @@
 #pragma once
 
 namespace System { class InputClass; }
-namespace UI { class IUIClass; }
+namespace UI
+{
+	class IUIClass;
+	class UIFactoryClass;
+}
 
 namespace UI
 {
@@ -11,15 +15,25 @@ namespace UI
 		UIManagerClass();
 		virtual ~UIManagerClass();
 
-		UINT LoadUIs(Scene::SceneState scene_state);
+		IUIClass* LoadBackground(Graphic::Texture::UITextureID TextureID);
+		IUIClass* LoadUI(ID UIID, Graphic::Texture::UITextureID TextureID);
 		void Release();
 
-		inline UINT GetTextureIDs() const { return m_UITextureIDs; }
+		inline UINT GetUITextureMask() const { return m_UITextureMask; }
+
+		IUIClass* GetUI(int idx) const;
+		IUIClass* GetBackground() const { return m_Background.get(); }
+
+		inline UINT GetUICount() const { return m_UIList.size(); }
 
 	private:
 		static bool IsInitialize;
-		std::vector<std::unique_ptr<IUIClass>> m_UIs;
-		UINT m_UITextureIDs = 0;
+
+		std::vector<std::unique_ptr<IUIClass>> m_UIList;
+		std::unique_ptr<IUIClass> m_Background = nullptr;
+		UINT m_UITextureMask = 0;
+
+		std::unique_ptr<UIFactoryClass> m_Loader = nullptr;
 
 	public:
 		UIManagerClass(const UIManagerClass& other) = delete;

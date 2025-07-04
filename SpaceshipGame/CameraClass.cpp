@@ -2,8 +2,6 @@
 #include "ComputeDirectionVectorClass.h"
 #include "CameraClass.h"
 
-Object::CameraClass::CameraClass(const AffineInfo& affine) : ObjectClass(affine) {}
-
 DirectX::XMFLOAT4X4 Object::CameraClass::Render() const
 {
 	DirectX::XMFLOAT4 pos, rot;

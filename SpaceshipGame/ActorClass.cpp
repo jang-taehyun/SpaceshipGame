@@ -4,26 +4,9 @@
 #include "CollisionClass.h"
 #include "ActorClass.h"
 
-Object::ActorClass::ActorClass(const AffineInfo& affine, std::unique_ptr<IMoveClass> move, std::unique_ptr<IRotateClass> rotate, std::unique_ptr<IObjectClass> collision, Graphic::Model::ID ModelID) : ObjectClass(affine), m_ModelID(ModelID)
-{
-	m_Move = std::move(move);
-	m_Rotate = std::move(rotate);
-	m_Collision = std::move(collision);
-}
-
-Object::ActorClass::ActorClass(const ActorClass& other) : ObjectClass(other), m_ModelID(other.m_ModelID)
-{
-	m_Move = other.m_Move->Clone();
-	m_Rotate = other.m_Rotate->Clone();
-	m_Collision = other.m_Collision->Clone();
-}
-
-Object::ActorClass::ActorClass(ActorClass&& other) noexcept : ObjectClass(other), m_ModelID(other.m_ModelID)
-{
-	m_Move = std::move(other.m_Move);
-	m_Rotate = std::move(other.m_Rotate);
-	m_Collision = std::move(other.m_Collision);
-}
+Object::ActorClass::ActorClass(std::unique_ptr<IMoveClass> move, std::unique_ptr<IRotateClass> rotate, std::unique_ptr<IObjectClass> collision, Graphic::Model::ID ModelID) : m_ModelID(ModelID), m_Move(std::move(move)), m_Rotate(std::move(rotate)), m_Collision(std::move(collision)) {}
+Object::ActorClass::ActorClass(const ActorClass& other) : ObjectClass(other), m_ModelID(other.m_ModelID), m_Move(other.m_Move->Clone()), m_Rotate(other.m_Rotate->Clone()), m_Collision(other.m_Collision->Clone()) {}
+Object::ActorClass::ActorClass(ActorClass&& other) noexcept : ObjectClass(other), m_ModelID(other.m_ModelID), m_Move(std::move(other.m_Move)), m_Rotate(std::move(other.m_Rotate)), m_Collision(std::move(other.m_Collision)) {}
 
 void Object::ActorClass::Move(MoveState state, float frame_time, bool IsKeyDown)
 {

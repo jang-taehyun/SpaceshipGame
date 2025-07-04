@@ -21,9 +21,6 @@ namespace Scene
 		virtual inline SceneState GetNextSceneState() const = 0;
 		virtual inline bool IsSceneEnded() const = 0;
 
-		virtual inline UINT GetModelIDs() const = 0;
-		virtual inline UINT GetUITextureIDs() const = 0;
-
 		virtual inline Object::IObjectClass* GetCamera() const = 0;
 
 		virtual void Frame(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time) = 0;

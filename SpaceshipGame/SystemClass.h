@@ -22,10 +22,6 @@ namespace System
 
 		LRESULT CALLBACK MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
 
-		inline const FPSClass* GetFPS() const { return m_FPS.get(); }
-		inline const CPUClass* GetCPU() const { return m_CPU.get(); }
-		inline const TimerClass* GetTimer() const { return m_Timer.get(); }
-
 	private:
 		void Initialize();
 
@@ -40,13 +36,12 @@ namespace System
 		HINSTANCE m_hinstance = 0;
 		HWND m_hwnd = 0;
 
-		std::unique_ptr<System::InputClass> m_Input = nullptr;
-		std::unique_ptr<Graphic::GraphicsClass> m_Graphics = nullptr;
-
 		std::unique_ptr<System::FPSClass> m_FPS = nullptr;
 		std::unique_ptr<System::CPUClass> m_CPU = nullptr;
 		std::unique_ptr<System::TimerClass> m_Timer = nullptr;
 
+		std::unique_ptr<System::InputClass> m_Input = nullptr;
+		std::unique_ptr<Graphic::GraphicsClass> m_Graphics = nullptr;
 		std::unique_ptr<Scene::SceneManagerClass> m_SceneManager = nullptr;
 
 	public:

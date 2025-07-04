@@ -2,8 +2,6 @@
 #include "TypeConverterClass.h"
 #include "CollisionClass.h"
 
-Object::CollisionClass::CollisionClass(const AffineInfo& affine, float range) : ObjectClass(affine), m_Range(range) {}
-
 DirectX::ContainmentType Object::CollisionClass::GetCollideState(const AffineInfo& affine)
 {
 	// 자신의 OBB 박스 생성 //
@@ -51,14 +49,13 @@ DirectX::ContainmentType Object::CollisionClass::GetCollideState(DirectX::XMFLOA
 
 	// 충돌 검사 //
 	result = itself.Intersects(origin, vector, dist);
-
-	// 충돌 검사 후, 결과에 따라 자신의 collision 색상 업데이트 //
 	if (result && (dist <= m_Range))
 		ret = DirectX::ContainmentType::INTERSECTS;
 	else
 		ret = DirectX::ContainmentType::DISJOINT;
 
 #ifdef DEBUG
+	// 충돌 검사 후, 결과에 따라 자신의 collision 색상 업데이트 //
 	m_Color = (ret == DirectX::ContainmentType::INTERSECTS ? DirectX::XMFLOAT4(1.f, 0.f, 0.f, 1.f) : DirectX::XMFLOAT4(0.f, 1.f, 0.f, 1.f));
 #endif // DEBUG
 

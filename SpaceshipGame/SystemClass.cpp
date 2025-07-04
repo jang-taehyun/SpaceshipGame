@@ -71,9 +71,7 @@ void System::SystemClass::Run()
 		}
 		// frame Ã³¸®
 		else
-		{
 			Frame();
-		}
 
 		if (m_Input->IsEscapePressed())
 			break;
@@ -93,7 +91,7 @@ void System::SystemClass::Frame()
 
 	m_Input->Frame();
 	m_SceneManager->Frame(m_Input.get(), m_FPS->GetFPS());
-	m_Graphics->Frame(m_ActorManager, m_Sound, m_FPS->GetFPS(), (int)m_CPU->GetCPUPercentage(), m_ProcessManager->GetSceneString());
+	m_Graphics->Frame();
 }
 
 void System::SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)

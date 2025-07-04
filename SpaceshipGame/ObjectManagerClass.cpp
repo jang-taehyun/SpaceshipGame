@@ -1,17 +1,17 @@
 #include "pch.h"
 #include "IObjectClass.h"
-#include "ActorClass.h"
-#include "CollisionClass.h"
-#include "MoveClass.h"
-#include "RotateClass.h"
+#include "ObjectFactoryClass.h"
 #include "ObjectManagerClass.h"
 
 bool Object::ObjectManagerClass::IsInitialize = false;
 
-Object::ObjectManagerClass::ObjectManagerClass()
+Object::ObjectManagerClass::ObjectManagerClass() : m_PlayerIdx(0), m_ModelMask(0)
 {
-	// ActorManagerClass 인스턴스가 이미 존재하는지 검사 //
 	assert(!IsInitialize);
+
+	m_Loader = std::make_unique<ObjectFactoryClass>();
+	assert(m_Loader);
+
 	IsInitialize = true;
 }
 
@@ -22,30 +22,25 @@ Object::ObjectManagerClass::~ObjectManagerClass()
 
 Object::IObjectClass* Object::ObjectManagerClass::operator[](int idx) const
 {
-	assert(idx < m_Objects.size());
-	return m_Objects[idx].get();
+	assert(idx < m_ObjectList.size());
+	return m_ObjectList[idx].get();
 }
 
-UINT Object::ObjectManagerClass::Load(const AffineInfo& ActorAffine, const AffineInfo& CollisionAffine, Graphic::Model::ID ModelID, Graphic::Shader::ID ShaderID)
+Object::IObjectClass* Object::ObjectManagerClass::Load(ID ObjectID, Graphic::Model::ID ModelID)
 {
-	std::unique_ptr<IMoveClass> moveInst = std::make_unique<MoveClass>();
-	std::unique_ptr<IRotateClass> rotateInst = std::make_unique<RotateClass>();
-	std::unique_ptr<IObjectClass> collisionInst = std::make_unique<CollisionClass>(CollisionAffine);
-	std::unique_ptr<IObjectClass> actorInst = std::make_unique<ActorClass>(ActorAffine, std::move(moveInst), std::move(rotateInst), std::move(collisionInst), ModelID, ShaderID);
+	std::unique_ptr<IObjectClass> obj = std::move(m_Loader->Load(ObjectID, ModelID));
+	assert(obj);
 
-	assert(actorInst);
-	m_Objects.push_back(std::move(actorInst));
+	m_ObjectList.push_back(std::move(obj));
 
-	m_ModelIDs |= (1 << static_cast<UINT>(ModelID));
-	m_ShaderIDs |= (1 << static_cast<UINT>(ShaderID));
+	m_ModelMask |= (1 << static_cast<UINT>(ModelID));
 
-	return m_Objects.size() - 1;
+	return m_ObjectList[m_ObjectList.size() - 1].get();
 }
 
 void Object::ObjectManagerClass::Release()
 {
-	m_ModelIDs = 0;
-	m_ShaderIDs = 0;
+	m_ModelMask = 0;
 	m_PlayerIdx = 0;
-	m_Objects.clear();
+	m_ObjectList.clear();
 }

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "SoundClass.h"
 
-Sound::SoundClass::SoundClass(DirectX::AudioEngine* engine, ID SoundID, bool loop) : m_ID(SoundID), IsLoop(loop)
+Sound::SoundClass::SoundClass(DirectX::AudioEngine* engine, ID SoundID) : m_ID(SoundID), m_IsLoop(false)
 {
 	LoadWaveFile(engine);
 }
@@ -25,5 +25,5 @@ void Sound::SoundClass::Play() const
 	if (m_EffectInstance->GetState() == DirectX::SoundState::PLAYING)
 		return;
 
-	m_EffectInstance->Play(IsLoop);
+	m_EffectInstance->Play(m_IsLoop);
 }

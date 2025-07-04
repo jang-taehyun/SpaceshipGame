@@ -2,8 +2,6 @@
 #include "TypeConverterClass.h"
 #include "ObjectClass.h"
 
-Object::ObjectClass::ObjectClass(const AffineInfo& affine) : m_Affine(affine) {}
-
 DirectX::XMFLOAT4X4 Object::ObjectClass::GetAffineMatrix() const
 {
 	DirectX::XMMATRIX affine;

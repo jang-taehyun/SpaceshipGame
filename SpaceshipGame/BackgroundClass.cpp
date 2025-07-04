@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "BackgroundClass.h"
 
-UI::BackgroundClass::BackgroundClass(Graphic::Texture::UITextureID ID, DirectX::XMFLOAT4 color) : UIClass(ID, DirectX::XMFLOAT2(0.f, 0.f), color)
+UI::BackgroundClass::BackgroundClass(Graphic::Texture::UITextureID ID) : UIClass(ID)
 {
 	RECT rect = {};
 	int width = 0, height = 0, PosX = 0, PosY = 0;

@@ -11,7 +11,7 @@ namespace Object
 	class CameraClass : public ObjectClass
 	{
 	public:
-		explicit CameraClass(const AffineInfo& affine);
+		CameraClass() = default;
 		virtual ~CameraClass() = default;
 
 		DirectX::XMFLOAT4X4 Render() const;

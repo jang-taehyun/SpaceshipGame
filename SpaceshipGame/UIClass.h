@@ -7,7 +7,7 @@ namespace UI
 	class UIClass : public IUIClass
 	{
 	public:
-		UIClass(Graphic::Texture::UITextureID ID, DirectX::XMFLOAT2 position, DirectX::XMFLOAT4 color = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f));
+		UIClass(Graphic::Texture::UITextureID ID);
 		virtual ~UIClass() = default;
 
 		virtual inline DirectX::XMFLOAT2 GetPosition() const override { return m_Position; }
@@ -17,9 +17,12 @@ namespace UI
 		virtual inline void SetColor(DirectX::XMFLOAT4 color) override { m_Color = color; }
 
 		virtual inline State GetUIState() const override { return m_State; }
-		virtual inline Graphic::Texture::UITextureID GetUIID() const override { return m_UITextureID; }
+		virtual inline Graphic::Texture::UITextureID GetUITextureID() const override { return m_UITextureID; }
 
-		virtual void Update(const System::InputClass* input) override = 0;
+		virtual inline void SetUIState(State state) { m_State = state; }
+		virtual inline void SetUITextureID(Graphic::Texture::UITextureID ID) { m_UITextureID = ID; }
+
+		virtual void Update(const System::InputClass* input) override;
 
 	private:
 		DirectX::XMFLOAT4 m_Color = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);

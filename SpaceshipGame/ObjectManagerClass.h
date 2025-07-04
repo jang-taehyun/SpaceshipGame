@@ -4,7 +4,11 @@
 * ActorManagerClass °³¿ä
 */
 
-namespace Object { class IObjectClass; }
+namespace Object
+{ 
+	class IObjectClass;
+	class ObjectFactoryClass;
+}
 
 namespace Object
 {
@@ -17,22 +21,22 @@ namespace Object
 		inline UINT GetPlayerIdx() const { return m_PlayerIdx; }
 
 		inline void SetPlayerIdx(UINT idx) { m_PlayerIdx = idx; }
-		inline UINT GetObjectCount() const { return static_cast<UINT>(m_Objects.size()); }
+		inline UINT GetObjectCount() const { return static_cast<UINT>(m_ObjectList.size()); }
 
 		IObjectClass* operator[](int idx) const;
-		inline UINT GetModelIDs() const { return m_ModelIDs; }
-		inline UINT GetShaderIDs() const { return m_ShaderIDs; }
+		inline UINT GetModelMask() const { return m_ModelMask; }
 
-		UINT Load(const AffineInfo& ActorAffine, const AffineInfo& CollisionAffine, Graphic::Model::ID ModelID, Graphic::Shader::ID ShaderID);
+		IObjectClass* Load(ID ObjectID, Graphic::Model::ID ModelID);
 		void Release();
 
 	private:
 		static bool IsInitialize;
 
-		std::vector<std::unique_ptr<IObjectClass>> m_Objects;
+		std::vector<std::unique_ptr<IObjectClass>> m_ObjectList;
+		std::unique_ptr<ObjectFactoryClass> m_Loader = nullptr;
+
 		UINT m_PlayerIdx = 0;
-		UINT m_ModelIDs = 0;
-		UINT m_ShaderIDs = 0;
+		UINT m_ModelMask = 0;
 
 	public:
 		ObjectManagerClass(const ObjectManagerClass& other) = delete;

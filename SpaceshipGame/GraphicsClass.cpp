@@ -4,7 +4,7 @@
 #include "LightClass.h"
 
 #include "ModelManagerClass.h"
-#include "ActorManagerClass.h"
+#include "ObjectManagerClass.h"
 
 #include "FrustumClass.h"
 #include "IMGUIClass.h"

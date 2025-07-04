@@ -155,6 +155,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ActorClass.h" />
+    <ClInclude Include="ModelFactoryClass.h" />
+    <ClInclude Include="ObjectFactoryClass.h" />
     <ClInclude Include="ObjectManagerClass.h" />
     <ClInclude Include="BackgroundClass.h" />
     <ClInclude Include="SceneClass.h" />
@@ -189,7 +191,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="PTN_ModelLoaderClass.h" />
     <ClInclude Include="RotateClass.h" />
-    <ClInclude Include="SceneLoaderClass.h" />
+    <ClInclude Include="SceneFactoryClass.h" />
     <ClInclude Include="SceneManagerClass.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ShaderClass.h" />
@@ -207,12 +209,15 @@
     <ClInclude Include="TypeConverterClass.h" />
     <ClInclude Include="typedef.h" />
     <ClInclude Include="UIClass.h" />
+    <ClInclude Include="UIFactoryClass.h" />
     <ClInclude Include="UIManagerClass.h" />
     <ClInclude Include="UIRenderClass.h" />
     <ClInclude Include="UITextureManagerClass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ActorClass.cpp" />
+    <ClCompile Include="ModelFactoryClass.cpp" />
+    <ClCompile Include="ObjectFactoryClass.cpp" />
     <ClCompile Include="ObjectManagerClass.cpp" />
     <ClCompile Include="BackgroundClass.cpp" />
     <ClCompile Include="SceneClass.cpp" />
@@ -251,7 +256,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PTN_ModelLoaderClass.cpp" />
     <ClCompile Include="RotateClass.cpp" />
-    <ClCompile Include="SceneLoaderClass.cpp" />
+    <ClCompile Include="SceneFactoryClass.cpp" />
     <ClCompile Include="SceneManagerClass.cpp" />
     <ClCompile Include="ShaderClass.cpp" />
     <ClCompile Include="SoundClass.cpp" />
@@ -265,6 +270,7 @@
     <ClCompile Include="ObjectClass.cpp" />
     <ClCompile Include="TypeConverterClass.cpp" />
     <ClCompile Include="UIClass.cpp" />
+    <ClCompile Include="UIFactoryClass.cpp" />
     <ClCompile Include="UIManagerClass.cpp" />
     <ClCompile Include="UIRenderClass.cpp" />
     <ClCompile Include="UITextureManagerClass.cpp" />

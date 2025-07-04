@@ -4,9 +4,14 @@
 #include <DDSTextureLoader.h>
 #include "TextureClass.h"
 
-Graphic::Texture::TextureClass::TextureClass(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::wstring& FileName)
+Graphic::Texture::TextureClass::TextureClass(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, UITextureID ID)
 {
-	HRESULT result = Initialize(Device, DeviceContext, FileName);
+	std::map<UITextureID, const std::wstring>::const_iterator iter;
+
+	iter = UITextureList.find(ID);
+	assert(UITextureList.end() == iter);
+
+	HRESULT result = Initialize(Device, DeviceContext, iter->second);
 }
 
 Graphic::Texture::TextureClass::TextureClass(const TextureClass& other)
@@ -14,7 +19,10 @@ Graphic::Texture::TextureClass::TextureClass(const TextureClass& other)
 	other.m_Texture.CopyTo(m_Texture.GetAddressOf());
 }
 
-Graphic::Texture::TextureClass::TextureClass(TextureClass&& other) noexcept : m_Texture(std::move(other.m_Texture)) {}
+Graphic::Texture::TextureClass::TextureClass(TextureClass&& other) noexcept
+{
+	m_Texture = std::move(other.m_Texture);
+}
 
 Graphic::Texture::TextureClass& Graphic::Texture::TextureClass::operator=(const TextureClass& other)
 {

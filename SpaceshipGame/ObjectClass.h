@@ -1,7 +1,7 @@
 #pragma once
 
 /**
-* GameObjectClass 개요
+* ObjectClass 개요
 * - affine 관련 데이터(position, rotate, scale) 관리
 * - affine 관련 기능 정의
 */
@@ -13,7 +13,7 @@ namespace Object
 	class ObjectClass : public IObjectClass
 	{
 	public:
-		explicit ObjectClass(const AffineInfo& affine);
+		ObjectClass() = default;
 		virtual ~ObjectClass() = default;
 
 		virtual DirectX::XMFLOAT4X4 GetAffineMatrix() const override;																	// affine matrxi(world matrix) 반환

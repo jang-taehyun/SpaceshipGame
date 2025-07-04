@@ -10,10 +10,11 @@ namespace Sound
 	{
 	public:
 		SoundManagerClass();
-		virtual ~SoundManagerClass() = default;
+		virtual ~SoundManagerClass();
 
-		void Frame() const;
+		void Load(UINT SoundMask);
 		void Play(ID SoundID) const;
+		void Frame() const;
 
 	private:
 		void Initailize();
@@ -24,5 +25,6 @@ namespace Sound
 
 		std::unique_ptr<DirectX::AudioEngine> m_AudioEngine = nullptr;
 		std::map<ID, std::unique_ptr<SoundClass>> m_SoundList;
+		UINT m_CurrentSoundMask = 0;
 	};
 }

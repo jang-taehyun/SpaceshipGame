@@ -11,7 +11,7 @@ namespace Object
 	class ActorClass : public ObjectClass
 	{
 	public:
-		ActorClass(const AffineInfo& affine, std::unique_ptr<IMoveClass> move, std::unique_ptr<IRotateClass> rotate, std::unique_ptr<IObjectClass> collision, Graphic::Model::ID ModelID);
+		ActorClass(std::unique_ptr<IMoveClass> move, std::unique_ptr<IRotateClass> rotate, std::unique_ptr<IObjectClass> collision, Graphic::Model::ID ModelID);
 		ActorClass(const ActorClass& other);
 		ActorClass(ActorClass&& other) noexcept;
 		virtual ~ActorClass() = default;

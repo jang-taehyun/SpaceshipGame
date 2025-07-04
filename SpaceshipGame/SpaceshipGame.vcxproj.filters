@@ -191,17 +191,23 @@
     <Filter Include="Sound\SoundManagerClass">
       <UniqueIdentifier>{31cd759a-f925-4fc7-9282-9361d6945a91}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\SceneLoader">
-      <UniqueIdentifier>{01b8224c-b514-4184-ae31-0e66348d1575}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\SceneLoader\SceneLoaderClass">
-      <UniqueIdentifier>{9d956e3e-aba6-451a-999f-d62b6e81a747}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Object\1. ObjectClass">
       <UniqueIdentifier>{f4cfa62f-a1db-4c9f-9081-a3a827113035}</UniqueIdentifier>
     </Filter>
     <Filter Include="Object\ObjectManagerClass">
       <UniqueIdentifier>{f76564fc-c875-488a-bc4b-f72ebb04c305}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\ModelFactoryClass">
+      <UniqueIdentifier>{346e4b44-8c33-404b-8c37-13f86ee355c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\SceneFactoryClass">
+      <UniqueIdentifier>{9d956e3e-aba6-451a-999f-d62b6e81a747}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIFactoryClass">
+      <UniqueIdentifier>{6b74dab4-ce93-4320-9f12-ea9405491434}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\ObjectFactoryClass">
+      <UniqueIdentifier>{c0907262-0024-4944-9111-09e79f5b5c58}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -370,8 +376,17 @@
     <ClInclude Include="SoundManagerClass.h">
       <Filter>Sound\SoundManagerClass</Filter>
     </ClInclude>
-    <ClInclude Include="SceneLoaderClass.h">
-      <Filter>Scene\SceneLoader\SceneLoaderClass</Filter>
+    <ClInclude Include="SceneFactoryClass.h">
+      <Filter>Scene\SceneFactoryClass</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelFactoryClass.h">
+      <Filter>Model\ModelFactoryClass</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFactoryClass.h">
+      <Filter>UI\UIFactoryClass</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectFactoryClass.h">
+      <Filter>Object\ObjectFactoryClass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -525,8 +540,17 @@
     <ClCompile Include="SoundManagerClass.cpp">
       <Filter>Sound\SoundManagerClass</Filter>
     </ClCompile>
-    <ClCompile Include="SceneLoaderClass.cpp">
-      <Filter>Scene\SceneLoader\SceneLoaderClass</Filter>
+    <ClCompile Include="SceneFactoryClass.cpp">
+      <Filter>Scene\SceneFactoryClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelFactoryClass.cpp">
+      <Filter>Model\ModelFactoryClass</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFactoryClass.cpp">
+      <Filter>UI\UIFactoryClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectFactoryClass.cpp">
+      <Filter>Object\ObjectFactoryClass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

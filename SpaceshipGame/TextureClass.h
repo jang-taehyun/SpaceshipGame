@@ -17,7 +17,7 @@ namespace Graphic
 			};
 
 		public:
-			TextureClass(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::wstring& FileName);
+			TextureClass(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, UITextureID ID);
 			TextureClass(const TextureClass& other);
 			TextureClass(TextureClass&& other) noexcept;
 			virtual ~TextureClass() = default;

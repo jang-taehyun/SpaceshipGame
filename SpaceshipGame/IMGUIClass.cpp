@@ -8,9 +8,8 @@
 #include "LightClass.h"
 
 // actor, collision 관련
-#include "ActorManagerClass.h"
+#include "ObjectManagerClass.h"
 #include "IObjectClass.h"
-#include "MoveableObjectClass.h"
 #include "IMoveClass.h"
 #include "IRotateClass.h"
 #include "ActorClass.h"
@@ -44,7 +43,7 @@ void Graphic::IMGUIClass::Initialize(HWND hwnd, ID3D11Device* Device, ID3D11Devi
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGui_ImplWin32_Init(hwnd);
-	ImGui_ImplDX11_Init(const_cast<ID3D11Device*>(Device), const_cast<ID3D11DeviceContext*>(DeivceContext));
+	ImGui_ImplDX11_Init(Device, DeivceContext);
 
 	// Font 및 테마 설정 //
 	ImGuiIO& io = ImGui::GetIO();
@@ -71,7 +70,7 @@ void Graphic::IMGUIClass::Shutdown()
 	ImGui::DestroyContext();
 }
 
-void Graphic::IMGUIClass::Render(Object::ActorManagerClass* actor_manager, LightClass* light, Sound::SoundClass* sound, Object::IObjectClass* camera, int fps, int cpu_usage)
+void Graphic::IMGUIClass::Render(Object::ObjectManagerClass* actor_manager, LightClass* light, Sound::SoundClass* sound, Object::IObjectClass* camera, int fps, int cpu_usage)
 {
 	// IMGUI 렌더링 준비 //
 	ImGui_ImplDX11_NewFrame();
@@ -85,7 +84,7 @@ void Graphic::IMGUIClass::Render(Object::ActorManagerClass* actor_manager, Light
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
-void Graphic::IMGUIClass::SetUI(Object::ActorManagerClass* actor_manager, LightClass* light, Sound::SoundClass* sound, Object::IObjectClass* camera, int fps, int cpu_usage)
+void Graphic::IMGUIClass::SetUI(Object::ObjectManagerClass* actor_manager, LightClass* light, Sound::SoundClass* sound, Object::IObjectClass* camera, int fps, int cpu_usage)
 {
 	std::string title = u8"FPS, CPU 사용량";
 	SetFPSCPUUsage(title, 0, fps, cpu_usage);

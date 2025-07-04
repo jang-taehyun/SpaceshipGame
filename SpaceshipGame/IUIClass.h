@@ -16,7 +16,10 @@ namespace UI
 		virtual inline void SetColor(DirectX::XMFLOAT4 color) = 0;
 
 		virtual inline State GetUIState() const = 0;
-		virtual inline Graphic::Texture::UITextureID GetUIID() const = 0;
+		virtual inline Graphic::Texture::UITextureID GetUITextureID() const = 0;
+
+		virtual inline void SetUIState(State state) = 0;
+		virtual inline void SetUITextureID(Graphic::Texture::UITextureID ID) = 0;
 
 		virtual void Update(const System::InputClass* input) = 0;
 	};

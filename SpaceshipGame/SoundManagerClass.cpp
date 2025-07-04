@@ -4,7 +4,7 @@
 
 bool Sound::SoundManagerClass::IsInitailize = false;
 
-Sound::SoundManagerClass::SoundManagerClass()
+Sound::SoundManagerClass::SoundManagerClass() : m_CurrentSoundMask(0)
 {
 	Initailize();
 	IsInitailize = true;
@@ -40,13 +40,53 @@ void Sound::SoundManagerClass::Initailize()
 	result = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 	assert(SUCCEEDED(result));
 
-#ifdef _DEBUG
+#ifdef DEBUG
 	AudioEngineFlag |= DirectX::AUDIO_ENGINE_FLAGS::AudioEngine_Debug;
-#endif
+#endif // DEBUG
 
 	// Audio Engine 생성 //
 	m_AudioEngine = std::make_unique<DirectX::AudioEngine>(AudioEngineFlag);
 	assert(m_AudioEngine);
+}
+
+void Sound::SoundManagerClass::Load(UINT SoundMask)
+{
+	bool IsLoad = false, IsExist = false;
+	ID id = ID::NONE;
+	UINT flag = 0;
+	std::unique_ptr<SoundClass> sound = nullptr;
+
+	for(UINT i=0; i<SoundIDCount; ++i)
+	{
+		IsLoad = (SoundMask & (1 << i));
+		IsExist = (m_CurrentSoundMask & (1 << i));
+		id = static_cast<ID>(i);
+
+		// 로드를 해야하는데 map에 없는 경우
+		if (IsLoad && !IsExist)
+		{
+			// instance 생성
+			sound = std::make_unique<SoundClass>(m_AudioEngine.get(), id);
+			assert(sound);
+
+			// 현재 로드된 Sound ID 업데이트
+			m_CurrentSoundMask |= (1 << i);
+
+			// map에 저장
+			m_SoundList.insert(std::make_pair(id, std::move(sound)));
+		}
+		// 해제해야 하는데 map에 있는 경우
+		else if (!IsLoad && IsExist)
+		{
+			// instance가 실제로 존재하는지 확인하고 해제
+			if(m_SoundList.end() != m_SoundList.find(id))
+				m_SoundList.erase(id);
+
+			// 현재 로드된 Sound ID 제거
+			flag = ~(1 << i);
+			m_CurrentSoundMask &= flag;
+		}
+	}
 }
 
 void Sound::SoundManagerClass::Shutdown()

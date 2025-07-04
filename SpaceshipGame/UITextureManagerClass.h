@@ -1,7 +1,5 @@
 #pragma once
 
-#include <SpriteBatch.h>
-
 namespace Graphic
 {
 	namespace Texture
@@ -18,14 +16,13 @@ namespace UI
 		UITextureManagerClass();
 		virtual ~UITextureManagerClass();
 
-		void LoadUITexture(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, UINT TextureIDs);
-
-	private:
-		void ReleaseUITexture();
+		void Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, UINT UITextureMask);
 
 	private:
 		static bool IsInitialize;
+
 		std::map<Graphic::Texture::UITextureID, std::unique_ptr<Graphic::Texture::TextureClass>> m_TextureList;
+		UINT m_CurrentUITextureMask = 0;
 
 	public:
 		UITextureManagerClass(const UITextureManagerClass& other) = delete;

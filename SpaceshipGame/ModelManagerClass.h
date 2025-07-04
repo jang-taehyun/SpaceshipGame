@@ -2,10 +2,8 @@
 
 namespace Graphic
 {
-	namespace Model
-	{
-		class IModelClass;
-	}
+	namespace Model { class IModelClass; }
+	namespace Loader { class ModelFactoryClass; }
 }
 
 namespace Graphic
@@ -15,18 +13,22 @@ namespace Graphic
 		class ModelManagerClass
 		{
 		public:
-			ModelManagerClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext);
+			ModelManagerClass();
 			virtual ~ModelManagerClass();
 
-			const IModelClass* GetModel(Graphic::Model::ID id) const;
+			IModelClass* GetModel(Graphic::Model::ID id) const;
 
-		private:
-			HRESULT Initailize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext);
-			void Shutdown();
+			void Load(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, UINT ModelMask);
+
+			inline UINT GetNeedShaderMask() const { return m_NeedShaderMask; }
 
 		private:
 			static bool IsInitialize;
+
 			std::map<Graphic::Model::ID, std::unique_ptr<IModelClass>> m_ModelList;
+			std::unique_ptr<Loader::ModelFactoryClass> m_Factory = nullptr;
+			UINT m_CurrentModelMask = 0;
+			UINT m_NeedShaderMask = 0;
 
 		public:
 			ModelManagerClass(const ModelManagerClass& other) = delete;

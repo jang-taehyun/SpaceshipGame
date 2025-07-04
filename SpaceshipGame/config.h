@@ -3,40 +3,41 @@
 #include <map>
 #include "typedef.h"
 
+// system 관련 //
 namespace System
 {
-	// 해상도 //
+	// 해상도
 	const int WIDTH = 1200;
 	const int HEIGHT = 800;
 
-	// Graphics 설정 //
+	// Graphics 설정
 	const bool FULL_SCREEN = false;
 	const bool VSYNC_ENABLED = true;
 	const float SCREEN_DEPTH = 1000.0f;
 	const float SCREEN_NEAR = 0.1f;
 
-	// MOUSE 감도 설정 //
+	// MOUSE 감도 설정
 	float MOUSE_SENSITIVITY = 0.0015f;
 }
 
-// object 관련
+// object 관련 //
 namespace Object
 {
+	// object의 종류 ID
 	enum class ID
 	{
 		NONE,
-		PlAYER,
-		OTHER1, OTHER2, OTHER3, OTHER4,
-		ASTEROID1, ASTEROID2, ASTEROID3, ASTEROID4,
+		ACTOR,
+		COLLISION,
 	};
 
-	// 이동 상태 정보 //
+	// 이동 상태 정보
 	enum class MoveState
 	{
 		MOVE_FORWARD, MOVE_BACKWARD, MOVE_RIGHT, MOVE_LEFT,
 	};
 
-	// collision 상태 정보 //
+	// collision 상태 정보
 	enum class CollisionState
 	{
 		NONE, OBB_HIT, RAY_HIT,
@@ -57,10 +58,10 @@ namespace Scene
 // UI 관련 //
 namespace UI
 {
-	// UI의 ID //
+	// UI의 종류 ID
 	enum class ID
 	{
-		NONE, START_BACKGROUND, START_BUTTON, LOADING_BACKGROUND,
+		NONE, DEFAULT, BUTTON, DYNAMIC, 
 	};
 
 	enum class State
@@ -73,19 +74,9 @@ namespace UI
 // Text 관련 //
 namespace Text
 {
-	enum class TextID
+	enum class ID
 	{
-		NONE, Default, 
-	};
-
-	enum class FontID
-	{
-		NONE, Default, 
-	};
-
-	const std::map<FontID, const std::wstring> FontList =
-	{
-		{ FontID::Default, _T("./resource/굴림.spritefont") },
+		NONE, DEFAULT,
 	};
 }
 
@@ -93,6 +84,7 @@ namespace Text
 // sound 관련 //
 namespace Sound
 {
+	const int SoundIDCount = 3;
 	enum class ID
 	{
 		NONE, BACKGROUND, EFFECT, HIT,
@@ -111,6 +103,7 @@ namespace Graphic
 	// 3D model 관련 //
 	namespace Model
 	{
+		const int ModelIDCount = 3;
 		enum class ID
 		{
 			NONE,
@@ -124,7 +117,7 @@ namespace Graphic
 			{ ID::DEFAULT_SPACESHIP, _T("./data/aircraft.txt") },
 		};
 
-		// PTN vertex type //
+		// PTN vertex type
 		struct PTN_VertexType
 		{
 			DirectX::XMFLOAT3 position;
@@ -133,13 +126,13 @@ namespace Graphic
 		};
 	}
 
-
+	// UI texture 관련 //
 	namespace Texture
 	{
-		// UI의 texture ID //
+		const int UITextureIDCount = 3;
 		enum class UITextureID
 		{
-			NONE, START_BACKGROUND, START_BUTTON, LOADING_BACKGROUND,
+			NONE, START_BACKGROUND, START_BUTTON,
 		};
 
 		// UI texture의 파일 정보 //
@@ -150,13 +143,13 @@ namespace Graphic
 		};
 	}
 
-
+	// shader 관련 //
 	namespace Shader
 	{
-		// shader ID //
+		const int ShaderIDCount = 3;
 		enum class ID
 		{
-			NONE, DEFAULT_SPACESHIP, ALPHA_MAP, TEXTURE, MULTI_TEXTURE, LIGHT, LIGHT_MAP, CUBE,
+			NONE, DEFAULT_SPACESHIP, CUBE, ALPHA_MAP, TEXTURE, MULTI_TEXTURE, LIGHT, LIGHT_MAP,
 		};
 
 		// File info //
@@ -218,12 +211,12 @@ namespace Graphic
 
 		const std::map<ID, ShaderFileInfo> ShaderList = {
 			{ ID::DEFAULT_SPACESHIP, SpaceshipShaderInfo },
+			{ ID::CUBE, CubeShaderInfo },
 			{ ID::ALPHA_MAP, AlphaMapShaderInfo },
 			{ ID::TEXTURE, TextureShaderInfo },
 			{ ID::MULTI_TEXTURE, MultiTextureShaderInfo },
 			{ ID::LIGHT, LightShaderInfo },
 			{ ID::LIGHT_MAP, LightMapShaderInfo },
-			{ ID::CUBE, CubeShaderInfo },
 		};
 
 		// shader buffer type //
@@ -256,6 +249,21 @@ namespace Graphic
 			MatrixBufferType transform;
 			LightBufferType light;
 			CameraBufferType camera;
+		};
+	}
+
+	// font 관련 //
+	namespace Font
+	{
+		const int FontIDCount = 2;
+		enum class ID
+		{
+			NONE, DEFAULT, 
+		};
+
+		const std::map<ID, const std::wstring> FontList =
+		{
+			{ ID::DEFAULT, _T("./resource/굴림.spritefont") },
 		};
 	}
 }

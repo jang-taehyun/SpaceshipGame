@@ -8,19 +8,20 @@ namespace Text
 	{
 	public:
 		TextManagerClass();
-		virtual ~TextManagerClass();
+		~TextManagerClass();
 
-		const ITextClass* GetTextObject(TextID ID) const;
-		inline UINT GetChatTextsCount() const { return static_cast<UINT>(m_ChatTexts.size()); }
+		ITextClass* GetTextObject(int idx) const;
+		inline UINT GetFontMask() const { return m_FontMask; }
+		inline UINT GetTextCount() const { return m_UITexts.size(); }
 
-		void LoadUIText(const std::wstring& text, TextID id, DirectX::XMFLOAT2 pos, DirectX::XMFLOAT4 color = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f), FontID font = FontID::Default);
+		void Load(ID id, const std::wstring& text, Graphic::Font::ID font = Graphic::Font::ID::DEFAULT);
+		void Release();
 
 	private:
 		static bool IsInitialize;
 		
-		std::map<TextID, std::unique_ptr<ITextClass>> m_UITexts;
-		std::vector<std::unique_ptr<ITextClass>> m_ChatTexts;
-		UINT m_Loaded = 0;
+		std::vector<std::unique_ptr<ITextClass>> m_UITexts;
+		UINT m_FontMask = 0;
 
 	public:
 		TextManagerClass(const TextManagerClass& other) = delete;
@@ -28,5 +29,4 @@ namespace Text
 		TextManagerClass& operator=(const TextManagerClass& other) = delete;
 		TextManagerClass& operator=(TextManagerClass&& other) = delete;
 	};
-
 }
