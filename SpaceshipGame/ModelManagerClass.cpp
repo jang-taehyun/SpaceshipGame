@@ -20,9 +20,9 @@ Graphic::Model::ModelManagerClass::~ModelManagerClass()
 	IsInitialize = false;
 }
 
-Graphic::Model::IModelClass* Graphic::Model::ModelManagerClass::GetModel(Graphic::Model::ID key) const
+Graphic::Model::IModelClass* Graphic::Model::ModelManagerClass::GetModel(ID key)
 {
-	std::map<Graphic::Model::ID, std::unique_ptr<IModelClass>>::const_iterator iter;
+	std::map<ID, std::unique_ptr<IModelClass>>::const_iterator iter;
 	
 	iter = m_ModelList.find(key);
 	if (m_ModelList.end() == iter)
@@ -37,7 +37,7 @@ void Graphic::Model::ModelManagerClass::Load(HWND hwnd, ID3D11Device* Device, ID
 	ID id = ID::NONE;
 	UINT flag = 0;
 	std::unique_ptr<IModelClass> model = nullptr;
-	std::map<Graphic::Model::ID, std::unique_ptr<IModelClass>>::iterator iter;
+	std::map<ID, std::unique_ptr<IModelClass>>::iterator iter;
 
 	for (UINT i = 0; i < ModelIDCount; ++i)
 	{
@@ -80,11 +80,12 @@ void Graphic::Model::ModelManagerClass::Load(HWND hwnd, ID3D11Device* Device, ID
 			m_CurrentModelMask &= flag;
 		}
 	}
+}
 
+void Graphic::Model::ModelManagerClass::UpdateInstanceBuffers(ID3D11DeviceContext* DeviceContext)
+{
+	std::map<ID, std::unique_ptr<IModelClass>>::iterator iter;
 
-	// cube 葛胆 按眉 积己 //
-	// model 按眉 积己
-	// loader = std::make_unique<Loader::PTN_ModelLoaderClass>(ID::COLLISION);
-	// model = std::make_unique<ModelClass<PTN_VertexType>>(hwnd, Device, DeviceContext, ID::COLLISION, loader);
-	// assert(model);
+	for (iter = m_ModelList.begin(); iter != m_ModelList.end(); ++iter)
+		iter->second->UpdateInstanceData(DeviceContext);
 }

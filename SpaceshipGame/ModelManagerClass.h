@@ -14,18 +14,20 @@ namespace Graphic
 		{
 		public:
 			ModelManagerClass();
-			virtual ~ModelManagerClass();
+			~ModelManagerClass();
 
-			IModelClass* GetModel(Graphic::Model::ID id) const;
+			IModelClass* GetModel(ID id);
 
 			void Load(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, UINT ModelMask);
+
+			void UpdateInstanceBuffers(ID3D11DeviceContext* DeviceContext);
 
 			inline UINT GetNeedShaderMask() const { return m_NeedShaderMask; }
 
 		private:
 			static bool IsInitialize;
 
-			std::map<Graphic::Model::ID, std::unique_ptr<IModelClass>> m_ModelList;
+			std::map<ID, std::unique_ptr<IModelClass>> m_ModelList;
 			std::unique_ptr<Loader::ModelFactoryClass> m_Factory = nullptr;
 			UINT m_CurrentModelMask = 0;
 			UINT m_NeedShaderMask = 0;

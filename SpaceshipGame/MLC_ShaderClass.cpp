@@ -3,6 +3,52 @@
 
 Graphic::Shader::MLC_ShaderClass::MLC_ShaderClass(ID ShaderID) : ShaderClass<MLC_ShaderBuffers>(ShaderID) {}
 
+Graphic::Shader::MLC_ShaderClass::MLC_ShaderClass(const MLC_ShaderClass& other) : ShaderClass<MLC_ShaderBuffers>(other)
+{
+	other.m_MatrixBuffer.CopyTo(m_MatrixBuffer.GetAddressOf());
+	other.m_LightBuffer.CopyTo(m_LightBuffer.GetAddressOf());
+	other.m_CameraBuffer.CopyTo(m_CameraBuffer.GetAddressOf());
+}
+
+Graphic::Shader::MLC_ShaderClass::MLC_ShaderClass(MLC_ShaderClass&& other) noexcept : ShaderClass<MLC_ShaderBuffers>(other)
+{
+	m_MatrixBuffer = std::move(other.m_MatrixBuffer);
+	m_LightBuffer = std::move(other.m_LightBuffer);
+	m_CameraBuffer = std::move(other.m_CameraBuffer);
+}
+
+Graphic::Shader::MLC_ShaderClass& Graphic::Shader::MLC_ShaderClass::operator=(const MLC_ShaderClass& other)
+{
+	if (this == &other)
+		return *this;
+
+	other.m_MatrixBuffer.CopyTo(m_MatrixBuffer.ReleaseAndGetAddressOf());
+	other.m_LightBuffer.CopyTo(m_LightBuffer.ReleaseAndGetAddressOf());
+	other.m_CameraBuffer.CopyTo(m_CameraBuffer.ReleaseAndGetAddressOf());
+
+	ShaderClass<MLC_ShaderBuffers>::operator=(other);
+
+	return *this;
+}
+
+Graphic::Shader::MLC_ShaderClass& Graphic::Shader::MLC_ShaderClass::operator=(MLC_ShaderClass&& other) noexcept
+{
+	if (this == &other)
+		return *this;
+
+	m_MatrixBuffer.Reset();
+	m_LightBuffer.Reset();
+	m_CameraBuffer.Reset();
+
+	m_MatrixBuffer = std::move(other.m_MatrixBuffer);
+	m_LightBuffer = std::move(other.m_LightBuffer);
+	m_CameraBuffer = std::move(other.m_CameraBuffer);
+
+	ShaderClass<MLC_ShaderBuffers>::operator=(std::move(other));
+
+	return *this;
+}
+
 HRESULT Graphic::Shader::MLC_ShaderClass::CreateBuffers(ID3D11Device* Device)
 {
 	HRESULT result = S_OK;

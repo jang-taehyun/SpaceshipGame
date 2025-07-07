@@ -39,17 +39,22 @@ Scene::SceneManagerClass::~SceneManagerClass()
 	IsInitialize = false;
 }
 
-void Scene::SceneManagerClass::Frame(const System::InputClass* input, float frame_time)
+bool Scene::SceneManagerClass::Frame(const System::InputClass* input, float frame_time)
 {
 	if (m_Scene->IsSceneEnded())
+	{
 		ChangeScene();
-	else
-		m_Scene->Frame(input, m_ObjectManager.get(), m_TextManager.get(), m_UIManager.get(), m_SoundManager.get(), frame_time);
+		return true;
+	}
+	
+	m_SoundManager->Frame();
+	m_Scene->Frame(input, m_ObjectManager.get(), m_TextManager.get(), m_UIManager.get(), m_SoundManager.get(), frame_time);
+	return false;
 }
 
-inline Object::IObjectClass* Scene::SceneManagerClass::GetCamera() const
+inline Object::IObjectClass* Scene::SceneManagerClass::GetCamera()
 {
-	return m_Scene->GetCamera();
+	return m_Scene->GetActiveCamera();
 }
 
 void Scene::SceneManagerClass::ChangeScene()

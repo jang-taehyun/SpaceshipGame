@@ -1,36 +1,94 @@
 #include "pch.h"
-#include "LightClass.h"
-#include "IObjectClass.h"
-#include "CameraClass.h"
-#include "TypeConverterClass.h"
 #include "ShaderClass.h"
 
 template<typename ShaderBuffers>
 Graphic::Shader::ShaderClass<ShaderBuffers>::ShaderClass(ID ShaderID) : m_ShaderID(ShaderID) {}
 
 template<typename ShaderBuffers>
-HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::Initialize(HWND hwnd, ID3D11Device* Device, const std::vector<std::string>& VertexDataSemantics)
+Graphic::Shader::ShaderClass<ShaderBuffers>::ShaderClass(const ShaderClass& other) : m_ShaderID(other.m_ShaderID)
+{
+	other.m_VertexShader.CopyTo(m_VertexShader.GetAddressOf());
+	other.m_PixelShader.CopyTo(m_PixelShader.GetAddressOf());
+	other.m_Layout.CopyTo(m_Layout.GetAddressOf());
+	other.m_SampleState.CopyTo(m_SampleState.GetAddressOf());
+}
+
+template<typename ShaderBuffers>
+Graphic::Shader::ShaderClass<ShaderBuffers>::ShaderClass(ShaderClass&& other) noexcept : m_ShaderID(other.m_ShaderID)
+{
+	m_VertexShader = std::move(other.m_VertexShader);
+	m_PixelShader = std::move(other.m_PixelShader);
+	m_Layout = std::move(other.m_Layout);
+	m_SampleState = std::move(other.m_SampleState);
+}
+
+template<typename ShaderBuffers>
+Graphic::Shader::ShaderClass<ShaderBuffers>& Graphic::Shader::ShaderClass<ShaderBuffers>::operator=(const ShaderClass& other)
+{
+	if (this == &other)
+		return *this;
+
+	m_ShaderID = other.m_ShaderID;
+
+	other.m_VertexShader.CopyTo(m_VertexShader.ReleaseAndGetAddressOf());
+	other.m_PixelShader.CopyTo(m_PixelShader.ReleaseAndGetAddressOf());
+	other.m_Layout.CopyTo(m_Layout.ReleaseAndGetAddressOf());
+	other.m_SampleState.CopyTo(m_SampleState.ReleaseAndGetAddressOf());
+
+	return *this;
+}
+
+template<typename ShaderBuffers>
+Graphic::Shader::ShaderClass<ShaderBuffers>& Graphic::Shader::ShaderClass<ShaderBuffers>::operator=(ShaderClass&& other) noexcept
+{
+	if (this == &other)
+		return *this;
+
+	m_ShaderID = other.m_ShaderID;
+
+	m_VertexShader.Reset();
+	m_PixelShader.Reset();
+	m_Layout.Reset();
+	m_SampleState.Reset();
+
+	m_VertexShader = std::move(other.m_VertexShader);
+	m_PixelShader = std::move(other.m_PixelShader);
+	m_Layout = std::move(other.m_Layout);
+	m_SampleState = std::move(other.m_SampleState);
+
+	return *this;
+}
+
+template<typename ShaderBuffers>
+HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::Initialize(HWND hwnd, ID3D11Device* Device, const Loader::ShaderFileInfo& info, const std::vector<std::string>& VertexDataSemantics)
 {
 	HRESULT result = S_OK;
-	ShaderFileInfo info = ShaderList.at(m_ShaderID);
 
-	// 매개 변수 확인 //
-	assert(Device && hwnd && info.vsFileName != _T("") && info.psFileName != _T("") && info.vsEntryPoint != "" && info.psEntryPoint != "");
+	// shader, input layout 초기화
+	result = InitializeShaderInputLayout(hwnd, Device, info, VertexDataSemantics);
+	assert(SUCCEEDED(result));
 
-	// shader 초기화 //
-	result = InitializeShader(hwnd, Device, VertexDataSemantics);
+	// shader에서 사용하는 buffer들 생성
+	result = CreateBuffers(Device);
+
+	// texture sampler state 생성
+	result = CreateTextureSamplerState(Device);
 
 	return result;
 }
 
 template<typename ShaderBuffers>
-void Graphic::Shader::ShaderClass<ShaderBuffers>::BeginRender(ID3D11DeviceContext* DeviceContext, const ShaderBuffers& ShaderBufferDatas)
+void Graphic::Shader::ShaderClass<ShaderBuffers>::BeginRender(ID3D11DeviceContext* DeviceContext) const
 {
-	// vertex shader, pixel shader, input layout 바인딩 //
-	BindShaderAndInputLayout(DeviceContext);
+	// vertex input layout 설정 //
+	DeviceContext->IASetInputLayout(m_Layout.Get());
 
-	// shader에서 사용하는 buffer 설정 //
-	SetShaderBuffers(DeviceContext, ShaderBufferDatas);
+	// vertex shader와 pixel shader 설정 //
+	DeviceContext->VSSetShader(m_VertexShader.Get(), NULL, 0);
+	DeviceContext->PSSetShader(m_PixelShader.Get(), NULL, 0);
+
+	// pixel shader에서 사용할 sampler state 설정(SamplerState) //
+	DeviceContext->PSSetSamplers(0, 1, m_SampleState.Get());
 }
 
 template<typename ShaderBuffers>
@@ -50,13 +108,15 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::Render(ID3D11DeviceContext*
 }
 
 template<typename ShaderBuffers>
-HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::InitializeShader(HWND hwnd, ID3D11Device* Device, const std::vector<std::string>& VertexDataSemantics)
+HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::InitializeShaderInputLayout(HWND hwnd, ID3D11Device* Device, const Loader::ShaderFileInfo& info, const std::vector<std::string>& VertexDataSemantics)
 {
 	HRESULT result = S_OK;
-	ShaderFileInfo info = ShaderList.at(m_ShaderID);
 	Microsoft::WRL::ComPtr<ID3D10Blob> ErrorMessage = nullptr;				// shader compile 에러메세지
 	Microsoft::WRL::ComPtr<ID3D10Blob> VertexShaderBuffer = nullptr;		// vertex shader buffer
 	Microsoft::WRL::ComPtr<ID3D10Blob> PixelShaderBuffer = nullptr;			// pixel shader buffer
+
+	// shader 정보 확인 //
+	assert(Device && hwnd && info.vsFileName != _T("") && info.psFileName != _T("") && info.vsEntryPoint != "" && info.psEntryPoint != "");
 
 	// vertex shader code 컴파일 //
 	result = D3DCompileFromFile(info.vsFileName.c_str(), NULL, NULL, info.vsEntryPoint.c_str(), "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &VertexShaderBuffer, &ErrorMessage);
@@ -88,12 +148,6 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::InitializeShader(HWND hwnd,
 
 	// input layout 생성
 	result = CreateInputLayout(Device, VertexShaderBuffer.Get(), VertexDataSemantics);
-
-	// shader에서 사용하는 buffer들 생성
-	result = CreateBuffers(Device);
-
-	// texture sampler state 생성 //
-	result = CreateTextureSamplerState(Device);
 
 	return result;
 }
@@ -129,7 +183,7 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::CreateInputLayout(ID3D11Dev
 	// instance layout은 world matrix만 있으므로 따로 처리
 	for (int i = 0; i < 4; ++i)
 	{
-		desc.SemanticName = "INSTANCE_WORLD_COLUMN0";
+		desc.SemanticName = "INSTANCE_WORLD_COLUMN";
 		desc.SemanticIndex = i;
 		desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		desc.InputSlot = 1;
@@ -186,29 +240,11 @@ void Graphic::Shader::ShaderClass<ShaderBuffers>::OutputShaderErrorMessage(HWND 
 }
 
 template<typename ShaderBuffers>
-void Graphic::Shader::ShaderClass<ShaderBuffers>::BindShaderAndInputLayout(ID3D11DeviceContext* DeviceContext)
-{
-	// vertex input layout 설정 //
-	DeviceContext->IASetInputLayout(m_Layout.Get());
-
-	// vertex shader와 pixel shader 설정 //
-	DeviceContext->VSSetShader(m_VertexShader.Get(), NULL, 0);
-	DeviceContext->PSSetShader(m_PixelShader.Get(), NULL, 0);
-
-	// pixel shader에서 사용할 sampler state 설정(SamplerState) //
-	DeviceContext->PSSetSamplers(0, 1, &m_SampleState);
-}
-
-template<typename ShaderBuffers>
 HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::CreateConstantBuffer(ID3D11Device* Device, ID3D11Buffer** Buffer, UINT BufferSize)
 {
 	HRESULT result = S_OK;
-	D3D11_BUFFER_DESC ConstantBufferDesc;							// 상수 버퍼 정보
+	D3D11_BUFFER_DESC ConstantBufferDesc = {};							// 상수 버퍼 정보
 
-	// 구조체 초기화 //
-	memset(&ConstantBufferDesc, 0, sizeof(ConstantBufferDesc));
-
-	// 상수 버퍼 생성 //
 	// 상수 버퍼 설정
 	ConstantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	ConstantBufferDesc.ByteWidth = BufferSize;

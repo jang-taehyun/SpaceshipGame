@@ -13,7 +13,7 @@ namespace Object
 	public:
 		virtual ~IObjectClass() = default;
 
-		virtual DirectX::XMFLOAT4X4 GetAffineMatrix() const = 0;				// affine matrxi(world matrix) 반환
+		virtual const DirectX::XMFLOAT4X4 GetAffineMatrix() const = 0;			// affine matrxi(world matrix) 반환
 		virtual const AffineInfo& GetAffine() const = 0;						// affine 데이터 반환
 
 		virtual inline DirectX::XMFLOAT4 GetPosition() const = 0;				// position 반환

@@ -85,13 +85,20 @@ LRESULT System::SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam,
 
 void System::SystemClass::Frame()
 {
+	bool IsLoad = false;
+
 	m_Timer->Frame();
 	m_FPS->Frame();
 	m_CPU->Frame();
 
 	m_Input->Frame();
-	m_SceneManager->Frame(m_Input.get(), m_FPS->GetFPS());
-	m_Graphics->Frame();
+
+	IsLoad = m_SceneManager->Frame(m_Input.get(), m_Timer->GetTime());
+	m_Graphics->Frame(m_SceneManager.get(), IsLoad);
+
+#ifdef DEBUG
+	m_Graphics->ImGuiRender(m_SceneManager.get());
+#endif // DEBUG
 }
 
 void System::SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)
@@ -154,6 +161,7 @@ void System::SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)
 		width = ScreenWidth;
 		height = ScreenHeight;
 
+		// TODO: mouse cursor 위치 확인 필요
 		PosX = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
 		PosY = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
 	}

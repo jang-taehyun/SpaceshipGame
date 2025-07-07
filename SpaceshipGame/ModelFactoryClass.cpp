@@ -35,8 +35,9 @@ std::unique_ptr<Graphic::Model::IModelClass> Graphic::Loader::LoadDefaultSpacesh
 
 	loader = std::make_unique<Loader::PTN_DNSR_ModelLoaderClass>(Model::ID::DEFAULT_SPACESHIP);
 	assert(loader);
+	loader->Load(Device, DeviceContext);
 
-	model = std::make_unique<Model::ModelClass<Model::PTN_VertexType>>(hwnd, Device, DeviceContext, Model::ID::DEFAULT_SPACESHIP, loader);
+	model = std::make_unique<Model::ModelClass<Model::PTN_VertexType>>(hwnd, Device, DeviceContext, Model::ID::DEFAULT_SPACESHIP, loader.get());
 	assert(model);
 
 	return model;

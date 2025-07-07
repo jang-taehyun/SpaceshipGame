@@ -66,7 +66,7 @@ namespace UI
 
 	enum class State
 	{
-		NONE, ACTIVE, DEACTIVE, HOVER, ONCLICKED
+		NONE, ACTIVE, DEACTIVE, HOVER, ONCLICKED, DISAPPEAR, 
 	};
 }
 
@@ -90,7 +90,7 @@ namespace Sound
 		NONE, BACKGROUND, EFFECT, HIT,
 	};
 
-	const std::map<ID, const std::wstring> SoundList =
+	std::map<ID, const std::wstring> SoundFileList =
 	{
 		{ ID::BACKGROUND, _T("./data/dedede.wav") },
 		{ ID::EFFECT, _T("./data/sound01.wav") }
@@ -112,7 +112,7 @@ namespace Graphic
 			ASTEROID,
 		};
 
-		const std::map<ID, const std::wstring> ModelList = {
+		std::map<ID, const std::wstring> ModelFileList = {
 			{ ID::COLLISION, _T("./data/cube.txt") },
 			{ ID::DEFAULT_SPACESHIP, _T("./data/aircraft.txt") },
 		};
@@ -136,7 +136,7 @@ namespace Graphic
 		};
 
 		// UI texture의 파일 정보 //
-		const std::map<UITextureID, const std::wstring> UITextureList =
+		std::map<UITextureID, const std::wstring> UITextureFileList =
 		{
 			{ UITextureID::START_BACKGROUND, _T("./resource/StartBackground.jpg") },
 			{ UITextureID::START_BUTTON, _T("./resource/button.png") }
@@ -150,73 +150,6 @@ namespace Graphic
 		enum class ID
 		{
 			NONE, DEFAULT_SPACESHIP, CUBE, ALPHA_MAP, TEXTURE, MULTI_TEXTURE, LIGHT, LIGHT_MAP,
-		};
-
-		// File info //
-		const ShaderFileInfo AlphaMapShaderInfo =
-		{
-			_T("./shader/vertex/alphamap.vs"),
-			_T("./shader/pixel/alphamap.ps"),
-			"AlphaMapVertexShader",
-			"AlphaMapPixelShader"
-		};
-
-		const ShaderFileInfo TextureShaderInfo =
-		{
-			_T("./shader/vertex/texture.vs"),
-			_T("./shader/pixel/texture.ps"),
-			"TextureVertexShader",
-			"TexturePixelShader"
-		};
-
-		const ShaderFileInfo MultiTextureShaderInfo =
-		{
-			_T("./shader/vertex/multitexture.vs"),
-			_T("./shader/pixel/multitexture.ps"),
-			"MultiTextureVertexShader",
-			"MultiTexturePixelShader"
-		};
-
-		const ShaderFileInfo LightShaderInfo =
-		{
-			_T("./shader/vertex/light.vs"),
-			_T("./shader/pixel/light.ps"),
-			"LightVertexShader",
-			"LightPixelShader"
-		};
-
-		const ShaderFileInfo LightMapShaderInfo =
-		{
-			_T("./shader/vertex/lightmap.vs"),
-			_T("./shader/pixel/lightmap.ps"),
-			"LightMapVertexShader",
-			"LightMapPixelShader"
-		};
-
-		const ShaderFileInfo SpaceshipShaderInfo =
-		{
-			_T("./shader/vertex/Spaceship.vs"),
-			_T("./shader/pixel/Spaceship.ps"),
-			"SpaceshipVertexShader",
-			"SpaceshipPixelShader"
-		};
-
-		const ShaderFileInfo CubeShaderInfo =
-		{
-			_T("./shader/vertex/color.vs"),
-			_T("./shader/pixel/color.ps"),
-			"ColorVertexShader",
-			"ColorPixelShader"
-		};
-
-		const std::map<ID, ShaderFileInfo> ShaderList = {
-			{ ID::DEFAULT_SPACESHIP, SpaceshipShaderInfo },
-			{ ID::CUBE, CubeShaderInfo },
-			{ ID::ALPHA_MAP, AlphaMapShaderInfo },
-			{ ID::TEXTURE, TextureShaderInfo },
-			{ ID::MULTI_TEXTURE, MultiTextureShaderInfo },
-			{ ID::LIGHT, LightShaderInfo },
-			{ ID::LIGHT_MAP, LightMapShaderInfo },
 		};
 
 		// shader buffer type //
@@ -244,6 +177,16 @@ namespace Graphic
 		};
 
 		// shader buffer 모음 //
+
+		// 모든 buffer 모음
+		struct BuffersData
+		{
+			MatrixBufferType transform;
+			LightBufferType light;
+			CameraBufferType camera;
+		};
+
+		// matrix, light, camera
 		struct MLC_ShaderBuffers
 		{
 			MatrixBufferType transform;
@@ -261,7 +204,7 @@ namespace Graphic
 			NONE, DEFAULT, 
 		};
 
-		const std::map<ID, const std::wstring> FontList =
+		std::map<ID, const std::wstring> FontList =
 		{
 			{ ID::DEFAULT, _T("./resource/굴림.spritefont") },
 		};

@@ -6,6 +6,7 @@ bool Sound::SoundManagerClass::IsInitailize = false;
 
 Sound::SoundManagerClass::SoundManagerClass() : m_CurrentSoundMask(0)
 {
+	assert(!IsInitailize);
 	Initailize();
 	IsInitailize = true;
 }

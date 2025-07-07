@@ -10,16 +10,19 @@ namespace Graphic
 			virtual ~IShaderClass() = default;
 
 			// shader 객체 초기화 함수 //
-			virtual HRESULT Initialize(HWND hwnd, ID3D11Device* Device, const std::vector<std::string>& VertexDataSemantics) = 0;
+			virtual HRESULT Initialize(HWND hwnd, ID3D11Device* Device, const Loader::ShaderFileInfo& info, const std::vector<std::string>& VertexDataSemantics) = 0;
 
-			// 렌더링 함수 //
-			virtual HRESULT Render(ID3D11DeviceContext* DeviceContext, int IndexCount, const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& Material) = 0;
+			// vertex shader, pixel shader, input layout 바인딩하는 함수
+			virtual void BeginRender(ID3D11DeviceContext* DeviceContext) const;
+
+			// 렌더링
+			virtual HRESULT Render(ID3D11DeviceContext* DeviceContext, int IndexCount, int InstanceCount, const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& Material) = 0;
 
 
 			// 초기화 관련 함수들 //
 		private:
 			// shader 컴파일 및 생성 함수
-			virtual HRESULT InitializeShader(HWND hwnd, ID3D11Device* Device, const std::vector<std::string>& VertexDataSemantics) = 0;
+			virtual HRESULT InitializeShaderInputLayout(HWND hwnd, ID3D11Device* Device, const Loader::ShaderFileInfo& info, const std::vector<std::string>& VertexDataSemantics) = 0;
 
 			// input layout 생성 함수
 			virtual HRESULT CreateInputLayout(ID3D11Device* Device, ID3D10Blob* VertexShaderBuffer, const std::vector<std::string>& VertexDataSemantics) = 0;

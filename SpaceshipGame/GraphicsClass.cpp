@@ -2,22 +2,38 @@
 
 #include "D3DClass.h"
 #include "LightClass.h"
-
 #include "ModelManagerClass.h"
-#include "ObjectManagerClass.h"
+#include "ShaderManagerClass.h"
+#include "UITextureManagerClass.h"
+#include "UIRenderClass.h"
 
-#include "FrustumClass.h"
+#include "SceneManagerClass.h"
+#include "ObjectManagerClass.h"
+#include "UIManagerClass.h"
+#include "TextManagerClass.h"
+#include "CameraClass.h"
+
+#include "IModelClass.h"
+#include "IShaderClass.h"
+
+#include "GameObjectClass.h"
+#include "IUIClass.h"
+#include "ITextClass.h"
+#include "TypeConverterClass.h"
+
+#ifdef DEBUG
 #include "IMGUIClass.h"
+#include "CollisionClass.h"
+#endif // DEBUG
 
 #include "GraphicsClass.h"
 
 bool Graphic::GraphicsClass::IsInitialize = false;
 
-Graphic::GraphicsClass::GraphicsClass(int ScreenWidth, int ScreenHeight, HWND hwnd)
+Graphic::GraphicsClass::GraphicsClass(HWND hwnd, int ScreenWidth, int ScreenHeight)
 {
 	assert(!IsInitialize);
-
-	Initialize(ScreenWidth, ScreenHeight, hwnd);
+	Initialize(hwnd, ScreenWidth, ScreenHeight);
 	IsInitialize = true;
 }
 
@@ -26,189 +42,210 @@ Graphic::GraphicsClass::~GraphicsClass()
 	IsInitialize = false;
 }
 
-void Graphic::GraphicsClass::Initialize(int ScreenWidth, int ScreenHeight, HWND hwnd)
+void Graphic::GraphicsClass::Frame(Scene::SceneManagerClass* SceneManager, bool IsLoad)
 {
-	HRESULT result = S_OK;
-	float ScalingFactor = 0.5f;
-	AffineInfo affine = {};
-	DirectX::XMMATRIX BaseViewMatrix;
-	DirectX::XMFLOAT4 AmbientColor = DirectX::XMFLOAT4(0.15f, 0.15f, 0.15f, 1.f);;
-	DirectX::XMFLOAT4 DiffuseColor = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);;
+	bool IsRender = false;
+	UINT cnt = 0;
+	Shader::BuffersData bufferData;
+
+	if (IsLoad)
+	{
+		Load(SceneManager);
+		return;
+	}
+
+	// frustum culling //
+	// 카메라 업데이트
+	static_cast<Object::CameraClass*>(SceneManager->GetCamera())->UpdateFrustum(m_D3D->GetProjectionMatrix());
+
+	// scene에 존재하는 object에 대해 frustum culling 진행
+	cnt = SceneManager->GetObjectManager()->GetObjectCount();
+	for (UINT i = 0; i < cnt; ++i)
+	{
+		IsRender = static_cast<Object::CameraClass*>(SceneManager->GetCamera())->IsRender(
+			m_ModelManager->GetModel(
+				static_cast<Object::GameObjectClass*>(
+					SceneManager->GetObjectManager()->GetGameObject(i)
+					)->GetModelID())->GetModelOBB(),
+			SceneManager->GetObjectManager()->GetGameObject(i)->GetAffineMatrix()
+		);
+
+		if (IsRender)
+			m_ModelManager->GetModel(
+				static_cast<Object::GameObjectClass*>(
+					SceneManager->GetObjectManager()->GetGameObject(i)
+					)->GetModelID())->AddWorldMatrix(
+				SceneManager->GetObjectManager()->GetGameObject(i)->GetAffineMatrix()
+			);
+
+#ifdef DEBUG
+		// Collision //
+		IsRender = static_cast<Object::CameraClass*>(SceneManager->GetCamera())->IsRender(
+			m_ModelManager->GetModel(
+				static_cast<Object::CollisionClass*>(
+					static_cast<Object::GameObjectClass*>(
+						SceneManager->GetObjectManager()->GetGameObject(i)
+						)->GetCollision()
+					)->GetModelID()
+			)->GetModelOBB(),
+			SceneManager->GetObjectManager()->GetGameObject(i)->GetAffineMatrix()
+		);
+
+		if (IsRender)
+			m_ModelManager->GetModel(
+				static_cast<Object::CollisionClass*>(
+					static_cast<Object::GameObjectClass*>(
+						SceneManager->GetObjectManager()->GetGameObject(i)
+						)->GetCollision()
+					)->GetModelID()
+			)->
+			AddWorldMatrix(SceneManager->GetObjectManager()->GetGameObject(i)->GetAffineMatrix());
+#endif // DEBUG
+	}
+
+	// model들의 instance buffer 업데이트 //
+	m_ModelManager->UpdateInstanceBuffers(m_D3D->GetDeviceContext());
+
+	// shader의 모든 buffer 업데이트 //
+	bufferData.transform.Projection = DirectX::XMLoadFloat4x4(&(m_D3D->GetProjectionMatrix()));
+	bufferData.transform.View = DirectX::XMLoadFloat4x4(&(
+		static_cast<Object::CameraClass*>(SceneManager->GetCamera())->Render()
+		));
+
+	bufferData.light.AmbientColor = m_Light->GetAmbientColor();
+	bufferData.light.DiffuseColor = m_Light->GetDiffuseColor();
+	bufferData.light.LightDirection = Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(m_Light->GetDirection());
+	bufferData.light.SpecularColor = m_Light->GetSpecularColor();
+	bufferData.light.SpecularPower = m_Light->GetSpecularPower();
+
+	bufferData.camera.CameraPosition = Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(SceneManager->GetCamera()->GetPosition());
+
+	m_ShaderManager->UpdateBuffer(m_D3D->GetDeviceContext(), bufferData);
+
+	// 렌더링 //
+	Render(SceneManager);
+}
+
+void Graphic::GraphicsClass::Initialize(HWND hwnd, int ScreenWidth, int ScreenHeight)
+{
+	DirectX::XMFLOAT4 AmbientColor = DirectX::XMFLOAT4(0.15f, 0.15f, 0.15f, 1.f);
+	DirectX::XMFLOAT4 DiffuseColor = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);
 	DirectX::XMFLOAT3 LightDirection = DirectX::XMFLOAT3(0.f, 0.f, 1.f);
 	DirectX::XMFLOAT4 SpecularColor = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);
 	float SpecularPower = 64.f;
 
 	// Direct3D 객체 생성 및 초기화 //
-	m_D3D = new D3DClass(ScreenWidth, ScreenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
-	if (!m_D3D)
-	{
-		e.contents = _T("D3DClass 인스턴스 생성 실패");
-		e.errorCode = E_FAIL;
-		return E_FAIL;
-	}
-
-	// Camera 객체 생성 및 초기화 //
-	affine.position = { 0.f, 3.35f, -3.35f, 1.f };
-	affine.rotation = { 0.32f, 0.006f, 0.f, 1.f };
-	affine.scale = { 1.f, 1.f, 1.f, 1.f };
-	m_Camera = new CameraClass(affine);
-	if (!m_Camera)
-	{
-		e.contents = _T("CameraClass 인스턴스 생성 실패");
-		e.errorCode = E_FAIL;
-		return E_FAIL;
-	}
-
-	// Base view matrix 가져오기 //
-	BaseViewMatrix = m_Camera->GetViewMatrix();
-
-	// Model manager 객체 생성 및 초기화 //
-	m_ModelManager = new ModelManagerClass(hwnd, m_D3D->GetDevice(), m_D3D->GetDeviceContext());
-	if(!m_ModelManager)
-	{
-		e.contents = _T("Model Manager Class 인스턴스 생성 실패");
-		e.errorCode = E_FAIL;
-		return E_FAIL;
-	}
-
-	// Text 객체 생성 및 초기화 //
-	m_TextRender = new TextRenderClass(m_D3D->GetDevice(), m_D3D->GetDeviceContext());
-	if (!m_TextRender)
-	{
-		e.contents = _T("TextClass 인스턴스 생성 실패");
-		e.errorCode = E_FAIL;
-		return E_FAIL;
-	}
-
-	// frustum 객체 생성 //
-	m_Frustum = new FrustumClass;
-	if (!m_Frustum)
-	{
-		e.contents = _T("FrustumClass 인스턴스 생성 실패");
-		e.errorCode = E_FAIL;
-		return E_FAIL;
-	}
-
-	// IMGUI 객체 생성 //
-	m_IMGUI = new IMGUIClass(hwnd, m_D3D->GetDevice(), m_D3D->GetDeviceContext());
-	if (!m_IMGUI)
-	{
-		e.contents = _T("IMGUIClass 인스턴스 생성 실패");
-		e.errorCode = E_FAIL;
-		return E_FAIL;
-	}
+	m_D3D = std::make_unique<D3DClass>(hwnd, ScreenWidth, ScreenHeight);
+	assert(m_D3D);
 
 	// Light 객체 생성 //
-	m_Light = new LightClass(AmbientColor, DiffuseColor, LightDirection, SpecularColor, SpecularPower);
-	if (!m_Light)
-	{
-		e.contents = _T("lightClass 인스턴스 생성 실패");
-		e.errorCode = E_FAIL;
-		return E_FAIL;
-	}
+	m_Light = std::make_unique<LightClass>(AmbientColor, DiffuseColor, LightDirection, SpecularColor, SpecularPower);
+	assert(m_Light);
+
+	// Model manager 객체 생성 //
+	m_ModelManager = std::make_unique<Model::ModelManagerClass>();
+	assert(m_ModelManager);
+
+	// Shader manager 객체 생성 //
+	m_ShaderManager = std::make_unique<Shader::ShaderManagerClass>();
+	assert(m_ShaderManager);
+
+	// UI texture manager 객체 생성 //
+	m_UITextureManager = std::make_unique<Texture::UITextureManagerClass>();
+	assert(m_UITextureManager);
+
+	// UI render 객체 생성 //
+	m_UIRender = std::make_unique<Texture::UIRenderClass>(m_D3D->GetDeviceContext());
+	assert(m_UIRender);
+
+#ifdef DEBUG
+	// IMGUI 객체 생성 //
+	m_IMGUI = std::make_unique<IMGUIClass>(m_D3D->GetDevice(), m_D3D->GetDeviceContext());
+	assert(m_IMGUI);
+#endif // DEBUG
 }
 
-void Graphic::GraphicsClass::Frame(ActorManagerClass* const& actor_manager, SoundClass* const& sound, const int& fps, const int& cpu_usage, const std::wstring& scene_info)
+void Graphic::GraphicsClass::Load(Scene::SceneManagerClass* SceneManager)
 {
-	HRESULT result = S_OK;
-
-	// 렌더링 //
-	result = Render(actor_manager, sound, fps, cpu_usage, scene_info);
-	if (FAILED(result))
-	{
-		e.contents = _T("Frame() 처리 실패");
-		e.errorCode = result;
-		return result;
-	}
+	m_ModelManager->Load(GetActiveWindow(), m_D3D->GetDevice(), m_D3D->GetDeviceContext(), SceneManager->GetObjectManager()->GetModelMask());
+	m_UITextureManager->Load(m_D3D->GetDevice(), m_D3D->GetDeviceContext(), SceneManager->GetUIManager()->GetUITextureMask());
+	m_UIRender->LoadFont(m_D3D->GetDevice(), SceneManager->GetTextManager()->GetFontMask());
+	m_ShaderManager->Load(GetActiveWindow(), m_D3D->GetDevice(), m_ModelManager->GetNeedShaderMask());
 }
 
-HRESULT Graphic::GraphicsClass::Render(ActorManagerClass* const& actor_manager, SoundClass* const& sound, const int& fps, const int& cpu_usage, const std::wstring& scene_info)
+void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager)
 {
-	HRESULT result = S_OK;
-	DirectX::XMMATRIX OrthoMatrix;
-	TransformMatrixData transform = {};
-	ColorClass background;
-
-	// 에러 메세지 초기화 //
-	e.title = _T("GraphicsClass Render()");
-
 	// front buffer 초기화 //
-	m_D3D->BeginScene(background);
+	m_D3D->BeginScene(DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f));
 
-	// 카메라의 위치에 따라 view matrix 생성 //
-	DirectX::XMFLOAT4 cpos = actor_manager->GetPlayerObject()->GetAffineObject()->GetPosition();
-	DirectX::XMFLOAT4 crot = actor_manager->GetPlayerObject()->GetAffineObject()->GetRotation();
-	cpos.y += 2.35f;
-	crot.x += 0.32f;
-	crot.y += 0.006f;
-	m_Camera->GetAffineObject()->SetPosition(cpos);
-	m_Camera->GetAffineObject()->SetRotation(crot);
-	m_Camera->Render();
-
-	// view, projection, ortho matrix 가져오기 및 업데이트 //
-	transform.view = m_Camera->GetViewMatrix();										// view matrix
-	transform.projection = m_D3D->GetProjectionMatrix();							// projection matrix
-	OrthoMatrix = m_D3D->GetOrthoMatrix();											// ortho matrix
-
-	// frustum culling을 이용한 rendering //
-	// viewing frustum 업데이트 및 render count(rendering한 3D object의 개수) 초기화
-	m_Frustum->UpdateFrustum(SCREEN_DEPTH, transform.projection, transform.view);
-
-	// 렌더링 //
-	// player model
-	transform.world = actor_manager->GetPlayerObject()->GetAffineObject()->GetAffine();
-	result = m_ModelManager->GetModel(actor_manager->GetPlayerObject()->GetModelID())->Render(m_D3D->GetDeviceContext(), transform, m_Light, m_Camera);
-	if (FAILED(result))
+	// 3D 물체 렌더링 //
+	for (UINT i = 0; i < Model::ModelIDCount; ++i)
 	{
-		e.contents = _T("Model 렌더링 실패");
-		e.errorCode = result;
-		return result;
-	}
-
-	// player collision
-	transform.world = actor_manager->GetPlayerObject()->GetCollision()->GetAffineObject()->GetAffine();
-	static_cast<CubeModelClass*>(m_ModelManager->GetModel(ModelIDs::DEFAULT_CUBE))->SetColor(actor_manager->GetPlayerObject()->GetCollision()->GetColor());
-	result = m_ModelManager->GetModel(ModelIDs::DEFAULT_CUBE)->Render(m_D3D->GetDeviceContext(), transform, m_Light, m_Camera);
-	if (FAILED(result))
-	{
-		e.contents = _T("Collision 렌더링 실패");
-		e.errorCode = result;
-		return result;
-	}
-
-	// other
-	for (int i = 0; i < actor_manager->GetOtherObjectCount(); ++i)
-	{
-		transform.world = actor_manager->GetOtherObject(i)->GetAffineObject()->GetAffine();
-		result = m_ModelManager->GetModel(actor_manager->GetOtherObject(i)->GetModelID())->Render(m_D3D->GetDeviceContext(), transform, m_Light, m_Camera);
-		if (FAILED(result))
+		// 해당 model이 있다면 렌더링
+		if (m_ModelManager->GetModel(static_cast<Model::ID>(i)))
 		{
-			e.contents = _T("Model 렌더링 실패");
-			e.errorCode = result;
-			return result;
-		}
-		transform.world = actor_manager->GetOtherObject(i)->GetCollision()->GetAffineObject()->GetAffine();
-		static_cast<CubeModelClass*>(m_ModelManager->GetModel(ModelIDs::DEFAULT_CUBE))->SetColor(actor_manager->GetOtherObject(i)->GetCollision()->GetColor());
-		result = m_ModelManager->GetModel(ModelIDs::DEFAULT_CUBE)->Render(m_D3D->GetDeviceContext(), transform, m_Light, m_Camera);
-		if (FAILED(result))
-		{
-			e.contents = _T("Collision 렌더링 실패");
-			e.errorCode = result;
-			return result;
+			// shader, input layout 세팅
+			m_ShaderManager->GetShader(m_ModelManager->GetModel(static_cast<Model::ID>(i))->GetShaderID())->BeginRender(m_D3D->GetDeviceContext());
+
+			for (UINT j = 0; j < m_ModelManager->GetModel(static_cast<Model::ID>(i))->GetMeshCount(); ++j)
+			{
+				m_ModelManager->GetModel(static_cast<Model::ID>(i))->RenderMesh(m_D3D->GetDeviceContext(), j);
+				m_ShaderManager->GetShader(m_ModelManager->GetModel(static_cast<Model::ID>(i))->GetShaderID())->Render(
+					m_D3D->GetDeviceContext(),
+					m_ModelManager->GetModel(static_cast<Model::ID>(i))->GetIndexCount(j),
+					m_ModelManager->GetModel(static_cast<Model::ID>(i))->GetInstanceCount(),
+					m_ModelManager->GetModel(static_cast<Model::ID>(i))->GetMaterial(j)
+				);
+			}
 		}
 	}
 
 	// 2D 렌더링 //
+	m_UIRender->BeginRender(m_D3D.get());
+
+	// background 렌더링
+	if (SceneManager->GetUIManager()->GetBackground())
+		m_UIRender->RenderBackground(
+			m_UITextureManager->GetTexture(SceneManager->GetUIManager()->GetBackground()->GetUITextureID()),
+			SceneManager->GetUIManager()->GetBackground()->GetColor()
+		);
+
+	// 2D UI 렌더링
+	for (UINT i = 0; i < SceneManager->GetUIManager()->GetUICount(); ++i)
+	{
+		if (UI::State::DISAPPEAR != SceneManager->GetUIManager()->GetUI(i)->GetUIState())
+			m_UIRender->RenderTexture(
+				m_UITextureManager->GetTexture(SceneManager->GetUIManager()->GetUI(i)->GetUITextureID()),
+				SceneManager->GetUIManager()->GetUI(i)->GetPosition(),
+				SceneManager->GetUIManager()->GetUI(i)->GetColor()
+			);
+	}
+
 	// text 렌더링
-	DirectX::XMFLOAT2 pos = { 500.f, 600.f };
-	DirectX::XMFLOAT4 color = { 1.f, 1.f, 1.f, 1.f };
-	m_TextRender->Render(m_D3D, scene_info, pos, color);
-	
-	// IMGUI 렌더링
-	m_IMGUI->Render(actor_manager, m_Light, sound, m_Camera, fps, cpu_usage);
+	for (UINT i = 0; i < SceneManager->GetTextManager()->GetTextCount(); ++i)
+	{
+		m_UIRender->RenderText(
+			SceneManager->GetTextManager()->GetTextObject(i)->GetText(),
+			SceneManager->GetTextManager()->GetTextObject(i)->GetFontID(),
+			SceneManager->GetTextManager()->GetTextObject(i)->GetTextPosition(),
+			SceneManager->GetTextManager()->GetTextObject(i)->GetTextColor(),
+			0.f,
+			DirectX::XMFLOAT2(0.f, 0.f),
+			SceneManager->GetTextManager()->GetTextObject(i)->GetTextSize()
+		);
+	}
+
+	m_UIRender->EndRender(m_D3D.get());
 
 	// back buffer에 있는 내용을 화면에 출력 //
 	m_D3D->EndScene();
-
-	return result;
 }
+
+#ifdef DEBUG
+void Graphic::GraphicsClass::ImGuiRender(Scene::SceneManagerClass* SceneManager)
+{
+	m_IMGUI->Render(m_Light.get(), SceneManager);
+}
+#endif // DEBUG
+
+

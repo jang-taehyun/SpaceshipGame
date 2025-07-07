@@ -155,6 +155,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ActorClass.h" />
+    <ClInclude Include="GameObjectClass.h" />
     <ClInclude Include="ModelFactoryClass.h" />
     <ClInclude Include="ObjectFactoryClass.h" />
     <ClInclude Include="ObjectManagerClass.h" />
@@ -167,7 +168,6 @@
     <ClInclude Include="D3DClass.h" />
     <ClInclude Include="DxDefine.h" />
     <ClInclude Include="FPSClass.h" />
-    <ClInclude Include="FrustumClass.h" />
     <ClInclude Include="GraphicsClass.h" />
     <ClInclude Include="IModelClass.h" />
     <ClInclude Include="IModelLoaderClass.h" />
@@ -194,7 +194,10 @@
     <ClInclude Include="SceneFactoryClass.h" />
     <ClInclude Include="SceneManagerClass.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="ShaderBufferUpdaterClass.h" />
     <ClInclude Include="ShaderClass.h" />
+    <ClInclude Include="ShaderFactoryClass.h" />
+    <ClInclude Include="ShaderManagerClass.h" />
     <ClInclude Include="SoundClass.h" />
     <ClInclude Include="SoundManagerClass.h" />
     <ClInclude Include="SpaceshipGame.h" />
@@ -216,6 +219,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ActorClass.cpp" />
+    <ClCompile Include="GameObjectClass.cpp" />
     <ClCompile Include="ModelFactoryClass.cpp" />
     <ClCompile Include="ObjectFactoryClass.cpp" />
     <ClCompile Include="ObjectManagerClass.cpp" />
@@ -226,7 +230,6 @@
     <ClCompile Include="CPUClass.cpp" />
     <ClCompile Include="D3DClass.cpp" />
     <ClCompile Include="FPSClass.cpp" />
-    <ClCompile Include="FrustumClass.cpp" />
     <ClCompile Include="GraphicsClass.cpp" />
     <ClCompile Include="IModelClass.cpp" />
     <ClCompile Include="IModelLoaderClass.cpp" />
@@ -258,7 +261,10 @@
     <ClCompile Include="RotateClass.cpp" />
     <ClCompile Include="SceneFactoryClass.cpp" />
     <ClCompile Include="SceneManagerClass.cpp" />
+    <ClCompile Include="ShaderBufferUpdaterClass.cpp" />
     <ClCompile Include="ShaderClass.cpp" />
+    <ClCompile Include="ShaderFactoryClass.cpp" />
+    <ClCompile Include="ShaderManagerClass.cpp" />
     <ClCompile Include="SoundClass.cpp" />
     <ClCompile Include="SoundManagerClass.cpp" />
     <ClCompile Include="StartSceneClass.cpp" />

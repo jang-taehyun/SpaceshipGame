@@ -2,11 +2,7 @@
 #include "CameraClass.h"
 #include "SceneClass.h"
 
-Scene::SceneClass::SceneClass(SceneState current) : m_CurrentSceneState(current), m_NextSceneState(SceneState::NONE), m_IsSceneEnded(false), m_IsShowingCursor(true)
-{
-	AffineInfo info = { DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f),DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f), DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f) };
-	m_Camera = std::make_unique<Object::CameraClass>(info);
-}
+Scene::SceneClass::SceneClass(SceneState current, SceneState next) : m_CurrentSceneState(current), m_NextSceneState(next), m_IsSceneEnded(false), m_IsShowingCursor(true) {}
 
 Scene::SceneClass::~SceneClass()
 {

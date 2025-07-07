@@ -23,18 +23,24 @@ namespace Graphic
 
 		public:
 			ModelClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, ID ModelID, Shader::ID ShaderID, Loader::ModelLoaderClass<VertexType>* loader);
+			ModelClass(const ModelClass& other);
+			ModelClass(ModelClass&& other) noexcept;
 			virtual ~ModelClass() = default;
 
-			virtual inline void ResetWorldMatrix() override { m_WorldMatrix.clear(); }
-			virtual inline void AddWorldMatrix(DirectX::XMFLOAT4X4& world) override { m_WorldMatrix.push_back(world); }
+			ModelClass<VertexType>& operator=(const ModelClass& other);
+			ModelClass<VertexType>& operator=(ModelClass&& other) noexcept;
+
+			virtual inline void AddWorldMatrix(const DirectX::XMFLOAT4X4& world) override { m_WorldMatrix.push_back(world); }
 
 			virtual void UpdateInstanceBuffer(ID3D11DeviceContext* DeviceContext);
 			virtual void RenderMesh(ID3D11DeviceContext* DeviceContext, int MeshIdx) override;
 
+			virtual inline UINT GetMeshCount() const override { return m_MeshCount; }
 			virtual inline Shader::ID GetShaderID() const override { return m_ShaderID; }
 			virtual inline ULONG GetIndexCount(int idx) const override { assert(idx < m_MeshCount); return m_MeshesIndexCount[idx]; }
 			virtual inline ULONG GetInstanceCount() const override { assert(m_WorldMatrix.size() < MAX_INSTANCE_COUNT); return m_WorldMatrix.size(); }
 			virtual inline const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& GetMaterial(int idx) const override { assert(idx < m_MeshCount); return m_Materials[idx]; }
+			virtual inline DirectX::BoundingOrientedBox GetModelOBB() const { return m_ModelOBB; }
 
 			virtual inline ULONG GetVertexCount(int idx) const override { assert(idx < m_MeshCount); return m_MeshesVertexCount[idx]; }
 
@@ -59,11 +65,7 @@ namespace Graphic
 
 			std::vector<DirectX::XMFLOAT4X4> m_WorldMatrix;											// 각 object의 world matrix 모음
 
-		public:
-			ModelClass(const ModelClass& other) = delete;
-			ModelClass(ModelClass&& other) noexcept = delete;
-			ModelClass& operator=(const ModelClass& other) = delete;
-			ModelClass& operator=(ModelClass&& other) noexcept = delete;
+			DirectX::BoundingOrientedBox m_ModelOBB;
 		};
 	}
 }

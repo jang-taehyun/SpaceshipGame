@@ -20,7 +20,7 @@ Object::ObjectManagerClass::~ObjectManagerClass()
 	IsInitialize = false;
 }
 
-Object::IObjectClass* Object::ObjectManagerClass::operator[](int idx) const
+Object::IObjectClass* Object::ObjectManagerClass::GetGameObject(int idx) const
 {
 	assert(idx < m_ObjectList.size());
 	return m_ObjectList[idx].get();

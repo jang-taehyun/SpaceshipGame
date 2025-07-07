@@ -1,32 +1,23 @@
 #pragma once
 
-// Error 관련
-typedef struct _error_content_
+namespace Graphic
 {
-	std::wstring title;
-	std::wstring contents;
-	HRESULT errorCode = S_OK;
-} ErrorContent;
-
-// shader 파일 관련
-typedef struct _shader_file_info_
-{
-	std::wstring vsFileName;
-	std::wstring psFileName;
-	std::string vsEntryPoint;
-	std::string psEntryPoint;
-} ShaderFileInfo;
-
-// sound 파일 관련
-typedef struct _sound_info_
-{
-	std::wstring filename;
-} SoundFileInfo;
+	namespace Loader
+	{
+		// shader 정보 //
+		typedef struct _shader_file_info_
+		{
+			std::wstring vsFileName;
+			std::wstring psFileName;
+			std::string vsEntryPoint;
+			std::string psEntryPoint;
+		} ShaderFileInfo;
+	}
+}
 
 // transform matrix(world matrix, view matrix, projection) 관련
 typedef struct _transform_matrix_data_
 {
-	DirectX::XMMATRIX world;
 	DirectX::XMMATRIX view;
 	DirectX::XMMATRIX projection;
 } TransformMatrixData;

@@ -12,19 +12,14 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	// _CrtSetBreakAlloc(393498);
 
-	try
 	{
 		System::SystemClass system;
 		system.Run();
-	}
-	catch (ErrorContent e)
-	{
-		OutputDebugString(e.title.c_str());
-		OutputDebugString(_T("\n"));
-		OutputDebugString(e.contents.c_str());
-		OutputDebugString(_T("\n"));
-		OutputDebugString(std::to_wstring(e.errorCode).c_str());
-		OutputDebugString(_T("\n"));
+
+		Sound::SoundFileList.clear();
+		Graphic::Model::ModelFileList.clear();
+		Graphic::Texture::UITextureFileList.clear();
+		Graphic::Font::FontList.clear();
 	}
 
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);

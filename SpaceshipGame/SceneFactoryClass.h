@@ -6,7 +6,7 @@ namespace Scene { class ISceneClass; }
 
 namespace Scene
 {
-	std::unique_ptr<ISceneClass> CreateStartScene(SceneState current, Object::ObjectManagerClass* actors, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds);
+	std::unique_ptr<ISceneClass> CreateStartScene(Object::ObjectManagerClass* actors, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds);
 
 	class SceneFactoryClass
 	{
@@ -18,6 +18,6 @@ namespace Scene
 
 	private:
 		static bool IsInitailize;
-		std::map<SceneState, std::function<std::unique_ptr<ISceneClass>(SceneState, Object::ObjectManagerClass*, Text::TextManagerClass*, UI::UIManagerClass*, Sound::SoundManagerClass*)>> m_Creator;
+		std::map<SceneState, std::function<std::unique_ptr<ISceneClass>(Object::ObjectManagerClass*, Text::TextManagerClass*, UI::UIManagerClass*, Sound::SoundManagerClass*)>> m_Creator;
 	};
 }

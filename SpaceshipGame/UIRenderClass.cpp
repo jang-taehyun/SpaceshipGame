@@ -4,29 +4,68 @@
 #include "ITextClass.h"
 #include "UIRenderClass.h"
 
-bool Graphic::UIRenderClass::IsInitialize = false;
+bool Graphic::Texture::UIRenderClass::IsInitialize = false;
 
-Graphic::UIRenderClass::UIRenderClass(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext)
+Graphic::Texture::UIRenderClass::UIRenderClass(ID3D11DeviceContext* DeviceContext) : m_CurrentFontMask(0)
 {
+	std::unique_ptr<DirectX::SpriteFont> font = nullptr;
+
 	assert(!IsInitialize);
 
 	// UI 렌더링을 담당할 sprite batch 생성 //
 	m_Renderer = std::make_unique<DirectX::SpriteBatch>(DeviceContext);
 	assert(m_Renderer);
 
-	// bitmap 폰트를 메모리에 로드 및 sprite font 생성 //
-	m_Font = std::make_unique<DirectX::SpriteFont>(Device, Text::FontFileName.c_str());
-	assert(m_Font);
-
 	IsInitialize = true;
 }
 
-Graphic::UIRenderClass::~UIRenderClass()
+Graphic::Texture::UIRenderClass::~UIRenderClass()
 {
 	IsInitialize = false;
 }
 
-void Graphic::UIRenderClass::BeginRender(const D3DClass* d3d)
+void Graphic::Texture::UIRenderClass::LoadFont(ID3D11Device* Device, UINT FontMask)
+{
+	bool IsLoad = false, IsExist = false;
+	Font::ID id = Font::ID::NONE;
+	UINT flag = 0;
+	std::unique_ptr<DirectX::SpriteFont> font = nullptr;
+
+	// 필요한 bitmap 폰트를 메모리에 로드 및 sprite font 생성 //
+	for (UINT i = 0; i < Font::FontIDCount; ++i)
+	{
+		IsLoad = (FontMask & (1 << i));
+		IsExist = (m_CurrentFontMask & (1 << i));
+		id = static_cast<Font::ID>(i);
+
+		// 로드를 해야하는데 map에 없는 경우
+		if (IsLoad && !IsExist)
+		{
+			// instance 생성
+			font = std::make_unique<DirectX::SpriteFont>(Device, Font::FontList.find(Font::ID::DEFAULT)->second.c_str());
+			assert(font);
+
+			// 현재 로드된 UI texture ID 업데이트
+			m_CurrentFontMask |= (1 << i);
+
+			// map에 저장
+			m_FontList.insert(std::make_pair(id, std::move(font)));
+		}
+		// 해제해야 하는데 map에 있는 경우
+		else if (!IsLoad && IsExist)
+		{
+			// instance가 실제로 존재하는지 확인하고 해제
+			if (m_FontList.end() != m_FontList.find(id))
+				m_FontList.erase(id);
+
+			// 현재 로드된 UI texture ID 제거
+			flag = ~(1 << i);
+			m_CurrentFontMask &= flag;
+		}
+	}
+}
+
+void Graphic::Texture::UIRenderClass::BeginRender(const D3DClass* d3d)
 {
 	// depth buffer 비활성화, alpha blend state 활성화
 	d3d->TurnDepthBufferOff();
@@ -35,7 +74,7 @@ void Graphic::UIRenderClass::BeginRender(const D3DClass* d3d)
 	m_Renderer->Begin();
 }
 
-void Graphic::UIRenderClass::RenderBackground(ID3D11ShaderResourceView* texture, DirectX::XMFLOAT4 color)
+void Graphic::Texture::UIRenderClass::RenderBackground(ID3D11ShaderResourceView* texture, DirectX::XMFLOAT4 color)
 {
 	RECT rect;
 	BOOL IsDone = false;
@@ -51,7 +90,7 @@ void Graphic::UIRenderClass::RenderBackground(ID3D11ShaderResourceView* texture,
 	m_Renderer->Draw(texture, rect, vColor);
 }
 
-void Graphic::UIRenderClass::RenderTexture(ID3D11ShaderResourceView* texture, DirectX::XMFLOAT2 pos, DirectX::XMFLOAT4 color, float rot, DirectX::XMFLOAT2 origin, float scale)
+void Graphic::Texture::UIRenderClass::RenderTexture(ID3D11ShaderResourceView* texture, DirectX::XMFLOAT2 pos, DirectX::XMFLOAT4 color, float rot, DirectX::XMFLOAT2 origin, float scale)
 {
 	// 색상 데이터(XMFLOAT4)을 XMVECTOR로 변환 //
 	DirectX::XMVECTOR vColor = DirectX::XMLoadFloat4(&color);
@@ -60,8 +99,10 @@ void Graphic::UIRenderClass::RenderTexture(ID3D11ShaderResourceView* texture, Di
 	m_Renderer->Draw(texture, pos, nullptr, vColor, rot, origin, scale);
 }
 
-void Graphic::UIRenderClass::RenderText(const std::wstring& text, DirectX::XMFLOAT2 pos, DirectX::XMFLOAT4 color, float rot, DirectX::XMFLOAT2 origin, float scale)
+void Graphic::Texture::UIRenderClass::RenderText(const std::wstring& text, Font::ID fontID, DirectX::XMFLOAT2 pos, DirectX::XMFLOAT4 color, float rot, DirectX::XMFLOAT2 origin, float scale)
 {
+	std::map<Font::ID, std::unique_ptr<DirectX::SpriteFont>>::iterator iter;
+
 	// 색상 데이터(XMFLOAT4)을 XMVECTOR로 변환 //
 	DirectX::XMVECTOR vColor = DirectX::XMLoadFloat4(&color);
 
@@ -70,10 +111,13 @@ void Graphic::UIRenderClass::RenderText(const std::wstring& text, DirectX::XMFLO
 	TextPos.x /= 2.f;
 	TextPos.y /= 2.f;
 
-	m_Font->DrawString(m_Renderer.get(), text.c_str(), TextPos, vColor, rot, origin, scale);
+	// font list에서 font를 찾아서 렌더링
+	m_FontList.find(fontID);
+	assert(m_FontList.end() != iter);
+	iter->second->DrawString(m_Renderer.get(), text.c_str(), TextPos, vColor, rot, origin, scale);
 }
 
-void Graphic::UIRenderClass::EndRender(const D3DClass* d3d)
+void Graphic::Texture::UIRenderClass::EndRender(const D3DClass* d3d)
 {
 	m_Renderer->End();
 

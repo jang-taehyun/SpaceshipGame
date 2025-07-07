@@ -5,6 +5,8 @@
 #include <assimp/postprocess.h>
 #include <assimp/material.h>
 
+#include <DirectXCollision.h>
+
 #include "IModelLoaderClass.h"
 
 namespace Graphic
@@ -21,6 +23,7 @@ namespace Graphic
 			virtual HRESULT Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext) override;
 
 			inline ULONG GetMeshCount() const { return m_MeshCount; }
+			inline DirectX::BoundingOrientedBox GetModelOBB() const { return m_ModelOBB; }
 			inline std::vector<std::vector<VertexType>> MoveVerticesDatas() { return std::move(m_Vertices); }
 			inline std::vector<std::vector<ULONG>> MoveIndicesDatas() { return std::move(m_Indices); }
 			inline std::vector<std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>> MoveMaterialsDatas() { return std::move(m_Materials); }
@@ -33,6 +36,7 @@ namespace Graphic
 
 		protected:
 			inline const aiScene* GetScene() const { return m_Scene; }
+			inline void PushPositionData(DirectX::XMFLOAT3 pos) { m_Positions.push_back(pos); }
 
 			inline void PushVerticesData(std::vector<VertexType> vertices) { m_Vertice.push_back(std::move(vertices)); }
 			inline void PushIndicesData(std::vector<ULONG> indices) { m_Indices.push_back(std::move(indices)); }
@@ -48,6 +52,9 @@ namespace Graphic
 			std::vector<std::vector<VertexType>> m_Vertices;													// 각 mesh에 있는 vertex 데이터들
 			std::vector<std::vector<ULONG>> m_Indices;															// 각 mesh에 있는 index 데이터들
 			std::vector<std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>> m_Materials;				// 각 mesh에서 사용하는 material 데이터들
+
+			std::vector<DirectX::XMFLOAT3> m_Positions;															// 모든 mesh에 존재하는 position 데이터(Bounding oriented box 생성시 사용)
+			DirectX::BoundingOrientedBox m_ModelOBB;															// frustum culling용 OBB 박스
 
 		public:
 			ModelLoaderClass(const ModelLoaderClass& other) = delete;

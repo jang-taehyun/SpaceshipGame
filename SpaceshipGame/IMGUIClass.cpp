@@ -20,10 +20,7 @@ bool Graphic::IMGUIClass::IsInitialize = false;
 
 Graphic::IMGUIClass::IMGUIClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeivceContext)
 {
-	HRESULT result = S_OK;
-
-	assert(IsInitialize);
-
+	assert(!IsInitialize);
 	Initialize(hwnd, Device, DeivceContext);
 	IsInitialize = true;
 }

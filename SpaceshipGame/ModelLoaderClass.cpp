@@ -6,7 +6,7 @@ template<typename VertexType>
 Graphic::Loader::ModelLoaderClass<VertexType>::ModelLoaderClass(Model::ID ModelID)
 {
 	Assimp::Importer importer;				// assimp 라이브러리 importer 객체
-	std::wstring filename = Model::ModelList.find(ModelID)->second;
+	std::wstring filename = Model::ModelFileList.find(ModelID)->second;
 
 	// assimp 라이브러리를 통해 모델 파일을 메모리에 로드 //
 	m_Filename.assign(filename.begin(), filename.end());
@@ -32,6 +32,9 @@ HRESULT Graphic::Loader::ModelLoaderClass<VertexType>::Load(ID3D11Device* Device
 	if (FAILED(result))
 		return result;
 
+	// Model의 OBB 박스 생성(frustum culling용 OBB 박스) //
+	DirectX::BoundingOrientedBox::CreateFromPoints(m_ModelOBB, m_Positions.size(), m_Positions.data(), sizeof(DirectX::XMFLOAT3));
+
 	return result;
 }
 
@@ -53,7 +56,7 @@ HRESULT Graphic::Loader::ModelLoaderClass<VertexType>::LoadVertex()
 		mesh = GetScene()->mMeshes[i];
 
 		// vertex 데이터 파싱 //
-		PushVerticesData(LoadVertex());
+		PushVerticesData(LoadVertexData(mesh));
 
 		// index 데이터 파싱 //
 		for (unsigned int j = 0; j < mesh->mNumFaces; ++j)

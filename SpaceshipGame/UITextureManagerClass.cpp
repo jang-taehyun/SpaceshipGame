@@ -2,37 +2,48 @@
 #include "TextureClass.h"
 #include "UITextureManagerClass.h"
 
-bool UI::UITextureManagerClass::IsInitialize = false;
+bool Graphic::Texture::UITextureManagerClass::IsInitialize = false;
 
-UI::UITextureManagerClass::UITextureManagerClass() : m_CurrentUITextureMask(0)
+Graphic::Texture::UITextureManagerClass::UITextureManagerClass() : m_CurrentUITextureMask(0)
 {
 	assert(!IsInitialize);
 	IsInitialize = true;
 }
 
-UI::UITextureManagerClass::~UITextureManagerClass()
+Graphic::Texture::UITextureManagerClass::~UITextureManagerClass()
 {
 	IsInitialize = false;
 }
 
-void UI::UITextureManagerClass::Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, UINT UITextureMask)
+ID3D11ShaderResourceView* Graphic::Texture::UITextureManagerClass::GetTexture(UITextureID id) const
+{
+	std::map<UITextureID, std::unique_ptr<TextureClass>>::const_iterator iter;
+
+	iter = m_TextureList.find(id);
+	if (m_TextureList.end() == iter)
+		return nullptr;
+
+	return iter->second->GetTexture();
+}
+
+void Graphic::Texture::UITextureManagerClass::Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, UINT UITextureMask)
 {
 	bool IsLoad = false, IsExist = false;
-	Graphic::Texture::UITextureID id = Graphic::Texture::UITextureID::NONE;
+	UITextureID id = UITextureID::NONE;
 	UINT flag = 0;
-	std::unique_ptr<Graphic::Texture::TextureClass> texture = nullptr;
+	std::unique_ptr<TextureClass> texture = nullptr;
 
-	for (UINT i = 0; i < Graphic::Texture::UITextureIDCount; ++i)
+	for (UINT i = 0; i < UITextureIDCount; ++i)
 	{
 		IsLoad = (UITextureMask & (1 << i));
 		IsExist = (m_CurrentUITextureMask & (1 << i));
-		id = static_cast<Graphic::Texture::UITextureID>(i);
+		id = static_cast<UITextureID>(i);
 
 		// 로드를 해야하는데 map에 없는 경우
 		if (IsLoad && !IsExist)
 		{
 			// instance 생성
-			texture = std::make_unique<Graphic::Texture::TextureClass>(Device, DeviceContext, id);
+			texture = std::make_unique<TextureClass>(Device, DeviceContext, id);
 			assert(texture);
 
 			// 현재 로드된 UI texture ID 업데이트

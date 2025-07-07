@@ -26,9 +26,6 @@
     <Filter Include="Default\header">
       <UniqueIdentifier>{4cdff5a3-8c3f-4636-bd3a-5b4c64260d22}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FrustumClass">
-      <UniqueIdentifier>{cbac6ccf-be28-4f73-9f9b-51c9b43e22fa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Model">
       <UniqueIdentifier>{b2ab057f-896f-42aa-800e-4d42831064c2}</UniqueIdentifier>
     </Filter>
@@ -209,6 +206,18 @@
     <Filter Include="Object\ObjectFactoryClass">
       <UniqueIdentifier>{c0907262-0024-4944-9111-09e79f5b5c58}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\ShaderManagerClass">
+      <UniqueIdentifier>{be0ca967-1e69-4f55-986d-ee04a59b6a78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\ShaderFactoryClass">
+      <UniqueIdentifier>{16e6d4a9-8e74-4e1f-a8e3-27042330fbb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\GameObjectClass">
+      <UniqueIdentifier>{b0942421-a20e-42fc-a3e6-b774e693e426}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\ShaderBufferUpdaterClass">
+      <UniqueIdentifier>{06740d24-4ae1-4a0b-a972-cc1fdefe0c28}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemClass.h">
@@ -249,9 +258,6 @@
     </ClInclude>
     <ClInclude Include="CameraClass.h">
       <Filter>Object\CameraClass</Filter>
-    </ClInclude>
-    <ClInclude Include="FrustumClass.h">
-      <Filter>FrustumClass</Filter>
     </ClInclude>
     <ClInclude Include="ModelClass.h">
       <Filter>Model\ModelClass</Filter>
@@ -388,6 +394,18 @@
     <ClInclude Include="ObjectFactoryClass.h">
       <Filter>Object\ObjectFactoryClass</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderManagerClass.h">
+      <Filter>Shader\ShaderManagerClass</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFactoryClass.h">
+      <Filter>Shader\ShaderFactoryClass</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectClass.h">
+      <Filter>Object\GameObjectClass</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderBufferUpdaterClass.h">
+      <Filter>Shader\ShaderBufferUpdaterClass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -419,9 +437,6 @@
     </ClCompile>
     <ClCompile Include="CameraClass.cpp">
       <Filter>Object\CameraClass</Filter>
-    </ClCompile>
-    <ClCompile Include="FrustumClass.cpp">
-      <Filter>FrustumClass</Filter>
     </ClCompile>
     <ClCompile Include="ModelClass.cpp">
       <Filter>Model\ModelClass</Filter>
@@ -551,6 +566,18 @@
     </ClCompile>
     <ClCompile Include="ObjectFactoryClass.cpp">
       <Filter>Object\ObjectFactoryClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderManagerClass.cpp">
+      <Filter>Shader\ShaderManagerClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFactoryClass.cpp">
+      <Filter>Shader\ShaderFactoryClass</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectClass.cpp">
+      <Filter>Object\GameObjectClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderBufferUpdaterClass.cpp">
+      <Filter>Shader\ShaderBufferUpdaterClass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

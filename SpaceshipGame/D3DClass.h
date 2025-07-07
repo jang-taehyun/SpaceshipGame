@@ -17,8 +17,8 @@ namespace Graphic
 		inline ID3D11Device* GetDevice() const { return m_Device.Get(); }
 		inline ID3D11DeviceContext* GetDeviceContext() const { return m_DeviceContext.Get(); }
 
-		inline const DirectX::XMMATRIX& GetProjectionMatrix() { return m_ProjectionMatrix; }
-		inline const DirectX::XMMATRIX& GetOrthoMatrix() { return m_OrthoMatrix; }
+		inline const DirectX::XMFLOAT4X4& GetProjectionMatrix() { return m_ProjectionMatrix; }
+		inline const DirectX::XMFLOAT4X4& GetOrthoMatrix() { return m_OrthoMatrix; }
 
 		void TurnDepthBufferOn() const;
 		void TurnDepthBufferOff() const;
@@ -78,8 +78,8 @@ namespace Graphic
 		Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_RasterizerState = nullptr;
 
 		// matrix
-		DirectX::XMMATRIX m_ProjectionMatrix = DirectX::XMMatrixIdentity();
-		DirectX::XMMATRIX m_OrthoMatrix = DirectX::XMMatrixIdentity();
+		DirectX::XMFLOAT4X4 m_ProjectionMatrix;
+		DirectX::XMFLOAT4X4 m_OrthoMatrix;
 
 		// alpha blending
 		Microsoft::WRL::ComPtr<ID3D11BlendState> m_AlphaEnableBlendingState = nullptr;

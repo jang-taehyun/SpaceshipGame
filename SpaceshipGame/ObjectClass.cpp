@@ -2,7 +2,7 @@
 #include "TypeConverterClass.h"
 #include "ObjectClass.h"
 
-DirectX::XMFLOAT4X4 Object::ObjectClass::GetAffineMatrix() const
+const DirectX::XMFLOAT4X4 Object::ObjectClass::GetAffineMatrix() const
 {
 	DirectX::XMMATRIX affine;
 	DirectX::XMFLOAT4X4 ret;

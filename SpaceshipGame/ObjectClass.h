@@ -16,7 +16,7 @@ namespace Object
 		ObjectClass() = default;
 		virtual ~ObjectClass() = default;
 
-		virtual DirectX::XMFLOAT4X4 GetAffineMatrix() const override;																	// affine matrxi(world matrix) 반환
+		virtual const DirectX::XMFLOAT4X4 GetAffineMatrix() const override;																	// affine matrxi(world matrix) 반환
 		virtual const AffineInfo& GetAffine() const override { return m_Affine; }														// affine 데이터 반환
 
 		virtual inline DirectX::XMFLOAT4 GetPosition() const override { return  m_Affine.position; }									// position 반환

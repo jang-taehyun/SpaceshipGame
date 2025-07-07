@@ -7,16 +7,15 @@ namespace Scene
 	class SceneClass : public ISceneClass
 	{
 	public:
-		SceneClass(SceneState current);
+		SceneClass(SceneState current, SceneState next);
 		virtual ~SceneClass();
 
 		virtual inline SceneState GetCurrentSceneState() const override { return m_CurrentSceneState; }
 		virtual inline SceneState GetNextSceneState() const override { return m_NextSceneState; }
 		virtual inline bool IsSceneEnded() const override { return m_IsSceneEnded; }
 
-		virtual inline Object::IObjectClass* GetCamera() const override { return m_Camera.get(); }
-
 		virtual void Frame(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time) override = 0;
+		virtual inline Object::IObjectClass* GetActiveCamera() override = 0;
 		virtual inline std::unique_ptr<ISceneClass> Clone() const override = 0;
 
 	protected:
@@ -28,7 +27,5 @@ namespace Scene
 		SceneState m_NextSceneState = SceneState::NONE;
 		bool m_IsSceneEnded = false;
 		bool m_IsShowingCursor = true;
-
-		std::unique_ptr<Object::IObjectClass> m_Camera = nullptr;
 	};
 }

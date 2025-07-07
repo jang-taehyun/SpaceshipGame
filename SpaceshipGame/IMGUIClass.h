@@ -8,12 +8,7 @@
 #include <backends/imgui_impl_dx11.h>
 
 namespace Graphic { class LightClass; }
-namespace Sound { class SoundClass; }
-namespace Object
-{
-	class IObjectClass;
-	class ObjectManagerClass;
-}
+namespace Scene { class SceneManagerClass; }
 
 
 namespace Graphic
@@ -26,7 +21,7 @@ namespace Graphic
 		IMGUIClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeivceContext);
 		virtual ~IMGUIClass();
 
-		void Render(Object::ObjectManagerClass* actor_manager, Graphic::LightClass* light, Sound::SoundClass* sound, Object::IObjectClass* camera, int fps, int cpu_usage);
+		void Render(Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light);
 
 	private:
 		void Initialize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeivceContext);

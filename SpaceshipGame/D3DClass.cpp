@@ -358,15 +358,19 @@ void Graphic::D3DClass::SetViewport(int ScreenWidth, int ScreenHeight)
 
 void Graphic::D3DClass::SetMatrix(int ScreenWidth, int ScreenHeight)
 {
+	DirectX::XMMATRIX proj, ortho;
+
 	// Projection matrix의 시야각(Field of view), 화면 비율(aspect) 설정 //
 	float FieldOfView = DirectX::XM_PI / 4.f;
 	float ScreenAspect = static_cast<float>(ScreenWidth) / static_cast<float>(ScreenHeight);
 
 	// Projection matrix 생성 //
-	m_ProjectionMatrix = DirectX::XMMatrixPerspectiveFovLH(FieldOfView, ScreenAspect, System::SCREEN_NEAR, System::SCREEN_DEPTH);
+	proj = DirectX::XMMatrixPerspectiveFovLH(FieldOfView, ScreenAspect, System::SCREEN_NEAR, System::SCREEN_DEPTH);
+	DirectX::XMStoreFloat4x4(&m_ProjectionMatrix, proj);
 
 	// Ortho matrix(직교 투영 행렬) 생성 //
-	m_OrthoMatrix = DirectX::XMMatrixOrthographicLH(static_cast<float>(ScreenWidth), static_cast<float>(ScreenHeight), System::SCREEN_NEAR, System::SCREEN_DEPTH);
+	ortho = DirectX::XMMatrixOrthographicLH(static_cast<float>(ScreenWidth), static_cast<float>(ScreenHeight), System::SCREEN_NEAR, System::SCREEN_DEPTH);
+	DirectX::XMStoreFloat4x4(&m_OrthoMatrix, ortho);
 }
 
 HRESULT Graphic::D3DClass::SetAlphaBlendState()

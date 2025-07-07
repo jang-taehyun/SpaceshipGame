@@ -10,11 +10,15 @@ std::vector<Graphic::Model::PTN_VertexType> Graphic::Loader::PTN_DNSR_ModelLoade
 
 	for (unsigned int j = 0; j < mesh->mNumVertices; ++j)
 	{
+		// vertex data 파싱
 		vertex.position = DirectX::XMFLOAT3(mesh->mVertices[j].x, mesh->mVertices[j].y, mesh->mVertices[j].z);
 		vertex.texture = DirectX::XMFLOAT2(mesh->mTextureCoords[0][j].x, mesh->mTextureCoords[0][j].y);
 		vertex.normal = DirectX::XMFLOAT3(mesh->mNormals[j].x, mesh->mNormals[j].y, mesh->mNormals[j].z);
 
 		vertices.push_back(vertex);
+
+		// OBB 박스를 만들때 사용할 position 데이터 파싱
+		PushPositionData(vertex.position);
 	}
 
 	return std::move(vertices);

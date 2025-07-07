@@ -9,16 +9,21 @@ namespace Graphic
 		{
 		public:
 			explicit MLC_ShaderClass(ID ShaderID);
+			MLC_ShaderClass(const MLC_ShaderClass& other);
+			MLC_ShaderClass(MLC_ShaderClass&& other) noexcept;
 			virtual ~MLC_ShaderClass() = default;
+
+			MLC_ShaderClass& operator=(const MLC_ShaderClass& other);
+			MLC_ShaderClass& operator=(MLC_ShaderClass&& other) noexcept;
+
+			// shader 내부에 들어갈 데이터들 업데이트하는 함수 //
+			virtual void SetShaderBuffers(ID3D11DeviceContext* DeviceContext, const MLC_ShaderBuffers& ShaderBufferDatas) override;
 
 		private:
 			// shader에서 사용하는 buffer들을 생성하는 함수
 			virtual HRESULT CreateBuffers(ID3D11Device* Device) override;
 
 		private:
-			// shader 내부에 들어갈 데이터들 업데이트하는 함수 //
-			virtual void SetShaderBuffers(ID3D11DeviceContext* DeviceContext, const MLC_ShaderBuffers& ShaderBufferDatas) override;
-
 			// Matrix buffer를 업데이트 하는 함수 //
 			HRESULT UpdateMatrixBuffer(ID3D11DeviceContext* DeviceContext, UINT slot, const MatrixBufferType& transform);
 

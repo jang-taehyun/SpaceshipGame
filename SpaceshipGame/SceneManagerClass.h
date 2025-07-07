@@ -4,7 +4,11 @@ namespace System { class InputClass; }
 namespace Text { class TextManagerClass; }
 namespace UI { class UIManagerClass; }
 namespace Sound { class SoundManagerClass; }
-namespace Object { class ObjectManagerClass; }
+namespace Object
+{
+	class ObjectManagerClass;
+	class IObjectClass;
+}
 namespace Scene
 {
 	class ISceneClass;
@@ -20,13 +24,13 @@ namespace Scene
 		~SceneManagerClass();
 
 	public:
-		void Frame(const System::InputClass* input, float frame_time);
+		bool Frame(const System::InputClass* input, float frame_time);
 
-		virtual inline Text::TextManagerClass* GetTextManager() const { return m_TextManager.get(); }
-		virtual inline UI::UIManagerClass* GetUIManager() const { return m_UIManager.get(); }
-		virtual inline Object::ObjectManagerClass* GetObjectManager() const { return m_ObjectManager.get(); }
-		virtual inline Sound::SoundManagerClass* GetSoundManager() const { return m_SoundManager.get(); }
-		virtual inline Object::IObjectClass* GetCamera() const;
+		inline Text::TextManagerClass* GetTextManager() const { return m_TextManager.get(); }
+		inline UI::UIManagerClass* GetUIManager() const { return m_UIManager.get(); }
+		inline Object::ObjectManagerClass* GetObjectManager() { return m_ObjectManager.get(); }
+		inline Sound::SoundManagerClass* GetSoundManager() const { return m_SoundManager.get(); }
+		inline Object::IObjectClass* GetCamera();
 
 	private:
 		void ChangeScene();

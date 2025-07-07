@@ -4,9 +4,9 @@
 #include "CollisionClass.h"
 #include "ActorClass.h"
 
-Object::ActorClass::ActorClass(std::unique_ptr<IMoveClass> move, std::unique_ptr<IRotateClass> rotate, std::unique_ptr<IObjectClass> collision, Graphic::Model::ID ModelID) : m_ModelID(ModelID), m_Move(std::move(move)), m_Rotate(std::move(rotate)), m_Collision(std::move(collision)) {}
-Object::ActorClass::ActorClass(const ActorClass& other) : ObjectClass(other), m_ModelID(other.m_ModelID), m_Move(other.m_Move->Clone()), m_Rotate(other.m_Rotate->Clone()), m_Collision(other.m_Collision->Clone()) {}
-Object::ActorClass::ActorClass(ActorClass&& other) noexcept : ObjectClass(other), m_ModelID(other.m_ModelID), m_Move(std::move(other.m_Move)), m_Rotate(std::move(other.m_Rotate)), m_Collision(std::move(other.m_Collision)) {}
+Object::ActorClass::ActorClass(std::unique_ptr<IMoveClass> move, std::unique_ptr<IRotateClass> rotate, std::unique_ptr<IObjectClass> collision, Graphic::Model::ID ModelID) : GameObjectClass(ModelID, std::move(collision)), m_Move(std::move(move)), m_Rotate(std::move(rotate)) {}
+Object::ActorClass::ActorClass(const ActorClass& other) : GameObjectClass(other), m_Move(other.m_Move->Clone()), m_Rotate(other.m_Rotate->Clone()) {}
+Object::ActorClass::ActorClass(ActorClass&& other) noexcept : GameObjectClass(other), m_Move(std::move(other.m_Move)), m_Rotate(std::move(other.m_Rotate)) {}
 
 void Object::ActorClass::Move(MoveState state, float frame_time, bool IsKeyDown)
 {
@@ -20,9 +20,8 @@ void Object::ActorClass::Move(MoveState state, float frame_time, bool IsKeyDown)
 	SetPosition(pos);
 
 	// collision 이동
-	if (!m_Collision)
-		return;
-	m_Collision->SetPosition(pos);
+	if (GetCollision())
+		GetCollision()->SetPosition(pos);
 }
 
 void Object::ActorClass::Rotate(long MouseX, long MouseY, float frame_time, bool IsKeyDown)
@@ -37,9 +36,8 @@ void Object::ActorClass::Rotate(long MouseX, long MouseY, float frame_time, bool
 	SetRotation(rot);
 
 	// collision 회전
-	if (!m_Collision)
-		return;
-	m_Collision->SetRotation(rot);
+	if (GetCollision())
+		GetCollision()->SetRotation(rot);
 }
 
 Object::ActorClass& Object::ActorClass::operator=(const ActorClass& other)
@@ -47,18 +45,15 @@ Object::ActorClass& Object::ActorClass::operator=(const ActorClass& other)
 	if (this == &other)
 		return *this;
 
-	m_ModelID = other.m_ModelID;
-
 	if (m_Move)
 		m_Move.reset();
 	if (m_Rotate)
 		m_Rotate.reset();
-	if (m_Collision)
-		m_Collision.reset();
 
 	m_Move = other.m_Move->Clone();
 	m_Rotate = other.m_Rotate->Clone();
-	m_Collision = other.m_Collision->Clone();
+
+	GameObjectClass::operator=(other);
 
 	return *this;
 }
@@ -68,18 +63,15 @@ Object::ActorClass& Object::ActorClass::operator=(ActorClass&& other) noexcept
 	if (this == &other)
 		return *this;
 
-	m_ModelID = other.m_ModelID;
-
 	if (m_Move)
 		m_Move.reset();
 	if (m_Rotate)
 		m_Rotate.reset();
-	if (m_Collision)
-		m_Collision.reset();
 
 	m_Move = std::move(other.m_Move);
 	m_Rotate = std::move(other.m_Rotate);
-	m_Collision = std::move(other.m_Collision);
+
+	GameObjectClass::operator=(std::move(other));
 
 	return *this;
 }

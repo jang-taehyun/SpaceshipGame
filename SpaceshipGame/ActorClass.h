@@ -4,11 +4,11 @@
 * ActorClass °³¿ä
 */
 
-#include "ObjectClass.h"
+#include "GameObjectClass.h"
 
 namespace Object
 {
-	class ActorClass : public ObjectClass
+	class ActorClass : public GameObjectClass
 	{
 	public:
 		ActorClass(std::unique_ptr<IMoveClass> move, std::unique_ptr<IRotateClass> rotate, std::unique_ptr<IObjectClass> collision, Graphic::Model::ID ModelID);
@@ -19,9 +19,6 @@ namespace Object
 		virtual void Move(MoveState state, float frame_time, bool IsKeyDown);
 		virtual void Rotate(long MouseX, long MouseY, float frame_time, bool IsKeyDown);
 
-		inline Graphic::Model::ID GetModelID() const { return m_ModelID; }
-		inline IObjectClass* GetCollision() const { return m_Collision.get(); }
-
 		ActorClass& operator=(const ActorClass& other);
 		ActorClass& operator=(ActorClass&& other) noexcept;
 
@@ -30,8 +27,5 @@ namespace Object
 	private:
 		std::unique_ptr<IMoveClass> m_Move = nullptr;
 		std::unique_ptr<IRotateClass> m_Rotate = nullptr;
-		std::unique_ptr<IObjectClass> m_Collision = nullptr;
-		
-		Graphic::Model::ID m_ModelID = Graphic::Model::ID::NONE;
 	};
 }

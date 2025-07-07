@@ -9,6 +9,95 @@ Graphic::Model::ModelClass<VertexType>::ModelClass(HWND hwnd, ID3D11Device* Devi
 }
 
 template<typename VertexType>
+Graphic::Model::ModelClass<VertexType>::ModelClass(const ModelClass& other)
+	: m_ModelID(other.m_ModelID), m_ShaderID(other.m_ShaderID), m_MeshCount(other.m_MeshCount),
+	m_VertexBuffer(other.m_VertexBuffer), m_IndexBuffer(other.m_IndexBuffer),
+	m_MeshesVertexCount(other.m_MeshesVertexCount), m_MeshesIndexCount(other.m_MeshesIndexCount),
+	m_Materials(other.m_Materials), m_WorldMatrix(other.m_WorldMatrix), m_ModelOBB(other.m_ModelOBB)
+{
+	// instance buffer 복사
+	other.m_InstanceBuffer.CopyTo(m_InstanceBuffer.GetAddressOf());
+}
+
+template<typename VertexType>
+Graphic::Model::ModelClass<VertexType>::ModelClass(ModelClass&& other) noexcept
+	: m_ModelID(other.m_ModelID), m_ShaderID(other.m_ShaderID), m_MeshCount(other.m_MeshCount),
+	m_VertexBuffer(std::move(other.m_VertexBuffer)), m_IndexBuffer(std::move(other.m_IndexBuffer)),
+	m_MeshesVertexCount(std::move(other.m_MeshesVertexCount)), m_MeshesIndexCount(std::move(other.m_MeshesIndexCount)),
+	m_Materials(std::move(other.m_Materials)), m_WorldMatrix(std::move(other.m_WorldMatrix)), m_ModelOBB(other.m_ModelOBB),
+	m_InstanceBuffer(std::move(other.m_InstanceBuffer))
+{}
+
+template<typename VertexType>
+Graphic::Model::ModelClass<VertexType>& Graphic::Model::ModelClass<VertexType>::operator=(const ModelClass& other)
+{
+	if (this == &other)
+		return *this;
+
+	// 멤버 변수 모두 해제 //
+	m_VertexBuffer.clear();
+	m_IndexBuffer.clear();
+	m_MeshesVertexCount.clear();
+	m_MeshesIndexCount.clear();
+	m_Materials.clear();
+	m_WorldMatrix.clear();
+
+	// ID 값, mesh의 개수, OBB 박스 복사
+	m_ModelID = other.m_ModelID;
+	m_ShaderID = other.m_ShaderID;
+	m_MeshCount = other.m_MeshCount;
+	m_ModelOBB = other.m_ModelOBB;
+
+	// vertex buffer, index buffer, instance buffer, material 복사
+	m_VertexBuffer = other.m_VertexBuffer;
+	m_IndexBuffer = other.m_IndexBuffer;
+	other.m_InstanceBuffer.CopyTo(m_InstanceBuffer.ReleaseAndGetAddressOf());
+	m_Materials = other.m_Materials;
+
+	// 각 mesh의 vertex data의 개수, index data의 개수, world matrix 복사
+	m_MeshesVertexCount = other.m_MeshesVertexCount;
+	m_MeshesIndexCount = other.m_MeshesIndexCount;
+	m_WorldMatrix = other.m_WorldMatrix;
+
+	return *this;
+}
+
+template<typename VertexType>
+Graphic::Model::ModelClass<VertexType>& Graphic::Model::ModelClass<VertexType>::operator=(ModelClass&& other) noexcept
+{
+	if (this == &other)
+		return *this;
+
+	// 멤버 변수 모두 해제 //
+	m_VertexBuffer.clear();
+	m_IndexBuffer.clear();
+	m_MeshesVertexCount.clear();
+	m_MeshesIndexCount.clear();
+	m_Materials.clear();
+	m_WorldMatrix.clear();
+	m_InstanceBuffer.Reset();
+
+	// ID 값, mesh의 개수, OBB 박스 복사
+	m_ModelID = other.m_ModelID;
+	m_ShaderID = other.m_ShaderID;
+	m_MeshCount = other.m_MeshCount;
+	m_ModelOBB = other.m_ModelOBB;
+
+	// vertex buffer, index buffer, instance buffer, material 이동
+	m_VertexBuffer = std::move(other.m_VertexBuffer);
+	m_IndexBuffer = std::move(other.m_IndexBuffer);
+	m_InstanceBuffer = std::move(other.m_InstanceBuffer);
+	m_Materials = std::move(other.m_Materials);
+
+	// 각 mesh의 vertex data의 개수, index data의 개수, world matrix 이동
+	m_MeshesVertexCount = std::move(other.m_MeshesVertexCount);
+	m_MeshesIndexCount = std::move(other.m_MeshesIndexCount);
+	m_WorldMatrix = std::move(other.m_WorldMatrix);
+
+	return *this;
+}
+
+template<typename VertexType>
 HRESULT Graphic::Model::ModelClass<VertexType>::Initialize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Loader::ModelLoaderClass<VertexType>* loader)
 {
 	HRESULT result = S_OK;
@@ -50,6 +139,7 @@ HRESULT Graphic::Model::ModelClass<VertexType>::InitializeBuffers(ID3D11Device* 
 	m_MeshCount = loader->GetMeshCount();
 	VerticeDatas = loader->MoveVerticesDatas();
 	IndicesDatas = loader->MoveIndicesDatas();
+	m_ModelOBB = loader->GetModelOBB();
 
 	//  vertex 데이터, index 데이터를 이용해 vertex buffer, index buffer 생성 //
 	for(int i=0; i< m_MeshCount; ++i)
@@ -135,15 +225,18 @@ void Graphic::Model::ModelClass<VertexType>::UpdateInstanceBuffer(ID3D11DeviceCo
 	// instance buffer에 데이터 복사
 	std::copy(m_WorldMatrix.begin(), m_WorldMatrix.end(), DataPtr);
 
-	// matrix constant buffer의 잠금을 풀어 GPU에 반영
+	// instance buffer의 잠금을 풀어 GPU에 반영
 	DeviceContext->Unmap(m_InstanceBuffer.Get(), 0);
+
+	// GPU에 반영되었으므로, 현재까지 저장된 world matrix를 모두 해제
+	m_WorldMatrix.clear();
 }
 
 template<typename VertexType>
 void Graphic::Model::ModelClass<VertexType>::RenderMesh(ID3D11DeviceContext* DeviceContext, int MeshIdx)
 {
 	assert(MeshIdx < m_MeshCount);
-	assert(m_WorldMatrix.size() < MAX_INSTANCE_COUNT);
+	assert(m_WorldMatrix.size() <= MAX_INSTANCE_COUNT);
 
 	// offset(오프셋), 정점 데이터의 stride(단위), buffer 설정 //
 	ID3D11Buffer* buffers[2] = { m_VertexBuffer[MeshIdx].Get(), m_InstanceBuffer.Get()};
