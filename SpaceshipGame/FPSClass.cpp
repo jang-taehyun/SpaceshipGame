@@ -3,22 +3,10 @@
 #include "FPSClass.h"
 
 bool System::FPSClass::IsInitailize = false;
-static ErrorContent e;
 
 System::FPSClass::FPSClass()
 {
-	HRESULT result = S_OK;
-
-	// 에러 메세지 초기화 //
-	e.title = _T("FPSClass Constructor");
-
-	if (IsInitailize)
-	{
-		e.contents = _T("이미 FPSClass 인스턴스가 존재합니다.");
-		e.errorCode = E_FAIL;
-		throw e;
-	}
-
+	assert(!IsInitailize);
 	Initialize();
 	IsInitailize = true;
 }

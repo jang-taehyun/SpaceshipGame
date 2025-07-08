@@ -52,7 +52,7 @@ namespace Graphic
 
 #ifdef DEBUG
 	public:
-		void ImGuiRender(Scene::SceneManagerClass* SceneManager);
+		void ImGuiRender(UINT FPS, UINT cpu_usage, Scene::SceneManagerClass* SceneManager);
 	private:
 		IMGUIClass* m_IMGUI = nullptr;
 #endif // DEBUG

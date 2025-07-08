@@ -97,7 +97,7 @@ void System::SystemClass::Frame()
 	m_Graphics->Frame(m_SceneManager.get(), IsLoad);
 
 #ifdef DEBUG
-	m_Graphics->ImGuiRender(m_SceneManager.get());
+	m_Graphics->ImGuiRender(m_FPS->GetFPS(), m_CPU->GetCPUPercentage(), m_SceneManager.get());
 #endif // DEBUG
 }
 

@@ -242,9 +242,9 @@ void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager)
 }
 
 #ifdef DEBUG
-void Graphic::GraphicsClass::ImGuiRender(Scene::SceneManagerClass* SceneManager)
+void Graphic::GraphicsClass::ImGuiRender(UINT FPS, UINT cpu_usage, Scene::SceneManagerClass* SceneManager)
 {
-	m_IMGUI->Render(m_Light.get(), SceneManager);
+	m_IMGUI->Render(FPS, cpu_usage, SceneManager, m_Light.get());
 }
 #endif // DEBUG
 

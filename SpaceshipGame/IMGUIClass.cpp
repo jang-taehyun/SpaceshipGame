@@ -1,20 +1,13 @@
 #include "pch.h"
-
-// FPS, CPU, Timer, Camera, Sound, Light 관련 //
-#include "FPSClass.h"
-#include "CPUClass.h"
-#include "CameraClass.h"
-#include "SoundClass.h"
-#include "LightClass.h"
-
-// actor, collision 관련
-#include "ObjectManagerClass.h"
-#include "IObjectClass.h"
-#include "IMoveClass.h"
-#include "IRotateClass.h"
-#include "ActorClass.h"
-
 #include "IMGUIClass.h"
+
+#ifdef DEBUG
+
+#include "SceneManagerClass.h"
+#include "ObjectManagerClass.h"
+#include "SoundManagerClass.h"
+#include "GameObjectClass.h"
+#include "LightClass.h"
 
 bool Graphic::IMGUIClass::IsInitialize = false;
 
@@ -34,7 +27,6 @@ Graphic::IMGUIClass::~IMGUIClass()
 void Graphic::IMGUIClass::Initialize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeivceContext)
 {
 	ImVec2 cur = {};
-	m_WindowsCount = MaxIMGUIWindowsCount;
 
 	// IMGUI 초기화 //
 	IMGUI_CHECKVERSION();
@@ -51,11 +43,11 @@ void Graphic::IMGUIClass::Initialize(HWND hwnd, ID3D11Device* Device, ID3D11Devi
 	m_WindowsSize = ImVec2(300.f, 100.f);
 
 	cur = ImGui::GetMainViewport()->GetCenter();
-	cur.x = 10.f;
-	cur.y = 10.f;
-	for (int i = 0; i < m_WindowsCount; ++i)
+	cur.x += 10.f;
+	cur.y += 10.f;
+	for (UINT i = 0; i < m_WindowsCount; ++i)
 	{
-		m_WindowsPosition[i] = ImVec2(cur.x, cur.y);
+		m_WindowsPositions.push_back(cur);
 		cur.y += (m_WindowsSize.y + 5.f);
 	}
 }
@@ -67,45 +59,53 @@ void Graphic::IMGUIClass::Shutdown()
 	ImGui::DestroyContext();
 }
 
-void Graphic::IMGUIClass::Render(Object::ObjectManagerClass* actor_manager, LightClass* light, Sound::SoundClass* sound, Object::IObjectClass* camera, int fps, int cpu_usage)
+void Graphic::IMGUIClass::Render(UINT FPS, UINT cpu_usage, Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light)
 {
 	// IMGUI 렌더링 준비 //
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	SetUI(actor_manager, light, sound, camera, fps, cpu_usage);
+	SetUI(FPS, cpu_usage, SceneManager, light);
 
 	// 렌더링
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
-void Graphic::IMGUIClass::SetUI(Object::ObjectManagerClass* actor_manager, LightClass* light, Sound::SoundClass* sound, Object::IObjectClass* camera, int fps, int cpu_usage)
+void Graphic::IMGUIClass::SetUI(UINT FPS, UINT cpu_usage, Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light)
 {
 	std::string title = u8"FPS, CPU 사용량";
-	SetFPSCPUUsage(title, 0, fps, cpu_usage);
+	SetFPSCPUUsage(title, 0, FPS, cpu_usage);
 
 	title = u8"카메라 위치, 회전";
-	SetCameraInfo(title, 1, camera);
+	SetCameraInfo(title, 1, SceneManager->GetCamera());
 
 	title = u8"사운드 재생 조정";
-	SetSoundInfo(title, 2, sound);
+	SetSoundInfo(title, 2, SceneManager->GetSoundManager());
 
 	title = u8"광원 정보(ambient, diffuse, direction, specular color, specular power)";
 	SetLightInfo(title, 3, light);
 
 	title = u8"player의 affine(position, rotate, scale), collision(center, rotate, extends)";
-	SetActorInfo(title, 4, actor_manager->GetPlayerInterface());
-	
-	for (int i = 0; i < actor_manager->GetActorInterfaceCount(); ++i)
-	{
-		if (!(*actor_manager)[i])
-			continue;
+	SetObjectInfo(title, 4,
+		static_cast<Object::GameObjectClass*>
+		(
+			SceneManager->GetObjectManager()->
+			GetGameObject(
+				SceneManager->GetObjectManager()->GetPlayerIdx()
+			)
+			)
+	);
 
-		std::string title = u8"번째 other의 affine(position, rotate, scale), collision(center, rotate, extends)";
-		title = std::to_string(i+1) + title;
-		SetActorInfo(title, i + 5, (*actor_manager)[i]);
+	for (int i = 0; i < SceneManager->GetObjectManager()->GetObjectCount(); ++i)
+	{
+		if (i != SceneManager->GetObjectManager()->GetPlayerIdx())
+		{
+			std::string title = u8"번째 other의 affine(position, rotate, scale), collision(center, rotate, extends)";
+			title = std::to_string(i + 1) + title;
+			SetObjectInfo(title, i + 5, static_cast<Object::GameObjectClass*>(SceneManager->GetObjectManager()->GetGameObject(i)));
+		}
 	}
 }
 
@@ -113,15 +113,16 @@ void Graphic::IMGUIClass::SetFPSCPUUsage(const std::string& title, int IMGUI_Win
 {
 	std::string contents;
 
-	// FPS, CPU 사용량 UI //
-	ImGui::SetNextWindowPos(m_WindowsPosition[IMGUI_Window_idx], ImGuiCond_Appearing);
+	ImGui::SetNextWindowPos(m_WindowsPositions[IMGUI_Window_idx], ImGuiCond_Appearing);
 	ImGui::Begin(title.c_str(), NULL);
 	ImGui::SetWindowSize(m_WindowsSize, ImGuiCond_Once);
 
+	// FPS UI //
 	contents = u8"FPS : ";
 	contents += std::to_string(fps);
 	ImGui::Text(contents.c_str());
 
+	// CPU 사용량 UI //
 	contents = u8"CPU : ";
 	contents += std::to_string(cpu_usage);
 	ImGui::Text(contents.c_str());
@@ -135,11 +136,11 @@ void Graphic::IMGUIClass::SetCameraInfo(const std::string& title, int IMGUI_Wind
 	std::string contents;
 	DirectX::XMFLOAT4 value = {};
 
-	// 카메라 위치, 회전 UI //
-	ImGui::SetNextWindowPos(m_WindowsPosition[IMGUI_Window_idx], ImGuiCond_Appearing);
+	ImGui::SetNextWindowPos(m_WindowsPositions[IMGUI_Window_idx], ImGuiCond_Appearing);
 	ImGui::Begin(title.c_str(), NULL);
 	ImGui::SetWindowSize(m_WindowsSize, ImGuiCond_Once);
 
+	// 카메라 위치 UI //
 	ImGui::Text(u8"카메라 위치(x, y, z)");
 	value = camera->GetPosition();
 	contents = u8"x : ";
@@ -152,7 +153,7 @@ void Graphic::IMGUIClass::SetCameraInfo(const std::string& title, int IMGUI_Wind
 	contents += std::to_string(value.z);
 	ImGui::Text(contents.c_str());
 
-
+	// 카메라 회전 UI //
 	ImGui::Text(u8"카메라 회전(x, y, z)");
 	value = camera->GetRotation();
 	contents = u8"x : ";
@@ -168,32 +169,26 @@ void Graphic::IMGUIClass::SetCameraInfo(const std::string& title, int IMGUI_Wind
 	ImGui::End();
 }
 
-void Graphic::IMGUIClass::SetSoundInfo(const std::string& title, int IMGUI_Window_idx, Sound::SoundClass* sound)
+void Graphic::IMGUIClass::SetSoundInfo(const std::string& title, int IMGUI_Window_idx, Sound::SoundManagerClass* sound_manager)
 {
 	bool IsPress = false;
+	UINT mask = sound_manager->GetCurrentSoundMask();
+	std::string contents;
 
 	// 사운드 재생 UI //
-	ImGui::SetNextWindowPos(m_WindowsPosition[IMGUI_Window_idx], ImGuiCond_Appearing);
+	ImGui::SetNextWindowPos(m_WindowsPositions[IMGUI_Window_idx], ImGuiCond_Appearing);
 	ImGui::Begin(title.c_str(), NULL);
 
-	// backgound 오디오 //
-	IsPress = ImGui::Button(u8"백그라운드");
-	if (IsPress)
+	for (UINT i = 0; i < Sound::SoundIDCount; ++i)
 	{
-		if (sound->IsBackgoundPlay())
-			sound->StopWaveFile(Sound::ID::BACKGROUND);
-		else
-			sound->PlayWaveFile(Sound::ID::BACKGROUND);
-	}
-
-	// effect 오디오 //
-	IsPress = ImGui::Button(u8"효과음");
-	if (IsPress)
-	{
-		if (sound->IsEffectPlay())
-			sound->StopWaveFile(Sound::ID::EFFECT);
-		else
-			sound->PlayWaveFile(Sound::ID::EFFECT);
+		// 해당 sound가 존재할 때
+		if (mask & (1 << i))
+		{
+			contents = u8"오디오" + std::to_string(i + 1);
+			IsPress = ImGui::Button(contents.c_str());
+			if (IsPress)
+				sound_manager->Play(static_cast<Sound::ID>(1 << i));
+		}
 	}
 
 	ImGui::End();
@@ -211,7 +206,7 @@ void Graphic::IMGUIClass::SetLightInfo(const std::string& title, int IMGUI_Windo
 	float value[4] = { 0.f, };
 
 	// light 관련 UI //
-	ImGui::SetNextWindowPos(m_WindowsPosition[IMGUI_Window_idx], ImGuiCond_Appearing);
+	ImGui::SetNextWindowPos(m_WindowsPositions[IMGUI_Window_idx], ImGuiCond_Appearing);
 	ImGui::Begin(title.c_str(), NULL);
 	ImGui::SetWindowSize(m_WindowsSize, ImGuiCond_Once);
 
@@ -274,84 +269,72 @@ void Graphic::IMGUIClass::SetLightInfo(const std::string& title, int IMGUI_Windo
 	ImGui::End();
 }
 
-void Graphic::IMGUIClass::SetActorInfo(const std::string& title, int IMGUI_Window_idx, Object::IObjectClass* actor)
+void Graphic::IMGUIClass::SetObjectInfo(const std::string& title, int IMGUI_Window_idx, Object::GameObjectClass* object)
 {
 	float value[4] = { 0.f, };
 	bool IsPress = false;
 	float speed = 0.f;
 
 	// actor affine 관련 UI //
-	ImGui::SetNextWindowPos(m_WindowsPosition[IMGUI_Window_idx], ImGuiCond_Appearing);
+	ImGui::SetNextWindowPos(m_WindowsPositions[IMGUI_Window_idx], ImGuiCond_Appearing);
 	ImGui::Begin(title.c_str(), NULL);
 	ImGui::SetWindowSize(m_WindowsSize, ImGuiCond_Once);
 
 	// position
-	value[0] = actor->GetPosition().x;
-	value[1] = actor->GetPosition().y;
-	value[2] = actor->GetPosition().z;
+	value[0] = object->GetPosition().x;
+	value[1] = object->GetPosition().y;
+	value[2] = object->GetPosition().z;
 	ImGui::Text(u8"위치");
 	ImGui::SameLine();
 	if (ImGui::SliderFloat3(u8"##1", value, -100.0f, 100.f))
-		actor->SetPosition(value[0], value[1], value[2]);
+		object->SetPosition(value[0], value[1], value[2]);
 
 	// rotate
-	value[0] = actor->GetRotation().x;
-	value[1] = actor->GetRotation().y;
-	value[2] = actor->GetRotation().z;
+	value[0] = object->GetRotation().x;
+	value[1] = object->GetRotation().y;
+	value[2] = object->GetRotation().z;
 	ImGui::Text(u8"회전");
 	ImGui::SameLine();
 	if (ImGui::SliderFloat3(u8"##2", value, -100.0f, 100.f))
-		actor->SetRotation(value[0], value[1], value[2]);
+		object->SetRotation(value[0], value[1], value[2]);
 
 	// scale
-	value[0] = actor->GetScale().x;
-	value[1] = actor->GetScale().y;
-	value[2] = actor->GetScale().z;
+	value[0] = object->GetScale().x;
+	value[1] = object->GetScale().y;
+	value[2] = object->GetScale().z;
 	ImGui::Text(u8"크기");
 	ImGui::SameLine();
 	if (ImGui::SliderFloat3(u8"##3", value, -100.0f, 100.f))
-		actor->SetScale(value[0], value[1], value[2]);
+		object->SetScale(value[0], value[1], value[2]);
 
 	// collision position
-	value[0] = static_cast<Object::ActorClass*>(actor)->GetCollision()->GetPosition().x;
-	value[1] = static_cast<Object::ActorClass*>(actor)->GetCollision()->GetPosition().y;
-	value[2] = static_cast<Object::ActorClass*>(actor)->GetCollision()->GetPosition().z;
+	value[0] = object->GetCollision()->GetPosition().x;
+	value[1] = object->GetCollision()->GetPosition().y;
+	value[2] = object->GetCollision()->GetPosition().z;
 	ImGui::Text(u8"충돌체 위치");
 	ImGui::SameLine();
 	if (ImGui::SliderFloat3(u8"##4", value, -100.0f, 100.f))
-		static_cast<Object::ActorClass*>(actor)->SetPosition(value[0], value[1], value[2]);
+		object->SetPosition(value[0], value[1], value[2]);
 
 	// collision rotate
-	value[0] = static_cast<Object::ActorClass*>(actor)->GetCollision()->GetPosition().x;
-	value[1] = static_cast<Object::ActorClass*>(actor)->GetCollision()->GetPosition().y;
-	value[2] = static_cast<Object::ActorClass*>(actor)->GetCollision()->GetPosition().z;
+	value[0] = object->GetCollision()->GetPosition().x;
+	value[1] = object->GetCollision()->GetPosition().y;
+	value[2] = object->GetCollision()->GetPosition().z;
 	ImGui::Text(u8"충돌체 회전");
 	ImGui::SameLine();
 	if (ImGui::SliderFloat3(u8"##5", value, -100.0f, 100.f))
-		static_cast<Object::ActorClass*>(actor)->SetRotation(value[0], value[1], value[2]);
+		object->SetRotation(value[0], value[1], value[2]);
 
 	// collision scale
-	value[0] = static_cast<Object::ActorClass*>(actor)->GetCollision()->GetPosition().x;
-	value[1] = static_cast<Object::ActorClass*>(actor)->GetCollision()->GetPosition().y;
-	value[2] = static_cast<Object::ActorClass*>(actor)->GetCollision()->GetPosition().z;
+	value[0] = object->GetCollision()->GetPosition().x;
+	value[1] = object->GetCollision()->GetPosition().y;
+	value[2] = object->GetCollision()->GetPosition().z;
 	ImGui::Text(u8"충돌체 크기");
 	ImGui::SameLine();
 	if (ImGui::SliderFloat3(u8"##6", value, -100.0f, 100.f))
-		static_cast<Object::ActorClass*>(actor)->SetScale(value[0], value[1], value[2]);
-
-	// 이동 speed UI //
-	ImGui::Text(u8"이동 속도");
-	ImGui::SameLine();
-	speed = static_cast<Object::MoveableObjectClass*>(actor)->GetMoveObject()->GetMoveSpeed();
-	if (ImGui::SliderFloat(u8"##7", &speed, 0.0f, 0.1f))
-		static_cast<Object::MoveableObjectClass*>(actor)->GetMoveObject()->SetMoveSpeed(speed);
-
-	// 회전 speed UI //
-	ImGui::Text(u8"회전 속도");
-	ImGui::SameLine();
-	speed = static_cast<Object::MoveableObjectClass*>(actor)->GetRotateObject()->GetRoteteSpeed();
-	if (ImGui::SliderFloat(u8"##8", &speed, 0.0f, 0.002f, "%.10f"))
-		static_cast<Object::MoveableObjectClass*>(actor)->GetRotateObject()->SetRoteteSpeed(speed);
+		object->SetScale(value[0], value[1], value[2]);
 
 	ImGui::End();
 }
+
+#endif // DEBUG

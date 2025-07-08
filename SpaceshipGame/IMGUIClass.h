@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef DEBUG
+
 // ImGui ฐüทร //
 #pragma comment(lib, "ImGui.lib")
 
@@ -9,37 +11,36 @@
 
 namespace Graphic { class LightClass; }
 namespace Scene { class SceneManagerClass; }
-
+namespace Sound { class SoundManagerClass; }
+namespace Object { class GameObjectClass; }
 
 namespace Graphic
 {
-	const static int MaxIMGUIWindowsCount = 10;
-
 	class IMGUIClass
 	{
 	public:
 		IMGUIClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeivceContext);
-		virtual ~IMGUIClass();
+		~IMGUIClass();
 
-		void Render(Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light);
+		void Render(UINT FPS, UINT cpu_usage, Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light);
 
 	private:
 		void Initialize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeivceContext);
 		void Shutdown();
 
-		void SetUI(Object::ObjectManagerClass* actor_manager, LightClass* light, Sound::SoundClass* sound, Object::IObjectClass* camera, int fps, int cpu_usage);
+		void SetUI(UINT FPS, UINT cpu_usage, Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light);
 
 		void SetFPSCPUUsage(const std::string& title, int IMGUI_Window_idx, int fps, int cpu_usage);
 		void SetCameraInfo(const std::string& title, int IMGUI_Window_idx, Object::IObjectClass* camera);
-		void SetSoundInfo(const std::string& title, int IMGUI_Window_idx, Sound::SoundClass* sound);
+		void SetSoundInfo(const std::string& title, int IMGUI_Window_idx, Sound::SoundManagerClass* sound_manager);
 		void SetLightInfo(const std::string& title, int IMGUI_Window_idx, LightClass* light);
-		void SetActorInfo(const std::string& title, int IMGUI_Window_idx, Object::IObjectClass* actor);
+		void SetObjectInfo(const std::string& title, int IMGUI_Window_idx, Object::GameObjectClass* object);
 
 	private:
 		static bool IsInitialize;
 
 		ImVec2 m_WindowsSize;
-		ImVec2 m_WindowsPosition[MaxIMGUIWindowsCount];
+		std::vector<ImVec2> m_WindowsPositions;
 		int m_WindowsCount = 0;
 
 	public:
@@ -49,3 +50,5 @@ namespace Graphic
 		IMGUIClass& operator=(IMGUIClass&& other) = delete;
 	};
 }
+
+#endif // DEBUG

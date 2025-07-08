@@ -17,7 +17,7 @@ namespace System
 		inline long long GetCPUPercentage() const { return m_CPUUsage; }
 
 	private:
-		HRESULT Initialize();
+		void Initialize();
 		void Shutdown();
 
 	private:
