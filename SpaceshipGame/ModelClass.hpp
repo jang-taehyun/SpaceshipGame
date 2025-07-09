@@ -1,9 +1,11 @@
+#pragma once
+
 #include "pch.h"
 #include "ModelLoaderClass.h"
 #include "ModelClass.h"
 
 template<typename VertexType>
-Graphic::Model::ModelClass<VertexType>::ModelClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, ID ModelID, Shader::ID ShaderID, Loader::ModelLoaderClass<VertexType>* loader) : m_ModelID(ModelID), m_ShaderID(ShaderID)
+Graphic::Model::ModelClass<VertexType>::ModelClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, ID ModelID, Shader::ID ShaderID, Loader::IModelLoaderClass* loader) : m_ModelID(ModelID), m_ShaderID(ShaderID)
 {
 	HRESULT result = Initialize(hwnd, Device, DeviceContext, loader);
 }
@@ -98,7 +100,7 @@ Graphic::Model::ModelClass<VertexType>& Graphic::Model::ModelClass<VertexType>::
 }
 
 template<typename VertexType>
-HRESULT Graphic::Model::ModelClass<VertexType>::Initialize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Loader::ModelLoaderClass<VertexType>* loader)
+HRESULT Graphic::Model::ModelClass<VertexType>::Initialize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Loader::IModelLoaderClass* loader)
 {
 	HRESULT result = S_OK;
 
@@ -113,18 +115,17 @@ HRESULT Graphic::Model::ModelClass<VertexType>::Initialize(HWND hwnd, ID3D11Devi
 		return result;
 
 	// material 초기화 //
-	InitializeMaterials(ModelLoader);
+	InitializeMaterials(loader);
 
 	return result;
 }
 
 template<typename VertexType>
-HRESULT Graphic::Model::ModelClass<VertexType>::InitializeBuffers(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Loader::ModelLoaderClass<VertexType>* loader)
+HRESULT Graphic::Model::ModelClass<VertexType>::InitializeBuffers(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Loader::IModelLoaderClass* loader)
 {
 	HRESULT result = S_OK;
 	Microsoft::WRL::ComPtr<ID3D11Buffer> VertexBuffer;		// vertex buffer
 	Microsoft::WRL::ComPtr<ID3D11Buffer> IndexBuffer;		// index buffer
-	Microsoft::WRL::ComPtr<ID3D11Buffer> InstanceBuffer;	// instance buffer
 
 	D3D11_BUFFER_DESC VertexBufferDesc = {};				// vertex buffer의 설정 정보
 	D3D11_SUBRESOURCE_DATA VertexData = {};					// vertex 데이터를 가르키는 subresource 설정 정보
@@ -137,17 +138,17 @@ HRESULT Graphic::Model::ModelClass<VertexType>::InitializeBuffers(ID3D11Device* 
 
 	// loader에서 로드한 데이터들 가져오기 //
 	m_MeshCount = loader->GetMeshCount();
-	VerticeDatas = loader->MoveVerticesDatas();
+	VerticeDatas = static_cast<Loader::ModelLoaderClass<VertexType>*>(loader)->MoveVerticesDatas();
 	IndicesDatas = loader->MoveIndicesDatas();
 	m_ModelOBB = loader->GetModelOBB();
 
 	//  vertex 데이터, index 데이터를 이용해 vertex buffer, index buffer 생성 //
-	for(int i=0; i< m_MeshCount; ++i)
+	for(UINT i=0; i< m_MeshCount; ++i)
 	{
 		// vertex buffer 생성 //
 		// vertex buffer 설정
 		VertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-		VertexBufferDesc.ByteWidth = sizeof(VertexType) * VerticeDatas[i].size();
+		VertexBufferDesc.ByteWidth = static_cast<UINT>(sizeof(VertexType) * VerticeDatas[i].size());
 		VertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		VertexBufferDesc.CPUAccessFlags = 0;
 		VertexBufferDesc.MiscFlags = 0;
@@ -165,7 +166,7 @@ HRESULT Graphic::Model::ModelClass<VertexType>::InitializeBuffers(ID3D11Device* 
 		// index buffer 생성 //
 		// index buffer 설정
 		IndexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-		IndexBufferDesc.ByteWidth = sizeof(ULONG) * IndicesDatas[i].size();
+		IndexBufferDesc.ByteWidth = static_cast<UINT>(sizeof(ULONG) * IndicesDatas[i].size());
 		IndexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		IndexBufferDesc.CPUAccessFlags = 0;
 		IndexBufferDesc.MiscFlags = 0;
@@ -180,30 +181,30 @@ HRESULT Graphic::Model::ModelClass<VertexType>::InitializeBuffers(ID3D11Device* 
 		result = Device->CreateBuffer(&IndexBufferDesc, &IndexData, IndexBuffer.GetAddressOf());
 		assert(SUCCEEDED(result));
 
-		m_MeshesVertexCount.push_back(VerticeDatas[i].size());
-		m_MeshesIndexCount.push_back(IndicesDatas[i].size());
+		m_MeshesVertexCount.push_back(static_cast<ULONG>(VerticeDatas[i].size()));
+		m_MeshesIndexCount.push_back(static_cast<ULONG>(IndicesDatas[i].size()));
 		m_VertexBuffer.push_back(std::move(VertexBuffer));
 		m_IndexBuffer.push_back(std::move(IndexBuffer));
 	}
 
 	// instance buffer 생성 //
 	// instance buffer 설정
-	InstanceBuffer.Usage = D3D11_USAGE_DYNAMIC;
-	InstanceBuffer.ByteWidth = sizeof(DirectX::XMFLOAT4X4) * MAX_INSTANCE_COUNT;
-	InstanceBuffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	InstanceBuffer.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	InstanceBuffer.MiscFlags = 0;
-	InstanceBuffer.StructureByteStride = 0;
+	InstanceBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	InstanceBufferDesc.ByteWidth = static_cast<UINT>(sizeof(InstanceBufferType) * MAX_INSTANCE_COUNT);
+	InstanceBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	InstanceBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	InstanceBufferDesc.MiscFlags = 0;
+	InstanceBufferDesc.StructureByteStride = 0;
 
 	// instance buffer 생성
-	result = Device->CreateBuffer(&InstanceBuffer, nullptr, m_InstanceBuffer.GetAddressOf());
+	result = Device->CreateBuffer(&InstanceBufferDesc, nullptr, m_InstanceBuffer.GetAddressOf());
 	assert(SUCCEEDED(result));
 
 	return result;
 }
 
 template<typename VertexType>
-void Graphic::Model::ModelClass<VertexType>::InitializeMaterials(Loader::ModelLoaderClass<VertexType>* loader)
+void Graphic::Model::ModelClass<VertexType>::InitializeMaterials(Loader::IModelLoaderClass* loader)
 {
 	m_Materials = loader->MoveMaterialsDatas();
 }
@@ -213,14 +214,14 @@ void Graphic::Model::ModelClass<VertexType>::UpdateInstanceBuffer(ID3D11DeviceCo
 {
 	HRESULT result = S_OK;
 	D3D11_MAPPED_SUBRESOURCE MappedResource;			// lock
-	DirectX::XMFLOAT4X4* DataPtr = nullptr;				// buffer의 포인터
+	InstanceBufferType* DataPtr = nullptr;				// buffer의 포인터
 
 	// instance buffer의 내용을 CPU가 쓸 수 있도록 잠금 //
 	result = DeviceContext->Map(m_InstanceBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource);
 	assert(SUCCEEDED(result));
 
 	// instance buffer의 데이터에 대한 포인터를 가져오기 //
-	DataPtr = static_cast<DirectX::XMFLOAT4X4*>(MappedResource.pData);
+	DataPtr = static_cast<InstanceBufferType*>(MappedResource.pData);
 
 	// instance buffer에 데이터 복사
 	std::copy(m_WorldMatrix.begin(), m_WorldMatrix.end(), DataPtr);
@@ -233,7 +234,7 @@ void Graphic::Model::ModelClass<VertexType>::UpdateInstanceBuffer(ID3D11DeviceCo
 }
 
 template<typename VertexType>
-void Graphic::Model::ModelClass<VertexType>::RenderMesh(ID3D11DeviceContext* DeviceContext, int MeshIdx)
+void Graphic::Model::ModelClass<VertexType>::RenderMesh(ID3D11DeviceContext* DeviceContext, UINT MeshIdx)
 {
 	assert(MeshIdx < m_MeshCount);
 	assert(m_WorldMatrix.size() <= MAX_INSTANCE_COUNT);

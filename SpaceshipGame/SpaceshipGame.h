@@ -4,7 +4,6 @@
 
 /*
 * TODO: terrain 공부해서 추가
-* TODO: IMGUIClass 오류 수정
 */
 
 /**

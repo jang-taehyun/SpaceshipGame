@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef DEBUG
+#ifdef _DEBUG
 
 // ImGui ฐüทร //
 #pragma comment(lib, "ImGui.lib")
@@ -12,7 +12,11 @@
 namespace Graphic { class LightClass; }
 namespace Scene { class SceneManagerClass; }
 namespace Sound { class SoundManagerClass; }
-namespace Object { class GameObjectClass; }
+namespace Object
+{
+	class GameObjectClass;
+	class IObjectClass;
+}
 
 namespace Graphic
 {
@@ -41,7 +45,7 @@ namespace Graphic
 
 		ImVec2 m_WindowsSize;
 		std::vector<ImVec2> m_WindowsPositions;
-		int m_WindowsCount = 0;
+		UINT m_WindowsCount = 0;
 
 	public:
 		IMGUIClass(const IMGUIClass& other) = delete;

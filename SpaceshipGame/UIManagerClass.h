@@ -24,7 +24,7 @@ namespace UI
 		IUIClass* GetUI(int idx) const;
 		IUIClass* GetBackground() const { return m_Background.get(); }
 
-		inline UINT GetUICount() const { return m_UIList.size(); }
+		inline UINT GetUICount() const { return static_cast<UINT>(m_UIList.size()); }
 
 	private:
 		static bool IsInitialize;

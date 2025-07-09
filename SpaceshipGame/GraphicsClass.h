@@ -13,11 +13,11 @@ namespace Graphic
 		class UITextureManagerClass;
 		class UIRenderClass;
 	}
-}
 
-#ifdef DEBUG
-namespace Graphic { class IMGUIClass; }
+#ifdef _DEBUG
+	class IMGUIClass;
 #endif // DEBUG
+}
 
 namespace Graphic
 {
@@ -50,11 +50,11 @@ namespace Graphic
 		GraphicsClass& operator=(const GraphicsClass& other) = delete;
 		GraphicsClass& operator=(GraphicsClass&& other) = delete;
 
-#ifdef DEBUG
+#ifdef _DEBUG
 	public:
 		void ImGuiRender(UINT FPS, UINT cpu_usage, Scene::SceneManagerClass* SceneManager);
 	private:
-		IMGUIClass* m_IMGUI = nullptr;
+		std::unique_ptr<IMGUIClass> m_IMGUI = nullptr;
 #endif // DEBUG
 
 	};

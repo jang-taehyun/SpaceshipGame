@@ -18,7 +18,7 @@ namespace Object
 		ObjectManagerClass();
 		virtual ~ObjectManagerClass();
 
-		inline UINT GetPlayerIdx() const { return m_PlayerIdx; }
+		inline int GetPlayerIdx() const { return (m_ObjectList.size() ? m_PlayerIdx : -1); }
 
 		inline void SetPlayerIdx(UINT idx) { m_PlayerIdx = idx; }
 		inline UINT GetObjectCount() const { return static_cast<UINT>(m_ObjectList.size()); }

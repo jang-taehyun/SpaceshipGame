@@ -4,11 +4,7 @@
 
 namespace Graphic
 {
-	namespace Loader
-	{
-		template<typename VertexType>
-		class ModelLoaderClass;
-	}
+	namespace Loader { class IModelLoaderClass; }
 }
 
 namespace Graphic
@@ -19,10 +15,10 @@ namespace Graphic
 		class ModelClass : public IModelClass
 		{
 		private:
-			const UINT MAX_INSTANCE_COUNT = 5;
+			const ULONG MAX_INSTANCE_COUNT = 5;
 
 		public:
-			ModelClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, ID ModelID, Shader::ID ShaderID, Loader::ModelLoaderClass<VertexType>* loader);
+			ModelClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, ID ModelID, Shader::ID ShaderID, Loader::IModelLoaderClass* loader);
 			ModelClass(const ModelClass& other);
 			ModelClass(ModelClass&& other) noexcept;
 			virtual ~ModelClass() = default;
@@ -30,24 +26,24 @@ namespace Graphic
 			ModelClass<VertexType>& operator=(const ModelClass& other);
 			ModelClass<VertexType>& operator=(ModelClass&& other) noexcept;
 
-			virtual inline void AddWorldMatrix(const DirectX::XMFLOAT4X4& world) override { m_WorldMatrix.push_back(world); }
+			virtual inline void AddWorldMatrix(const InstanceBufferType& world) override { m_WorldMatrix.push_back(world); }
 
-			virtual void UpdateInstanceBuffer(ID3D11DeviceContext* DeviceContext);
-			virtual void RenderMesh(ID3D11DeviceContext* DeviceContext, int MeshIdx) override;
+			virtual void UpdateInstanceBuffer(ID3D11DeviceContext* DeviceContext) override;
+			virtual void RenderMesh(ID3D11DeviceContext* DeviceContext, UINT MeshIdx) override;
 
 			virtual inline UINT GetMeshCount() const override { return m_MeshCount; }
 			virtual inline Shader::ID GetShaderID() const override { return m_ShaderID; }
-			virtual inline ULONG GetIndexCount(int idx) const override { assert(idx < m_MeshCount); return m_MeshesIndexCount[idx]; }
-			virtual inline ULONG GetInstanceCount() const override { assert(m_WorldMatrix.size() < MAX_INSTANCE_COUNT); return m_WorldMatrix.size(); }
-			virtual inline const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& GetMaterial(int idx) const override { assert(idx < m_MeshCount); return m_Materials[idx]; }
+			virtual inline ULONG GetIndexCount(UINT idx) const override { assert(idx < m_MeshCount); return m_MeshesIndexCount[idx]; }
+			virtual inline ULONG GetInstanceCount() const override { assert(static_cast<ULONG>(m_WorldMatrix.size()) < MAX_INSTANCE_COUNT); return static_cast<ULONG>(m_WorldMatrix.size()); }
+			virtual inline const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& GetMaterial(UINT idx) const override { assert(idx < m_MeshCount); return m_Materials[idx]; }
 			virtual inline DirectX::BoundingOrientedBox GetModelOBB() const { return m_ModelOBB; }
 
-			virtual inline ULONG GetVertexCount(int idx) const override { assert(idx < m_MeshCount); return m_MeshesVertexCount[idx]; }
+			virtual inline ULONG GetVertexCount(UINT idx) const override { assert(idx < m_MeshCount); return m_MeshesVertexCount[idx]; }
 
 		private:
-			HRESULT Initialize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Loader::ModelLoaderClass<VertexType>* loader);
-			HRESULT InitializeBuffers(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Loader::ModelLoaderClass<VertexType>* loader);
-			void InitializeMaterials(Loader::ModelLoaderClass<VertexType>* loader);
+			HRESULT Initialize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Loader::IModelLoaderClass* loader);
+			HRESULT InitializeBuffers(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Loader::IModelLoaderClass* loader);
+			void InitializeMaterials(Loader::IModelLoaderClass* loader);
 
 		private:
 			ID m_ModelID = ID::NONE;
@@ -63,7 +59,7 @@ namespace Graphic
 
 			std::vector<std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>> m_Materials;	// 각 mesh에서 사용하는 material 데이터들
 
-			std::vector<DirectX::XMFLOAT4X4> m_WorldMatrix;											// 각 object의 world matrix 모음
+			std::vector<InstanceBufferType> m_WorldMatrix;											// 각 object의 world matrix 모음
 
 			DirectX::BoundingOrientedBox m_ModelOBB;
 		};

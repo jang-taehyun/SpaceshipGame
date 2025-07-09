@@ -25,10 +25,10 @@ namespace Graphic
 			// 렌더링 함수들 //
 
 			// shader 내부에 들어갈 데이터들 업데이트하는 함수 //
-			virtual void SetShaderBuffers(ID3D11DeviceContext* DeviceContext, const ShaderBuffers& ShaderBufferDatas) = 0;
+			virtual void UpdateShaderBuffers(ID3D11DeviceContext* DeviceContext, const ShaderBuffers& ShaderBufferDatas) = 0;
 
 			// vertex shader, pixel shader, input layout 바인딩하는 함수
-			virtual void BeginRender(ID3D11DeviceContext* DeviceContext) const override;
+			virtual void BeginRender(ID3D11DeviceContext* DeviceContext) override;
 
 			// shader 렌더링 함수
 			virtual HRESULT Render(ID3D11DeviceContext* DeviceContext, int IndexCount, int InstanceCount, const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& Material) override;
@@ -53,7 +53,12 @@ namespace Graphic
 
 		protected:
 			// Constant buffer 생성 함수
-			virtual HRESULT CreateConstantBuffer(ID3D11Device* Device, ID3D11Buffer** Buffer, UINT BufferSize) override;	
+			virtual HRESULT CreateConstantBuffer(ID3D11Device* Device, ID3D11Buffer** Buffer, UINT BufferSize) override;
+
+			// 렌더링 관련 함수들 //
+		private:
+			virtual void BindShaderAndInputLayout(ID3D11DeviceContext* DeviceContext) override;
+			virtual void SetShaderBuffers(ID3D11DeviceContext* DeviceContext) override = 0;
 
 		private:
 			ID m_ShaderID = ID::DEFAULT;
@@ -65,4 +70,3 @@ namespace Graphic
 		};
 	}
 }
-

@@ -19,7 +19,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		Sound::SoundFileList.clear();
 		Graphic::Model::ModelFileList.clear();
 		Graphic::Texture::UITextureFileList.clear();
-		Graphic::Font::FontList.clear();
+		Graphic::Font::FontFileList.clear();
 	}
 
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);

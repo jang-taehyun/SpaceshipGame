@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "ModelLoaderClass.hpp"
 #include "PTN_ModelLoaderClass.h"
 
 Graphic::Loader::PTN_ModelLoaderClass::PTN_ModelLoaderClass(Model::ID ModelID) : ModelLoaderClass<Model::PTN_VertexType>(ModelID) {}
@@ -17,7 +18,7 @@ std::vector<Graphic::Model::PTN_VertexType> Graphic::Loader::PTN_ModelLoaderClas
 		vertices.push_back(vertex);
 	}
 
-	return std::move(vertices);
+	return vertices;
 }
 
 HRESULT Graphic::Loader::PTN_ModelLoaderClass::LoadMaterial(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext)

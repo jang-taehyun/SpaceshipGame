@@ -1,11 +1,11 @@
 #pragma once
 
+#pragma comment(lib, "assimp-vc143-mtd.lib")
+
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <assimp/material.h>
-
-#include <DirectXCollision.h>
 
 #include "IModelLoaderClass.h"
 
@@ -22,11 +22,11 @@ namespace Graphic
 
 			virtual HRESULT Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext) override;
 
-			inline ULONG GetMeshCount() const { return m_MeshCount; }
-			inline DirectX::BoundingOrientedBox GetModelOBB() const { return m_ModelOBB; }
+			virtual inline ULONG GetMeshCount() const override { return m_MeshCount; }
+			virtual inline DirectX::BoundingOrientedBox GetModelOBB() const override { return m_ModelOBB; }
+			virtual inline std::vector<std::vector<ULONG>> MoveIndicesDatas() override { return std::move(m_Indices); }
+			virtual inline std::vector<std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>> MoveMaterialsDatas() override { return std::move(m_Materials); }
 			inline std::vector<std::vector<VertexType>> MoveVerticesDatas() { return std::move(m_Vertices); }
-			inline std::vector<std::vector<ULONG>> MoveIndicesDatas() { return std::move(m_Indices); }
-			inline std::vector<std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>> MoveMaterialsDatas() { return std::move(m_Materials); }
 
 		private:
 			HRESULT LoadVertex();
@@ -38,7 +38,7 @@ namespace Graphic
 			inline const aiScene* GetScene() const { return m_Scene; }
 			inline void PushPositionData(DirectX::XMFLOAT3 pos) { m_Positions.push_back(pos); }
 
-			inline void PushVerticesData(std::vector<VertexType> vertices) { m_Vertice.push_back(std::move(vertices)); }
+			inline void PushVerticesData(std::vector<VertexType> vertices) { m_Vertices.push_back(std::move(vertices)); }
 			inline void PushIndicesData(std::vector<ULONG> indices) { m_Indices.push_back(std::move(indices)); }
 			inline void PushMaterialsData(std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> materials) { m_Materials.push_back(std::move(materials)); }
 

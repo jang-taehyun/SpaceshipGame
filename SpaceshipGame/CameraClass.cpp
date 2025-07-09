@@ -54,11 +54,13 @@ bool Object::CameraClass::IsRender(DirectX::BoundingOrientedBox ModelOBB, Direct
 
 void Object::CameraClass::UpdateFrustum(DirectX::XMFLOAT4X4 projection)
 {
+	DirectX::XMFLOAT4X4 worldF = GetAffineMatrix();
+
 	// projection matrix를 XMMATRIX로 변환
 	DirectX::XMMATRIX proj = DirectX::XMLoadFloat4x4(&projection);
 
 	// World matrix를 XMMATRIX로 변환
-	DirectX::XMMATRIX world = DirectX::XMLoadFloat4x4(&GetAffineMatrix());
+	DirectX::XMMATRIX world = DirectX::XMLoadFloat4x4(&worldF);
 
 	// projection matrix를 통해 frustum volume을 생성하고, world matrix를 이용해 trasform 변환
 	m_Frustum = DirectX::BoundingFrustum(proj);

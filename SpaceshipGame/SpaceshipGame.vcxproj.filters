@@ -218,6 +218,9 @@
     <Filter Include="Shader\ShaderBufferUpdaterClass">
       <UniqueIdentifier>{06740d24-4ae1-4a0b-a972-cc1fdefe0c28}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\Cube_ShaderClass">
+      <UniqueIdentifier>{39ca4d8f-12f1-45a0-8cbb-da3cb1a599b7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemClass.h">
@@ -270,9 +273,6 @@
     </ClInclude>
     <ClInclude Include="LightClass.h">
       <Filter>Light</Filter>
-    </ClInclude>
-    <ClInclude Include="typedef.h">
-      <Filter>Default\header</Filter>
     </ClInclude>
     <ClInclude Include="ModelManagerClass.h">
       <Filter>Model\ModelManager</Filter>
@@ -406,6 +406,9 @@
     <ClInclude Include="ShaderBufferUpdaterClass.h">
       <Filter>Shader\ShaderBufferUpdaterClass</Filter>
     </ClInclude>
+    <ClInclude Include="Cube_ShaderClass.h">
+      <Filter>Shader\Cube_ShaderClass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -438,7 +441,7 @@
     <ClCompile Include="CameraClass.cpp">
       <Filter>Object\CameraClass</Filter>
     </ClCompile>
-    <ClCompile Include="ModelClass.cpp">
+    <ClCompile Include="ModelClass.hpp">
       <Filter>Model\ModelClass</Filter>
     </ClCompile>
     <ClCompile Include="IMGUIClass.cpp">
@@ -450,7 +453,7 @@
     <ClCompile Include="ModelManagerClass.cpp">
       <Filter>Model\ModelManager</Filter>
     </ClCompile>
-    <ClCompile Include="ShaderClass.cpp">
+    <ClCompile Include="ShaderClass.hpp">
       <Filter>Shader\1. ShaderClass</Filter>
     </ClCompile>
     <ClCompile Include="TextureClass.cpp">
@@ -525,7 +528,7 @@
     <ClCompile Include="UIManagerClass.cpp">
       <Filter>UI\UIManager</Filter>
     </ClCompile>
-    <ClCompile Include="ModelLoaderClass.cpp">
+    <ClCompile Include="ModelLoaderClass.hpp">
       <Filter>Model\ModelLoader\1. ModelLoaderClass</Filter>
     </ClCompile>
     <ClCompile Include="PTN_DNSR_ModelLoaderClass.cpp">
@@ -578,6 +581,12 @@
     </ClCompile>
     <ClCompile Include="ShaderBufferUpdaterClass.cpp">
       <Filter>Shader\ShaderBufferUpdaterClass</Filter>
+    </ClCompile>
+    <ClCompile Include="Cube_ShaderClass.cpp">
+      <Filter>Shader\Cube_ShaderClass</Filter>
+    </ClCompile>
+    <ClCompile Include="config.cpp">
+      <Filter>Default\header</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

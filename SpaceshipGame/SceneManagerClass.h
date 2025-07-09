@@ -30,7 +30,7 @@ namespace Scene
 		inline UI::UIManagerClass* GetUIManager() const { return m_UIManager.get(); }
 		inline Object::ObjectManagerClass* GetObjectManager() { return m_ObjectManager.get(); }
 		inline Sound::SoundManagerClass* GetSoundManager() const { return m_SoundManager.get(); }
-		inline Object::IObjectClass* GetCamera();
+		Object::IObjectClass* GetCamera();
 
 	private:
 		void ChangeScene();

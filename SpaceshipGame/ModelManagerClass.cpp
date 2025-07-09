@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "ModelClass.h"
+#include "ModelClass.hpp"
 #include "ModelFactoryClass.h"
 #include "ModelManagerClass.h"
 
@@ -87,5 +87,5 @@ void Graphic::Model::ModelManagerClass::UpdateInstanceBuffers(ID3D11DeviceContex
 	std::map<ID, std::unique_ptr<IModelClass>>::iterator iter;
 
 	for (iter = m_ModelList.begin(); iter != m_ModelList.end(); ++iter)
-		iter->second->UpdateInstanceData(DeviceContext);
+		iter->second->UpdateInstanceBuffer(DeviceContext);
 }

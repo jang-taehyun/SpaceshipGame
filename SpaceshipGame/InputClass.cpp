@@ -7,7 +7,7 @@ System::InputClass::InputClass(HINSTANCE hinstance, HWND hwnd, int ScreenWidth, 
 {
 	HRESULT result = S_OK;
 	
-	assert(IsInitailize);
+	assert(!IsInitailize);
 
 	result = Initialize(hinstance, hwnd, ScreenWidth, ScreenHeight);
 	IsInitailize = true;

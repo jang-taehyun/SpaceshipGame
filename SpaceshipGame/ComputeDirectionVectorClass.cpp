@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ComputeDirectionVectorClass.h"
 
-void Object::ComputeDirectionVectorClass::GetDirectionVectors(DirectX::XMFLOAT4 rotate, DirectX::XMFLOAT4 forward, DirectX::XMFLOAT4 right, DirectX::XMFLOAT4 up)
+void Object::ComputeDirectionVectorClass::GetDirectionVectors(DirectX::XMFLOAT4 rotate, DirectX::XMFLOAT4& forward, DirectX::XMFLOAT4& right, DirectX::XMFLOAT4& up)
 {
 	float pitch, yaw, roll;
 	DirectX::XMVECTOR f, r, u;

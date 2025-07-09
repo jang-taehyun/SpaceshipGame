@@ -23,7 +23,7 @@ namespace Object
 	private:
 		float m_Range = 0.f;
 
-#ifdef DEBUG
+#ifdef _DEBUG
 	public:
 		inline Graphic::Model::ID GetModelID() const { return m_ModelID; }
 		inline DirectX::XMFLOAT4 GetColor() const { return m_Color; }

@@ -42,7 +42,7 @@ void Graphic::Texture::UIRenderClass::LoadFont(ID3D11Device* Device, UINT FontMa
 		if (IsLoad && !IsExist)
 		{
 			// instance 생성
-			font = std::make_unique<DirectX::SpriteFont>(Device, Font::FontList.find(Font::ID::DEFAULT)->second.c_str());
+			font = std::make_unique<DirectX::SpriteFont>(Device, Font::FontFileList.find(Font::ID::DEFAULT)->second.c_str());
 			assert(font);
 
 			// 현재 로드된 UI texture ID 업데이트
@@ -112,7 +112,7 @@ void Graphic::Texture::UIRenderClass::RenderText(const std::wstring& text, Font:
 	TextPos.y /= 2.f;
 
 	// font list에서 font를 찾아서 렌더링
-	m_FontList.find(fontID);
+	iter = m_FontList.find(fontID);
 	assert(m_FontList.end() != iter);
 	iter->second->DrawString(m_Renderer.get(), text.c_str(), TextPos, vColor, rot, origin, scale);
 }

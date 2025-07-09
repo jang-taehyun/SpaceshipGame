@@ -11,6 +11,7 @@
 #include "ObjectManagerClass.h"
 #include "UIManagerClass.h"
 #include "TextManagerClass.h"
+#include "SceneClass.h"
 #include "CameraClass.h"
 
 #include "IModelClass.h"
@@ -21,7 +22,7 @@
 #include "ITextClass.h"
 #include "TypeConverterClass.h"
 
-#ifdef DEBUG
+#ifdef _DEBUG
 #include "IMGUIClass.h"
 #include "CollisionClass.h"
 #endif // DEBUG
@@ -46,7 +47,9 @@ void Graphic::GraphicsClass::Frame(Scene::SceneManagerClass* SceneManager, bool 
 {
 	bool IsRender = false;
 	UINT cnt = 0;
-	Shader::BuffersData bufferData;
+	DirectX::XMFLOAT4X4 view = {};
+	Model::InstanceBufferType instance = {};
+	Shader::BuffersData BufferData = {};
 
 	if (IsLoad)
 	{
@@ -71,14 +74,15 @@ void Graphic::GraphicsClass::Frame(Scene::SceneManagerClass* SceneManager, bool 
 		);
 
 		if (IsRender)
+		{
+			instance.world = SceneManager->GetObjectManager()->GetGameObject(i)->GetAffineMatrix();
 			m_ModelManager->GetModel(
 				static_cast<Object::GameObjectClass*>(
 					SceneManager->GetObjectManager()->GetGameObject(i)
-					)->GetModelID())->AddWorldMatrix(
-				SceneManager->GetObjectManager()->GetGameObject(i)->GetAffineMatrix()
-			);
+					)->GetModelID())->AddWorldMatrix(instance);
+		}
 
-#ifdef DEBUG
+#ifdef _DEBUG
 		// Collision //
 		IsRender = static_cast<Object::CameraClass*>(SceneManager->GetCamera())->IsRender(
 			m_ModelManager->GetModel(
@@ -88,10 +92,21 @@ void Graphic::GraphicsClass::Frame(Scene::SceneManagerClass* SceneManager, bool 
 						)->GetCollision()
 					)->GetModelID()
 			)->GetModelOBB(),
-			SceneManager->GetObjectManager()->GetGameObject(i)->GetAffineMatrix()
+			static_cast<Object::GameObjectClass*>(
+				SceneManager->GetObjectManager()->GetGameObject(i)
+				)->GetCollision()->GetAffineMatrix()
 		);
 
 		if (IsRender)
+		{
+			instance.world = static_cast<Object::GameObjectClass*>(
+				SceneManager->GetObjectManager()->GetGameObject(i)
+				)->GetCollision()->GetAffineMatrix();
+			instance.color = static_cast<Object::CollisionClass*>(
+				static_cast<Object::GameObjectClass*>(
+					SceneManager->GetObjectManager()->GetGameObject(i)
+					)->GetCollision()
+				)->GetColor();
 			m_ModelManager->GetModel(
 				static_cast<Object::CollisionClass*>(
 					static_cast<Object::GameObjectClass*>(
@@ -99,7 +114,11 @@ void Graphic::GraphicsClass::Frame(Scene::SceneManagerClass* SceneManager, bool 
 						)->GetCollision()
 					)->GetModelID()
 			)->
-			AddWorldMatrix(SceneManager->GetObjectManager()->GetGameObject(i)->GetAffineMatrix());
+				AddWorldMatrix(instance);
+
+			instance.color = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);
+		}
+			
 #endif // DEBUG
 	}
 
@@ -107,20 +126,19 @@ void Graphic::GraphicsClass::Frame(Scene::SceneManagerClass* SceneManager, bool 
 	m_ModelManager->UpdateInstanceBuffers(m_D3D->GetDeviceContext());
 
 	// shader의 모든 buffer 업데이트 //
-	bufferData.transform.Projection = DirectX::XMLoadFloat4x4(&(m_D3D->GetProjectionMatrix()));
-	bufferData.transform.View = DirectX::XMLoadFloat4x4(&(
-		static_cast<Object::CameraClass*>(SceneManager->GetCamera())->Render()
-		));
+	view = static_cast<Object::CameraClass*>(SceneManager->GetCamera())->Render();
+	BufferData.transform.Projection = DirectX::XMLoadFloat4x4(&(m_D3D->GetProjectionMatrix()));
+	BufferData.transform.View = DirectX::XMLoadFloat4x4(&view);
 
-	bufferData.light.AmbientColor = m_Light->GetAmbientColor();
-	bufferData.light.DiffuseColor = m_Light->GetDiffuseColor();
-	bufferData.light.LightDirection = Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(m_Light->GetDirection());
-	bufferData.light.SpecularColor = m_Light->GetSpecularColor();
-	bufferData.light.SpecularPower = m_Light->GetSpecularPower();
+	BufferData.light.AmbientColor = m_Light->GetAmbientColor();
+	BufferData.light.DiffuseColor = m_Light->GetDiffuseColor();
+	BufferData.light.LightDirection = Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(m_Light->GetDirection());
+	BufferData.light.SpecularColor = m_Light->GetSpecularColor();
+	BufferData.light.SpecularPower = m_Light->GetSpecularPower();
 
-	bufferData.camera.CameraPosition = Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(SceneManager->GetCamera()->GetPosition());
+	BufferData.camera.CameraPosition = Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(SceneManager->GetCamera()->GetPosition());
 
-	m_ShaderManager->UpdateBuffer(m_D3D->GetDeviceContext(), bufferData);
+	m_ShaderManager->UpdateBuffer(m_D3D->GetDeviceContext(), BufferData);
 
 	// 렌더링 //
 	Render(SceneManager);
@@ -130,7 +148,7 @@ void Graphic::GraphicsClass::Initialize(HWND hwnd, int ScreenWidth, int ScreenHe
 {
 	DirectX::XMFLOAT4 AmbientColor = DirectX::XMFLOAT4(0.15f, 0.15f, 0.15f, 1.f);
 	DirectX::XMFLOAT4 DiffuseColor = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);
-	DirectX::XMFLOAT3 LightDirection = DirectX::XMFLOAT3(0.f, 0.f, 1.f);
+	DirectX::XMFLOAT4 LightDirection = DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f);
 	DirectX::XMFLOAT4 SpecularColor = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);
 	float SpecularPower = 64.f;
 
@@ -158,9 +176,9 @@ void Graphic::GraphicsClass::Initialize(HWND hwnd, int ScreenWidth, int ScreenHe
 	m_UIRender = std::make_unique<Texture::UIRenderClass>(m_D3D->GetDeviceContext());
 	assert(m_UIRender);
 
-#ifdef DEBUG
+#ifdef _DEBUG
 	// IMGUI 객체 생성 //
-	m_IMGUI = std::make_unique<IMGUIClass>(m_D3D->GetDevice(), m_D3D->GetDeviceContext());
+	m_IMGUI = std::make_unique<IMGUIClass>(GetActiveWindow(), m_D3D->GetDevice(), m_D3D->GetDeviceContext());
 	assert(m_IMGUI);
 #endif // DEBUG
 }
@@ -241,7 +259,7 @@ void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager)
 	m_D3D->EndScene();
 }
 
-#ifdef DEBUG
+#ifdef _DEBUG
 void Graphic::GraphicsClass::ImGuiRender(UINT FPS, UINT cpu_usage, Scene::SceneManagerClass* SceneManager)
 {
 	m_IMGUI->Render(FPS, cpu_usage, SceneManager, m_Light.get());

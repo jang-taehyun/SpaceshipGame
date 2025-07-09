@@ -1,3 +1,5 @@
+#pragma once
+
 #include "pch.h"
 #include "ShaderClass.h"
 
@@ -78,17 +80,10 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::Initialize(HWND hwnd, ID3D1
 }
 
 template<typename ShaderBuffers>
-void Graphic::Shader::ShaderClass<ShaderBuffers>::BeginRender(ID3D11DeviceContext* DeviceContext) const
+void Graphic::Shader::ShaderClass<ShaderBuffers>::BeginRender(ID3D11DeviceContext* DeviceContext)
 {
-	// vertex input layout 설정 //
-	DeviceContext->IASetInputLayout(m_Layout.Get());
-
-	// vertex shader와 pixel shader 설정 //
-	DeviceContext->VSSetShader(m_VertexShader.Get(), NULL, 0);
-	DeviceContext->PSSetShader(m_PixelShader.Get(), NULL, 0);
-
-	// pixel shader에서 사용할 sampler state 설정(SamplerState) //
-	DeviceContext->PSSetSamplers(0, 1, m_SampleState.Get());
+	BindShaderAndInputLayout(DeviceContext);
+	SetShaderBuffers(DeviceContext);
 }
 
 template<typename ShaderBuffers>
@@ -258,4 +253,18 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::CreateConstantBuffer(ID3D11
 	assert(SUCCEEDED(result));
 
 	return result;
+}
+
+template<typename ShaderBuffers>
+void Graphic::Shader::ShaderClass<ShaderBuffers>::BindShaderAndInputLayout(ID3D11DeviceContext* DeviceContext)
+{
+	// vertex input layout 설정 //
+	DeviceContext->IASetInputLayout(m_Layout.Get());
+
+	// vertex shader와 pixel shader 설정 //
+	DeviceContext->VSSetShader(m_VertexShader.Get(), NULL, 0);
+	DeviceContext->PSSetShader(m_PixelShader.Get(), NULL, 0);
+
+	// pixel shader에서 사용할 sampler state 설정(SamplerState) //
+	DeviceContext->PSSetSamplers(0, 1, m_SampleState.GetAddressOf());
 }

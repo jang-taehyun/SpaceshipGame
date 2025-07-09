@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ModelLoaderClass.h"
+#include "ModelLoaderClass.hpp"
 
 namespace Graphic
 {

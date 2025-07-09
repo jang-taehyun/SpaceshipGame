@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "MLC_ShaderClass.h"
+#include "Cube_ShaderClass.h"
 #include "ShaderFactoryClass.h"
 
 bool Graphic::Loader::ShaderFactoryClass::IsInitialize = false;
@@ -72,10 +73,12 @@ std::unique_ptr<Graphic::Shader::IShaderClass> Graphic::Loader::CreateCubeShader
 	std::vector<std::string> semantics =
 	{
 		"POSITION",
+		"TEXCOORD",
+		"NORMAL",
 	};
 
 	// instance 생성
-	std::unique_ptr<Shader::IShaderClass> shader = std::make_unique<Shader::>(id);
+	std::unique_ptr<Shader::IShaderClass> shader = std::make_unique<Shader::Cube_ShaderClass>(id);
 	assert(shader);
 
 	// instance 초기화

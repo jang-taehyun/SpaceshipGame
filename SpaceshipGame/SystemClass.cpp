@@ -33,22 +33,22 @@ void System::SystemClass::Initialize()
 
 	// 객체 생성 및 초기화 //
 	m_Input = std::make_unique<InputClass>(m_hinstance, m_hwnd, ScreenWidth, ScreenHeight);
-	assert(!m_Input);
+	assert(m_Input);
 
-	m_Graphics = std::make_unique<Graphic::GraphicsClass>(ScreenWidth, ScreenHeight, m_hwnd);
-	assert(!m_Graphics);
+	m_Graphics = std::make_unique<Graphic::GraphicsClass>(m_hwnd, ScreenWidth, ScreenHeight);
+	assert(m_Graphics);
 
 	m_FPS = std::make_unique<FPSClass>();
-	assert(!m_FPS);
+	assert(m_FPS);
 
 	m_CPU = std::make_unique<CPUClass>();
-	assert(!m_CPU);
+	assert(m_CPU);
 
 	m_Timer = std::make_unique<TimerClass>();
-	assert(!m_Timer);
+	assert(m_Timer);
 
 	m_SceneManager = std::make_unique<Scene::SceneManagerClass>();
-	assert(!m_SceneManager);
+	assert(m_SceneManager);
 }
 
 void System::SystemClass::Run()
@@ -96,7 +96,7 @@ void System::SystemClass::Frame()
 	IsLoad = m_SceneManager->Frame(m_Input.get(), m_Timer->GetTime());
 	m_Graphics->Frame(m_SceneManager.get(), IsLoad);
 
-#ifdef DEBUG
+#ifdef _DEBUG
 	m_Graphics->ImGuiRender(m_FPS->GetFPS(), m_CPU->GetCPUPercentage(), m_SceneManager.get());
 #endif // DEBUG
 }

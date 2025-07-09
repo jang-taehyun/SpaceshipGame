@@ -8,10 +8,15 @@ Graphic::Texture::TextureClass::TextureClass(ID3D11Device* Device, ID3D11DeviceC
 {
 	std::map<UITextureID, const std::wstring>::const_iterator iter;
 
-	iter = UITextureList.find(ID);
-	assert(UITextureList.end() == iter);
+	iter = UITextureFileList.find(ID);
+	assert(UITextureFileList.end() == iter);
 
 	HRESULT result = Initialize(Device, DeviceContext, iter->second);
+}
+
+Graphic::Texture::TextureClass::TextureClass(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::wstring& filename)
+{
+	HRESULT result = Initialize(Device, DeviceContext, filename);
 }
 
 Graphic::Texture::TextureClass::TextureClass(const TextureClass& other)

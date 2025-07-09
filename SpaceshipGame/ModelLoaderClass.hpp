@@ -1,3 +1,5 @@
+#pragma once
+
 #include "pch.h"
 #include "TextureClass.h"
 #include "ModelLoaderClass.h"
@@ -10,7 +12,7 @@ Graphic::Loader::ModelLoaderClass<VertexType>::ModelLoaderClass(Model::ID ModelI
 
 	// assimp 라이브러리를 통해 모델 파일을 메모리에 로드 //
 	m_Filename.assign(filename.begin(), filename.end());
-	m_Scene = importer.ReadFile(m_Filename.c_str(), aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs | aiProcess_MakeLeftHanded);
+	m_Scene = const_cast<aiScene*>(importer.ReadFile(m_Filename.c_str(), aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs | aiProcess_MakeLeftHanded));
 	assert(m_Scene && !m_Scene->HasMeshes());
 
 	// mesh 개수 설정 //
@@ -56,7 +58,7 @@ HRESULT Graphic::Loader::ModelLoaderClass<VertexType>::LoadVertex()
 		mesh = GetScene()->mMeshes[i];
 
 		// vertex 데이터 파싱 //
-		PushVerticesData(LoadVertexData(mesh));
+		PushVerticesData(std::move(LoadVertexData(mesh)));
 
 		// index 데이터 파싱 //
 		for (unsigned int j = 0; j < mesh->mNumFaces; ++j)

@@ -2,20 +2,10 @@
 #include "TimerClass.h"
 
 bool System::TimerClass::IsInitialize = false;
-static ErrorContent e;
 
 System::TimerClass::TimerClass()
 {
-	// 에러 메세지 초기화 //
-	e.title = _T("TimerClass Constructor");
-
-	if (IsInitialize)
-	{
-		e.contents = _T("이미 TimerClass 인스턴스가 존재합니다.");
-		e.errorCode = E_FAIL;
-		throw e;
-	}
-
+	assert(!IsInitialize);
 	Initialize();
 	IsInitialize = true;
 }
@@ -27,17 +17,11 @@ System::TimerClass::~TimerClass()
 
 void System::TimerClass::Initialize()
 {
-	// 에러 메세지 초기화 //
-	e.title = _T("TimerClass Initialize()");
-
 	// 성능 카운터의 빈도 검색
 	// high performance timer를 지원하는지 확인
 	QueryPerformanceFrequency((LARGE_INTEGER*)&m_Frequency);
 	if (!m_Frequency)
-	{
-		e.contents = _T("high performance timer를 지원하지 않습니다.");
 		return;
-	}
 
 	// 1ms마다 counter에서 tick이 몇 번 일어나는지 계산
 	m_TicksPerMs = (float)(m_Frequency / 1000);

@@ -13,7 +13,7 @@ namespace Graphic
 			virtual HRESULT Initialize(HWND hwnd, ID3D11Device* Device, const Loader::ShaderFileInfo& info, const std::vector<std::string>& VertexDataSemantics) = 0;
 
 			// vertex shader, pixel shader, input layout 바인딩하는 함수
-			virtual void BeginRender(ID3D11DeviceContext* DeviceContext) const;
+			virtual void BeginRender(ID3D11DeviceContext* DeviceContext) = 0;
 
 			// 렌더링
 			virtual HRESULT Render(ID3D11DeviceContext* DeviceContext, int IndexCount, int InstanceCount, const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& Material) = 0;
@@ -43,8 +43,8 @@ namespace Graphic
 
 			// 렌더링 관련 함수들 //
 		private:
-			// vertex shader, pixel shader, input layout 바인딩하는 함수
 			virtual void BindShaderAndInputLayout(ID3D11DeviceContext* DeviceContext) = 0;
+			virtual void SetShaderBuffers(ID3D11DeviceContext* DeviceContext) = 0;
 		};
 	}
 }

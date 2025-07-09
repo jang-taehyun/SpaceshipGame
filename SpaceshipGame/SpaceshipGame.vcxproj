@@ -81,7 +81,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(SolutionDir)assimp\build\include;$(SolutionDir)assimp\include;$(SolutionDir)DirectXTK\Inc;$(SolutionDir)imgui;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)assimp\build\lib\Debug;$(SolutionDir)assimp\build\bin\Debug;$(SolutionDir)DirectXTK\Bin\Desktop_2022\x64\Debug;$(SolutionDir)IMGUI_Library\ImGui\lib\x64\Debug;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)assimp\build\lib\Debug;$(SolutionDir)assimp\build\bin\Debug;$(SolutionDir)DirectXTK\Bin\Desktop_2022\x64\Debug\;$(SolutionDir)IMGUI_Library\ImGui\lib\x64\Debug\;$(LibraryPath)</LibraryPath>
     <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -155,6 +155,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ActorClass.h" />
+    <ClInclude Include="Cube_ShaderClass.h" />
     <ClInclude Include="GameObjectClass.h" />
     <ClInclude Include="ModelFactoryClass.h" />
     <ClInclude Include="ObjectFactoryClass.h" />
@@ -210,7 +211,6 @@
     <ClInclude Include="TimerClass.h" />
     <ClInclude Include="ObjectClass.h" />
     <ClInclude Include="TypeConverterClass.h" />
-    <ClInclude Include="typedef.h" />
     <ClInclude Include="UIClass.h" />
     <ClInclude Include="UIFactoryClass.h" />
     <ClInclude Include="UIManagerClass.h" />
@@ -219,6 +219,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ActorClass.cpp" />
+    <ClCompile Include="config.cpp" />
+    <ClCompile Include="Cube_ShaderClass.cpp" />
     <ClCompile Include="GameObjectClass.cpp" />
     <ClCompile Include="ModelFactoryClass.cpp" />
     <ClCompile Include="ObjectFactoryClass.cpp" />
@@ -244,10 +246,10 @@
     <ClCompile Include="ITextClass.cpp" />
     <ClCompile Include="IUIClass.cpp" />
     <ClCompile Include="MLC_ShaderClass.cpp" />
-    <ClCompile Include="ModelLoaderClass.cpp" />
+    <ClCompile Include="ModelLoaderClass.hpp" />
     <ClCompile Include="MoveClass.cpp" />
     <ClCompile Include="LightClass.cpp" />
-    <ClCompile Include="ModelClass.cpp" />
+    <ClCompile Include="ModelClass.hpp" />
     <ClCompile Include="ModelManagerClass.cpp" />
     <ClCompile Include="PTN_DNSR_ModelLoaderClass.cpp" />
     <ClCompile Include="pch.cpp">
@@ -262,7 +264,7 @@
     <ClCompile Include="SceneFactoryClass.cpp" />
     <ClCompile Include="SceneManagerClass.cpp" />
     <ClCompile Include="ShaderBufferUpdaterClass.cpp" />
-    <ClCompile Include="ShaderClass.cpp" />
+    <ClCompile Include="ShaderClass.hpp" />
     <ClCompile Include="ShaderFactoryClass.cpp" />
     <ClCompile Include="ShaderManagerClass.cpp" />
     <ClCompile Include="SoundClass.cpp" />

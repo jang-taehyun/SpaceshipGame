@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "MLC_ShaderClass.h"
+#include "Cube_ShaderClass.h"
 #include "ShaderBufferUpdaterClass.h"
 
 bool Graphic::Shader::ShaderBufferUpdaterClass::IsInitialize = false;
@@ -8,6 +9,8 @@ Graphic::Shader::ShaderBufferUpdaterClass::ShaderBufferUpdaterClass()
 {
 	assert(!IsInitialize);
 	IsInitialize = true;
+
+	m_UpdaterList.insert(std::make_pair(ID::CUBE, UpdateCubeShaderBuffer));
 
 	m_UpdaterList.insert(std::make_pair(ID::DEFAULT_SPACESHIP, UpdateDefaultSpaceshipShaderBuffer));
 }
@@ -35,5 +38,11 @@ void Graphic::Shader::UpdateDefaultSpaceshipShaderBuffer(ID3D11DeviceContext* De
 	buffers.light = data.light;
 	buffers.camera = data.camera;
 	
-	static_cast<MLC_ShaderClass*>(shader)->SetShaderBuffers(DeviceContext, buffers);
+	static_cast<MLC_ShaderClass*>(shader)->UpdateShaderBuffers(DeviceContext, buffers);
+}
+
+void Graphic::Shader::UpdateCubeShaderBuffer(ID3D11DeviceContext* DeviceContext, const BuffersData& data, IShaderClass* shader)
+{
+	None_ShaderBuffer buffers;
+	static_cast<Cube_ShaderClass*>(shader)->UpdateShaderBuffers(DeviceContext, buffers);
 }

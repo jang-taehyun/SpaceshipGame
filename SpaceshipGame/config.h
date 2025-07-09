@@ -1,23 +1,20 @@
 #pragma once
 
-#include <map>
-#include "typedef.h"
-
 // system 관련 //
 namespace System
 {
 	// 해상도
-	const int WIDTH = 1200;
-	const int HEIGHT = 800;
+	extern UINT WIDTH;
+	extern UINT HEIGHT;
 
 	// Graphics 설정
-	const bool FULL_SCREEN = false;
-	const bool VSYNC_ENABLED = true;
-	const float SCREEN_DEPTH = 1000.0f;
-	const float SCREEN_NEAR = 0.1f;
+	extern bool FULL_SCREEN;
+	extern bool VSYNC_ENABLED;
+	extern float SCREEN_DEPTH;
+	extern float SCREEN_NEAR;
 
 	// MOUSE 감도 설정
-	float MOUSE_SENSITIVITY = 0.0015f;
+	extern float MOUSE_SENSITIVITY;
 }
 
 // object 관련 //
@@ -41,6 +38,14 @@ namespace Object
 	enum class CollisionState
 	{
 		NONE, OBB_HIT, RAY_HIT,
+	};
+
+	// affine 데이터(이동, 회전, 스케일) 관련
+	struct AffineInfo
+	{
+		DirectX::XMFLOAT4 position;
+		DirectX::XMFLOAT4 rotation;
+		DirectX::XMFLOAT4 scale;
 	};
 }
 
@@ -84,17 +89,13 @@ namespace Text
 // sound 관련 //
 namespace Sound
 {
-	const int SoundIDCount = 3;
+	extern UINT SoundIDCount;
 	enum class ID
 	{
 		NONE, BACKGROUND, EFFECT, HIT,
 	};
 
-	std::map<ID, const std::wstring> SoundFileList =
-	{
-		{ ID::BACKGROUND, _T("./data/dedede.wav") },
-		{ ID::EFFECT, _T("./data/sound01.wav") }
-	};
+	extern std::map<ID, const std::wstring> SoundFileList;
 }
 
 // Graphic 관련 //
@@ -103,7 +104,7 @@ namespace Graphic
 	// 3D model 관련 //
 	namespace Model
 	{
-		const int ModelIDCount = 3;
+		extern UINT ModelIDCount;
 		enum class ID
 		{
 			NONE,
@@ -112,41 +113,44 @@ namespace Graphic
 			ASTEROID,
 		};
 
-		std::map<ID, const std::wstring> ModelFileList = {
-			{ ID::COLLISION, _T("./data/cube.txt") },
-			{ ID::DEFAULT_SPACESHIP, _T("./data/aircraft.txt") },
+		extern std::map<ID, const std::wstring> ModelFileList;
+
+		// instance buffer type
+		struct InstanceBufferType
+		{
+			DirectX::XMFLOAT4X4 world = {};;
+
+#ifdef _DEBUG
+			DirectX::XMFLOAT4 color = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);
+#endif // DEBUG
 		};
 
 		// PTN vertex type
 		struct PTN_VertexType
 		{
-			DirectX::XMFLOAT3 position;
-			DirectX::XMFLOAT2 texture;
-			DirectX::XMFLOAT3 normal;
+			DirectX::XMFLOAT3 position = {};
+			DirectX::XMFLOAT2 texture = {};;
+			DirectX::XMFLOAT3 normal = {};;
 		};
 	}
 
 	// UI texture 관련 //
 	namespace Texture
 	{
-		const int UITextureIDCount = 3;
+		extern UINT UITextureIDCount;
 		enum class UITextureID
 		{
 			NONE, START_BACKGROUND, START_BUTTON,
 		};
 
 		// UI texture의 파일 정보 //
-		std::map<UITextureID, const std::wstring> UITextureFileList =
-		{
-			{ UITextureID::START_BACKGROUND, _T("./resource/StartBackground.jpg") },
-			{ UITextureID::START_BUTTON, _T("./resource/button.png") }
-		};
+		extern std::map<UITextureID, const std::wstring> UITextureFileList;
 	}
 
 	// shader 관련 //
 	namespace Shader
 	{
-		const int ShaderIDCount = 3;
+		extern UINT ShaderIDCount;
 		enum class ID
 		{
 			NONE, DEFAULT_SPACESHIP, CUBE, ALPHA_MAP, TEXTURE, MULTI_TEXTURE, LIGHT, LIGHT_MAP,
@@ -155,25 +159,25 @@ namespace Graphic
 		// shader buffer type //
 		struct MatrixBufferType
 		{
-			DirectX::XMMATRIX View;
-			DirectX::XMMATRIX Projection;
+			DirectX::XMMATRIX View = {};
+			DirectX::XMMATRIX Projection = {};
 		};
 
 		struct LightBufferType
 		{
-			DirectX::XMFLOAT4 AmbientColor;
-			DirectX::XMFLOAT4 DiffuseColor;
-			DirectX::XMFLOAT3 LightDirection;
+			DirectX::XMFLOAT4 AmbientColor = {};
+			DirectX::XMFLOAT4 DiffuseColor = {};
+			DirectX::XMFLOAT3 LightDirection = {};
 			float padding1 = 0.f;
-			DirectX::XMFLOAT4 SpecularColor;
-			float SpecularPower;
+			DirectX::XMFLOAT4 SpecularColor = {};
+			float SpecularPower = 0.f;
 			float padding2[3] = { 0.f, };
 		};
 
 		struct CameraBufferType
 		{
-			DirectX::XMFLOAT3 CameraPosition;
-			float padding;
+			DirectX::XMFLOAT3 CameraPosition = {};
+			float padding = 0.f;
 		};
 
 		// shader buffer 모음 //
@@ -181,32 +185,45 @@ namespace Graphic
 		// 모든 buffer 모음
 		struct BuffersData
 		{
-			MatrixBufferType transform;
-			LightBufferType light;
-			CameraBufferType camera;
+			MatrixBufferType transform = {};
+			LightBufferType light = {};
+			CameraBufferType camera = {};
 		};
+
+		// cube 전용(buffer 없음)
+		struct None_ShaderBuffer {};
 
 		// matrix, light, camera
 		struct MLC_ShaderBuffers
 		{
-			MatrixBufferType transform;
-			LightBufferType light;
-			CameraBufferType camera;
+			MatrixBufferType transform = {};
+			LightBufferType light = {};
+			CameraBufferType camera = {};
 		};
 	}
 
 	// font 관련 //
 	namespace Font
 	{
-		const int FontIDCount = 2;
+		extern UINT FontIDCount;
 		enum class ID
 		{
 			NONE, DEFAULT, 
 		};
 
-		std::map<ID, const std::wstring> FontList =
+		extern std::map<ID, const std::wstring> FontFileList;
+	}
+
+	// loader 관련 //
+	namespace Loader
+	{
+		// shader 파일 정보
+		struct ShaderFileInfo
 		{
-			{ ID::DEFAULT, _T("./resource/굴림.spritefont") },
+			std::wstring vsFileName;
+			std::wstring psFileName;
+			std::string vsEntryPoint;
+			std::string psEntryPoint;
 		};
 	}
 }

@@ -7,7 +7,7 @@ Graphic::D3DClass::D3DClass(HWND hwnd, int ScreenWidth, int ScreenHeight)
 {
 	HRESULT result = S_OK;
 
-	assert(IsInitialize);
+	assert(!IsInitialize);
 
 	result = Initialize(hwnd, ScreenWidth, ScreenHeight);
 	IsInitialize = true;

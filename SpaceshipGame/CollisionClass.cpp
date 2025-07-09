@@ -17,7 +17,7 @@ DirectX::ContainmentType Object::CollisionClass::GetCollideState(const AffineInf
 	// 충돌 검사 //
 	DirectX::ContainmentType ret = itself.Contains(other);
 
-#ifdef DEBUG
+#ifdef _DEBUG
 	// 충돌 검사 후, 결과에 따라 자신의 collision 색상 업데이트 //
 	if (ret != DirectX::ContainmentType::DISJOINT)
 		m_Color = DirectX::XMFLOAT4(1.f, 0.f, 0.f, 1.f);
@@ -54,7 +54,7 @@ DirectX::ContainmentType Object::CollisionClass::GetCollideState(DirectX::XMFLOA
 	else
 		ret = DirectX::ContainmentType::DISJOINT;
 
-#ifdef DEBUG
+#ifdef _DEBUG
 	// 충돌 검사 후, 결과에 따라 자신의 collision 색상 업데이트 //
 	m_Color = (ret == DirectX::ContainmentType::INTERSECTS ? DirectX::XMFLOAT4(1.f, 0.f, 0.f, 1.f) : DirectX::XMFLOAT4(0.f, 1.f, 0.f, 1.f));
 #endif // DEBUG

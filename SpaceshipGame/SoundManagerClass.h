@@ -16,6 +16,8 @@ namespace Sound
 		void Play(ID SoundID) const;
 		void Frame() const;
 
+		inline UINT GetSoundMask() const { return m_CurrentSoundMask; }
+
 	private:
 		void Initailize();
 		void Shutdown();

@@ -1,5 +1,6 @@
 #pragma once
-#include "ShaderClass.h"
+
+#include "ShaderClass.hpp"
 
 namespace Graphic
 {
@@ -17,21 +18,24 @@ namespace Graphic
 			MLC_ShaderClass& operator=(MLC_ShaderClass&& other) noexcept;
 
 			// shader 내부에 들어갈 데이터들 업데이트하는 함수 //
-			virtual void SetShaderBuffers(ID3D11DeviceContext* DeviceContext, const MLC_ShaderBuffers& ShaderBufferDatas) override;
+			virtual void UpdateShaderBuffers(ID3D11DeviceContext* DeviceContext, const MLC_ShaderBuffers& ShaderBufferDatas) override;
 
 		private:
 			// shader에서 사용하는 buffer들을 생성하는 함수
 			virtual HRESULT CreateBuffers(ID3D11Device* Device) override;
 
+			// shader buffer를 세팅하는 함수 //
+			virtual void SetShaderBuffers(ID3D11DeviceContext* DeviceContext) override;
+
 		private:
 			// Matrix buffer를 업데이트 하는 함수 //
-			HRESULT UpdateMatrixBuffer(ID3D11DeviceContext* DeviceContext, UINT slot, const MatrixBufferType& transform);
+			HRESULT UpdateMatrixBuffer(ID3D11DeviceContext* DeviceContext, const MatrixBufferType& transform);
 
 			// Light buffer를 업데이트 하는 함수 //
-			HRESULT UpdateLightBuffer(ID3D11DeviceContext* DeviceContext, UINT slot, const LightBufferType& light);
+			HRESULT UpdateLightBuffer(ID3D11DeviceContext* DeviceContext, const LightBufferType& light);
 
 			// camera buffer를 업데이트 하는 함수 //
-			HRESULT UpdateCameraBuffer(ID3D11DeviceContext* DeviceContext, UINT slot, const CameraBufferType& camera);
+			HRESULT UpdateCameraBuffer(ID3D11DeviceContext* DeviceContext, const CameraBufferType& camera);
 
 		private:
 			Microsoft::WRL::ComPtr<ID3D11Buffer> m_MatrixBuffer = nullptr;

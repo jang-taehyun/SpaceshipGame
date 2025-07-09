@@ -1,13 +1,15 @@
 #include "pch.h"
 #include "IMGUIClass.h"
 
-#ifdef DEBUG
+#ifdef _DEBUG
 
 #include "SceneManagerClass.h"
 #include "ObjectManagerClass.h"
 #include "SoundManagerClass.h"
 #include "GameObjectClass.h"
 #include "LightClass.h"
+
+#include "SoundClass.h"
 
 bool Graphic::IMGUIClass::IsInitialize = false;
 
@@ -41,6 +43,7 @@ void Graphic::IMGUIClass::Initialize(HWND hwnd, ID3D11Device* Device, ID3D11Devi
 
 	// IMGUI의 윈도우 크기, 위치 설정 //
 	m_WindowsSize = ImVec2(300.f, 100.f);
+	m_WindowsCount = 10;
 
 	cur = ImGui::GetMainViewport()->GetCenter();
 	cur.x += 10.f;
@@ -87,18 +90,21 @@ void Graphic::IMGUIClass::SetUI(UINT FPS, UINT cpu_usage, Scene::SceneManagerCla
 	title = u8"광원 정보(ambient, diffuse, direction, specular color, specular power)";
 	SetLightInfo(title, 3, light);
 
-	title = u8"player의 affine(position, rotate, scale), collision(center, rotate, extends)";
-	SetObjectInfo(title, 4,
-		static_cast<Object::GameObjectClass*>
-		(
-			SceneManager->GetObjectManager()->
-			GetGameObject(
-				SceneManager->GetObjectManager()->GetPlayerIdx()
-			)
-			)
-	);
+	if (-1 != SceneManager->GetObjectManager()->GetPlayerIdx())
+	{
+		title = u8"player의 affine(position, rotate, scale), collision(center, rotate, extends)";
+		SetObjectInfo(title, 4,
+			static_cast<Object::GameObjectClass*>
+			(
+				SceneManager->GetObjectManager()->
+				GetGameObject(
+					SceneManager->GetObjectManager()->GetPlayerIdx()
+				)
+				)
+		);
+	}
 
-	for (int i = 0; i < SceneManager->GetObjectManager()->GetObjectCount(); ++i)
+	for (UINT i = 0; i < SceneManager->GetObjectManager()->GetObjectCount(); ++i)
 	{
 		if (i != SceneManager->GetObjectManager()->GetPlayerIdx())
 		{
@@ -172,7 +178,7 @@ void Graphic::IMGUIClass::SetCameraInfo(const std::string& title, int IMGUI_Wind
 void Graphic::IMGUIClass::SetSoundInfo(const std::string& title, int IMGUI_Window_idx, Sound::SoundManagerClass* sound_manager)
 {
 	bool IsPress = false;
-	UINT mask = sound_manager->GetCurrentSoundMask();
+	UINT mask = sound_manager->GetSoundMask();
 	std::string contents;
 
 	// 사운드 재생 UI //

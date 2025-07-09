@@ -49,6 +49,20 @@ Graphic::Shader::MLC_ShaderClass& Graphic::Shader::MLC_ShaderClass::operator=(ML
 	return *this;
 }
 
+void Graphic::Shader::MLC_ShaderClass::UpdateShaderBuffers(ID3D11DeviceContext* DeviceContext, const MLC_ShaderBuffers& ShaderBufferDatas)
+{
+	HRESULT result = S_OK;
+
+	// matrix constant buffer의 내용 업데이트 //
+	result = UpdateMatrixBuffer(DeviceContext, ShaderBufferDatas.transform);
+
+	// light constant buffer의 내용 업데이트 //
+	result = UpdateLightBuffer(DeviceContext, ShaderBufferDatas.light);
+
+	// camera constant buffer의 내용 업데이트 //
+	result = UpdateCameraBuffer(DeviceContext, ShaderBufferDatas.camera);
+}
+
 HRESULT Graphic::Shader::MLC_ShaderClass::CreateBuffers(ID3D11Device* Device)
 {
 	HRESULT result = S_OK;
@@ -65,28 +79,27 @@ HRESULT Graphic::Shader::MLC_ShaderClass::CreateBuffers(ID3D11Device* Device)
 	return result;
 }
 
-void Graphic::Shader::MLC_ShaderClass::SetShaderBuffers(ID3D11DeviceContext* DeviceContext, const Graphic::Shader::MLC_ShaderBuffers& ShaderBufferDatas)
+void Graphic::Shader::MLC_ShaderClass::SetShaderBuffers(ID3D11DeviceContext* DeviceContext)
 {
-	HRESULT result = S_OK;
-	UINT SlotNum = 0;												// slot 번호
+	UINT slot = 0;
 
-	// matrix constant buffer의 내용 업데이트 //
+	// vertex shader에서 상수 버퍼의 위치 설정
 	// vertex shader에서 matrix constant buffer의 위치 : 0번
-	SlotNum = 0;
-	result = UpdateMatrixBuffer(DeviceContext, SlotNum, ShaderBufferDatas.transform);
+	slot = 0;
+	DeviceContext->VSSetConstantBuffers(slot, 1, m_MatrixBuffer.GetAddressOf());
 
-	// light constant buffer의 내용 업데이트 //
+	// pixel shader의 광원 상수 버퍼의 위치 설정
 	// pixel shader에서 light constant buffer의 위치 : 0번
-	SlotNum = 0;
-	result = UpdateLightBuffer(DeviceContext, SlotNum, ShaderBufferDatas.light);
+	slot = 0;
+	DeviceContext->PSSetConstantBuffers(slot, 1, m_LightBuffer.GetAddressOf());
 
-	// camera constant buffer의 내용 업데이트 //
+	// vertex shader에서 상수 버퍼의 위치 설정 및 camera constant buffer의 내용 업데이트
 	// vertex shader에서 camera constant buffer의 위치 : 1번
-	SlotNum = 1;
-	result = UpdateCameraBuffer(DeviceContext, SlotNum, ShaderBufferDatas.camera);
+	slot = 1;
+	DeviceContext->VSSetConstantBuffers(slot, 1, m_CameraBuffer.GetAddressOf());
 }
 
-HRESULT Graphic::Shader::MLC_ShaderClass::UpdateMatrixBuffer(ID3D11DeviceContext* DeviceContext, UINT slot, const MatrixBufferType& transform)
+HRESULT Graphic::Shader::MLC_ShaderClass::UpdateMatrixBuffer(ID3D11DeviceContext* DeviceContext, const MatrixBufferType& transform)
 {
 	HRESULT result = S_OK;
 	D3D11_MAPPED_SUBRESOURCE MappedResource;			// lock
@@ -113,13 +126,10 @@ HRESULT Graphic::Shader::MLC_ShaderClass::UpdateMatrixBuffer(ID3D11DeviceContext
 	// matrix constant buffer의 잠금을 풀어 GPU에 반영
 	DeviceContext->Unmap(m_MatrixBuffer.Get(), 0);
 
-	// vertex shader에서 상수 버퍼의 위치 설정 및 matrix constant buffer의 내용 업데이트
-	DeviceContext->VSSetConstantBuffers(slot, 1, m_MatrixBuffer.GetAddressOf());
-
 	return result;
 }
 
-HRESULT Graphic::Shader::MLC_ShaderClass::UpdateLightBuffer(ID3D11DeviceContext* DeviceContext, UINT slot, const LightBufferType& light)
+HRESULT Graphic::Shader::MLC_ShaderClass::UpdateLightBuffer(ID3D11DeviceContext* DeviceContext, const LightBufferType& light)
 {
 	HRESULT result = S_OK;
 	D3D11_MAPPED_SUBRESOURCE MappedResource;						// lock
@@ -144,13 +154,10 @@ HRESULT Graphic::Shader::MLC_ShaderClass::UpdateLightBuffer(ID3D11DeviceContext*
 	// 광원 상수 버퍼의 잠금을 풀어 GPU에 반영
 	DeviceContext->Unmap(m_LightBuffer.Get(), 0);
 
-	// pixel shader의 광원 상수 버퍼의 위치 설정 및 light constant buffer의 내용 업데이트
-	DeviceContext->PSSetConstantBuffers(slot, 1, m_LightBuffer.GetAddressOf());
-
 	return result;
 }
 
-HRESULT Graphic::Shader::MLC_ShaderClass::UpdateCameraBuffer(ID3D11DeviceContext* DeviceContext, UINT slot, const CameraBufferType& camera)
+HRESULT Graphic::Shader::MLC_ShaderClass::UpdateCameraBuffer(ID3D11DeviceContext* DeviceContext, const CameraBufferType& camera)
 {
 	HRESULT result = S_OK;
 	D3D11_MAPPED_SUBRESOURCE MappedResource;						// lock
@@ -169,9 +176,6 @@ HRESULT Graphic::Shader::MLC_ShaderClass::UpdateCameraBuffer(ID3D11DeviceContext
 
 	// camera constant buffer의 잠금을 풀어 GPU에 반영
 	DeviceContext->Unmap(m_CameraBuffer.Get(), 0);
-
-	// vertex shader에서 상수 버퍼의 위치 설정 및 camera constant buffer의 내용 업데이트
-	DeviceContext->VSSetConstantBuffers(slot, 1, m_CameraBuffer.GetAddressOf());
 
 	return result;
 }

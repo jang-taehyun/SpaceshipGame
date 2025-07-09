@@ -8,6 +8,12 @@
 
 namespace Object
 {
+	class IMoveClass;
+	class IRotateClass;
+}
+
+namespace Object
+{
 	class ActorClass : public GameObjectClass
 	{
 	public:
