@@ -4,6 +4,7 @@
 
 /*
 * TODO: terrain 공부해서 추가
+* TODO: UI, Text 회전, 스케일링 가능하게 만들기
 */
 
 /**

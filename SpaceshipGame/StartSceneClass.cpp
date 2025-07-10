@@ -7,7 +7,7 @@
 #include "CameraClass.h"
 
 #include "ActorClass.h"
-#include "UIClass.h"
+#include "IUIClass.h"
 #include "ITextClass.h"
 #include "StartSceneClass.h"
 
@@ -25,12 +25,17 @@ Scene::StartSceneClass::StartSceneClass(SceneState next, Object::ObjectManagerCl
 	objects->SetPlayerIdx(objectIdx);
 	objects->GetGameObject(objectIdx)->SetPosition(DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f));
 
+	UI_Idx = UIs->LoadUI(UI::ID::BACKGROUND, Graphic::Texture::UITextureID::START_BACKGROUND);
+	UIs->GetUI(UI_Idx)->SetColor(DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f));
+
 	UI_Idx = UIs->LoadUI(UI::ID::DEFAULT, Graphic::Texture::UITextureID::START_BUTTON);
 	UIs->GetUI(UI_Idx)->SetColor(DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f));
 	UIs->GetUI(UI_Idx)->SetPosition(DirectX::XMFLOAT2(50.f, 50.f));
+	UIs->GetUI(UI_Idx)->SetScale(DirectX::XMFLOAT2(0.015f, 0.015f));
 	
 	textIdx = texts->Load(Text::ID::DEFAULT, _T("~~우주선 게임~~"), Graphic::Font::ID::DEFAULT);
-	texts->GetTextObject(textIdx)->SetTextColor(DirectX::XMFLOAT4(0.f, 1.f, 0.f, 1.f));
+	texts->GetTextObject(textIdx)->SetColor(DirectX::XMFLOAT4(0.f, 1.f, 0.f, 1.f));
+	texts->GetTextObject(textIdx)->SetScale(DirectX::XMFLOAT2(1.f, 2.f));
 }
 
 Scene::StartSceneClass::StartSceneClass(const StartSceneClass& other) : SceneClass(other), m_Camera(std::move(other.m_Camera->Clone())) {}

@@ -61,11 +61,22 @@ Object::IObjectClass* Scene::SceneManagerClass::GetCamera()
 	return m_Scene->GetActiveCamera();
 }
 
+void Scene::SceneManagerClass::Release()
+{
+	m_ObjectManager->Release();
+	m_TextManager->Release();
+	m_UIManager->Release();
+}
+
 void Scene::SceneManagerClass::ChangeScene()
 {
-	SceneState next = m_Scene->GetNextSceneState();
+	SceneState next = SceneState::NONE;
 
+	// 이전 scene에서 사용한 객체 소멸
+	Release();
+
+	// 다음 scene의 ID를 통해 scene 생성
+	next = m_Scene->GetNextSceneState();
 	m_Scene.reset();
-
 	m_Scene = std::move(m_Loader->CreateScene(next, m_ObjectManager.get(), m_TextManager.get(), m_UIManager.get(), m_SoundManager.get()));
 }

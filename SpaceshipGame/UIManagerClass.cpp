@@ -22,18 +22,6 @@ UI::UIManagerClass::~UIManagerClass()
 	IsInitialize = false;
 }
 
-UI::IUIClass* UI::UIManagerClass::LoadBackground(Graphic::Texture::UITextureID TextureID)
-{
-	// instance 생성
-	m_Background = std::make_unique<BackgroundClass>(TextureID);
-	assert(m_Background);
-
-	// 필요한 UI Texture ID 업데이트
-	m_UITextureMask |= (1 << static_cast<UINT>(TextureID));
-
-	return m_Background.get();
-}
-
 UINT UI::UIManagerClass::LoadUI(ID UIID, Graphic::Texture::UITextureID TextureID)
 {
 	// instance 생성
@@ -42,7 +30,7 @@ UINT UI::UIManagerClass::LoadUI(ID UIID, Graphic::Texture::UITextureID TextureID
 	// 필요한 UI Texture ID 업데이트
 	m_UITextureMask |= (1 << (static_cast<UINT>(TextureID)));
 
-	// map에 저장
+	// vector에 저장
 	m_UIList.push_back(std::move(ui));
 
 	return static_cast<UINT>(m_UIList.size() - 1);
@@ -50,7 +38,6 @@ UINT UI::UIManagerClass::LoadUI(ID UIID, Graphic::Texture::UITextureID TextureID
 
 void UI::UIManagerClass::Release()
 {
-	m_Background.reset();
 	m_UIList.clear();
 	m_UITextureMask = 0;
 }

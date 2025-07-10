@@ -90,7 +90,7 @@ void Graphic::Texture::UIRenderClass::RenderBackground(ID3D11ShaderResourceView*
 	m_Renderer->Draw(texture, rect, vColor);
 }
 
-void Graphic::Texture::UIRenderClass::RenderTexture(ID3D11ShaderResourceView* texture, DirectX::XMFLOAT2 pos, DirectX::XMFLOAT4 color, float rot, DirectX::XMFLOAT2 origin, float scale)
+void Graphic::Texture::UIRenderClass::RenderTexture(ID3D11ShaderResourceView* texture, DirectX::XMFLOAT2 pos, DirectX::XMFLOAT4 color, float rot, DirectX::XMFLOAT2 origin, DirectX::XMFLOAT2 scale)
 {
 	// 색상 데이터(XMFLOAT4)을 XMVECTOR로 변환 //
 	DirectX::XMVECTOR vColor = DirectX::XMLoadFloat4(&color);
@@ -99,7 +99,7 @@ void Graphic::Texture::UIRenderClass::RenderTexture(ID3D11ShaderResourceView* te
 	m_Renderer->Draw(texture, pos, nullptr, vColor, rot, origin, scale);
 }
 
-void Graphic::Texture::UIRenderClass::RenderText(const std::wstring& text, Font::ID fontID, DirectX::XMFLOAT2 pos, DirectX::XMFLOAT4 color, float rot, DirectX::XMFLOAT2 origin, float scale)
+void Graphic::Texture::UIRenderClass::RenderText(const std::wstring& text, Font::ID fontID, DirectX::XMFLOAT2 pos, DirectX::XMFLOAT4 color, float rot, DirectX::XMFLOAT2 origin, DirectX::XMFLOAT2 scale)
 {
 	std::map<Font::ID, std::unique_ptr<DirectX::SpriteFont>>::iterator iter;
 

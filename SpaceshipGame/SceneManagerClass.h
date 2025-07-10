@@ -33,6 +33,7 @@ namespace Scene
 		Object::IObjectClass* GetCamera();
 
 	private:
+		void Release();
 		void ChangeScene();
 
 	private:

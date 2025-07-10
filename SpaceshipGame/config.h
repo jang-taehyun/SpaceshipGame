@@ -66,7 +66,7 @@ namespace UI
 	// UIÀÇ Á¾·ù ID
 	enum class ID
 	{
-		NONE, DEFAULT, BUTTON, DYNAMIC, 
+		NONE, DEFAULT, BACKGROUND, BUTTON,
 	};
 
 	enum class State

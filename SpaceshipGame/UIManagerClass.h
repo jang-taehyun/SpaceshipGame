@@ -15,14 +15,12 @@ namespace UI
 		UIManagerClass();
 		virtual ~UIManagerClass();
 
-		IUIClass* LoadBackground(Graphic::Texture::UITextureID TextureID);
 		UINT LoadUI(ID UIID, Graphic::Texture::UITextureID TextureID);
 		void Release();
 
 		inline UINT GetUITextureMask() const { return m_UITextureMask; }
 
 		IUIClass* GetUI(UINT idx) const;
-		IUIClass* GetBackground() const { return m_Background.get(); }
 
 		inline UINT GetUICount() const { return static_cast<UINT>(m_UIList.size()); }
 
@@ -30,7 +28,6 @@ namespace UI
 		static bool IsInitialize;
 
 		std::vector<std::unique_ptr<IUIClass>> m_UIList;
-		std::unique_ptr<IUIClass> m_Background = nullptr;
 		UINT m_UITextureMask = 0;
 
 		std::unique_ptr<UIFactoryClass> m_Loader = nullptr;

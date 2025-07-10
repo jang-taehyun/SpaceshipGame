@@ -179,26 +179,34 @@ void Graphic::GraphicsClass::Load(Scene::SceneManagerClass* SceneManager)
 
 void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager)
 {
+	Model::IModelClass* model = nullptr;
+	Shader::IShaderClass* shader = nullptr;
+	UI::IUIClass* ui = nullptr;
+	Text::ITextClass* text = nullptr;
+
 	// front buffer ÃÊ±âÈ­ //
 	m_D3D->BeginScene(DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f));
 
 	// 3D ¹°Ã¼ ·»´õ¸µ //
 	for (UINT i = 0; i < Model::ModelIDCount; ++i)
 	{
+		model = m_ModelManager->GetModel(static_cast<Model::ID>(i));
+
 		// ÇØ´ç modelÀÌ ÀÖ´Ù¸é ·»´õ¸µ
-		if (m_ModelManager->GetModel(static_cast<Model::ID>(i)))
+		if (model)
 		{
 			// shader, input layout ¼¼ÆÃ
-			m_ShaderManager->GetShader(m_ModelManager->GetModel(static_cast<Model::ID>(i))->GetShaderID())->BeginRender(m_D3D->GetDeviceContext());
+			shader = m_ShaderManager->GetShader(model->GetShaderID());
+			shader->BeginRender(m_D3D->GetDeviceContext());
 
-			for (UINT j = 0; j < m_ModelManager->GetModel(static_cast<Model::ID>(i))->GetMeshCount(); ++j)
+			for (UINT j = 0; j < model->GetMeshCount(); ++j)
 			{
-				m_ModelManager->GetModel(static_cast<Model::ID>(i))->RenderMesh(m_D3D->GetDeviceContext(), j);
-				m_ShaderManager->GetShader(m_ModelManager->GetModel(static_cast<Model::ID>(i))->GetShaderID())->Render(
+				model->RenderMesh(m_D3D->GetDeviceContext(), j);
+				shader->Render(
 					m_D3D->GetDeviceContext(),
-					m_ModelManager->GetModel(static_cast<Model::ID>(i))->GetIndexCount(j),
-					m_ModelManager->GetModel(static_cast<Model::ID>(i))->GetInstanceCount(),
-					m_ModelManager->GetModel(static_cast<Model::ID>(i))->GetMaterial(j)
+					model->GetIndexCount(j),
+					model->GetInstanceCount(),
+					model->GetMaterial(j)
 				);
 			}
 		}
@@ -207,35 +215,42 @@ void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager)
 	// 2D ·»´õ¸µ //
 	m_UIRender->BeginRender(m_D3D.get());
 
-	// background ·»´õ¸µ
-	if (SceneManager->GetUIManager()->GetBackground())
-		m_UIRender->RenderBackground(
-			m_UITextureManager->GetTexture(SceneManager->GetUIManager()->GetBackground()->GetUITextureID()),
-			SceneManager->GetUIManager()->GetBackground()->GetColor()
-		);
-
 	// 2D UI ·»´õ¸µ
 	for (UINT i = 0; i < SceneManager->GetUIManager()->GetUICount(); ++i)
 	{
-		if (UI::State::DISAPPEAR != SceneManager->GetUIManager()->GetUI(i)->GetUIState())
-			m_UIRender->RenderTexture(
-				m_UITextureManager->GetTexture(SceneManager->GetUIManager()->GetUI(i)->GetUITextureID()),
-				SceneManager->GetUIManager()->GetUI(i)->GetPosition(),
-				SceneManager->GetUIManager()->GetUI(i)->GetColor()
-			);
+		ui = SceneManager->GetUIManager()->GetUI(i);
+		if (UI::State::DISAPPEAR != ui->GetUIState())
+		{
+			// background¸¦ Á¦¿ÜÇÑ ¸ðµç UI ·»´õ¸µ
+			if (UI::ID::BACKGROUND != ui->GetUIID())
+			{
+				m_UIRender->RenderTexture(
+					m_UITextureManager->GetTexture(ui->GetUITextureID()),
+					ui->GetPosition(),
+					ui->GetColor(),
+					ui->GetRotation(),
+					ui->GetOrigin(),
+					ui->GetScale()
+				);
+			}
+			// background ·»´õ¸µ
+			else
+				m_UIRender->RenderBackground(m_UITextureManager->GetTexture(ui->GetUITextureID()), ui->GetColor());
+		}
 	}
 
 	// text ·»´õ¸µ
 	for (UINT i = 0; i < SceneManager->GetTextManager()->GetTextCount(); ++i)
 	{
+		text = SceneManager->GetTextManager()->GetTextObject(i);
 		m_UIRender->RenderText(
-			SceneManager->GetTextManager()->GetTextObject(i)->GetText(),
-			SceneManager->GetTextManager()->GetTextObject(i)->GetFontID(),
-			SceneManager->GetTextManager()->GetTextObject(i)->GetTextPosition(),
-			SceneManager->GetTextManager()->GetTextObject(i)->GetTextColor(),
-			0.f,
-			DirectX::XMFLOAT2(0.f, 0.f),
-			SceneManager->GetTextManager()->GetTextObject(i)->GetTextSize()
+			text->GetText(),
+			text->GetFontID(),
+			text->GetPosition(),
+			text->GetColor(),
+			text->GetRotation(),
+			text->GetOrigin(),
+			text->GetScale()
 		);
 	}
 

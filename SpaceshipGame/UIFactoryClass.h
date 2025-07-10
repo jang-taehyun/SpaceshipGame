@@ -6,7 +6,7 @@ namespace UI { class IUIClass; }
 
 namespace UI
 {
-	std::unique_ptr<IUIClass> CreateDefault(Graphic::Texture::UITextureID TextureID);
+	std::unique_ptr<IUIClass> CreateDefault(ID UIID, Graphic::Texture::UITextureID TextureID);
 
 	class UIFactoryClass
 	{
@@ -19,7 +19,7 @@ namespace UI
 	private:
 		static bool IsInitialize;
 
-		std::map<ID, std::function<std::unique_ptr<IUIClass>(Graphic::Texture::UITextureID ID)>> m_Creator;
+		std::map<ID, std::function<std::unique_ptr<IUIClass>(ID, Graphic::Texture::UITextureID)>> m_Creator;
 	};
 }
 
