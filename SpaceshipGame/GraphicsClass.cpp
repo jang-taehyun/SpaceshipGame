@@ -50,6 +50,12 @@ void Graphic::GraphicsClass::Frame(Scene::SceneManagerClass* SceneManager, bool 
 	DirectX::XMFLOAT4X4 view = {};
 	Model::InstanceBufferType instance = {};
 	Shader::BuffersData BufferData = {};
+	Object::GameObjectClass* obj = nullptr;
+	Object::CameraClass* cam = static_cast<Object::CameraClass*>(SceneManager->GetCamera());
+
+#ifdef _DEBUG
+	Object::CollisionClass* col = nullptr;
+#endif
 
 	if (IsLoad)
 	{
@@ -59,62 +65,42 @@ void Graphic::GraphicsClass::Frame(Scene::SceneManagerClass* SceneManager, bool 
 
 	// frustum culling //
 	// 카메라 업데이트
-	static_cast<Object::CameraClass*>(SceneManager->GetCamera())->UpdateFrustum(m_D3D->GetProjectionMatrix());
+	assert(cam);
+	cam->UpdateFrustum(m_D3D->GetProjectionMatrix());
 
 	// scene에 존재하는 object에 대해 frustum culling 진행
 	cnt = SceneManager->GetObjectManager()->GetObjectCount();
 	for (UINT i = 0; i < cnt; ++i)
 	{
-		IsRender = static_cast<Object::CameraClass*>(SceneManager->GetCamera())->IsRender(
-			m_ModelManager->GetModel(
-				static_cast<Object::GameObjectClass*>(
-					SceneManager->GetObjectManager()->GetGameObject(i)
-					)->GetModelID())->GetModelOBB(),
-			SceneManager->GetObjectManager()->GetGameObject(i)->GetAffineMatrix()
+		obj = static_cast<Object::GameObjectClass*>(SceneManager->GetObjectManager()->GetGameObject(i));
+		assert(obj);
+
+		IsRender = cam->IsRender(
+			m_ModelManager->GetModel(obj->GetModelID())->GetModelOBB(),
+			obj->GetAffineMatrix()
 		);
 
 		if (IsRender)
 		{
-			instance.world = SceneManager->GetObjectManager()->GetGameObject(i)->GetAffineMatrix();
-			m_ModelManager->GetModel(
-				static_cast<Object::GameObjectClass*>(
-					SceneManager->GetObjectManager()->GetGameObject(i)
-					)->GetModelID())->AddWorldMatrix(instance);
+			instance.world = obj->GetAffineMatrix();
+			m_ModelManager->GetModel(obj->GetModelID())->AddWorldMatrix(instance);
 		}
 
 #ifdef _DEBUG
-		// Collision //
-		IsRender = static_cast<Object::CameraClass*>(SceneManager->GetCamera())->IsRender(
-			m_ModelManager->GetModel(
-				static_cast<Object::CollisionClass*>(
-					static_cast<Object::GameObjectClass*>(
-						SceneManager->GetObjectManager()->GetGameObject(i)
-						)->GetCollision()
-					)->GetModelID()
-			)->GetModelOBB(),
-			static_cast<Object::GameObjectClass*>(
-				SceneManager->GetObjectManager()->GetGameObject(i)
-				)->GetCollision()->GetAffineMatrix()
+		// Collision
+		col = static_cast<Object::CollisionClass*>(obj->GetCollision());
+		assert(col);
+
+		IsRender = cam->IsRender(
+			m_ModelManager->GetModel(obj->GetModelID())->GetModelOBB(),
+			col->GetAffineMatrix()
 		);
 
 		if (IsRender)
 		{
-			instance.world = static_cast<Object::GameObjectClass*>(
-				SceneManager->GetObjectManager()->GetGameObject(i)
-				)->GetCollision()->GetAffineMatrix();
-			instance.color = static_cast<Object::CollisionClass*>(
-				static_cast<Object::GameObjectClass*>(
-					SceneManager->GetObjectManager()->GetGameObject(i)
-					)->GetCollision()
-				)->GetColor();
-			m_ModelManager->GetModel(
-				static_cast<Object::CollisionClass*>(
-					static_cast<Object::GameObjectClass*>(
-						SceneManager->GetObjectManager()->GetGameObject(i)
-						)->GetCollision()
-					)->GetModelID()
-			)->
-				AddWorldMatrix(instance);
+			instance.world = col->GetAffineMatrix();
+			instance.color = col->GetColor();
+			m_ModelManager->GetModel(col->GetModelID())->AddWorldMatrix(instance);
 
 			instance.color = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);
 		}
@@ -126,7 +112,7 @@ void Graphic::GraphicsClass::Frame(Scene::SceneManagerClass* SceneManager, bool 
 	m_ModelManager->UpdateInstanceBuffers(m_D3D->GetDeviceContext());
 
 	// shader의 모든 buffer 업데이트 //
-	view = static_cast<Object::CameraClass*>(SceneManager->GetCamera())->Render();
+	view = cam->Render();
 	BufferData.transform.Projection = DirectX::XMLoadFloat4x4(&(m_D3D->GetProjectionMatrix()));
 	BufferData.transform.View = DirectX::XMLoadFloat4x4(&view);
 
@@ -260,7 +246,7 @@ void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager)
 }
 
 #ifdef _DEBUG
-void Graphic::GraphicsClass::ImGuiRender(UINT FPS, UINT cpu_usage, Scene::SceneManagerClass* SceneManager)
+void Graphic::GraphicsClass::ImGuiRender(UINT FPS, ULONGLONG cpu_usage, Scene::SceneManagerClass* SceneManager)
 {
 	m_IMGUI->Render(FPS, cpu_usage, SceneManager, m_Light.get());
 }

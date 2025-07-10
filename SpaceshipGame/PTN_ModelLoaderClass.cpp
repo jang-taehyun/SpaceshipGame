@@ -16,13 +16,15 @@ std::vector<Graphic::Model::PTN_VertexType> Graphic::Loader::PTN_ModelLoaderClas
 		vertex.normal = DirectX::XMFLOAT3(mesh->mNormals[j].x, mesh->mNormals[j].y, mesh->mNormals[j].z);
 
 		vertices.push_back(vertex);
+
+		// OBB 박스를 만들때 사용할 position 데이터 파싱
+		PushPositionData(vertex.position);
 	}
 
 	return vertices;
 }
 
-HRESULT Graphic::Loader::PTN_ModelLoaderClass::LoadMaterial(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext)
+void Graphic::Loader::PTN_ModelLoaderClass::LoadMaterial(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const aiScene* scene)
 {
-	HRESULT result = S_OK;
-	return result;
+
 }

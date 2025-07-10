@@ -62,7 +62,7 @@ void Graphic::IMGUIClass::Shutdown()
 	ImGui::DestroyContext();
 }
 
-void Graphic::IMGUIClass::Render(UINT FPS, UINT cpu_usage, Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light)
+void Graphic::IMGUIClass::Render(UINT FPS, ULONGLONG cpu_usage, Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light)
 {
 	// IMGUI 렌더링 준비 //
 	ImGui_ImplDX11_NewFrame();
@@ -76,7 +76,7 @@ void Graphic::IMGUIClass::Render(UINT FPS, UINT cpu_usage, Scene::SceneManagerCl
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
-void Graphic::IMGUIClass::SetUI(UINT FPS, UINT cpu_usage, Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light)
+void Graphic::IMGUIClass::SetUI(UINT FPS, ULONGLONG cpu_usage, Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light)
 {
 	std::string title = u8"FPS, CPU 사용량";
 	SetFPSCPUUsage(title, 0, FPS, cpu_usage);
@@ -115,7 +115,7 @@ void Graphic::IMGUIClass::SetUI(UINT FPS, UINT cpu_usage, Scene::SceneManagerCla
 	}
 }
 
-void Graphic::IMGUIClass::SetFPSCPUUsage(const std::string& title, int IMGUI_Window_idx, int fps, int cpu_usage)
+void Graphic::IMGUIClass::SetFPSCPUUsage(const std::string& title, UINT IMGUI_Window_idx, UINT fps, ULONGLONG cpu_usage)
 {
 	std::string contents;
 
@@ -136,7 +136,7 @@ void Graphic::IMGUIClass::SetFPSCPUUsage(const std::string& title, int IMGUI_Win
 	ImGui::End();
 }
 
-void Graphic::IMGUIClass::SetCameraInfo(const std::string& title, int IMGUI_Window_idx, Object::IObjectClass* camera)
+void Graphic::IMGUIClass::SetCameraInfo(const std::string& title, UINT IMGUI_Window_idx, Object::IObjectClass* camera)
 {
 	bool IsPress = false;
 	std::string contents;
@@ -175,7 +175,7 @@ void Graphic::IMGUIClass::SetCameraInfo(const std::string& title, int IMGUI_Wind
 	ImGui::End();
 }
 
-void Graphic::IMGUIClass::SetSoundInfo(const std::string& title, int IMGUI_Window_idx, Sound::SoundManagerClass* sound_manager)
+void Graphic::IMGUIClass::SetSoundInfo(const std::string& title, UINT IMGUI_Window_idx, Sound::SoundManagerClass* sound_manager)
 {
 	bool IsPress = false;
 	UINT mask = sound_manager->GetSoundMask();
@@ -200,7 +200,7 @@ void Graphic::IMGUIClass::SetSoundInfo(const std::string& title, int IMGUI_Windo
 	ImGui::End();
 }
 
-void Graphic::IMGUIClass::SetLightInfo(const std::string& title, int IMGUI_Window_idx, LightClass* light)
+void Graphic::IMGUIClass::SetLightInfo(const std::string& title, UINT IMGUI_Window_idx, LightClass* light)
 {
 	static DirectX::XMFLOAT4 origin_ambient = light->GetAmbientColor();
 	static DirectX::XMFLOAT4 origin_diffuse = light->GetDiffuseColor();
@@ -275,7 +275,7 @@ void Graphic::IMGUIClass::SetLightInfo(const std::string& title, int IMGUI_Windo
 	ImGui::End();
 }
 
-void Graphic::IMGUIClass::SetObjectInfo(const std::string& title, int IMGUI_Window_idx, Object::GameObjectClass* object)
+void Graphic::IMGUIClass::SetObjectInfo(const std::string& title, UINT IMGUI_Window_idx, Object::GameObjectClass* object)
 {
 	float value[4] = { 0.f, };
 	bool IsPress = false;

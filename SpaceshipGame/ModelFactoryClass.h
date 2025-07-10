@@ -15,6 +15,7 @@ namespace Graphic
 	namespace Loader
 	{
 		std::unique_ptr<Model::IModelClass> LoadDefaultSpaceship(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext);
+		std::unique_ptr<Model::IModelClass> LoadCollision(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext);
 
 		class ModelFactoryClass
 		{

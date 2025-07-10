@@ -16,12 +16,12 @@ namespace UI
 		virtual ~UIManagerClass();
 
 		IUIClass* LoadBackground(Graphic::Texture::UITextureID TextureID);
-		IUIClass* LoadUI(ID UIID, Graphic::Texture::UITextureID TextureID);
+		UINT LoadUI(ID UIID, Graphic::Texture::UITextureID TextureID);
 		void Release();
 
 		inline UINT GetUITextureMask() const { return m_UITextureMask; }
 
-		IUIClass* GetUI(int idx) const;
+		IUIClass* GetUI(UINT idx) const;
 		IUIClass* GetBackground() const { return m_Background.get(); }
 
 		inline UINT GetUICount() const { return static_cast<UINT>(m_UIList.size()); }

@@ -22,10 +22,14 @@ std::map<Sound::ID, const std::wstring> Sound::SoundFileList =
 
 // Model 관련 전역 변수 초기화 //
 UINT Graphic::Model::ModelIDCount = 3;
-std::map<Graphic::Model::ID, const std::wstring> Graphic::Model::ModelFileList =
+std::map<Graphic::Model::ID, const std::string> Graphic::Model::ModelFileList =
 {
-			{ Graphic::Model::ID::COLLISION, _T("./data/cube.txt") },
-			{ Graphic::Model::ID::DEFAULT_SPACESHIP, _T("./data/aircraft.txt") },
+	{ Graphic::Model::ID::COLLISION, "./data/uploads_files_3862208_Cube.obj" },
+	{ Graphic::Model::ID::DEFAULT_SPACESHIP, "./data/E-45-Aircraft/E 45 Aircraft_obj.obj" },
+};
+std::map<Graphic::Model::ID, const std::wstring> Graphic::Model::ModelTexturePathList =
+{
+	{ Graphic::Model::ID::DEFAULT_SPACESHIP, _T("./data/E-45-Aircraft/") },
 };
 
 // UI texture 관련 전역 변수 초기화 //

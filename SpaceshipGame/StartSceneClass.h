@@ -10,7 +10,7 @@ namespace Scene
 	class StartSceneClass : public SceneClass
 	{
 	public:
-		StartSceneClass(SceneState next, Object::ObjectManagerClass* actors, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds);
+		StartSceneClass(SceneState next, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds);
 		StartSceneClass(const StartSceneClass& other);
 		StartSceneClass(StartSceneClass&& other) noexcept;
 		virtual ~StartSceneClass() = default;

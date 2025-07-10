@@ -20,7 +20,7 @@ namespace Graphic
 			explicit ModelLoaderClass(Model::ID ModelID);
 			virtual ~ModelLoaderClass() = default;
 
-			virtual HRESULT Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext) override;
+			virtual void Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext) override;
 
 			virtual inline ULONG GetMeshCount() const override { return m_MeshCount; }
 			virtual inline DirectX::BoundingOrientedBox GetModelOBB() const override { return m_ModelOBB; }
@@ -29,13 +29,12 @@ namespace Graphic
 			inline std::vector<std::vector<VertexType>> MoveVerticesDatas() { return std::move(m_Vertices); }
 
 		private:
-			HRESULT LoadVertex();
+			void LoadVertex(const aiScene* scene);
 
 			virtual std::vector<VertexType> LoadVertexData(aiMesh* mesh) = 0;
-			virtual HRESULT LoadMaterial(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext) = 0;
+			virtual void LoadMaterial(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const aiScene* scene) = 0;
 
 		protected:
-			inline const aiScene* GetScene() const { return m_Scene; }
 			inline void PushPositionData(DirectX::XMFLOAT3 pos) { m_Positions.push_back(pos); }
 
 			inline void PushVerticesData(std::vector<VertexType> vertices) { m_Vertices.push_back(std::move(vertices)); }
@@ -46,7 +45,7 @@ namespace Graphic
 
 		private:
 			std::string m_Filename = "";
-			aiScene* m_Scene = nullptr;																			// model 파일을 로드한 scene 객체
+			Model::ID m_ModelID = Model::ID::NONE;
 
 			ULONG m_MeshCount = 0;																				// mesh 개수
 			std::vector<std::vector<VertexType>> m_Vertices;													// 각 mesh에 있는 vertex 데이터들

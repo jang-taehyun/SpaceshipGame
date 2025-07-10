@@ -23,10 +23,10 @@ namespace Object
 		inline void SetPlayerIdx(UINT idx) { m_PlayerIdx = idx; }
 		inline UINT GetObjectCount() const { return static_cast<UINT>(m_ObjectList.size()); }
 
-		IObjectClass* GetGameObject(int idx) const;
+		IObjectClass* GetGameObject(UINT idx) const;
 		inline UINT GetModelMask() const { return m_ModelMask; }
 
-		IObjectClass* Load(ID ObjectID, Graphic::Model::ID ModelID);
+		UINT Load(ID ObjectID, Graphic::Model::ID ModelID);
 		void Release();
 
 	private:

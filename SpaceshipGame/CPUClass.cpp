@@ -52,7 +52,7 @@ void System::CPUClass::Frame()
 	if (m_CanReadCPU)
 	{
 		// query 횟수를 줄이기 위해 1초마다 CPU 사용량을 샘플링
-		if (GetTickCount64() > (m_LastSampleTime + (unsigned long long)1000))
+		if (GetTickCount64() > (m_LastSampleTime + (ULONGLONG)1000))
 		{
 			m_LastSampleTime = GetTickCount64();
 

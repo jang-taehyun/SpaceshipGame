@@ -11,7 +11,7 @@ namespace Graphic
 		public:
 			virtual ~IModelLoaderClass() = default;
 
-			virtual HRESULT Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext) = 0;
+			virtual void Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext) = 0;
 
 			virtual inline ULONG GetMeshCount() const = 0;
 			virtual inline DirectX::BoundingOrientedBox GetModelOBB() const = 0;

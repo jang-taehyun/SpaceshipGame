@@ -1,2 +1,5 @@
 // 기본 우주선
 https://free3d.com/3d-model/e-45-aircraft-71823.html
+
+// 충돌체 큐브
+https://www.cgtrader.com/items/3862208/download-page

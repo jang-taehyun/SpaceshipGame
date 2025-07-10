@@ -105,9 +105,7 @@ HRESULT Graphic::Model::ModelClass<VertexType>::Initialize(HWND hwnd, ID3D11Devi
 	HRESULT result = S_OK;
 
 	// model load //
-	result = loader->Load(Device, DeviceContext);
-	if (FAILED(result))
-		return result;
+	loader->Load(Device, DeviceContext);
 
 	// vertex buffer, index buffer 생성 및 초기화 //
 	result = InitializeBuffers(Device, DeviceContext, loader);
@@ -250,4 +248,13 @@ void Graphic::Model::ModelClass<VertexType>::RenderMesh(ID3D11DeviceContext* Dev
 
 	// vertex buffer에서 그릴 object의 기본 도형 설정 //
 	DeviceContext->IASetPrimitiveTopology((m_ModelID == ID::COLLISION ? D3D11_PRIMITIVE_TOPOLOGY_LINELIST : D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+}
+
+template<typename VertexType>
+const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& Graphic::Model::ModelClass<VertexType>::GetMaterial(UINT idx) const
+{
+	if (idx >= m_MeshCount || m_Materials.empty())
+		return m_Empty;
+
+	return m_Materials[idx];
 }

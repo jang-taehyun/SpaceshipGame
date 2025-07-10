@@ -14,7 +14,7 @@ namespace System
 		void Frame();
 
 		// Getter //
-		inline long long GetCPUPercentage() const { return m_CPUUsage; }
+		inline ULONGLONG GetCPUPercentage() const { return m_CPUUsage; }
 
 	private:
 		void Initialize();
@@ -26,8 +26,8 @@ namespace System
 		bool m_CanReadCPU = false;
 		HQUERY m_QueryHandle = 0;
 		HCOUNTER m_CounterHandle = 0;
-		unsigned long long m_LastSampleTime = 0;
-		long long m_CPUUsage = 0;
+		ULONGLONG m_LastSampleTime = 0;
+		ULONGLONG m_CPUUsage = 0;
 
 	public:
 		CPUClass(const CPUClass& other) = delete;

@@ -20,7 +20,7 @@ namespace Graphic
 			virtual inline Shader::ID GetShaderID() const = 0;
 			virtual inline ULONG GetIndexCount(UINT idx) const = 0;
 			virtual inline ULONG GetInstanceCount() const = 0;
-			virtual inline const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& GetMaterial(UINT idx) const = 0;
+			virtual const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& GetMaterial(UINT idx) const = 0;
 			virtual inline DirectX::BoundingOrientedBox GetModelOBB() const = 0;
 
 			virtual inline ULONG GetVertexCount(UINT idx) const = 0;

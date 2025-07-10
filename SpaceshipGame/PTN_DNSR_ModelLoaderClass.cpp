@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "ModelLoaderClass.hpp"
 #include "PTN_DNSR_ModelLoaderClass.h"
 
 Graphic::Loader::PTN_DNSR_ModelLoaderClass::PTN_DNSR_ModelLoaderClass(Model::ID ModelID) : ModelLoaderClass<Model::PTN_VertexType>(ModelID) {}
@@ -25,9 +24,8 @@ std::vector<Graphic::Model::PTN_VertexType> Graphic::Loader::PTN_DNSR_ModelLoade
 	return vertices;
 }
 
-HRESULT Graphic::Loader::PTN_DNSR_ModelLoaderClass::LoadMaterial(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext)
+void Graphic::Loader::PTN_DNSR_ModelLoaderClass::LoadMaterial(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const aiScene* scene)
 {
-	HRESULT result = S_OK;
 	aiMesh* mesh = nullptr;														// scene에 존재하는 mesh 객체
 	aiMaterial* material = nullptr;												// mesh에 존재하는 material 객체
 	aiString TexturePath;														// texture 경로
@@ -37,8 +35,8 @@ HRESULT Graphic::Loader::PTN_DNSR_ModelLoaderClass::LoadMaterial(ID3D11Device* D
 	// texture 데이터 파싱 //
 	for (ULONG i = 0; i < GetMeshCount(); ++i)
 	{
-		mesh = GetScene()->mMeshes[i];
-		material = GetScene()->mMaterials[mesh->mMaterialIndex];
+		mesh = scene->mMeshes[i];
+		material = scene->mMaterials[mesh->mMaterialIndex];
 
 		// diffuse texture 파싱 및 저장 //
 		ret = material->GetTexture(aiTextureType_DIFFUSE, 0, &TexturePath);
@@ -63,6 +61,4 @@ HRESULT Graphic::Loader::PTN_DNSR_ModelLoaderClass::LoadMaterial(ID3D11Device* D
 		// 현재 mesh의 material 데이터 저장 //
 		PushMaterialsData(MaterialList);
 	}
-
-	return result;
 }

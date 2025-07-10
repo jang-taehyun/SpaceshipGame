@@ -20,13 +20,13 @@ Object::ObjectManagerClass::~ObjectManagerClass()
 	IsInitialize = false;
 }
 
-Object::IObjectClass* Object::ObjectManagerClass::GetGameObject(int idx) const
+Object::IObjectClass* Object::ObjectManagerClass::GetGameObject(UINT idx) const
 {
 	assert(idx < m_ObjectList.size());
 	return m_ObjectList[idx].get();
 }
 
-Object::IObjectClass* Object::ObjectManagerClass::Load(ID ObjectID, Graphic::Model::ID ModelID)
+UINT Object::ObjectManagerClass::Load(ID ObjectID, Graphic::Model::ID ModelID)
 {
 	std::unique_ptr<IObjectClass> obj = std::move(m_Loader->Load(ObjectID, ModelID));
 	assert(obj);
@@ -35,7 +35,11 @@ Object::IObjectClass* Object::ObjectManagerClass::Load(ID ObjectID, Graphic::Mod
 
 	m_ModelMask |= (1 << static_cast<UINT>(ModelID));
 
-	return m_ObjectList[m_ObjectList.size() - 1].get();
+#ifdef _DEBUG
+	m_ModelMask |= (1 << static_cast<UINT>(Graphic::Model::ID::COLLISION));
+#endif
+
+	return static_cast<UINT>(m_ObjectList.size() - 1);
 }
 
 void Object::ObjectManagerClass::Release()

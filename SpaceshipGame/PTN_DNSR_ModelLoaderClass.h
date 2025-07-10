@@ -14,7 +14,7 @@ namespace Graphic
 			
 		private:
 			virtual std::vector<Graphic::Model::PTN_VertexType> LoadVertexData(aiMesh* mesh) override;
-			virtual HRESULT LoadMaterial(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext) override;
+			virtual void LoadMaterial(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const aiScene* scene) override;
 		};
 	}
 }

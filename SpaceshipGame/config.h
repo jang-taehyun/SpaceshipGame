@@ -113,7 +113,8 @@ namespace Graphic
 			ASTEROID,
 		};
 
-		extern std::map<ID, const std::wstring> ModelFileList;
+		extern std::map<ID, const std::string> ModelFileList;
+		extern std::map<ID, const std::wstring> ModelTexturePathList;
 
 		// instance buffer type
 		struct InstanceBufferType
@@ -129,8 +130,8 @@ namespace Graphic
 		struct PTN_VertexType
 		{
 			DirectX::XMFLOAT3 position = {};
-			DirectX::XMFLOAT2 texture = {};;
-			DirectX::XMFLOAT3 normal = {};;
+			DirectX::XMFLOAT2 texture = {};
+			DirectX::XMFLOAT3 normal = {};
 		};
 	}
 

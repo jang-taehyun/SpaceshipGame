@@ -15,23 +15,25 @@ Text::TextManagerClass::~TextManagerClass()
 	IsInitialize = false;
 }
 
-Text::ITextClass* Text::TextManagerClass::GetTextObject(int idx) const
+Text::ITextClass* Text::TextManagerClass::GetTextObject(UINT idx) const
 {
 	assert(idx < m_UITexts.size());
 	return m_UITexts[idx].get();
 }
 
-void Text::TextManagerClass::Load(ID id, const std::wstring& text, Graphic::Font::ID font)
+UINT Text::TextManagerClass::Load(ID id, const std::wstring& text, Graphic::Font::ID font)
 {
 	// instance 생성
 	std::unique_ptr<ITextClass> textInst = std::make_unique<TextClass>(text, font);
 	assert(textInst);
 
 	// 필요한 Font ID 업데이트
-	m_FontMask |= (static_cast<UINT>(font));
+	m_FontMask |= (1 << static_cast<UINT>(font));
 
 	// map에 저장
 	m_UITexts.push_back(std::move(textInst));
+
+	return static_cast<UINT>(m_UITexts.size() - 1);
 }
 
 void Text::TextManagerClass::Release()

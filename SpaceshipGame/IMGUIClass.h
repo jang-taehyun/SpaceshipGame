@@ -26,19 +26,19 @@ namespace Graphic
 		IMGUIClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeivceContext);
 		~IMGUIClass();
 
-		void Render(UINT FPS, UINT cpu_usage, Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light);
+		void Render(UINT FPS, ULONGLONG cpu_usage, Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light);
 
 	private:
 		void Initialize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeivceContext);
 		void Shutdown();
 
-		void SetUI(UINT FPS, UINT cpu_usage, Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light);
+		void SetUI(UINT FPS, ULONGLONG cpu_usage, Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light);
 
-		void SetFPSCPUUsage(const std::string& title, int IMGUI_Window_idx, int fps, int cpu_usage);
-		void SetCameraInfo(const std::string& title, int IMGUI_Window_idx, Object::IObjectClass* camera);
-		void SetSoundInfo(const std::string& title, int IMGUI_Window_idx, Sound::SoundManagerClass* sound_manager);
-		void SetLightInfo(const std::string& title, int IMGUI_Window_idx, LightClass* light);
-		void SetObjectInfo(const std::string& title, int IMGUI_Window_idx, Object::GameObjectClass* object);
+		void SetFPSCPUUsage(const std::string& title, UINT IMGUI_Window_idx, UINT fps, ULONGLONG cpu_usage);
+		void SetCameraInfo(const std::string& title, UINT IMGUI_Window_idx, Object::IObjectClass* camera);
+		void SetSoundInfo(const std::string& title, UINT IMGUI_Window_idx, Sound::SoundManagerClass* sound_manager);
+		void SetLightInfo(const std::string& title, UINT IMGUI_Window_idx, LightClass* light);
+		void SetObjectInfo(const std::string& title, UINT IMGUI_Window_idx, Object::GameObjectClass* object);
 
 	private:
 		static bool IsInitialize;

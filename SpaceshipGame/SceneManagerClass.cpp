@@ -28,9 +28,6 @@ Scene::SceneManagerClass::SceneManagerClass()
 	m_Loader = std::make_unique<SceneFactoryClass>();
 	assert(m_Loader);
 
-	m_Scene = std::move(m_Loader->CreateScene(SceneState::START, m_ObjectManager.get(), m_TextManager.get(), m_UIManager.get(), m_SoundManager.get()));
-	assert(m_Scene);
-
 	IsInitialize = true;
 }
 
@@ -41,9 +38,16 @@ Scene::SceneManagerClass::~SceneManagerClass()
 
 bool Scene::SceneManagerClass::Frame(const System::InputClass* input, float frame_time)
 {
-	if (m_Scene->IsSceneEnded())
+	if (!m_Scene || m_Scene->IsSceneEnded())
 	{
-		ChangeScene();
+		if (!m_Scene)
+		{
+			m_Scene = std::move(m_Loader->CreateScene(SceneState::START, m_ObjectManager.get(), m_TextManager.get(), m_UIManager.get(), m_SoundManager.get()));
+			assert(m_Scene);
+		}
+		else
+			ChangeScene();
+
 		return true;
 	}
 	

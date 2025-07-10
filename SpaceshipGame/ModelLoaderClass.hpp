@@ -5,45 +5,34 @@
 #include "ModelLoaderClass.h"
 
 template<typename VertexType>
-Graphic::Loader::ModelLoaderClass<VertexType>::ModelLoaderClass(Model::ID ModelID)
-{
-	Assimp::Importer importer;				// assimp 라이브러리 importer 객체
-	std::wstring filename = Model::ModelFileList.find(ModelID)->second;
-
-	// assimp 라이브러리를 통해 모델 파일을 메모리에 로드 //
-	m_Filename.assign(filename.begin(), filename.end());
-	m_Scene = const_cast<aiScene*>(importer.ReadFile(m_Filename.c_str(), aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs | aiProcess_MakeLeftHanded));
-	assert(m_Scene && !m_Scene->HasMeshes());
-
-	// mesh 개수 설정 //
-	m_MeshCount = m_Scene->mNumMeshes;
-}
+Graphic::Loader::ModelLoaderClass<VertexType>::ModelLoaderClass(Model::ID ModelID) : m_ModelID(ModelID), m_Filename(Model::ModelFileList.find(ModelID)->second) {}
 
 template<typename VertexType>
-HRESULT Graphic::Loader::ModelLoaderClass<VertexType>::Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext)
+void Graphic::Loader::ModelLoaderClass<VertexType>::Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext)
 {
-	HRESULT result = S_OK;
+	Assimp::Importer importer;				// assimp 라이브러리 importer 객체
+
+	// assimp 라이브러리를 통해 모델 파일을 메모리에 로드 //
+	const aiScene* scene = importer.ReadFile(m_Filename.c_str(), aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs | aiProcess_MakeLeftHanded);
+	assert(scene);
+	assert(scene->HasMeshes());
+
+	// mesh 개수 설정 //
+	m_MeshCount = scene->mNumMeshes;
 
 	// vertex 데이터 로드 //
-	result = LoadVertex();
-	if (FAILED(result))
-		return result;
+	LoadVertex(scene);
 
 	// material 데이터 로드 //
-	result = LoadMaterial(Device, DeviceContext);
-	if (FAILED(result))
-		return result;
+	LoadMaterial(Device, DeviceContext, scene);
 
 	// Model의 OBB 박스 생성(frustum culling용 OBB 박스) //
 	DirectX::BoundingOrientedBox::CreateFromPoints(m_ModelOBB, m_Positions.size(), m_Positions.data(), sizeof(DirectX::XMFLOAT3));
-
-	return result;
 }
 
 template<typename VertexType>
-HRESULT Graphic::Loader::ModelLoaderClass<VertexType>::LoadVertex()
+void Graphic::Loader::ModelLoaderClass<VertexType>::LoadVertex(const aiScene* scene)
 {
-	HRESULT result = S_OK;
 	aiMesh* mesh = nullptr;					// scene에 존재하는 mesh 객체
 
 	std::vector<VertexType> vertices;		// mesh의 vertex 데이터들
@@ -55,7 +44,7 @@ HRESULT Graphic::Loader::ModelLoaderClass<VertexType>::LoadVertex()
 	// 메쉬 개수를 가져와서 가져온 메쉬 개수만큼 데이터(vertex, index, texture) 파싱 //
 	for (ULONG i = 0; i < GetMeshCount(); ++i)
 	{
-		mesh = GetScene()->mMeshes[i];
+		mesh = scene->mMeshes[i];
 
 		// vertex 데이터 파싱 //
 		PushVerticesData(std::move(LoadVertexData(mesh)));
@@ -70,8 +59,6 @@ HRESULT Graphic::Loader::ModelLoaderClass<VertexType>::LoadVertex()
 		}
 		PushIndicesData(indices);
 	}
-
-	return result;
 }
 
 template<typename VertexType>
@@ -84,7 +71,10 @@ HRESULT Graphic::Loader::ModelLoaderClass<VertexType>::LoadTextureData(ID3D11Dev
 
 	// texture 경로를 std::wstring으로 변환
 	path = TexturePath.C_Str();
-	wpath.assign(path.begin(), path.end());
+	wpath = wpath.assign(path.begin(), path.end());
+
+	// 프로젝트의 상대 경로로 변경
+	wpath = Graphic::Model::ModelTexturePathList.find(m_ModelID)->second + wpath;
 
 	// texture 생성 및 저장
 	texture = std::make_unique<Texture::TextureClass>(Device, DeviceContext, wpath);
