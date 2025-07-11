@@ -51,7 +51,7 @@ void Graphic::IMGUIClass::Initialize(HWND hwnd, ID3D11Device* Device, ID3D11Devi
 	for (UINT i = 0; i < m_WindowsCount; ++i)
 	{
 		m_WindowsPositions.push_back(cur);
-		cur.y += (m_WindowsSize.y + 5.f);
+		cur.y += 5.f;
 	}
 }
 
@@ -62,24 +62,23 @@ void Graphic::IMGUIClass::Shutdown()
 	ImGui::DestroyContext();
 }
 
-void Graphic::IMGUIClass::Render(UINT FPS, ULONGLONG cpu_usage, Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light)
+void Graphic::IMGUIClass::Render(Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light)
 {
 	// IMGUI 렌더링 준비 //
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	SetUI(FPS, cpu_usage, SceneManager, light);
+	SetUI(SceneManager, light);
 
 	// 렌더링
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
-void Graphic::IMGUIClass::SetUI(UINT FPS, ULONGLONG cpu_usage, Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light)
+void Graphic::IMGUIClass::SetUI(Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light)
 {
 	std::string title = u8"FPS, CPU 사용량";
-	SetFPSCPUUsage(title, 0, FPS, cpu_usage);
 
 	title = u8"카메라 위치, 회전";
 	SetCameraInfo(title, 1, SceneManager->GetCamera());

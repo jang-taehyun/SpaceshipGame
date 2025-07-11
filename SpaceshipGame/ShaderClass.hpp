@@ -114,7 +114,7 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::InitializeShaderInputLayout
 	assert(Device && hwnd && info.vsFileName != _T("") && info.psFileName != _T("") && info.vsEntryPoint != "" && info.psEntryPoint != "");
 
 	// vertex shader code 컴파일 //
-	result = D3DCompileFromFile(info.vsFileName.c_str(), NULL, NULL, info.vsEntryPoint.c_str(), "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &VertexShaderBuffer, &ErrorMessage);
+	result = D3DCompileFromFile(info.vsFileName.c_str(), NULL, NULL, info.vsEntryPoint.c_str(), "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, VertexShaderBuffer.GetAddressOf(), ErrorMessage.GetAddressOf());
 	if (FAILED(result))
 	{
 		assert(ErrorMessage);
@@ -124,7 +124,7 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::InitializeShaderInputLayout
 	}
 
 	// pixel shader code 컴파일 //
-	result = D3DCompileFromFile(info.psFileName.c_str(), NULL, NULL, info.psEntryPoint.c_str(), "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &PixelShaderBuffer, &ErrorMessage);
+	result = D3DCompileFromFile(info.psFileName.c_str(), NULL, NULL, info.psEntryPoint.c_str(), "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, PixelShaderBuffer.GetAddressOf(), ErrorMessage.GetAddressOf());
 	if (FAILED(result))
 	{
 		assert(ErrorMessage);
@@ -152,42 +152,84 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::CreateInputLayout(ID3D11Dev
 {
 	HRESULT result = S_OK;
 	std::vector<D3D11_INPUT_ELEMENT_DESC> LayoutDesc;
-	D3D11_INPUT_ELEMENT_DESC desc = { 0, };
+	D3D11_INPUT_ELEMENT_DESC desc = {};
+	std::string semantic;
+
+#ifdef _DEBUG
+	Microsoft::WRL::ComPtr<ID3D11ShaderReflection> reflector;
+	D3DReflect(VertexShaderBuffer->GetBufferPointer(), VertexShaderBuffer->GetBufferSize(), IID_ID3D11ShaderReflection, reinterpret_cast<void**>(reflector.GetAddressOf()));
+
+	D3D11_SHADER_DESC shaderDesc;
+	reflector->GetDesc(&shaderDesc);
+	for (UINT i = 0; i < shaderDesc.InputParameters; ++i)
+	{
+		D3D11_SIGNATURE_PARAMETER_DESC paramDesc;
+		reflector->GetInputParameterDesc(i, &paramDesc);
+
+		OutputDebugStringA("SemanticName:");
+		OutputDebugStringA(paramDesc.SemanticName);
+
+		OutputDebugStringA("\nSemanticIndex:");
+		OutputDebugStringA(std::to_string(paramDesc.SemanticIndex).c_str());
+
+		OutputDebugStringA("\nRegister:");
+		OutputDebugStringA(std::to_string(paramDesc.Register).c_str());
+
+		OutputDebugStringA("\nMask: %d");
+		OutputDebugStringA(std::to_string(paramDesc.Mask).c_str());
+
+		OutputDebugStringA("\nSystemValueType:");
+		OutputDebugStringA(std::to_string(paramDesc.SystemValueType).c_str());
+		OutputDebugStringA("\n---------------------------\n");
+	}
+#endif
 
 	// vertex input layout 설정
 	// vertex input layout 설정는 ModelClass의 VertexType 구조, vertex shader 내부의 VertexInputType 모두 일치해야 함
-	for (int i = 0; i < VertexDataSemantics.size(); ++i)
+	desc.SemanticIndex = 0;
+	desc.InputSlot = 0;
+	desc.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	desc.InstanceDataStepRate = 0;
+
+	for (UINT i = 0; i < VertexDataSemantics.size(); ++i)
 	{
 		desc.SemanticName = VertexDataSemantics[i].c_str();
-		desc.SemanticIndex = 0;
 
-		if(VertexDataSemantics[i] == "TEXCOORD")
+		if (VertexDataSemantics[i] == "POSITION")
+			desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		else if (VertexDataSemantics[i] == "TEXCOORD")
 			desc.Format = DXGI_FORMAT_R32G32_FLOAT;
 		else
 			desc.Format = DXGI_FORMAT_R32G32B32_FLOAT;
 
-		desc.InputSlot = 0;
 		desc.AlignedByteOffset = (i ? D3D11_APPEND_ALIGNED_ELEMENT : 0);
-		desc.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-		desc.InstanceDataStepRate = 0;
 
 		LayoutDesc.push_back(desc);
 	}
 
 	// instance layout 설정
 	// instance layout은 world matrix만 있으므로 따로 처리
-	for (int i = 0; i < 4; ++i)
-	{
-		desc.SemanticName = "INSTANCE_WORLD_COLUMN";
-		desc.SemanticIndex = i;
-		desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-		desc.InputSlot = 1;
-		desc.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-		desc.InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
-		desc.InstanceDataStepRate = 1;
+	desc.SemanticName = "INSTANCE_WORLD_COLUMN";
+	desc.SemanticIndex = 0;
+	desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	desc.InputSlot = 1;
+	desc.InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	desc.AlignedByteOffset = 0;
+	desc.InstanceDataStepRate = 1;
+	LayoutDesc.push_back(desc);
 
-		LayoutDesc.push_back(desc);
-	}
+	desc.SemanticName = "INSTANCE_WORLD_COLUMN";
+	desc.SemanticIndex = 1;
+	desc.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	LayoutDesc.push_back(desc);
+
+	desc.SemanticName = "INSTANCE_WORLD_COLUMN";
+	desc.SemanticIndex = 2;
+	LayoutDesc.push_back(desc);
+
+	desc.SemanticName = "INSTANCE_WORLD_COLUMN";
+	desc.SemanticIndex = 3;
+	LayoutDesc.push_back(desc);
 
 	// input layout 생성
 	result = Device->CreateInputLayout(LayoutDesc.data(), static_cast<UINT>(LayoutDesc.size()), VertexShaderBuffer->GetBufferPointer(), VertexShaderBuffer->GetBufferSize(), m_Layout.GetAddressOf());
@@ -200,10 +242,7 @@ template<typename ShaderBuffers>
 HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::CreateTextureSamplerState(ID3D11Device* Device)
 {
 	HRESULT result = S_OK;
-	D3D11_SAMPLER_DESC SamplerDesc;								// texture sampler state 설정 정보
-
-	// 구조체 초기화 //
-	memset(&SamplerDesc, 0, sizeof(SamplerDesc));
+	D3D11_SAMPLER_DESC SamplerDesc = {};								// texture sampler state 설정 정보
 
 	// texture sampler state 생성 //
 	// texture sampler state 설정
@@ -231,7 +270,13 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::CreateTextureSamplerState(I
 template<typename ShaderBuffers>
 void Graphic::Shader::ShaderClass<ShaderBuffers>::OutputShaderErrorMessage(HWND hwnd, ID3D10Blob* ErrorMessage, const std::wstring& ShaderFileName)
 {
-	MessageBox(hwnd, reinterpret_cast<const wchar_t*>(ErrorMessage->GetBufferPointer()), ShaderFileName.c_str(), MB_OK);
+	const char* msg = reinterpret_cast<const char*>(ErrorMessage->GetBufferPointer());
+	int len = static_cast<UINT>(ErrorMessage->GetBufferSize());
+	wchar_t wmsg[2000] = { 0, };
+
+	MultiByteToWideChar(CP_ACP, 0, msg, len, wmsg, sizeof(wmsg));
+
+	MessageBox(hwnd, wmsg, ShaderFileName.c_str(), MB_OK);
 }
 
 template<typename ShaderBuffers>

@@ -1,12 +1,11 @@
 // GLOBAL //
 cbuffer MatrixBuffer : register(b0)
 {
-	matrix WorldMatrix;
 	matrix ViewMatrix;
 	matrix ProjectionMatrix;
 };
 
-cbuffer CameraBuffer : register(b1)
+cbuffer CameraBuffer : register(b2)
 {
 	float3 CameraPosition;
 	float padding;
@@ -18,6 +17,10 @@ struct VertexInputType
 	float4 position : POSITION;
 	float2 tex : TEXCOORD0;
 	float3 normal : NORMAL;
+	float4 instCol0 : INSTANCE_WORLD_COLUMN0;
+	float4 instCol1 : INSTANCE_WORLD_COLUMN1;
+	float4 instCol2 : INSTANCE_WORLD_COLUMN2;
+	float4 instCol3 : INSTANCE_WORLD_COLUMN3;
 };
 
 struct PixelInputType
@@ -33,6 +36,14 @@ PixelInputType SpaceshipVertexShader(VertexInputType input)
 {
 	PixelInputType output;
 	float4 WorldPosition;
+	float4x4 WorldMatrix = 
+	{
+		input.instCol0,
+		input.instCol1,
+		input.instCol2,
+		input.instCol3
+	};
+	float3 normalW;
 
 	// 적절한 행렬 계산을 위해 위치 벡터를 4 단위로 변경 //
 	input.position.w = 1.f;
@@ -45,21 +56,13 @@ PixelInputType SpaceshipVertexShader(VertexInputType input)
 	// pixel shader의 texture 좌표 저장 //
 	output.tex = input.tex;
 
-	// normal vector를 월드 공간으로 변환 //
-    output.normal = mul(input.normal, (float3x3)WorldMatrix);
+	// normal 변환 //
+	normalW = mul((float3x3)WorldMatrix, input.normal);
+	output.normal = normalize(normalW);
 
-	// normal vector 정규화
-	output.normal = normalize(output.normal);
-
-	// world matrix 상에서 정점 위치 계산
+	// view direction 연산 //
 	WorldPosition = mul(input.position, WorldMatrix);
-
-	// 카메라의 위치와 world matrix 상에서 정점 위치를 기준으로 view direction vector를 설정
-	output.viewDirection = CameraPosition.xyz - WorldPosition.xyz;
-
-	// view direction vector 정규화
-	output.viewDirection = normalize(output.viewDirection);
-	// output.viewDirection = normalize(CameraPosition.xyz);
+	output.viewDirection = normalize(CameraPosition.xyz - WorldPosition.xyz);
 
 	return output;
 }

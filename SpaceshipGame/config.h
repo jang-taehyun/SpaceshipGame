@@ -129,7 +129,7 @@ namespace Graphic
 		// PTN vertex type
 		struct PTN_VertexType
 		{
-			DirectX::XMFLOAT3 position = {};
+			DirectX::XMFLOAT4 position = {};
 			DirectX::XMFLOAT2 texture = {};
 			DirectX::XMFLOAT3 normal = {};
 		};

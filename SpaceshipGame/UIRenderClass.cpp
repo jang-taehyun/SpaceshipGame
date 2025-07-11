@@ -8,8 +8,6 @@ bool Graphic::Texture::UIRenderClass::IsInitialize = false;
 
 Graphic::Texture::UIRenderClass::UIRenderClass(ID3D11DeviceContext* DeviceContext) : m_CurrentFontMask(0)
 {
-	std::unique_ptr<DirectX::SpriteFont> font = nullptr;
-
 	assert(!IsInitialize);
 
 	// UI 렌더링을 담당할 sprite batch 생성 //
@@ -74,20 +72,21 @@ void Graphic::Texture::UIRenderClass::BeginRender(const D3DClass* d3d)
 	m_Renderer->Begin();
 }
 
-void Graphic::Texture::UIRenderClass::RenderBackground(ID3D11ShaderResourceView* texture, DirectX::XMFLOAT4 color)
+void Graphic::Texture::UIRenderClass::RenderBackground(ID3D11ShaderResourceView* texture, DirectX::XMFLOAT4 color, DirectX::XMFLOAT2 scale)
 {
-	RECT rect;
-	BOOL IsDone = false;
-
 	// 색상 데이터(XMFLOAT4)을 XMVECTOR로 변환 //
 	DirectX::XMVECTOR vColor = DirectX::XMLoadFloat4(&color);
 
-	// 현재 윈도우의 크기 가져오기 //
-	IsDone = GetWindowRect(GetActiveWindow(), &rect);
-	assert(IsDone);
-
 	// 렌더링 //
-	m_Renderer->Draw(texture, rect, vColor);
+	m_Renderer->Draw(
+		texture,
+		DirectX::XMFLOAT2(0.f, 0.f),
+		nullptr,
+		vColor,
+		0.f,
+		DirectX::XMFLOAT2(0.f, 0.f),
+		(System::FULL_SCREEN ? DirectX::XMFLOAT2(1.f, 1.f) : scale)
+	);
 }
 
 void Graphic::Texture::UIRenderClass::RenderTexture(ID3D11ShaderResourceView* texture, DirectX::XMFLOAT2 pos, DirectX::XMFLOAT4 color, float rot, DirectX::XMFLOAT2 origin, DirectX::XMFLOAT2 scale)
@@ -96,7 +95,15 @@ void Graphic::Texture::UIRenderClass::RenderTexture(ID3D11ShaderResourceView* te
 	DirectX::XMVECTOR vColor = DirectX::XMLoadFloat4(&color);
 
 	// 렌더링 //
-	m_Renderer->Draw(texture, pos, nullptr, vColor, rot, origin, scale);
+	m_Renderer->Draw(
+		texture,
+		pos,
+		nullptr,
+		vColor,
+		rot,
+		origin,
+		scale
+	);
 }
 
 void Graphic::Texture::UIRenderClass::RenderText(const std::wstring& text, Font::ID fontID, DirectX::XMFLOAT2 pos, DirectX::XMFLOAT4 color, float rot, DirectX::XMFLOAT2 origin, DirectX::XMFLOAT2 scale)

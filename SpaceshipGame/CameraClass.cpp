@@ -1,8 +1,19 @@
 #include "pch.h"
+#include "IMoveClass.h"
+#include "IRotateClass.h"
 #include "ComputeDirectionVectorClass.h"
 #include "CameraClass.h"
 
-DirectX::XMFLOAT4X4 Object::CameraClass::Render() const
+Object::CameraClass::CameraClass(std::unique_ptr<IMoveClass> move, std::unique_ptr<IRotateClass> rotate) : m_Move(std::move(move)), m_Rotate(std::move(rotate))
+{}
+
+Object::CameraClass::CameraClass(const CameraClass& other) : ObjectClass(other), m_Move(other.m_Move->Clone()), m_Rotate(other.m_Rotate->Clone()), m_Frustum(other.m_Frustum)
+{}
+
+Object::CameraClass::CameraClass(CameraClass && other) noexcept : ObjectClass(other), m_Move(std::move(other.m_Move)), m_Rotate(std::move(other.m_Rotate)), m_Frustum(other.m_Frustum)
+{}
+
+DirectX::XMFLOAT4X4 Object::CameraClass::Render()
 {
 	DirectX::XMFLOAT4 pos, rot;
 	DirectX::XMVECTOR position, forward, target, up;
@@ -10,7 +21,6 @@ DirectX::XMFLOAT4X4 Object::CameraClass::Render() const
 	DirectX::XMFLOAT4 UpVector = DirectX::XMFLOAT4(0.f, 0.f, 0.f, 0.f);
 	DirectX::XMFLOAT4 RightVector = DirectX::XMFLOAT4(0.f, 0.f, 0.f, 0.f);
 	DirectX::XMMATRIX viewMatrix;
-	DirectX::XMFLOAT4X4 ret;
 
 	// 카메라의 local 좌표계의 축 추출 //
 	rot = GetRotation();
@@ -27,9 +37,9 @@ DirectX::XMFLOAT4X4 Object::CameraClass::Render() const
 
 	// view matrix 생성 //
 	viewMatrix = DirectX::XMMatrixLookAtLH(position, target, up);
-	DirectX::XMStoreFloat4x4(&ret, viewMatrix);
+	DirectX::XMStoreFloat4x4(&m_ViewMatrix, viewMatrix);
 
-	return ret;
+	return m_ViewMatrix;
 }
 
 bool Object::CameraClass::IsRender(DirectX::BoundingOrientedBox ModelOBB, DirectX::XMFLOAT4X4 ModelWorldMatrix) const
@@ -52,17 +62,80 @@ bool Object::CameraClass::IsRender(DirectX::BoundingOrientedBox ModelOBB, Direct
 	return (IsIntersect || IsContain);
 }
 
+Object::CameraClass& Object::CameraClass::operator=(const CameraClass& other)
+{
+	if (this == &other)
+		return *this;
+
+	m_Frustum = other.m_Frustum;
+
+	if (m_Move)
+		m_Move.reset();
+	if (m_Rotate)
+		m_Rotate.reset();
+
+	m_Move = other.m_Move->Clone();
+	m_Rotate = other.m_Rotate->Clone();
+
+	ObjectClass::operator=(other);
+
+	return *this;
+}
+
+Object::CameraClass& Object::CameraClass::operator=(CameraClass&& other) noexcept
+{
+	if (this == &other)
+		return *this;
+
+	m_Frustum = other.m_Frustum;
+
+	if (m_Move)
+		m_Move.reset();
+	if (m_Rotate)
+		m_Rotate.reset();
+
+	m_Move = std::move(other.m_Move);
+	m_Rotate = std::move(other.m_Rotate);
+
+	ObjectClass::operator=(std::move(other));
+
+	return *this;
+}
+
 void Object::CameraClass::UpdateFrustum(DirectX::XMFLOAT4X4 projection)
 {
-	DirectX::XMFLOAT4X4 worldF = GetAffineMatrix();
-
 	// projection matrix를 XMMATRIX로 변환
 	DirectX::XMMATRIX proj = DirectX::XMLoadFloat4x4(&projection);
 
-	// World matrix를 XMMATRIX로 변환
-	DirectX::XMMATRIX world = DirectX::XMLoadFloat4x4(&worldF);
+	// view matrix를 XMMATRIX로 변환
+	DirectX::XMMATRIX view = DirectX::XMLoadFloat4x4(&m_ViewMatrix);
 
 	// projection matrix를 통해 frustum volume을 생성하고, world matrix를 이용해 trasform 변환
 	m_Frustum = DirectX::BoundingFrustum(proj);
-	m_Frustum.Transform(m_Frustum, world);
+	view = DirectX::XMMatrixInverse(nullptr, view);
+	m_Frustum.Transform(m_Frustum, view);
+}
+
+void Object::CameraClass::Move(MoveState state, float frame_time, bool IsKeyDown)
+{
+	DirectX::XMFLOAT4 pos;
+
+	// 최종적으로 계산된 position으로 교체 //
+	// actor 이동
+	if (!m_Move)
+		return;
+	pos = m_Move->Move(GetPosition(), GetRotation(), state, frame_time, IsKeyDown);
+	SetPosition(pos);
+}
+
+void Object::CameraClass::Rotate(long MouseX, long MouseY, float frame_time, bool IsKeyDown)
+{
+	DirectX::XMFLOAT4 rot;
+
+	// 최종적으로 계산된 rotation으로 교체 //
+	// actor 회전
+	if (!m_Rotate)
+		return;
+	rot = m_Rotate->Rotate(GetRotation(), MouseX, MouseY, frame_time, IsKeyDown);
+	SetRotation(rot);
 }

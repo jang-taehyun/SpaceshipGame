@@ -3,6 +3,7 @@
 #include "IRotateClass.h"
 #include "CollisionClass.h"
 #include "ActorClass.h"
+#include "CameraClass.h"
 
 Object::ActorClass::ActorClass(std::unique_ptr<IMoveClass> move, std::unique_ptr<IRotateClass> rotate, std::unique_ptr<IObjectClass> collision, Graphic::Model::ID ModelID) : GameObjectClass(ModelID, std::move(collision)), m_Move(std::move(move)), m_Rotate(std::move(rotate)) {}
 Object::ActorClass::ActorClass(const ActorClass& other) : GameObjectClass(other), m_Move(other.m_Move->Clone()), m_Rotate(other.m_Rotate->Clone()) {}

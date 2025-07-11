@@ -160,7 +160,6 @@
     <ClInclude Include="ModelFactoryClass.h" />
     <ClInclude Include="ObjectFactoryClass.h" />
     <ClInclude Include="ObjectManagerClass.h" />
-    <ClInclude Include="BackgroundClass.h" />
     <ClInclude Include="SceneClass.h" />
     <ClInclude Include="CameraClass.h" />
     <ClInclude Include="ComputeDirectionVectorClass.h" />
@@ -225,7 +224,6 @@
     <ClCompile Include="ModelFactoryClass.cpp" />
     <ClCompile Include="ObjectFactoryClass.cpp" />
     <ClCompile Include="ObjectManagerClass.cpp" />
-    <ClCompile Include="BackgroundClass.cpp" />
     <ClCompile Include="SceneClass.cpp" />
     <ClCompile Include="CameraClass.cpp" />
     <ClCompile Include="ComputeDirectionVectorClass.cpp" />

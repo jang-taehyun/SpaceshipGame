@@ -35,6 +35,6 @@ namespace Object
 		virtual inline std::unique_ptr<IObjectClass> Clone() const override = 0;
 
 	private:
-		AffineInfo m_Affine = { DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f),  DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f), DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f) };
+		AffineInfo m_Affine = { DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f),  DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f), DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f) };
 	};
 }

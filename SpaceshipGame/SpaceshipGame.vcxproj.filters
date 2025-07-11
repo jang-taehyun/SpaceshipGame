@@ -74,9 +74,6 @@
     <Filter Include="UI">
       <UniqueIdentifier>{64a20a66-22a4-4764-8639-ea400df12e13}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI\BackgroundClass">
-      <UniqueIdentifier>{d0e8d5d5-7b01-490a-8d81-b9d780db12be}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene\StartSceneClass">
       <UniqueIdentifier>{da32d0ad-f6df-4498-bed4-8d63d4cd2b81}</UniqueIdentifier>
     </Filter>
@@ -340,9 +337,6 @@
     <ClInclude Include="UIClass.h">
       <Filter>UI\1. UIClass</Filter>
     </ClInclude>
-    <ClInclude Include="BackgroundClass.h">
-      <Filter>UI\BackgroundClass</Filter>
-    </ClInclude>
     <ClInclude Include="IUIClass.h">
       <Filter>UI\0. IUIClass</Filter>
     </ClInclude>
@@ -515,9 +509,6 @@
     </ClCompile>
     <ClCompile Include="UIClass.cpp">
       <Filter>UI\1. UIClass</Filter>
-    </ClCompile>
-    <ClCompile Include="BackgroundClass.cpp">
-      <Filter>UI\BackgroundClass</Filter>
     </ClCompile>
     <ClCompile Include="IUIClass.cpp">
       <Filter>UI\0. IUIClass</Filter>

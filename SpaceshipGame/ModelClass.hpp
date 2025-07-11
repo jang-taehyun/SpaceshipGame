@@ -214,6 +214,9 @@ void Graphic::Model::ModelClass<VertexType>::UpdateInstanceBuffer(ID3D11DeviceCo
 	D3D11_MAPPED_SUBRESOURCE MappedResource;			// lock
 	InstanceBufferType* DataPtr = nullptr;				// buffer의 포인터
 
+	// instance의 개수 업데이트 //
+	m_InstanceCount = static_cast<UINT>(m_WorldMatrix.size());
+
 	// instance buffer의 내용을 CPU가 쓸 수 있도록 잠금 //
 	result = DeviceContext->Map(m_InstanceBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource);
 	assert(SUCCEEDED(result));

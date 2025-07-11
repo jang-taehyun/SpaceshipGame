@@ -95,10 +95,6 @@ void System::SystemClass::Frame()
 
 	IsLoad = m_SceneManager->Frame(m_Input.get(), m_Timer->GetTime());
 	m_Graphics->Frame(m_SceneManager.get(), IsLoad);
-
-#ifdef _DEBUG
-	m_Graphics->ImGuiRender(m_FPS->GetFPS(), m_CPU->GetCPUPercentage(), m_SceneManager.get());
-#endif // DEBUG
 }
 
 void System::SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)

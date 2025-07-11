@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "UIClass.h"
-#include "BackgroundClass.h"
 #include "UIFactoryClass.h"
 
 bool UI::UIFactoryClass::IsInitialize = false;

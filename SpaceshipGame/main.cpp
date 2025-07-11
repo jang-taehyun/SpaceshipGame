@@ -18,6 +18,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 
 		Sound::SoundFileList.clear();
 		Graphic::Model::ModelFileList.clear();
+		Graphic::Model::ModelTexturePathList.clear();
 		Graphic::Texture::UITextureFileList.clear();
 		Graphic::Font::FontFileList.clear();
 	}

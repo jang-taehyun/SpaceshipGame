@@ -17,6 +17,11 @@ DirectX::XMFLOAT4 Object::RotateClass::Rotate(DirectX::XMFLOAT4 rotate, long Mou
 	// pitch
 	ret.x += ((float)MouseY * speed);
 
+	if (ret.x > 89.f)
+		ret.x = 89.f;
+	if (ret.x < -89.f)
+		ret.x = -89.f;
+
 	// 변경된 rotate 반환 //
 	return ret;
 }

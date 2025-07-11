@@ -32,7 +32,7 @@ namespace Object
 		float ComputeMoveSpeed(float frame_time, bool IsKeyDown);
 
 	private:
-		float m_MoveSpeed = 1.f;
+		float m_MoveSpeed = 0.05f;
 		float m_PrevMoveSpeed = 0.f;
 	};
 }

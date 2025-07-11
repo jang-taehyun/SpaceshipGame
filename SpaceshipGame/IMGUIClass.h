@@ -26,13 +26,13 @@ namespace Graphic
 		IMGUIClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeivceContext);
 		~IMGUIClass();
 
-		void Render(UINT FPS, ULONGLONG cpu_usage, Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light);
+		void Render(Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light);
 
 	private:
 		void Initialize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeivceContext);
 		void Shutdown();
 
-		void SetUI(UINT FPS, ULONGLONG cpu_usage, Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light);
+		void SetUI(Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light);
 
 		void SetFPSCPUUsage(const std::string& title, UINT IMGUI_Window_idx, UINT fps, ULONGLONG cpu_usage);
 		void SetCameraInfo(const std::string& title, UINT IMGUI_Window_idx, Object::IObjectClass* camera);

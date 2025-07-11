@@ -66,6 +66,7 @@ void Graphic::GraphicsClass::Frame(Scene::SceneManagerClass* SceneManager, bool 
 	// frustum culling //
 	// 카메라 업데이트
 	assert(cam);
+	view = cam->Render();
 	cam->UpdateFrustum(m_D3D->GetProjectionMatrix());
 
 	// scene에 존재하는 object에 대해 frustum culling 진행
@@ -112,7 +113,6 @@ void Graphic::GraphicsClass::Frame(Scene::SceneManagerClass* SceneManager, bool 
 	m_ModelManager->UpdateInstanceBuffers(m_D3D->GetDeviceContext());
 
 	// shader의 모든 buffer 업데이트 //
-	view = cam->Render();
 	BufferData.transform.Projection = DirectX::XMLoadFloat4x4(&(m_D3D->GetProjectionMatrix()));
 	BufferData.transform.View = DirectX::XMLoadFloat4x4(&view);
 
@@ -132,9 +132,9 @@ void Graphic::GraphicsClass::Frame(Scene::SceneManagerClass* SceneManager, bool 
 
 void Graphic::GraphicsClass::Initialize(HWND hwnd, int ScreenWidth, int ScreenHeight)
 {
-	DirectX::XMFLOAT4 AmbientColor = DirectX::XMFLOAT4(0.15f, 0.15f, 0.15f, 1.f);
+	DirectX::XMFLOAT4 AmbientColor = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);
 	DirectX::XMFLOAT4 DiffuseColor = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);
-	DirectX::XMFLOAT4 LightDirection = DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f);
+	DirectX::XMFLOAT4 LightDirection = DirectX::XMFLOAT4(1.f, 0.f, 0.f, 1.f);
 	DirectX::XMFLOAT4 SpecularColor = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);
 	float SpecularPower = 64.f;
 
@@ -235,7 +235,7 @@ void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager)
 			}
 			// background 렌더링
 			else
-				m_UIRender->RenderBackground(m_UITextureManager->GetTexture(ui->GetUITextureID()), ui->GetColor());
+				m_UIRender->RenderBackground(m_UITextureManager->GetTexture(ui->GetUITextureID()), ui->GetColor(), ui->GetScale());
 		}
 	}
 
@@ -254,6 +254,10 @@ void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager)
 		);
 	}
 
+#ifdef _DEBUG
+	ImGuiRender(SceneManager);
+#endif // DEBUG
+
 	m_UIRender->EndRender(m_D3D.get());
 
 	// back buffer에 있는 내용을 화면에 출력 //
@@ -261,9 +265,9 @@ void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager)
 }
 
 #ifdef _DEBUG
-void Graphic::GraphicsClass::ImGuiRender(UINT FPS, ULONGLONG cpu_usage, Scene::SceneManagerClass* SceneManager)
+void Graphic::GraphicsClass::ImGuiRender(Scene::SceneManagerClass* SceneManager)
 {
-	m_IMGUI->Render(FPS, cpu_usage, SceneManager, m_Light.get());
+	m_IMGUI->Render(SceneManager, m_Light.get());
 }
 #endif // DEBUG
 

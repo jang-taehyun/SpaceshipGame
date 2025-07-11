@@ -34,7 +34,7 @@ namespace Graphic
 			virtual inline UINT GetMeshCount() const override { return m_MeshCount; }
 			virtual inline Shader::ID GetShaderID() const override { return m_ShaderID; }
 			virtual inline ULONG GetIndexCount(UINT idx) const override { assert(idx < m_MeshCount); return m_MeshesIndexCount[idx]; }
-			virtual inline ULONG GetInstanceCount() const override { assert(static_cast<ULONG>(m_WorldMatrix.size()) < MAX_INSTANCE_COUNT); return static_cast<ULONG>(m_WorldMatrix.size()); }
+			virtual inline ULONG GetInstanceCount() const override { assert(m_InstanceCount < MAX_INSTANCE_COUNT); return m_InstanceCount; }
 			virtual const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& GetMaterial(UINT idx) const override;
 			virtual inline DirectX::BoundingOrientedBox GetModelOBB() const { return m_ModelOBB; }
 
@@ -60,6 +60,7 @@ namespace Graphic
 			std::vector<std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>> m_Materials;	// 각 mesh에서 사용하는 material 데이터들
 			std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> m_Empty;					// model에 material이 없는 경우 반환 용도
 
+			UINT m_InstanceCount = 0;
 			std::vector<InstanceBufferType> m_WorldMatrix;											// 각 object의 world matrix 모음
 
 			DirectX::BoundingOrientedBox m_ModelOBB;

@@ -89,13 +89,13 @@ void Graphic::Shader::MLC_ShaderClass::SetShaderBuffers(ID3D11DeviceContext* Dev
 	DeviceContext->VSSetConstantBuffers(slot, 1, m_MatrixBuffer.GetAddressOf());
 
 	// pixel shader의 광원 상수 버퍼의 위치 설정
-	// pixel shader에서 light constant buffer의 위치 : 0번
-	slot = 0;
+	// pixel shader에서 light constant buffer의 위치 : 1번
+	slot = 1;
 	DeviceContext->PSSetConstantBuffers(slot, 1, m_LightBuffer.GetAddressOf());
 
 	// vertex shader에서 상수 버퍼의 위치 설정 및 camera constant buffer의 내용 업데이트
-	// vertex shader에서 camera constant buffer의 위치 : 1번
-	slot = 1;
+	// vertex shader에서 camera constant buffer의 위치 : 2번
+	slot = 2;
 	DeviceContext->VSSetConstantBuffers(slot, 1, m_CameraBuffer.GetAddressOf());
 }
 

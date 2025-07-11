@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "IUIClass.h"
-#include "BackgroundClass.h"
 #include "UIFactoryClass.h"
 #include "UIManagerClass.h"
 
