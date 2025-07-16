@@ -32,6 +32,42 @@ void Sound::SoundManagerClass::Play(ID SoundID) const
 	iter->second->Play();
 }
 
+void Sound::SoundManagerClass::Stop(ID SoundID) const
+{
+	std::map<ID, std::unique_ptr<SoundClass>>::const_iterator iter;
+
+	iter = m_SoundList.find(SoundID);
+	assert(m_SoundList.end() != iter);
+
+	iter->second->Stop();
+}
+
+void Sound::SoundManagerClass::SetLoop(ID SoundID, bool IsLoop)
+{
+	std::map<ID, std::unique_ptr<SoundClass>>::iterator iter;
+
+	iter = m_SoundList.find(SoundID);
+	assert(m_SoundList.end() != iter);
+
+	iter->second->SetLoop(IsLoop);
+}
+
+void Sound::SoundManagerClass::AllStop() const
+{
+	bool IsExist = false;
+	ID id = ID::NONE;
+
+	for (UINT i = 0; i < SoundIDCount; ++i)
+	{
+		IsExist = (m_CurrentSoundMask & (1 << i));
+		id = static_cast<ID>(i);
+
+		// map에 있으면 오디오 중단
+		if (IsExist)
+			m_SoundList.find(id)->second->Stop();
+	}
+}
+
 void Sound::SoundManagerClass::Initailize()
 {
 	HRESULT result = S_OK;
@@ -41,7 +77,7 @@ void Sound::SoundManagerClass::Initailize()
 	result = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 	assert(SUCCEEDED(result));
 
-#ifdef DEBUG
+#ifdef _DEBUG
 	AudioEngineFlag |= DirectX::AUDIO_ENGINE_FLAGS::AudioEngine_Debug;
 #endif // DEBUG
 

@@ -157,6 +157,7 @@
     <ClInclude Include="ActorClass.h" />
     <ClInclude Include="Cube_ShaderClass.h" />
     <ClInclude Include="GameObjectClass.h" />
+    <ClInclude Include="ModeChooseSceneClass.h" />
     <ClInclude Include="ModelFactoryClass.h" />
     <ClInclude Include="ObjectFactoryClass.h" />
     <ClInclude Include="ObjectManagerClass.h" />
@@ -221,6 +222,7 @@
     <ClCompile Include="config.cpp" />
     <ClCompile Include="Cube_ShaderClass.cpp" />
     <ClCompile Include="GameObjectClass.cpp" />
+    <ClCompile Include="ModeChooseSceneClass.cpp" />
     <ClCompile Include="ModelFactoryClass.cpp" />
     <ClCompile Include="ObjectFactoryClass.cpp" />
     <ClCompile Include="ObjectManagerClass.cpp" />

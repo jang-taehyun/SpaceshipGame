@@ -55,7 +55,7 @@ namespace Scene
 {
 	enum class SceneState
 	{
-		NONE, START, LOADING, LOGIN, MATCH, INGAME,
+		NONE, START, LOADING, LOGIN, MATCH, INGAME, MODE_CHOOSE,
 	};
 }
 

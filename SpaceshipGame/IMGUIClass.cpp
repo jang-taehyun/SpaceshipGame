@@ -192,7 +192,7 @@ void Graphic::IMGUIClass::SetSoundInfo(const std::string& title, UINT IMGUI_Wind
 			contents = u8"¿Àµð¿À" + std::to_string(i + 1);
 			IsPress = ImGui::Button(contents.c_str());
 			if (IsPress)
-				sound_manager->Play(static_cast<Sound::ID>(1 << i));
+				sound_manager->Play(static_cast<Sound::ID>(i));
 		}
 	}
 

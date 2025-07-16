@@ -51,3 +51,11 @@ void Sound::SoundClass::Play() const
 
 	m_EffectInstance->Play(m_IsLoop);
 }
+
+void Sound::SoundClass::Stop() const
+{
+	if (m_EffectInstance->GetState() == DirectX::SoundState::STOPPED)
+		return;
+
+	m_EffectInstance->Stop();
+}

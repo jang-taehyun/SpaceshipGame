@@ -46,7 +46,10 @@ bool Scene::SceneManagerClass::Frame(const System::InputClass* input, float fram
 			assert(m_Scene);
 		}
 		else
+		{
+			m_SoundManager->AllStop();
 			ChangeScene();
+		}
 
 		return true;
 	}

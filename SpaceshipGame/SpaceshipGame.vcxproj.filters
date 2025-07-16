@@ -218,6 +218,9 @@
     <Filter Include="Shader\Cube_ShaderClass">
       <UniqueIdentifier>{39ca4d8f-12f1-45a0-8cbb-da3cb1a599b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene\ModeChooseSceneClass">
+      <UniqueIdentifier>{4198ae01-b565-42bd-96d5-a3e518869234}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemClass.h">
@@ -403,6 +406,9 @@
     <ClInclude Include="Cube_ShaderClass.h">
       <Filter>Shader\Cube_ShaderClass</Filter>
     </ClInclude>
+    <ClInclude Include="ModeChooseSceneClass.h">
+      <Filter>Scene\ModeChooseSceneClass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -578,6 +584,9 @@
     </ClCompile>
     <ClCompile Include="config.cpp">
       <Filter>Default\header</Filter>
+    </ClCompile>
+    <ClCompile Include="ModeChooseSceneClass.cpp">
+      <Filter>Scene\ModeChooseSceneClass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

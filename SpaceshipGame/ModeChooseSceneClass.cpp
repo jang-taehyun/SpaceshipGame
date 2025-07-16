@@ -12,9 +12,9 @@
 #include "ActorClass.h"
 #include "IUIClass.h"
 #include "ITextClass.h"
-#include "StartSceneClass.h"
+#include "ModeChooseSceneClass.h"
 
-Scene::StartSceneClass::StartSceneClass(SceneState next, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds) : SceneClass(Scene::SceneState::START, next)
+Scene::ModeChooseSceneClass::ModeChooseSceneClass(SceneState next, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds) : SceneClass(Scene::SceneState::START, next)
 {
 	UINT objectIdx = 0;
 	UINT UI_Idx = 0;
@@ -27,28 +27,24 @@ Scene::StartSceneClass::StartSceneClass(SceneState next, Object::ObjectManagerCl
 	assert(m_Camera);
 	m_Camera->SetPosition(DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f));
 
-	UI_Idx = UIs->LoadUI(UI::ID::BACKGROUND, Graphic::Texture::UITextureID::START_BACKGROUND);
-	UIs->GetUI(UI_Idx)->SetColor(DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f));
-	UIs->GetUI(UI_Idx)->SetScale(DirectX::XMFLOAT2(0.25f, 0.25f));
+	objectIdx = objects->Load(Object::ID::ACTOR, Graphic::Model::ID::DEFAULT_SPACESHIP);
+	objects->SetPlayerIdx(objectIdx);
+	objects->GetGameObject(objectIdx)->SetPosition(DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f));
 
-	UI_Idx = UIs->LoadUI(UI::ID::DEFAULT, Graphic::Texture::UITextureID::START_BUTTON);
-	UIs->GetUI(UI_Idx)->SetColor(DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f));
-	UIs->GetUI(UI_Idx)->SetPosition(DirectX::XMFLOAT2(0.f, 0.f));
-	UIs->GetUI(UI_Idx)->SetScale(DirectX::XMFLOAT2(0.3f, 0.3f));
-	
-	textIdx = texts->Load(Text::ID::DEFAULT, _T("시작 화면"), Graphic::Font::ID::DEFAULT);
+	textIdx = texts->Load(Text::ID::DEFAULT, _T("모드 선택"), Graphic::Font::ID::DEFAULT);
 	texts->GetTextObject(textIdx)->SetColor(DirectX::XMFLOAT4(0.f, 1.f, 0.f, 1.f));
 	texts->GetTextObject(textIdx)->SetScale(DirectX::XMFLOAT2(1.f, 2.f));
 
 	SoundMask |= (1 << static_cast<UINT>(Sound::ID::BACKGROUND));
+	SoundMask |= (1 << static_cast<UINT>(Sound::ID::EFFECT));
 	sounds->Load(SoundMask);
 	sounds->Play(Sound::ID::BACKGROUND);
 }
 
-Scene::StartSceneClass::StartSceneClass(const StartSceneClass& other) : SceneClass(other), m_Camera(std::move(other.m_Camera->Clone())) {}
-Scene::StartSceneClass::StartSceneClass(StartSceneClass&& other) noexcept : SceneClass(other), m_Camera(std::move(other.m_Camera)) {}
+Scene::ModeChooseSceneClass::ModeChooseSceneClass(const ModeChooseSceneClass& other) : SceneClass(other), m_Camera(std::move(other.m_Camera->Clone())) {}
+Scene::ModeChooseSceneClass::ModeChooseSceneClass(ModeChooseSceneClass&& other) noexcept : SceneClass(other), m_Camera(std::move(other.m_Camera)) {}
 
-Scene::StartSceneClass& Scene::StartSceneClass::operator=(const StartSceneClass& other)
+Scene::ModeChooseSceneClass& Scene::ModeChooseSceneClass::operator=(const ModeChooseSceneClass& other)
 {
 	if (this == &other)
 		return *this;
@@ -59,7 +55,7 @@ Scene::StartSceneClass& Scene::StartSceneClass::operator=(const StartSceneClass&
 	return *this;
 }
 
-Scene::StartSceneClass& Scene::StartSceneClass::operator=(StartSceneClass&& other) noexcept
+Scene::ModeChooseSceneClass& Scene::ModeChooseSceneClass::operator=(ModeChooseSceneClass&& other) noexcept
 {
 	if (this == &other)
 		return *this;
@@ -70,7 +66,7 @@ Scene::StartSceneClass& Scene::StartSceneClass::operator=(StartSceneClass&& othe
 	return *this;
 }
 
-void Scene::StartSceneClass::Frame(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time)
+void Scene::ModeChooseSceneClass::Frame(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time)
 {
 	Object::CameraClass* cam = nullptr;
 	long x = 0, y = 0;

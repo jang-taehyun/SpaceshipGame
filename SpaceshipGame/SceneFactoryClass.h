@@ -7,6 +7,7 @@ namespace Scene { class ISceneClass; }
 namespace Scene
 {
 	std::unique_ptr<ISceneClass> CreateStartScene(Object::ObjectManagerClass* actors, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds);
+	std::unique_ptr<ISceneClass> CreateModeChooseScene(Object::ObjectManagerClass* actors, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds);
 
 	class SceneFactoryClass
 	{

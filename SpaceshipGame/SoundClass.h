@@ -14,6 +14,7 @@ namespace Sound
 		SoundClass& operator=(SoundClass&& other) noexcept;
 
 		void Play() const;
+		void Stop() const;
 
 		inline void SetLoop(bool IsLoop) { m_IsLoop = IsLoop; }
 

@@ -254,11 +254,11 @@ void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager)
 		);
 	}
 
+	m_UIRender->EndRender(m_D3D.get());
+
 #ifdef _DEBUG
 	ImGuiRender(SceneManager);
 #endif // DEBUG
-
-	m_UIRender->EndRender(m_D3D.get());
 
 	// back buffer에 있는 내용을 화면에 출력 //
 	m_D3D->EndScene();

@@ -14,9 +14,13 @@ namespace Sound
 
 		void Load(UINT SoundMask);
 		void Play(ID SoundID) const;
+		void Stop(ID SoundID) const;
+		void SetLoop(ID SoundID, bool IsLoop);
 		void Frame() const;
 
-		inline UINT GetSoundMask() const { return m_CurrentSoundMask; }
+		inline UINT GetSoundMask() const { return m_CurrentSoundMask; } 
+
+		void AllStop() const;
 
 	private:
 		void Initailize();
