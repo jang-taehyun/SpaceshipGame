@@ -13,11 +13,12 @@ namespace Graphic
 		class UITextureManagerClass;
 		class UIRenderClass;
 	}
+}
 
 #ifdef _DEBUG
-	class IMGUIClass;
-#endif // DEBUG
-}
+namespace System { class InputClass; }
+namespace Graphic { class IMGUIClass; }
+#endif
 
 namespace Graphic
 {
@@ -27,12 +28,20 @@ namespace Graphic
 		GraphicsClass(HWND hwnd, int ScreenWidth, int ScreenHeight);
 		virtual ~GraphicsClass();
 
-		void Frame(Scene::SceneManagerClass* SceneManager, bool IsLoad);
+		void Frame(Scene::SceneManagerClass* SceneManager, bool IsLoad
+#ifdef _DEBUG
+			, System::InputClass* input
+#endif // _DEBUG
+		);
 
 	private:
 		void Initialize(HWND hwnd, int ScreenWidth, int ScreenHeight);
 		void Load(Scene::SceneManagerClass* SceneManager);
-		void Render(Scene::SceneManagerClass* SceneManager);
+		void Render(Scene::SceneManagerClass* SceneManager
+#ifdef _DEBUG
+			, System::InputClass* input
+#endif // _DEBUG
+		);
 
 	private:
 		static bool IsInitialize;
@@ -52,7 +61,7 @@ namespace Graphic
 
 #ifdef _DEBUG
 	public:
-		void ImGuiRender(Scene::SceneManagerClass* SceneManager);
+		void ImGuiRender(Scene::SceneManagerClass* SceneManager, System::InputClass* input);
 	private:
 		std::unique_ptr<IMGUIClass> m_IMGUI = nullptr;
 #endif // DEBUG

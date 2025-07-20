@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "IMGUIClass.h"
 
 #ifdef _DEBUG
 
@@ -8,8 +7,14 @@
 #include "SoundManagerClass.h"
 #include "GameObjectClass.h"
 #include "LightClass.h"
-
 #include "SoundClass.h"
+#include "InputClass.h"
+
+#endif
+
+#include "IMGUIClass.h"
+
+#ifdef _DEBUG
 
 bool Graphic::IMGUIClass::IsInitialize = false;
 
@@ -62,23 +67,26 @@ void Graphic::IMGUIClass::Shutdown()
 	ImGui::DestroyContext();
 }
 
-void Graphic::IMGUIClass::Render(Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light)
+void Graphic::IMGUIClass::Render(Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light, System::InputClass* input)
 {
 	// IMGUI 렌더링 준비 //
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	SetUI(SceneManager, light);
+	SetUI(SceneManager, light, input);
 
 	// 렌더링
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
-void Graphic::IMGUIClass::SetUI(Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light)
+void Graphic::IMGUIClass::SetUI(Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light, System::InputClass* input)
 {
-	std::string title = u8"FPS, CPU 사용량";
+	Object::GameObjectClass* obj = nullptr;
+
+	std::string title = u8"마우스 위치";
+	SetMousePosition(title, 0, input);
 
 	title = u8"카메라 위치, 회전";
 	SetCameraInfo(title, 1, SceneManager->GetCamera());
@@ -89,28 +97,19 @@ void Graphic::IMGUIClass::SetUI(Scene::SceneManagerClass* SceneManager, Graphic:
 	title = u8"광원 정보(ambient, diffuse, direction, specular color, specular power)";
 	SetLightInfo(title, 3, light);
 
-	if (-1 != SceneManager->GetObjectManager()->GetPlayerIdx())
-	{
-		title = u8"player의 affine(position, rotate, scale), collision(center, rotate, extends)";
-		SetObjectInfo(title, 4,
-			static_cast<Object::GameObjectClass*>
-			(
-				SceneManager->GetObjectManager()->
-				GetGameObject(
-					SceneManager->GetObjectManager()->GetPlayerIdx()
-				)
-				)
-		);
-	}
-
 	for (UINT i = 0; i < SceneManager->GetObjectManager()->GetObjectCount(); ++i)
 	{
+		obj = static_cast<Object::GameObjectClass*>(SceneManager->GetObjectManager()->GetGameObject(i));
+
 		if (i != SceneManager->GetObjectManager()->GetPlayerIdx())
 		{
-			std::string title = u8"번째 other의 affine(position, rotate, scale), collision(center, rotate, extends)";
+			title = u8"번째 other의 affine(position, rotate, scale), collision(center, rotate, extends)";
 			title = std::to_string(i + 1) + title;
-			SetObjectInfo(title, i + 5, static_cast<Object::GameObjectClass*>(SceneManager->GetObjectManager()->GetGameObject(i)));
 		}
+		else
+			title = u8"player의 affine(position, rotate, scale), collision(center, rotate, extends)";
+
+		SetObjectInfo(title, i + 5, obj);
 	}
 }
 
@@ -130,6 +129,24 @@ void Graphic::IMGUIClass::SetFPSCPUUsage(const std::string& title, UINT IMGUI_Wi
 	// CPU 사용량 UI //
 	contents = u8"CPU : ";
 	contents += std::to_string(cpu_usage);
+	ImGui::Text(contents.c_str());
+
+	ImGui::End();
+}
+
+void Graphic::IMGUIClass::SetMousePosition(const std::string& title, UINT IMGUI_Window_idx, System::InputClass* input)
+{
+	std::string contents;
+	int x = 0, y = 0;
+	
+	ImGui::SetNextWindowPos(m_WindowsPositions[IMGUI_Window_idx], ImGuiCond_Appearing);
+	ImGui::Begin(title.c_str(), NULL);
+	ImGui::SetWindowSize(m_WindowsSize, ImGuiCond_Once);
+
+	input->GetMouseLocation(x, y);
+	contents = "Mouse X : " + std::to_string(x);
+	ImGui::Text(contents.c_str());
+	contents = "Mouse Y : " + std::to_string(y);
 	ImGui::Text(contents.c_str());
 
 	ImGui::End();
@@ -276,6 +293,10 @@ void Graphic::IMGUIClass::SetLightInfo(const std::string& title, UINT IMGUI_Wind
 
 void Graphic::IMGUIClass::SetObjectInfo(const std::string& title, UINT IMGUI_Window_idx, Object::GameObjectClass* object)
 {
+	static DirectX::XMFLOAT4 origin_pos = object->GetPosition();
+	static DirectX::XMFLOAT4 origin_rot = object->GetRotation();
+	static DirectX::XMFLOAT4 origin_scale = object->GetScale();
+
 	float value[4] = { 0.f, };
 	bool IsPress = false;
 	float speed = 0.f;
@@ -338,6 +359,14 @@ void Graphic::IMGUIClass::SetObjectInfo(const std::string& title, UINT IMGUI_Win
 	ImGui::SameLine();
 	if (ImGui::SliderFloat3(u8"##6", value, -100.0f, 100.f))
 		object->SetScale(value[0], value[1], value[2]);
+
+	IsPress = ImGui::Button("reset");
+	if (IsPress)
+	{
+		object->SetPosition(origin_pos);
+		object->SetRotation(origin_rot);
+		object->SetScale(origin_scale);
+	}
 
 	ImGui::End();
 }

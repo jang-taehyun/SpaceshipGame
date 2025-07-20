@@ -25,6 +25,7 @@
 #ifdef _DEBUG
 #include "IMGUIClass.h"
 #include "CollisionClass.h"
+#include "InputClass.h"
 #endif // DEBUG
 
 #include "GraphicsClass.h"
@@ -43,7 +44,11 @@ Graphic::GraphicsClass::~GraphicsClass()
 	IsInitialize = false;
 }
 
-void Graphic::GraphicsClass::Frame(Scene::SceneManagerClass* SceneManager, bool IsLoad)
+void Graphic::GraphicsClass::Frame(Scene::SceneManagerClass* SceneManager, bool IsLoad
+#ifdef _DEBUG
+	, System::InputClass* input
+#endif // _DEBUG
+)
 {
 	bool IsRender = false;
 	UINT cnt = 0;
@@ -127,7 +132,11 @@ void Graphic::GraphicsClass::Frame(Scene::SceneManagerClass* SceneManager, bool 
 	m_ShaderManager->UpdateBuffer(m_D3D->GetDeviceContext(), BufferData);
 
 	// 렌더링 //
-	Render(SceneManager);
+	Render(SceneManager
+#ifdef _DEBUG
+		, input
+#endif // _DEBUG
+	);
 }
 
 void Graphic::GraphicsClass::Initialize(HWND hwnd, int ScreenWidth, int ScreenHeight)
@@ -177,7 +186,11 @@ void Graphic::GraphicsClass::Load(Scene::SceneManagerClass* SceneManager)
 	m_ShaderManager->Load(GetActiveWindow(), m_D3D->GetDevice(), m_ModelManager->GetNeedShaderMask());
 }
 
-void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager)
+void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager
+#ifdef _DEBUG
+	, System::InputClass* input
+#endif // _DEBUG
+)
 {
 	Model::IModelClass* model = nullptr;
 	Shader::IShaderClass* shader = nullptr;
@@ -257,7 +270,7 @@ void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager)
 	m_UIRender->EndRender(m_D3D.get());
 
 #ifdef _DEBUG
-	ImGuiRender(SceneManager);
+	ImGuiRender(SceneManager, input);
 #endif // DEBUG
 
 	// back buffer에 있는 내용을 화면에 출력 //
@@ -265,9 +278,9 @@ void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager)
 }
 
 #ifdef _DEBUG
-void Graphic::GraphicsClass::ImGuiRender(Scene::SceneManagerClass* SceneManager)
+void Graphic::GraphicsClass::ImGuiRender(Scene::SceneManagerClass* SceneManager, System::InputClass* input)
 {
-	m_IMGUI->Render(SceneManager, m_Light.get());
+	m_IMGUI->Render(SceneManager, m_Light.get(), input);
 }
 #endif // DEBUG
 

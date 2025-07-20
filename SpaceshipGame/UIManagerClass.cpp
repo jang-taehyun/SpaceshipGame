@@ -41,6 +41,14 @@ void UI::UIManagerClass::Release()
 	m_UITextureMask = 0;
 }
 
+void UI::UIManagerClass::Frame(const System::InputClass* input)
+{
+	std::vector<std::unique_ptr<IUIClass>>::iterator iter;
+
+	for (iter = m_UIList.begin(); iter != m_UIList.end(); ++iter)
+		iter->get()->Update(input);
+}
+
 UI::IUIClass* UI::UIManagerClass::GetUI(UINT idx) const
 {
 	assert(idx < m_UIList.size());

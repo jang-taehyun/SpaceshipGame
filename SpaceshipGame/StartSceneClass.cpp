@@ -31,10 +31,10 @@ Scene::StartSceneClass::StartSceneClass(SceneState next, Object::ObjectManagerCl
 	UIs->GetUI(UI_Idx)->SetColor(DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f));
 	UIs->GetUI(UI_Idx)->SetScale(DirectX::XMFLOAT2(0.25f, 0.25f));
 
-	UI_Idx = UIs->LoadUI(UI::ID::DEFAULT, Graphic::Texture::UITextureID::START_BUTTON);
+	UI_Idx = UIs->LoadUI(UI::ID::BUTTON, Graphic::Texture::UITextureID::START_BUTTON);
 	UIs->GetUI(UI_Idx)->SetColor(DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f));
-	UIs->GetUI(UI_Idx)->SetPosition(DirectX::XMFLOAT2(0.f, 0.f));
-	UIs->GetUI(UI_Idx)->SetScale(DirectX::XMFLOAT2(0.3f, 0.3f));
+	UIs->GetUI(UI_Idx)->SetPosition(DirectX::XMFLOAT2(50.f, 60.f));
+	UIs->GetUI(UI_Idx)->SetScale(DirectX::XMFLOAT2(100.f, 150.f));
 	
 	textIdx = texts->Load(Text::ID::DEFAULT, _T("시작 화면"), Graphic::Font::ID::DEFAULT);
 	texts->GetTextObject(textIdx)->SetColor(DirectX::XMFLOAT4(0.f, 1.f, 0.f, 1.f));
@@ -75,7 +75,8 @@ void Scene::StartSceneClass::Frame(const System::InputClass* input, Object::Obje
 	Object::CameraClass* cam = nullptr;
 	long x = 0, y = 0;
 
-	if (input->IsSpacebarPressed())
+	if (input->IsSpacebarPressed() ||
+		UIs->GetUI(1)->GetUIState() == UI::State::ONCLICKED)
 	{
 		SetSceneEnded();
 		return;

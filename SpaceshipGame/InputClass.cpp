@@ -22,10 +22,8 @@ System::InputClass::~InputClass()
 HRESULT System::InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int ScreenWidth, int ScreenHeight)
 {
 	HRESULT result = S_OK;
-
-	// 초기 마우스 위치 설정 //
-	m_ScreenHeight = ScreenHeight;
-	m_ScreenWidth = ScreenWidth;
+	RECT OriginRect, ClipRect;
+	POINT LT, RB;
 
 	// Direct input interface 초기화 //
 	result = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)m_DirectInput.GetAddressOf(), NULL);
@@ -132,15 +130,9 @@ HRESULT System::InputClass::ReadMouse()
 
 void System::InputClass::ProcessInput()
 {
-	m_MouseX += m_MouseState.lX;
-	m_MouseY += m_MouseState.lY;
+	// 화면 상의 마우스 좌표 가져오기
+	GetCursorPos(&m_MousePos);
 
-	if (m_MouseX < 0)
-	{
-		m_MouseX = 0;
-	}
-	if (m_MouseY < 0)
-	{
-		m_MouseY = 0;
-	}
+	// 가져온 마우스 좌표를 윈도우 영역 기준으로 변환
+	ScreenToClient(GetActiveWindow(), &m_MousePos);
 }

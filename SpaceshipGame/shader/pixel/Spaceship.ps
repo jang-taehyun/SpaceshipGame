@@ -69,6 +69,5 @@ float4 SpaceshipPixelShader(PixelInputType input) : SV_TARGET
 	// 최종 pixel의 색상에 specular 적용
 	Color = saturate(Color);
 
-	// return float4(1, 0, 0, 1);
 	return Color;
 }

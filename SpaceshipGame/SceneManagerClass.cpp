@@ -55,6 +55,7 @@ bool Scene::SceneManagerClass::Frame(const System::InputClass* input, float fram
 	}
 	
 	m_SoundManager->Frame();
+	m_UIManager->Frame(input);
 	m_Scene->Frame(input, m_ObjectManager.get(), m_TextManager.get(), m_UIManager.get(), m_SoundManager.get(), frame_time);
 	return false;
 }

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "UIClass.h"
+#include "ButtonClass.h"
 #include "UIFactoryClass.h"
 
 bool UI::UIFactoryClass::IsInitialize = false;
@@ -11,6 +12,7 @@ UI::UIFactoryClass::UIFactoryClass()
 
 	m_Creator.insert(std::make_pair(ID::BACKGROUND, CreateDefault));
 	m_Creator.insert(std::make_pair(ID::DEFAULT, CreateDefault));
+	m_Creator.insert(std::make_pair(ID::BUTTON, CreateButton));
 }
 
 UI::UIFactoryClass::~UIFactoryClass()
@@ -31,6 +33,14 @@ std::unique_ptr<UI::IUIClass> UI::UIFactoryClass::Load(ID UIID, Graphic::Texture
 std::unique_ptr<UI::IUIClass> UI::CreateDefault(ID UIID, Graphic::Texture::UITextureID TextureID)
 {
 	std::unique_ptr<UI::IUIClass> ui = std::make_unique<UIClass>(UIID, TextureID);
+	assert(ui);
+
+	return ui;
+}
+
+std::unique_ptr<UI::IUIClass> UI::CreateButton(ID UIID, Graphic::Texture::UITextureID TextureID)
+{
+	std::unique_ptr<UI::IUIClass> ui = std::make_unique<ButtonClass>(UIID, TextureID);
 	assert(ui);
 
 	return ui;

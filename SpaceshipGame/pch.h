@@ -10,6 +10,7 @@
 #pragma comment(lib, "winmm.lib")
 
 #include "targetver.h"
+#include "Resource.h"
 
 // 외부 MFC 오버헤더 제외 //
 #define WIN32_LEAN_AND_MEAN

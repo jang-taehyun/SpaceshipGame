@@ -93,16 +93,23 @@ void Graphic::Texture::UIRenderClass::RenderTexture(ID3D11ShaderResourceView* te
 {
 	// 색상 데이터(XMFLOAT4)을 XMVECTOR로 변환 //
 	DirectX::XMVECTOR vColor = DirectX::XMLoadFloat4(&color);
+	
+	RECT rect = {
+		pos.x - scale.x / 2,
+		pos.y - scale.y / 2,
+		pos.x + scale.x / 2,
+		pos.y + scale.y / 2
+	};
 
 	// 렌더링 //
 	m_Renderer->Draw(
 		texture,
 		pos,
-		nullptr,
+		&rect,
 		vColor,
 		rot,
-		origin,
-		scale
+		origin
+		// scale
 	);
 }
 

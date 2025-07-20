@@ -27,6 +27,11 @@ Scene::ModeChooseSceneClass::ModeChooseSceneClass(SceneState next, Object::Objec
 	assert(m_Camera);
 	m_Camera->SetPosition(DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f));
 
+	UI_Idx = UIs->LoadUI(UI::ID::BUTTON, Graphic::Texture::UITextureID::START_BUTTON);
+	UIs->GetUI(UI_Idx)->SetColor(DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f));
+	UIs->GetUI(UI_Idx)->SetPosition(DirectX::XMFLOAT2(50.f, 30.f));
+	UIs->GetUI(UI_Idx)->SetScale(DirectX::XMFLOAT2(6.f, 4.f));
+
 	objectIdx = objects->Load(Object::ID::ACTOR, Graphic::Model::ID::DEFAULT_SPACESHIP);
 	objects->SetPlayerIdx(objectIdx);
 	objects->GetGameObject(objectIdx)->SetPosition(DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f));
@@ -38,6 +43,7 @@ Scene::ModeChooseSceneClass::ModeChooseSceneClass(SceneState next, Object::Objec
 	SoundMask |= (1 << static_cast<UINT>(Sound::ID::BACKGROUND));
 	SoundMask |= (1 << static_cast<UINT>(Sound::ID::EFFECT));
 	sounds->Load(SoundMask);
+	sounds->SetLoop(Sound::ID::BACKGROUND, true);
 	sounds->Play(Sound::ID::BACKGROUND);
 }
 
@@ -71,7 +77,8 @@ void Scene::ModeChooseSceneClass::Frame(const System::InputClass* input, Object:
 	Object::CameraClass* cam = nullptr;
 	long x = 0, y = 0;
 
-	if (input->IsSpacebarPressed())
+	if (input->IsSpacebarPressed() ||
+		UIs->GetUI(0)->GetUIState() == UI::State::ONCLICKED)
 	{
 		SetSceneEnded();
 		return;

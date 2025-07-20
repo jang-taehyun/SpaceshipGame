@@ -71,7 +71,7 @@ namespace UI
 
 	enum class State
 	{
-		NONE, ACTIVE, DEACTIVE, HOVER, ONCLICKED, DISAPPEAR, 
+		NONE, ACTIVE, DEACTIVE, HOVER, ONPRESSED, DISAPPEAR, ONCLICKED,
 	};
 }
 
@@ -119,7 +119,7 @@ namespace Graphic
 		// instance buffer type
 		struct InstanceBufferType
 		{
-			DirectX::XMFLOAT4X4 world = {};;
+			DirectX::XMFLOAT4X4 world = {};
 
 #ifdef _DEBUG
 			DirectX::XMFLOAT4 color = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);

@@ -33,10 +33,11 @@ namespace System
 		inline bool IsSpacebarPressed() const { return m_KeyboardState[DIK_SPACE] & 0x80; }
 
 		inline bool IsMouseCenterBottunPressed() const { return m_MouseState.rgbButtons[MOUSEBUTTON::MOUSE_CENTER] & 0x80; }
+		inline bool IsMouseLeftBottunPressed() const { return m_MouseState.rgbButtons[MOUSEBUTTON::MOUSE_LEFT] & 0x80; }
 
 		// Setter //
 
-		inline void GetMouseLocation(int& MouseX, int& MouseY) const { MouseX = m_MouseX; MouseY = m_MouseY; }
+		inline void GetMouseLocation(int& MouseX, int& MouseY) const { MouseX = m_MousePos.x; MouseY = m_MousePos.y; }
 		inline void GetMouseMoveDelta(long& MouseX, long& MouseY) const { MouseX = m_MouseState.lX; MouseY = m_MouseState.lY; }
 
 	private:
@@ -57,10 +58,7 @@ namespace System
 		unsigned char m_KeyboardState[256] = { 0, };
 		DIMOUSESTATE m_MouseState = { 0, };
 
-		int m_ScreenWidth = 0;
-		int m_ScreenHeight = 0;
-		int m_MouseX = 0;
-		int m_MouseY = 0;
+		POINT m_MousePos = {};
 
 	public:
 		InputClass(const InputClass& other) = delete;

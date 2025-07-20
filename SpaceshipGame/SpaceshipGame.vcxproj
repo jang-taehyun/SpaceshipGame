@@ -155,6 +155,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ActorClass.h" />
+    <ClInclude Include="ButtonClass.h" />
     <ClInclude Include="Cube_ShaderClass.h" />
     <ClInclude Include="GameObjectClass.h" />
     <ClInclude Include="ModeChooseSceneClass.h" />
@@ -219,6 +220,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ActorClass.cpp" />
+    <ClCompile Include="ButtonClass.cpp" />
     <ClCompile Include="config.cpp" />
     <ClCompile Include="Cube_ShaderClass.cpp" />
     <ClCompile Include="GameObjectClass.cpp" />

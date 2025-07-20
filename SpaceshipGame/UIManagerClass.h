@@ -18,11 +18,11 @@ namespace UI
 		UINT LoadUI(ID UIID, Graphic::Texture::UITextureID TextureID);
 		void Release();
 
-		inline UINT GetUITextureMask() const { return m_UITextureMask; }
+		void Frame(const System::InputClass* input);
 
 		IUIClass* GetUI(UINT idx) const;
-
 		inline UINT GetUICount() const { return static_cast<UINT>(m_UIList.size()); }
+		inline UINT GetUITextureMask() const { return m_UITextureMask; }
 
 	private:
 		static bool IsInitialize;

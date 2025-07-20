@@ -94,7 +94,11 @@ void System::SystemClass::Frame()
 	m_Input->Frame();
 
 	IsLoad = m_SceneManager->Frame(m_Input.get(), m_Timer->GetTime());
-	m_Graphics->Frame(m_SceneManager.get(), IsLoad);
+	m_Graphics->Frame(m_SceneManager.get(), IsLoad
+#ifdef _DEBUG
+		, m_Input.get()
+#endif // _DEBUG
+	);
 }
 
 void System::SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)
@@ -116,12 +120,12 @@ void System::SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = m_hinstance;
-	wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);
-	wc.hIconSm = wc.hIcon;
-	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+	wc.hIcon = LoadIcon(m_hinstance, MAKEINTRESOURCE(IDI_SPACESHIPGAME));
+	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wc.lpszMenuName = NULL;
 	wc.lpszClassName = m_applicationName;
+	wc.hIconSm = LoadIcon(wc.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 	wc.cbSize = sizeof(WNDCLASSEX);
 
 	RegisterClassEx(&wc);
@@ -150,7 +154,7 @@ void System::SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)
 	else
 	{
 		// 윈도우 모드 //
-		// 모니터 화면 해상도를 800*600으로 지정
+		// 모니터 화면 해상도를 1200*800으로 지정
 		// 윈도우의 위치 : 정가운데
 		ScreenWidth = WIDTH;
 		ScreenHeight = HEIGHT;
@@ -164,7 +168,7 @@ void System::SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)
 
 	// 윈도우 생성 및 handle 가지오기
 	m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
-		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
+		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP | WS_OVERLAPPEDWINDOW,
 		PosX, PosY, width, height, NULL, NULL, m_hinstance, NULL);
 
 	// 윈도우를 화면에 표시하고 focus를 지정
