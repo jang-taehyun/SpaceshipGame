@@ -72,20 +72,21 @@ void Graphic::Texture::UIRenderClass::BeginRender(const D3DClass* d3d)
 	m_Renderer->Begin();
 }
 
-void Graphic::Texture::UIRenderClass::RenderBackground(ID3D11ShaderResourceView* texture, DirectX::XMFLOAT4 color, DirectX::XMFLOAT2 scale)
+void Graphic::Texture::UIRenderClass::RenderBackground(ID3D11ShaderResourceView* texture, DirectX::XMFLOAT4 color)
 {
 	// 색상 데이터(XMFLOAT4)을 XMVECTOR로 변환 //
 	DirectX::XMVECTOR vColor = DirectX::XMLoadFloat4(&color);
 
+	// texture와 UI의 위치 조정 //
+	RECT rect;
+	GetClientRect(GetActiveWindow(), &rect);
+
 	// 렌더링 //
 	m_Renderer->Draw(
 		texture,
-		DirectX::XMFLOAT2(0.f, 0.f),
+		rect,
 		nullptr,
-		vColor,
-		0.f,
-		DirectX::XMFLOAT2(0.f, 0.f),
-		(System::FULL_SCREEN ? DirectX::XMFLOAT2(1.f, 1.f) : scale)
+		vColor
 	);
 }
 

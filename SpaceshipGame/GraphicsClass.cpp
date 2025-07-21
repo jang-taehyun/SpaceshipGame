@@ -248,7 +248,7 @@ void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager
 			}
 			// background ·»´õ¸µ
 			else
-				m_UIRender->RenderBackground(m_UITextureManager->GetTexture(ui->GetUITextureID()), ui->GetColor(), ui->GetScale());
+				m_UIRender->RenderBackground(m_UITextureManager->GetTexture(ui->GetUITextureID()), ui->GetColor());
 		}
 	}
 
