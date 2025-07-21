@@ -16,16 +16,16 @@ float System::MOUSE_SENSITIVITY = 0.0015f;
 UINT Sound::SoundIDCount = 3;
 std::map<Sound::ID, const std::wstring> Sound::SoundFileList =
 {
-	{ Sound::ID::BACKGROUND, _T("./data/dedede.wav") },
-	{ Sound::ID::EFFECT, _T("./data/sound01.wav") }
+	{ Sound::ID::BACKGROUND, _T("./resource/dedede.wav") },
+	{ Sound::ID::EFFECT, _T("./resource/sound01.wav") }
 };
 
 // Model 관련 전역 변수 초기화 //
 UINT Graphic::Model::ModelIDCount = 3;
 std::map<Graphic::Model::ID, const std::string> Graphic::Model::ModelFileList =
 {
-	{ Graphic::Model::ID::COLLISION, "./data/uploads_files_3862208_Cube.obj" },
-	{ Graphic::Model::ID::DEFAULT_SPACESHIP, "./data/E-45-Aircraft/E 45 Aircraft_obj.obj" },
+	{ Graphic::Model::ID::COLLISION, "./resource/uploads_files_3862208_Cube.obj" },
+	{ Graphic::Model::ID::DEFAULT_SPACESHIP, "./resource/E-45-Aircraft/E 45 Aircraft_obj.obj" },
 };
 std::map<Graphic::Model::ID, const std::wstring> Graphic::Model::ModelTexturePathList =
 {

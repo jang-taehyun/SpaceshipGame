@@ -22,8 +22,6 @@ System::InputClass::~InputClass()
 HRESULT System::InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int ScreenWidth, int ScreenHeight)
 {
 	HRESULT result = S_OK;
-	RECT OriginRect, ClipRect;
-	POINT LT, RB;
 
 	// Direct input interface ÃÊ±âÈ­ //
 	result = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)m_DirectInput.GetAddressOf(), NULL);
@@ -75,7 +73,7 @@ void System::InputClass::Shutdown()
 		m_Keyboard->Unacquire();
 }
 
-HRESULT System::InputClass::Frame()
+void System::InputClass::Frame()
 {
 	HRESULT result = S_OK;
 
@@ -86,8 +84,6 @@ HRESULT System::InputClass::Frame()
 	result = ReadMouse();
 
 	ProcessInput();
-
-	return result;
 }
 
 HRESULT System::InputClass::ReadKeyboard()
