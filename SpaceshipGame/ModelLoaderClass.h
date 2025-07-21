@@ -1,6 +1,10 @@
 #pragma once
 
+#ifdef _DEBUG
 #pragma comment(lib, "assimp-vc143-mtd.lib")
+#else
+#pragma comment(lib, "assimp-vc143-mt.lib")
+#endif
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>

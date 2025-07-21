@@ -95,10 +95,10 @@ void Graphic::Texture::UIRenderClass::RenderTexture(ID3D11ShaderResourceView* te
 	DirectX::XMVECTOR vColor = DirectX::XMLoadFloat4(&color);
 	
 	RECT rect = {
-		pos.x - scale.x / 2,
-		pos.y - scale.y / 2,
-		pos.x + scale.x / 2,
-		pos.y + scale.y / 2
+		static_cast<LONG>(pos.x - scale.x / 2),
+		static_cast<LONG>(pos.y - scale.y / 2),
+		static_cast<LONG>(pos.x + scale.x / 2),
+		static_cast<LONG>(pos.y + scale.y / 2)
 	};
 
 	// ·»´õ¸µ //
@@ -109,7 +109,6 @@ void Graphic::Texture::UIRenderClass::RenderTexture(ID3D11ShaderResourceView* te
 		vColor,
 		rot,
 		origin
-		// scale
 	);
 }
 

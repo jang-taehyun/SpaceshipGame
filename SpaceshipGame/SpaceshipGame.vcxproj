@@ -86,6 +86,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)assimp\build\include;$(SolutionDir)assimp\include;$(SolutionDir)DirectXTK\Inc;$(SolutionDir)imgui;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)assimp\build\lib\Release;$(SolutionDir)assimp\build\bin\Release;$(SolutionDir)DirectXTK\Bin\Desktop_2022\x64\Release;$(SolutionDir)IMGUI_Library\ImGui\lib\x64\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

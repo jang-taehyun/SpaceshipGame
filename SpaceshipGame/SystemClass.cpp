@@ -161,7 +161,6 @@ void System::SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)
 		width = ScreenWidth;
 		height = ScreenHeight;
 
-		// TODO: mouse cursor 위치 확인 필요
 		PosX = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
 		PosY = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
 	}
@@ -198,13 +197,17 @@ void System::SystemClass::ShutdownWindows()
 	ApplicationHandle = NULL;
 }
 
-// IMGUI WndProcHandler
+#ifdef _DEBUG
+// ImGui WndProcHandler
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
+#endif
 
 static LRESULT CALLBACK System::WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
+#ifdef _DEBUG
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, umessage, wparam, lparam))
 		return 0;
+#endif
 
 	switch (umessage)
 	{

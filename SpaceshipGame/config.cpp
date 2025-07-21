@@ -29,7 +29,7 @@ std::map<Graphic::Model::ID, const std::string> Graphic::Model::ModelFileList =
 };
 std::map<Graphic::Model::ID, const std::wstring> Graphic::Model::ModelTexturePathList =
 {
-	{ Graphic::Model::ID::DEFAULT_SPACESHIP, _T("./data/E-45-Aircraft/") },
+	{ Graphic::Model::ID::DEFAULT_SPACESHIP, _T("./resource/E-45-Aircraft/") },
 };
 
 // UI texture 관련 전역 변수 초기화 //
