@@ -6,14 +6,6 @@ namespace Graphic
 {
 	namespace Loader
 	{
-		// PTN vertex type //
-		// struct PTN_VertexType
-		// {
-		// 	DirectX::XMFLOAT3 position;
-		// 	DirectX::XMFLOAT2 texture;
-		// 	DirectX::XMFLOAT3 normal;
-		// };
-
 		class PTN_ModelLoaderClass : public ModelLoaderClass<Graphic::Model::PTN_VertexType>
 		{
 		public:

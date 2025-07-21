@@ -8,11 +8,14 @@ bool Graphic::Loader::ModelFactoryClass::IsInitialize = false;
 
 Graphic::Loader::ModelFactoryClass::ModelFactoryClass()
 {
+	assert(!IsInitialize);
+	IsInitialize = true;
+
+#ifdef _DEBUG
 	m_Creator.insert(std::make_pair(Model::ID::COLLISION, LoadCollision));
+#endif
 
 	m_Creator.insert(std::make_pair(Model::ID::DEFAULT_SPACESHIP, LoadDefaultSpaceship));
-
-	IsInitialize = true;
 }
 
 Graphic::Loader::ModelFactoryClass::~ModelFactoryClass()
@@ -45,6 +48,7 @@ std::unique_ptr<Graphic::Model::IModelClass> Graphic::Loader::LoadDefaultSpacesh
 	return model;
 }
 
+#ifdef _DEBUG
 std::unique_ptr<Graphic::Model::IModelClass> Graphic::Loader::LoadCollision(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext)
 {
 	std::unique_ptr<Model::IModelClass> model = nullptr;
@@ -59,3 +63,4 @@ std::unique_ptr<Graphic::Model::IModelClass> Graphic::Loader::LoadCollision(HWND
 
 	return model;
 }
+#endif

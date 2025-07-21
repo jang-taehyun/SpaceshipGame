@@ -10,7 +10,7 @@ std::vector<Graphic::Model::PTN_VertexType> Graphic::Loader::PTN_ModelLoaderClas
 	Model::PTN_VertexType vertex = {};
 	std::vector<Model::PTN_VertexType> vertices;					// mesh의 vertex 데이터들
 
-	for (unsigned int j = 0; j < mesh->mNumVertices; ++j)
+	for (UINT j = 0; j < mesh->mNumVertices; ++j)
 	{
 		vertex.position = DirectX::XMFLOAT4(mesh->mVertices[j].x, mesh->mVertices[j].y, mesh->mVertices[j].z, 1.f);
 		vertex.texture = DirectX::XMFLOAT2(mesh->mTextureCoords[0][j].x, mesh->mTextureCoords[0][j].y);
