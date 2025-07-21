@@ -2,7 +2,7 @@
 #include "config.h"
 
 // System 관련 전역 변수 초기화 //
-UINT System::WIDTH = 1200;
+UINT System::WIDTH = 1280;
 UINT System::HEIGHT = 800;
 
 bool System::FULL_SCREEN = false;
@@ -37,7 +37,7 @@ UINT Graphic::Texture::UITextureIDCount = 3;
 std::map<Graphic::Texture::UITextureID, const std::wstring> Graphic::Texture::UITextureFileList =
 {
 	{ Graphic::Texture::UITextureID::START_BACKGROUND, _T("./resource/StartBackground.jpg") },
-	{ Graphic::Texture::UITextureID::START_BUTTON, _T("./resource/button.png") }
+	{ Graphic::Texture::UITextureID::START_BUTTON, _T("./resource/button-icon-png-21058.png") }
 };
 
 // Shader 관련 전역 변수 초기화 //

@@ -94,6 +94,7 @@ void Graphic::Texture::UIRenderClass::RenderTexture(ID3D11ShaderResourceView* te
 	// 색상 데이터(XMFLOAT4)을 XMVECTOR로 변환 //
 	DirectX::XMVECTOR vColor = DirectX::XMLoadFloat4(&color);
 	
+	// texture와 UI의 위치 조정 //
 	RECT rect = {
 		static_cast<LONG>(pos.x - scale.x / 2),
 		static_cast<LONG>(pos.y - scale.y / 2),
@@ -104,8 +105,8 @@ void Graphic::Texture::UIRenderClass::RenderTexture(ID3D11ShaderResourceView* te
 	// 렌더링 //
 	m_Renderer->Draw(
 		texture,
-		pos,
-		&rect,
+		rect,
+		nullptr,
 		vColor,
 		rot,
 		origin
@@ -115,19 +116,24 @@ void Graphic::Texture::UIRenderClass::RenderTexture(ID3D11ShaderResourceView* te
 void Graphic::Texture::UIRenderClass::RenderText(const std::wstring& text, Font::ID fontID, DirectX::XMFLOAT2 pos, DirectX::XMFLOAT4 color, float rot, DirectX::XMFLOAT2 origin, DirectX::XMFLOAT2 scale)
 {
 	std::map<Font::ID, std::unique_ptr<DirectX::SpriteFont>>::iterator iter;
+	DirectX::XMVECTOR size;
+	DirectX::XMFLOAT2 TextOrigin;
 
 	// 색상 데이터(XMFLOAT4)을 XMVECTOR로 변환 //
 	DirectX::XMVECTOR vColor = DirectX::XMLoadFloat4(&color);
 
-	// text의 위치 조정 //
-	DirectX::SimpleMath::Vector2 TextPos = pos;
-	TextPos.x /= 2.f;
-	TextPos.y /= 2.f;
-
-	// font list에서 font를 찾아서 렌더링
+	// font list에서 font를 찾기
 	iter = m_FontList.find(fontID);
 	assert(m_FontList.end() != iter);
-	iter->second->DrawString(m_Renderer.get(), text.c_str(), TextPos, vColor, rot, origin, scale);
+
+	// text의 위치 조정 //
+	size = iter->second->MeasureString(text.c_str());
+	DirectX::XMStoreFloat2(&TextOrigin, size);
+	TextOrigin.x /= 2;
+	TextOrigin.y /= 2;
+
+	// 렌더링
+	iter->second->DrawString(m_Renderer.get(), text.c_str(), pos, vColor, rot, TextOrigin, scale);
 }
 
 void Graphic::Texture::UIRenderClass::EndRender(const D3DClass* d3d)

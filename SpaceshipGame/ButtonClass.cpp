@@ -51,12 +51,13 @@ bool UI::ButtonClass::IsInUI(int x, int y) const
 {
 	DirectX::XMFLOAT2 pos = GetPosition();
 	DirectX::XMFLOAT2 scale = GetScale();
-	DirectX::SimpleMath::Rectangle rect(
-		static_cast<long>(pos.x),
-		static_cast<long>(pos.y),
-		static_cast<long>(scale.x),
-		static_cast<long>(scale.y)
-	);
+	RECT rect =
+	{
+		static_cast<long>(pos.x - scale.x / 2),
+		static_cast<long>(pos.y - scale.y / 2),
+		static_cast<long>(pos.x + scale.x / 2),
+		static_cast<long>(pos.y + scale.y / 2)
+	};
 
-	return rect.Contains(x, y);
+	return DirectX::SimpleMath::Rectangle(rect).Contains(x, y);
 }
