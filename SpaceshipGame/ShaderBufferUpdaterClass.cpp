@@ -43,6 +43,9 @@ void Graphic::Shader::UpdateDefaultSpaceshipShaderBuffer(ID3D11DeviceContext* De
 
 void Graphic::Shader::UpdateCubeShaderBuffer(ID3D11DeviceContext* DeviceContext, const BuffersData& data, IShaderClass* shader)
 {
-	None_ShaderBuffer buffers;
+	M_ShaderBuffer buffers;
+
+	buffers.transform = data.transform;
+
 	static_cast<Cube_ShaderClass*>(shader)->UpdateShaderBuffers(DeviceContext, buffers);
 }

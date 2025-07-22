@@ -191,8 +191,11 @@ namespace Graphic
 			CameraBufferType camera = {};
 		};
 
-		// cube 전용(buffer 없음)
-		struct None_ShaderBuffer {};
+		// cube 전용(matrix만 존재)
+		struct M_ShaderBuffer
+		{
+			MatrixBufferType transform = {};
+		};
 
 		// matrix, light, camera
 		struct MLC_ShaderBuffers

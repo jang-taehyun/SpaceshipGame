@@ -296,22 +296,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
-    <None Include="shader\pixel\alphamap.ps" />
     <None Include="shader\pixel\color.ps" />
-    <None Include="shader\pixel\font.ps" />
-    <None Include="shader\pixel\light.ps" />
-    <None Include="shader\pixel\lightmap.ps" />
-    <None Include="shader\pixel\multitexture.ps" />
     <None Include="shader\pixel\Spaceship.ps" />
-    <None Include="shader\pixel\texture.ps" />
-    <None Include="shader\vertex\alphamap.vs" />
     <None Include="shader\vertex\color.vs" />
-    <None Include="shader\vertex\font.vs" />
-    <None Include="shader\vertex\light.vs" />
-    <None Include="shader\vertex\lightmap.vs" />
-    <None Include="shader\vertex\multitexture.vs" />
     <None Include="shader\vertex\Spaceship.vs" />
-    <None Include="shader\vertex\texture.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

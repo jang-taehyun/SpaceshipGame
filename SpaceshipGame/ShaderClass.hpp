@@ -109,12 +109,27 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::InitializeShaderInputLayout
 	Microsoft::WRL::ComPtr<ID3D10Blob> ErrorMessage = nullptr;				// shader compile 에러메세지
 	Microsoft::WRL::ComPtr<ID3D10Blob> VertexShaderBuffer = nullptr;		// vertex shader buffer
 	Microsoft::WRL::ComPtr<ID3D10Blob> PixelShaderBuffer = nullptr;			// pixel shader buffer
+	UINT flag = D3D10_SHADER_ENABLE_STRICTNESS;
+
+#ifdef _DEBUG
+	D3D_SHADER_MACRO macros[2] =
+	{
+		{ "_DEBUG", "1" },
+		{ nullptr, nullptr }
+	};
+#endif // _DEBUG
 
 	// shader 정보 확인 //
 	assert(Device && hwnd && info.vsFileName != _T("") && info.psFileName != _T("") && info.vsEntryPoint != "" && info.psEntryPoint != "");
 
 	// vertex shader code 컴파일 //
-	result = D3DCompileFromFile(info.vsFileName.c_str(), NULL, NULL, info.vsEntryPoint.c_str(), "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, VertexShaderBuffer.GetAddressOf(), ErrorMessage.GetAddressOf());
+	result = D3DCompileFromFile(info.vsFileName.c_str(),
+#ifdef _DEBUG
+		macros,
+#else
+		NULL,
+#endif
+		NULL, info.vsEntryPoint.c_str(), "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, VertexShaderBuffer.GetAddressOf(), ErrorMessage.GetAddressOf());
 	if (FAILED(result))
 	{
 		assert(ErrorMessage);
@@ -124,7 +139,13 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::InitializeShaderInputLayout
 	}
 
 	// pixel shader code 컴파일 //
-	result = D3DCompileFromFile(info.psFileName.c_str(), NULL, NULL, info.psEntryPoint.c_str(), "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, PixelShaderBuffer.GetAddressOf(), ErrorMessage.GetAddressOf());
+	result = D3DCompileFromFile(info.psFileName.c_str(),
+#ifdef _DEBUG
+		macros,
+#else
+		NULL,
+#endif
+		NULL, info.psEntryPoint.c_str(), "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, PixelShaderBuffer.GetAddressOf(), ErrorMessage.GetAddressOf());
 	if (FAILED(result))
 	{
 		assert(ErrorMessage);
@@ -154,35 +175,6 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::CreateInputLayout(ID3D11Dev
 	std::vector<D3D11_INPUT_ELEMENT_DESC> LayoutDesc;
 	D3D11_INPUT_ELEMENT_DESC desc = {};
 	std::string semantic;
-
-#ifdef _DEBUG
-	Microsoft::WRL::ComPtr<ID3D11ShaderReflection> reflector;
-	D3DReflect(VertexShaderBuffer->GetBufferPointer(), VertexShaderBuffer->GetBufferSize(), IID_ID3D11ShaderReflection, reinterpret_cast<void**>(reflector.GetAddressOf()));
-
-	D3D11_SHADER_DESC shaderDesc;
-	reflector->GetDesc(&shaderDesc);
-	for (UINT i = 0; i < shaderDesc.InputParameters; ++i)
-	{
-		D3D11_SIGNATURE_PARAMETER_DESC paramDesc;
-		reflector->GetInputParameterDesc(i, &paramDesc);
-
-		OutputDebugStringA("SemanticName:");
-		OutputDebugStringA(paramDesc.SemanticName);
-
-		OutputDebugStringA("\nSemanticIndex:");
-		OutputDebugStringA(std::to_string(paramDesc.SemanticIndex).c_str());
-
-		OutputDebugStringA("\nRegister:");
-		OutputDebugStringA(std::to_string(paramDesc.Register).c_str());
-
-		OutputDebugStringA("\nMask: %d");
-		OutputDebugStringA(std::to_string(paramDesc.Mask).c_str());
-
-		OutputDebugStringA("\nSystemValueType:");
-		OutputDebugStringA(std::to_string(paramDesc.SystemValueType).c_str());
-		OutputDebugStringA("\n---------------------------\n");
-	}
-#endif
 
 	// vertex input layout 설정
 	// vertex input layout 설정는 ModelClass의 VertexType 구조, vertex shader 내부의 VertexInputType 모두 일치해야 함
@@ -230,6 +222,12 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::CreateInputLayout(ID3D11Dev
 	desc.SemanticName = "INSTANCE_WORLD_COLUMN";
 	desc.SemanticIndex = 3;
 	LayoutDesc.push_back(desc);
+
+#ifdef _DEBUG
+	desc.SemanticName = "INSTANCE_WORLD_COLUMN";
+	desc.SemanticIndex = 4;
+	LayoutDesc.push_back(desc);
+#endif // DEBUG
 
 	// input layout 생성
 	result = Device->CreateInputLayout(LayoutDesc.data(), static_cast<UINT>(LayoutDesc.size()), VertexShaderBuffer->GetBufferPointer(), VertexShaderBuffer->GetBufferSize(), m_Layout.GetAddressOf());

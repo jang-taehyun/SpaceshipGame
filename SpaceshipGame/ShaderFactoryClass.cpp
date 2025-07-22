@@ -73,8 +73,6 @@ std::unique_ptr<Graphic::Shader::IShaderClass> Graphic::Loader::CreateCubeShader
 	std::vector<std::string> semantics =
 	{
 		"POSITION",
-		"TEXCOORD",
-		"NORMAL",
 	};
 
 	// instance »ý¼º

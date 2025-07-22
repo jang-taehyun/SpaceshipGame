@@ -612,46 +612,10 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader\pixel\alphamap.ps">
-      <Filter>Shader\1. ShaderCode\PixelShader</Filter>
-    </None>
     <None Include="shader\pixel\color.ps">
       <Filter>Shader\1. ShaderCode\PixelShader</Filter>
     </None>
-    <None Include="shader\pixel\font.ps">
-      <Filter>Shader\1. ShaderCode\PixelShader</Filter>
-    </None>
-    <None Include="shader\pixel\light.ps">
-      <Filter>Shader\1. ShaderCode\PixelShader</Filter>
-    </None>
-    <None Include="shader\pixel\lightmap.ps">
-      <Filter>Shader\1. ShaderCode\PixelShader</Filter>
-    </None>
-    <None Include="shader\pixel\multitexture.ps">
-      <Filter>Shader\1. ShaderCode\PixelShader</Filter>
-    </None>
-    <None Include="shader\pixel\texture.ps">
-      <Filter>Shader\1. ShaderCode\PixelShader</Filter>
-    </None>
-    <None Include="shader\vertex\alphamap.vs">
-      <Filter>Shader\1. ShaderCode\VertexShader</Filter>
-    </None>
     <None Include="shader\vertex\color.vs">
-      <Filter>Shader\1. ShaderCode\VertexShader</Filter>
-    </None>
-    <None Include="shader\vertex\font.vs">
-      <Filter>Shader\1. ShaderCode\VertexShader</Filter>
-    </None>
-    <None Include="shader\vertex\light.vs">
-      <Filter>Shader\1. ShaderCode\VertexShader</Filter>
-    </None>
-    <None Include="shader\vertex\lightmap.vs">
-      <Filter>Shader\1. ShaderCode\VertexShader</Filter>
-    </None>
-    <None Include="shader\vertex\multitexture.vs">
-      <Filter>Shader\1. ShaderCode\VertexShader</Filter>
-    </None>
-    <None Include="shader\vertex\texture.vs">
       <Filter>Shader\1. ShaderCode\VertexShader</Filter>
     </None>
     <None Include="shader\pixel\Spaceship.ps">
