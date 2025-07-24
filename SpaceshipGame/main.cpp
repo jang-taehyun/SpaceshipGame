@@ -10,17 +10,21 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 {
 	// 메모리 누수 감지 활성화
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	// _CrtSetBreakAlloc(393498);
+	// _CrtSetBreakAlloc(490);
 
 	{
-		System::SystemClass system;
-		system.Run();
+		std::unique_ptr<System::SystemClass> system = std::make_unique<System::SystemClass>();
+		assert(system);
+
+		system->Run();
 
 		Sound::SoundFileList.clear();
 		Graphic::Model::ModelFileList.clear();
 		Graphic::Model::ModelTexturePathList.clear();
 		Graphic::Texture::UITextureFileList.clear();
 		Graphic::Font::FontFileList.clear();
+
+		system.reset();
 	}
 
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);

@@ -12,6 +12,10 @@ UI::ButtonNoneStateClass::ButtonNoneStateClass(ButtonClass* caller)
 	scale.x /= 1.5f;
 	scale.y /= 1.5f;
 	caller->SetScale(scale);
+
+#ifdef _DEBUG
+	OutputDebugStringA("NONE\n");
+#endif // _DEBUG
 }
 
 std::unique_ptr<UI::IButtonStateClass> UI::ButtonNoneStateClass::Update(ButtonClass* caller, const System::InputClass* input, bool IsInCursor)

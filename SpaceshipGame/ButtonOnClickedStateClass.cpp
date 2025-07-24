@@ -10,6 +10,10 @@ UI::ButtonOnClickedStateClass::ButtonOnClickedStateClass(ButtonClass* caller)
 	scale.x /= 1.5f;
 	scale.y /= 1.5f;
 	caller->SetScale(scale);
+
+#ifdef _DEBUG
+	OutputDebugStringA("ON CLICKED\n");
+#endif // _DEBUG
 }
 
 std::unique_ptr<UI::IButtonStateClass> UI::ButtonOnClickedStateClass::Update(ButtonClass* caller, const System::InputClass* input, bool IsInCursor)
