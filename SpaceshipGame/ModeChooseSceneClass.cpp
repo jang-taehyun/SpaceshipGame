@@ -28,17 +28,18 @@ Scene::ModeChooseSceneClass::ModeChooseSceneClass(SceneState next, Object::Objec
 	m_Camera->SetPosition(DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f));
 
 	UI_Idx = UIs->LoadUI(UI::ID::BUTTON, Graphic::Texture::UITextureID::START_BUTTON);
-	UIs->GetUI(UI_Idx)->SetColor(DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f));
 	UIs->GetUI(UI_Idx)->SetPosition(DirectX::XMFLOAT2(50.f, 30.f));
-	UIs->GetUI(UI_Idx)->SetScale(DirectX::XMFLOAT2(6.f, 4.f));
+	UIs->GetUI(UI_Idx)->SetColor(DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f));
+	UIs->GetUI(UI_Idx)->SetScale(DirectX::XMFLOAT2(50.f, 40.f));
 
 	objectIdx = objects->Load(Object::ID::ACTOR, Graphic::Model::ID::DEFAULT_SPACESHIP);
 	objects->SetPlayerIdx(objectIdx);
 	objects->GetGameObject(objectIdx)->SetPosition(DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f));
 
 	textIdx = texts->Load(Text::ID::DEFAULT, _T("모드 선택"), Graphic::Font::ID::DEFAULT);
+	texts->GetTextObject(textIdx)->SetPosition(DirectX::XMFLOAT2(50.f, 30.f));
 	texts->GetTextObject(textIdx)->SetColor(DirectX::XMFLOAT4(0.f, 1.f, 0.f, 1.f));
-	texts->GetTextObject(textIdx)->SetScale(DirectX::XMFLOAT2(1.f, 2.f));
+	texts->GetTextObject(textIdx)->SetScale(DirectX::XMFLOAT2(1.f, 1.f));
 
 	SoundMask |= (1 << static_cast<UINT>(Sound::ID::BACKGROUND));
 	SoundMask |= (1 << static_cast<UINT>(Sound::ID::EFFECT));

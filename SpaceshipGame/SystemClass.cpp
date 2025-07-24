@@ -91,10 +91,10 @@ void System::SystemClass::Frame()
 	m_FPS->Frame();
 	m_CPU->Frame();
 
-	m_Input->Frame();
+	m_Input->Frame(m_hwnd);
 
 	IsLoad = m_SceneManager->Frame(m_Input.get(), m_Timer->GetTime());
-	m_Graphics->Frame(m_SceneManager.get(), IsLoad
+	m_Graphics->Frame(m_hwnd, m_SceneManager.get(), IsLoad
 #ifdef _DEBUG
 		, m_Input.get()
 #endif // _DEBUG

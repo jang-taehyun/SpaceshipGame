@@ -70,11 +70,13 @@ void Graphic::IMGUIClass::Shutdown()
 void Graphic::IMGUIClass::Render(Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light, System::InputClass* input)
 {
 	// IMGUI 렌더링 준비 //
-	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
+	ImGui_ImplDX11_NewFrame();
 	ImGui::NewFrame();
 
 	SetUI(SceneManager, light, input);
+
+	ImGui::ShowMetricsWindow();
 
 	// 렌더링
 	ImGui::Render();
@@ -109,7 +111,7 @@ void Graphic::IMGUIClass::SetUI(Scene::SceneManagerClass* SceneManager, Graphic:
 		else
 			title = u8"player의 affine(position, rotate, scale), collision(center, rotate, extends)";
 
-		SetObjectInfo(title, i + 5, obj);
+		SetObjectInfo(title, i + 4, obj);
 	}
 }
 
@@ -340,25 +342,25 @@ void Graphic::IMGUIClass::SetObjectInfo(const std::string& title, UINT IMGUI_Win
 	ImGui::Text(u8"충돌체 위치");
 	ImGui::SameLine();
 	if (ImGui::SliderFloat3(u8"##4", value, -100.0f, 100.f))
-		object->SetPosition(value[0], value[1], value[2]);
+		object->GetCollision()->SetPosition(value[0], value[1], value[2]);
 
 	// collision rotate
-	value[0] = object->GetCollision()->GetPosition().x;
-	value[1] = object->GetCollision()->GetPosition().y;
-	value[2] = object->GetCollision()->GetPosition().z;
+	value[0] = object->GetCollision()->GetRotation().x;
+	value[1] = object->GetCollision()->GetRotation().y;
+	value[2] = object->GetCollision()->GetRotation().z;
 	ImGui::Text(u8"충돌체 회전");
 	ImGui::SameLine();
 	if (ImGui::SliderFloat3(u8"##5", value, -100.0f, 100.f))
-		object->SetRotation(value[0], value[1], value[2]);
+		object->GetCollision()->SetRotation(value[0], value[1], value[2]);
 
 	// collision scale
-	value[0] = object->GetCollision()->GetPosition().x;
-	value[1] = object->GetCollision()->GetPosition().y;
-	value[2] = object->GetCollision()->GetPosition().z;
+	value[0] = object->GetCollision()->GetScale().x;
+	value[1] = object->GetCollision()->GetScale().y;
+	value[2] = object->GetCollision()->GetScale().z;
 	ImGui::Text(u8"충돌체 크기");
 	ImGui::SameLine();
 	if (ImGui::SliderFloat3(u8"##6", value, -100.0f, 100.f))
-		object->SetScale(value[0], value[1], value[2]);
+		object->GetCollision()->SetScale(value[0], value[1], value[2]);
 
 	IsPress = ImGui::Button("reset");
 	if (IsPress)

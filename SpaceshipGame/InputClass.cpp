@@ -73,7 +73,7 @@ void System::InputClass::Shutdown()
 		m_Keyboard->Unacquire();
 }
 
-void System::InputClass::Frame()
+void System::InputClass::Frame(HWND hwnd)
 {
 	HRESULT result = S_OK;
 
@@ -83,7 +83,7 @@ void System::InputClass::Frame()
 	// 마우스의 상태 읽기 //
 	result = ReadMouse();
 
-	ProcessInput();
+	ProcessInput(hwnd);
 }
 
 HRESULT System::InputClass::ReadKeyboard()
@@ -124,11 +124,11 @@ HRESULT System::InputClass::ReadMouse()
 	return result;
 }
 
-void System::InputClass::ProcessInput()
+void System::InputClass::ProcessInput(HWND hwnd)
 {
 	// 화면 상의 마우스 좌표 가져오기
 	GetCursorPos(&m_MousePos);
 
 	// 가져온 마우스 좌표를 윈도우 영역 기준으로 변환
-	ScreenToClient(GetActiveWindow(), &m_MousePos);
+	ScreenToClient(hwnd, &m_MousePos);
 }

@@ -44,7 +44,7 @@ Graphic::GraphicsClass::~GraphicsClass()
 	IsInitialize = false;
 }
 
-void Graphic::GraphicsClass::Frame(Scene::SceneManagerClass* SceneManager, bool IsLoad
+void Graphic::GraphicsClass::Frame(HWND hwnd, Scene::SceneManagerClass* SceneManager, bool IsLoad
 #ifdef _DEBUG
 	, System::InputClass* input
 #endif // _DEBUG
@@ -64,7 +64,7 @@ void Graphic::GraphicsClass::Frame(Scene::SceneManagerClass* SceneManager, bool 
 
 	if (IsLoad)
 	{
-		Load(SceneManager);
+		Load(hwnd, SceneManager);
 		return;
 	}
 
@@ -132,7 +132,7 @@ void Graphic::GraphicsClass::Frame(Scene::SceneManagerClass* SceneManager, bool 
 	m_ShaderManager->UpdateBuffer(m_D3D->GetDeviceContext(), BufferData);
 
 	// 兄希元 //
-	Render(SceneManager
+	Render(hwnd, SceneManager
 #ifdef _DEBUG
 		, input
 #endif // _DEBUG
@@ -173,20 +173,20 @@ void Graphic::GraphicsClass::Initialize(HWND hwnd, int ScreenWidth, int ScreenHe
 
 #ifdef _DEBUG
 	// IMGUI 梓端 持失 //
-	m_IMGUI = std::make_unique<IMGUIClass>(GetActiveWindow(), m_D3D->GetDevice(), m_D3D->GetDeviceContext());
+	m_IMGUI = std::make_unique<IMGUIClass>(hwnd, m_D3D->GetDevice(), m_D3D->GetDeviceContext());
 	assert(m_IMGUI);
 #endif // DEBUG
 }
 
-void Graphic::GraphicsClass::Load(Scene::SceneManagerClass* SceneManager)
+void Graphic::GraphicsClass::Load(HWND hwnd, Scene::SceneManagerClass* SceneManager)
 {
-	m_ModelManager->Load(GetActiveWindow(), m_D3D->GetDevice(), m_D3D->GetDeviceContext(), SceneManager->GetObjectManager()->GetModelMask());
+	m_ModelManager->Load(hwnd, m_D3D->GetDevice(), m_D3D->GetDeviceContext(), SceneManager->GetObjectManager()->GetModelMask());
 	m_UITextureManager->Load(m_D3D->GetDevice(), m_D3D->GetDeviceContext(), SceneManager->GetUIManager()->GetUITextureMask());
 	m_UIRender->LoadFont(m_D3D->GetDevice(), SceneManager->GetTextManager()->GetFontMask());
-	m_ShaderManager->Load(GetActiveWindow(), m_D3D->GetDevice(), m_ModelManager->GetNeedShaderMask());
+	m_ShaderManager->Load(hwnd, m_D3D->GetDevice(), m_ModelManager->GetNeedShaderMask());
 }
 
-void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager
+void Graphic::GraphicsClass::Render(HWND hwnd, Scene::SceneManagerClass* SceneManager
 #ifdef _DEBUG
 	, System::InputClass* input
 #endif // _DEBUG
@@ -248,7 +248,7 @@ void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager
 			}
 			// background 兄希元
 			else
-				m_UIRender->RenderBackground(m_UITextureManager->GetTexture(ui->GetUITextureID()), ui->GetColor());
+				m_UIRender->RenderBackground(hwnd, m_UITextureManager->GetTexture(ui->GetUITextureID()), ui->GetColor());
 		}
 	}
 

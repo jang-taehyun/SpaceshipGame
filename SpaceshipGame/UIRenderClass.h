@@ -21,7 +21,7 @@ namespace Graphic
 			void LoadFont(ID3D11Device* Device, UINT FontMask);
 
 			void BeginRender(const D3DClass* d3d);
-			void RenderBackground(ID3D11ShaderResourceView* texture, DirectX::XMFLOAT4 color = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f));
+			void RenderBackground(HWND hwnd, ID3D11ShaderResourceView* texture, DirectX::XMFLOAT4 color = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f));
 			void RenderTexture(ID3D11ShaderResourceView* texture, DirectX::XMFLOAT2 pos, DirectX::XMFLOAT4 color = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f), float rot = 0.f, DirectX::XMFLOAT2 origin = DirectX::XMFLOAT2(0.f, 0.f), DirectX::XMFLOAT2 scale = DirectX::XMFLOAT2(0.f, 0.f));
 			void RenderText(const std::wstring& text, Font::ID fontID, DirectX::XMFLOAT2 pos, DirectX::XMFLOAT4 color = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f), float rot = 0.f, DirectX::XMFLOAT2 origin = DirectX::XMFLOAT2(0.f, 0.f), DirectX::XMFLOAT2 scale = DirectX::XMFLOAT2(0.f, 0.f));
 			void EndRender(const D3DClass* d3d);

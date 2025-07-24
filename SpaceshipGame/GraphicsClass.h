@@ -28,7 +28,7 @@ namespace Graphic
 		GraphicsClass(HWND hwnd, int ScreenWidth, int ScreenHeight);
 		virtual ~GraphicsClass();
 
-		void Frame(Scene::SceneManagerClass* SceneManager, bool IsLoad
+		void Frame(HWND hwnd, Scene::SceneManagerClass* SceneManager, bool IsLoad
 #ifdef _DEBUG
 			, System::InputClass* input
 #endif // _DEBUG
@@ -36,8 +36,8 @@ namespace Graphic
 
 	private:
 		void Initialize(HWND hwnd, int ScreenWidth, int ScreenHeight);
-		void Load(Scene::SceneManagerClass* SceneManager);
-		void Render(Scene::SceneManagerClass* SceneManager
+		void Load(HWND hwnd, Scene::SceneManagerClass* SceneManager);
+		void Render(HWND hwnd, Scene::SceneManagerClass* SceneManager
 #ifdef _DEBUG
 			, System::InputClass* input
 #endif // _DEBUG

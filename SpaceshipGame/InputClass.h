@@ -14,7 +14,7 @@ namespace System
 		InputClass(HINSTANCE hinstance, HWND hwnd, int ScreenWidth, int ScreenHeight);
 		virtual ~InputClass();
 
-		void Frame();
+		void Frame(HWND hwnd);
 
 		// Getter //
 
@@ -44,7 +44,7 @@ namespace System
 
 		HRESULT ReadKeyboard();
 		HRESULT ReadMouse();
-		void ProcessInput();
+		void ProcessInput(HWND hwnd);
 
 	private:
 		static bool IsInitailize;
