@@ -232,7 +232,7 @@ void Graphic::GraphicsClass::Render(HWND hwnd, Scene::SceneManagerClass* SceneMa
 	for (UINT i = 0; i < SceneManager->GetUIManager()->GetUICount(); ++i)
 	{
 		ui = SceneManager->GetUIManager()->GetUI(i);
-		if (UI::State::DISAPPEAR != ui->GetUIState())
+		if (UI::UIState::ACTIVE == ui->GetUIState())
 		{
 			// background를 제외한 모든 UI 렌더링
 			if (UI::ID::BACKGROUND != ui->GetUIID())

@@ -1,0 +1,25 @@
+#include "pch.h"
+#include "InputClass.h"
+#include "ButtonClass.h"
+#include "ButtonHoverStateClass.h"
+#include "ButtonNoneStateClass.h"
+
+UI::ButtonNoneStateClass::ButtonNoneStateClass(ButtonClass* caller)
+{
+	DirectX::XMFLOAT2 scale;
+
+	scale = caller->GetScale();
+	scale.x /= 1.5f;
+	scale.y /= 1.5f;
+	caller->SetScale(scale);
+}
+
+std::unique_ptr<UI::IButtonStateClass> UI::ButtonNoneStateClass::Update(ButtonClass* caller, const System::InputClass* input, bool IsInCursor)
+{
+	std::unique_ptr<IButtonStateClass> ret = nullptr;
+	
+	if (IsInCursor)
+		ret = std::make_unique<ButtonHoverStateClass>(caller);
+
+	return ret;
+}

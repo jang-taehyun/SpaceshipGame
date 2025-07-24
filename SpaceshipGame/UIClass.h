@@ -11,7 +11,7 @@ namespace UI
 		virtual ~UIClass() = default;
 
 		virtual inline ID GetUIID() const { return m_UIID; }
-		virtual inline State GetUIState() const override { return m_State; }
+		virtual inline UIState GetUIState() const override { return m_State; }
 		virtual inline Graphic::Texture::UITextureID GetUITextureID() const override { return m_UITextureID; }
 
 		virtual inline DirectX::XMFLOAT2 GetPosition() const override { return m_Position; }
@@ -20,7 +20,7 @@ namespace UI
 		virtual inline DirectX::XMFLOAT2 GetScale() const override { return m_Scale; }
 		virtual inline DirectX::XMFLOAT4 GetColor() const override { return m_Color; }
 
-		virtual inline void SetUIState(State state) { m_State = state; }
+		virtual inline void SetUIState(UIState state) { m_State = state; }
 		virtual inline void SetUITextureID(Graphic::Texture::UITextureID ID) { m_UITextureID = ID; }
 
 		virtual inline void SetPosition(DirectX::XMFLOAT2 pos) override { m_Position = pos; }
@@ -34,7 +34,7 @@ namespace UI
 	private:
 		ID m_UIID = ID::NONE;
 		Graphic::Texture::UITextureID m_UITextureID = Graphic::Texture::UITextureID::NONE;
-		State m_State = State::NONE;
+		UIState m_State = UIState::ACTIVE;
 
 		DirectX::XMFLOAT2 m_Position = DirectX::XMFLOAT2(0.f, 0.f);
 		float m_Rotation = 0.f;

@@ -158,8 +158,13 @@
   <ItemGroup>
     <ClInclude Include="ActorClass.h" />
     <ClInclude Include="ButtonClass.h" />
+    <ClInclude Include="ButtonHoverStateClass.h" />
+    <ClInclude Include="ButtonNoneStateClass.h" />
+    <ClInclude Include="ButtonOnClickedStateClass.h" />
+    <ClInclude Include="ButtonOnPressedStateClass.h" />
     <ClInclude Include="Cube_ShaderClass.h" />
     <ClInclude Include="GameObjectClass.h" />
+    <ClInclude Include="IButtonStateClass.h" />
     <ClInclude Include="ModeChooseSceneClass.h" />
     <ClInclude Include="ModelFactoryClass.h" />
     <ClInclude Include="ObjectFactoryClass.h" />
@@ -223,9 +228,14 @@
   <ItemGroup>
     <ClCompile Include="ActorClass.cpp" />
     <ClCompile Include="ButtonClass.cpp" />
+    <ClCompile Include="ButtonHoverStateClass.cpp" />
+    <ClCompile Include="ButtonNoneStateClass.cpp" />
+    <ClCompile Include="ButtonOnClickedStateClass.cpp" />
+    <ClCompile Include="ButtonOnPressedStateClass.cpp" />
     <ClCompile Include="config.cpp" />
     <ClCompile Include="Cube_ShaderClass.cpp" />
     <ClCompile Include="GameObjectClass.cpp" />
+    <ClCompile Include="IButtonStateClass.cpp" />
     <ClCompile Include="ModeChooseSceneClass.cpp" />
     <ClCompile Include="ModelFactoryClass.cpp" />
     <ClCompile Include="ObjectFactoryClass.cpp" />

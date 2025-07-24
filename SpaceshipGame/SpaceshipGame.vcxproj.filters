@@ -221,8 +221,29 @@
     <Filter Include="Scene\ModeChooseSceneClass">
       <UniqueIdentifier>{4198ae01-b565-42bd-96d5-a3e518869234}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI\ButtonClass">
+    <Filter Include="UI\Button">
+      <UniqueIdentifier>{bcfba0db-ec4a-4d6e-9a17-ddd169662f38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Button\ButtonClass">
       <UniqueIdentifier>{7912fec6-2399-413e-94ea-64ac695e1d3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Button\ButtonState">
+      <UniqueIdentifier>{e6ecfbc0-adbf-4351-9a90-90a8c15b2905}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Button\ButtonState\0. IButtonStateClass">
+      <UniqueIdentifier>{edc550c6-71e9-406b-bd61-0ebb2e8fef40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Button\ButtonState\ButtonHoverStateClass">
+      <UniqueIdentifier>{85216cbb-a43b-4b2a-bf68-53db022111c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Button\ButtonState\ButtonNoneStateClass">
+      <UniqueIdentifier>{db745dcd-39d2-4fec-b43e-1f941440e256}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Button\ButtonState\ButtonOnPressedStateClass">
+      <UniqueIdentifier>{d6bbd91e-151a-4033-b1cf-18977177c0c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Button\ButtonState\ButtonOnClickedStateClass">
+      <UniqueIdentifier>{68c47f60-dd4f-4fae-aab0-800706256807}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -413,7 +434,22 @@
       <Filter>Scene\ModeChooseSceneClass</Filter>
     </ClInclude>
     <ClInclude Include="ButtonClass.h">
-      <Filter>UI\ButtonClass</Filter>
+      <Filter>UI\Button\ButtonClass</Filter>
+    </ClInclude>
+    <ClInclude Include="IButtonStateClass.h">
+      <Filter>UI\Button\ButtonState\0. IButtonStateClass</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonHoverStateClass.h">
+      <Filter>UI\Button\ButtonState\ButtonHoverStateClass</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonNoneStateClass.h">
+      <Filter>UI\Button\ButtonState\ButtonNoneStateClass</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonOnPressedStateClass.h">
+      <Filter>UI\Button\ButtonState\ButtonOnPressedStateClass</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonOnClickedStateClass.h">
+      <Filter>UI\Button\ButtonState\ButtonOnClickedStateClass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -595,7 +631,22 @@
       <Filter>Scene\ModeChooseSceneClass</Filter>
     </ClCompile>
     <ClCompile Include="ButtonClass.cpp">
-      <Filter>UI\ButtonClass</Filter>
+      <Filter>UI\Button\ButtonClass</Filter>
+    </ClCompile>
+    <ClCompile Include="IButtonStateClass.cpp">
+      <Filter>UI\Button\ButtonState\0. IButtonStateClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonHoverStateClass.cpp">
+      <Filter>UI\Button\ButtonState\ButtonHoverStateClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonNoneStateClass.cpp">
+      <Filter>UI\Button\ButtonState\ButtonNoneStateClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonOnPressedStateClass.cpp">
+      <Filter>UI\Button\ButtonState\ButtonOnPressedStateClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonOnClickedStateClass.cpp">
+      <Filter>UI\Button\ButtonState\ButtonOnClickedStateClass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

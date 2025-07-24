@@ -42,7 +42,7 @@ bool Scene::SceneManagerClass::Frame(const System::InputClass* input, float fram
 	{
 		if (!m_Scene)
 		{
-			m_Scene = std::move(m_Loader->CreateScene(SceneState::START, m_ObjectManager.get(), m_TextManager.get(), m_UIManager.get(), m_SoundManager.get()));
+			m_Scene = std::move(m_Loader->CreateScene(SceneID::START, m_ObjectManager.get(), m_TextManager.get(), m_UIManager.get(), m_SoundManager.get()));
 			assert(m_Scene);
 		}
 		else
@@ -74,7 +74,7 @@ void Scene::SceneManagerClass::Release()
 
 void Scene::SceneManagerClass::ChangeScene()
 {
-	SceneState next = SceneState::NONE;
+	SceneID next = SceneID::NONE;
 
 	// 이전 scene에서 사용한 객체 소멸
 	Release();

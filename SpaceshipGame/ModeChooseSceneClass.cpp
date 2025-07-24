@@ -6,15 +6,17 @@
 #include "InputClass.h"
 
 #include "CameraClass.h"
+#include "ActorClass.h"
 #include "MoveClass.h"
 #include "RotateClass.h"
 
-#include "ActorClass.h"
 #include "IUIClass.h"
+#include "ButtonClass.h"
+
 #include "ITextClass.h"
 #include "ModeChooseSceneClass.h"
 
-Scene::ModeChooseSceneClass::ModeChooseSceneClass(SceneState next, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds) : SceneClass(Scene::SceneState::START, next)
+Scene::ModeChooseSceneClass::ModeChooseSceneClass(SceneID next, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds) : SceneClass(Scene::SceneID::START, next)
 {
 	UINT objectIdx = 0;
 	UINT UI_Idx = 0;
@@ -76,10 +78,12 @@ Scene::ModeChooseSceneClass& Scene::ModeChooseSceneClass::operator=(ModeChooseSc
 void Scene::ModeChooseSceneClass::Frame(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time)
 {
 	Object::CameraClass* cam = nullptr;
+	UI::ButtonClass* button = nullptr;
 	long x = 0, y = 0;
 
+	button = static_cast<UI::ButtonClass*>(UIs->GetUI(0));
 	if (input->IsSpacebarPressed() ||
-		UIs->GetUI(0)->GetUIState() == UI::State::ONCLICKED)
+		 UI::ButtonState::ONCLICKED == button->GetButtonState())
 	{
 		SetSceneEnded();
 		return;

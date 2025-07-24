@@ -15,10 +15,10 @@ namespace Scene
 		SceneFactoryClass();
 		virtual ~SceneFactoryClass();
 
-		std::unique_ptr<ISceneClass> CreateScene(SceneState current, Object::ObjectManagerClass* actors, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds);
+		std::unique_ptr<ISceneClass> CreateScene(SceneID current, Object::ObjectManagerClass* actors, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds);
 
 	private:
 		static bool IsInitailize;
-		std::map<SceneState, std::function<std::unique_ptr<ISceneClass>(Object::ObjectManagerClass*, Text::TextManagerClass*, UI::UIManagerClass*, Sound::SoundManagerClass*)>> m_Creator;
+		std::map<SceneID, std::function<std::unique_ptr<ISceneClass>(Object::ObjectManagerClass*, Text::TextManagerClass*, UI::UIManagerClass*, Sound::SoundManagerClass*)>> m_Creator;
 	};
 }

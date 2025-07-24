@@ -10,7 +10,7 @@ namespace Scene
 	class ModeChooseSceneClass : public SceneClass
 	{
 	public:
-		ModeChooseSceneClass(SceneState next, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds);
+		ModeChooseSceneClass(SceneID next, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds);
 		ModeChooseSceneClass(const ModeChooseSceneClass& other);
 		ModeChooseSceneClass(ModeChooseSceneClass&& other) noexcept;
 

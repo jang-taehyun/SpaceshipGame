@@ -53,7 +53,7 @@ namespace Object
 // scene 관련 //
 namespace Scene
 {
-	enum class SceneState
+	enum class SceneID
 	{
 		NONE, START, LOADING, LOGIN, MATCH, INGAME, MODE_CHOOSE,
 	};
@@ -69,9 +69,16 @@ namespace UI
 		NONE, DEFAULT, BACKGROUND, BUTTON,
 	};
 
-	enum class State
+	// UI 상태
+	enum class UIState
 	{
-		NONE, ACTIVE, DEACTIVE, HOVER, ONPRESSED, DISAPPEAR, ONCLICKED,
+		NONE, ACTIVE, DEACTIVE, DISAPPEAR, 
+	};
+
+	// button 상태
+	enum class ButtonState
+	{
+		NONE, HOVER, ONPRESSED, ONCLICKED, 
 	};
 }
 

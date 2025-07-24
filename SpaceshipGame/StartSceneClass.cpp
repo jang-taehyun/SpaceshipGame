@@ -10,11 +10,14 @@
 #include "RotateClass.h"
 
 #include "ActorClass.h"
+
 #include "IUIClass.h"
+#include "ButtonClass.h"
+
 #include "ITextClass.h"
 #include "StartSceneClass.h"
 
-Scene::StartSceneClass::StartSceneClass(SceneState next, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds) : SceneClass(Scene::SceneState::START, next)
+Scene::StartSceneClass::StartSceneClass(SceneID next, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds) : SceneClass(Scene::SceneID::START, next)
 {
 	UINT objectIdx = 0;
 	UINT UI_Idx = 0;
@@ -73,10 +76,12 @@ Scene::StartSceneClass& Scene::StartSceneClass::operator=(StartSceneClass&& othe
 void Scene::StartSceneClass::Frame(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time)
 {
 	Object::CameraClass* cam = nullptr;
+	UI::ButtonClass* button = nullptr;
 	long x = 0, y = 0;
 
+	button = static_cast<UI::ButtonClass*>(UIs->GetUI(1));
 	if (input->IsSpacebarPressed() ||
-		UIs->GetUI(1)->GetUIState() == UI::State::ONCLICKED)
+		UI::ButtonState::ONCLICKED == button->GetButtonState())
 	{
 		SetSceneEnded();
 		return;

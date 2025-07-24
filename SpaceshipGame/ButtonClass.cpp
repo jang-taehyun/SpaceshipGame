@@ -2,49 +2,76 @@
 #include <DirectXCollision.h>
 #include <SimpleMath.h>
 #include "InputClass.h"
+#include "ButtonNoneStateClass.h"
 #include "ButtonClass.h"
 
-UI::ButtonClass::ButtonClass(ID UIID, Graphic::Texture::UITextureID ID) : UIClass(UIID, ID) {}
+UI::ButtonClass::ButtonClass(ID UIID, Graphic::Texture::UITextureID ID) : UIClass(UIID, ID)
+{
+	m_ButtonState = std::make_unique<ButtonNoneStateClass>();
+	assert(m_ButtonState);
+}
+
+UI::ButtonClass::ButtonClass(const ButtonClass& other) : UIClass(other)
+{
+	m_ButtonState = std::move(other.m_ButtonState->Clone());
+}
+
+UI::ButtonClass::ButtonClass(ButtonClass&& other) noexcept : UIClass(other)
+{
+	m_ButtonState = std::move(other.m_ButtonState);
+}
+
+UI::ButtonClass& UI::ButtonClass::operator=(const ButtonClass&& other)
+{
+	if (this == &other)
+		return *this;
+
+	if (m_ButtonState)
+		m_ButtonState.reset();
+	m_ButtonState = std::move(other.m_ButtonState->Clone());
+
+	UIClass::operator=(other);
+
+	return *this;
+}
+
+UI::ButtonClass& UI::ButtonClass::operator=(ButtonClass&& other) noexcept
+{
+	if (this == &other)
+		return *this;
+
+	if (m_ButtonState)
+		m_ButtonState.reset();
+	m_ButtonState = std::move(other.m_ButtonState);
+
+	UIClass::operator=(std::move(other));
+
+	return *this;
+}
 
 void UI::ButtonClass::Update(const System::InputClass* input)
 {
 	int x = 0, y = 0;
 	bool IsInCursor = false;
-	DirectX::XMFLOAT2 scale = GetScale();
-
-	input->GetMouseLocation(x, y);
-	IsInCursor = IsInUI(x, y);
-
-	if (GetUIState() == State::NONE && IsInCursor)
+	std::unique_ptr<IButtonStateClass> ret = nullptr;
+	
+	if (GetUIState() == UIState::ACTIVE)
 	{
-		SetUIState(State::HOVER);
-		scale.x *= 1.5f;
-		scale.y *= 1.5f;
-		SetScale(scale);
-	}
-	else if (GetUIState() == State::HOVER)
-	{
-		if(IsInCursor && input->IsMouseLeftBottunPressed())
-			SetUIState(State::ONPRESSED);
-		else if (!IsInCursor && !input->IsMouseLeftBottunPressed())
+		input->GetMouseLocation(x, y);
+		IsInCursor = IsInUI(x, y);
+
+		ret = std::move(m_ButtonState->Update(this, input, IsInCursor));
+		if (ret)
 		{
-			SetUIState(State::NONE);
-			scale.x /= 1.5f;
-			scale.y /= 1.5f;
-			SetScale(scale);
+			m_ButtonState.reset();
+			m_ButtonState = std::move(ret);
 		}
 	}
-	else if (GetUIState() == State::ONPRESSED && IsInCursor && !input->IsMouseLeftBottunPressed())
-	{
-		SetUIState(State::ONCLICKED);
-	}
-	else if(GetUIState() == State::ONCLICKED && !IsInCursor)
-	{
-		SetUIState(State::NONE);
-		scale.x /= 1.5f;
-		scale.y /= 1.5f;
-		SetScale(scale);
-	}
+}
+
+UI::ButtonState UI::ButtonClass::GetButtonState() const
+{
+	return m_ButtonState->GetButtonState();
 }
 
 bool UI::ButtonClass::IsInUI(int x, int y) const
