@@ -11,8 +11,11 @@ namespace Graphic
 {
 	namespace Loader
 	{
-		std::unique_ptr<Shader::IShaderClass> CreateDefaultSpaceshipShader(HWND hwnd, ID3D11Device* Device, Shader::ID id);
+#ifdef _DEBUG
 		std::unique_ptr<Shader::IShaderClass> CreateCubeShader(HWND hwnd, ID3D11Device* Device, Shader::ID id);
+#endif
+
+		std::unique_ptr<Shader::IShaderClass> CreateDefaultSpaceshipShader(HWND hwnd, ID3D11Device* Device, Shader::ID id);
 
 		class ShaderFactoryClass
 		{

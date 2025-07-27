@@ -23,7 +23,8 @@ namespace Graphic
 			TextureClass(TextureClass&& other) noexcept;
 			virtual ~TextureClass() = default;
 
-			inline ID3D11ShaderResourceView* GetTexture() const { return m_Texture.Get(); }
+			inline ID3D11ShaderResourceView* GetTexture() { return m_Texture.Get(); }
+			inline Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> MoveTexture() { return std::move(m_Texture); }
 
 			TextureClass& operator=(const TextureClass& other);
 			TextureClass& operator=(TextureClass&& other) noexcept;

@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "MLC_ShaderClass.h"
+
+#ifdef _DEBUG
 #include "Cube_ShaderClass.h"
+#endif // _DEBUG
+
 #include "ShaderFactoryClass.h"
 
 bool Graphic::Loader::ShaderFactoryClass::IsInitialize = false;
@@ -10,13 +14,17 @@ Graphic::Loader::ShaderFactoryClass::ShaderFactoryClass()
 	assert(!IsInitialize);
 	IsInitialize = true;
 
-	m_Creator.insert(std::make_pair(Shader::ID::DEFAULT_SPACESHIP, CreateDefaultSpaceshipShader));
+#ifdef _DEBUG
 	m_Creator.insert(std::make_pair(Shader::ID::CUBE, CreateCubeShader));
+#endif // _DEBUG
+
+	m_Creator.insert(std::make_pair(Shader::ID::DEFAULT_SPACESHIP, CreateDefaultSpaceshipShader));
 }
 
 Graphic::Loader::ShaderFactoryClass::~ShaderFactoryClass()
 {
 	IsInitialize = false;
+	m_Creator.clear();
 }
 
 std::unique_ptr<Graphic::Shader::IShaderClass> Graphic::Loader::ShaderFactoryClass::Load(HWND hwnd, ID3D11Device* Device, Shader::ID id) const
@@ -58,6 +66,8 @@ std::unique_ptr<Graphic::Shader::IShaderClass> Graphic::Loader::CreateDefaultSpa
 	return shader;
 }
 
+#ifdef _DEBUG
+
 std::unique_ptr<Graphic::Shader::IShaderClass> Graphic::Loader::CreateCubeShader(HWND hwnd, ID3D11Device* Device, Shader::ID id)
 {
 	// shader 정보 설정
@@ -84,3 +94,5 @@ std::unique_ptr<Graphic::Shader::IShaderClass> Graphic::Loader::CreateCubeShader
 
 	return shader;
 }
+
+#endif // _DEBUG

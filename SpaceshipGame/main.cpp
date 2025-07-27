@@ -10,10 +10,10 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 {
 	// 메모리 누수 감지 활성화
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	// _CrtSetBreakAlloc(490);
+	// _CrtSetBreakAlloc(496);
 
 	{
-		std::unique_ptr<System::SystemClass> system = std::make_unique<System::SystemClass>();
+		std::unique_ptr<System::SystemClass> system(std::make_unique<System::SystemClass>());
 		assert(system);
 
 		system->Run();

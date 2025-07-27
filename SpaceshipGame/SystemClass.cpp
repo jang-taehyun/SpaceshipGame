@@ -154,7 +154,7 @@ void System::SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)
 	else
 	{
 		// 윈도우 모드 //
-		// 모니터 화면 해상도를 1200*800으로 지정
+		// 모니터 화면 해상도를 1280*800으로 지정
 		// 윈도우의 위치 : 정가운데
 		ScreenWidth = WIDTH;
 		ScreenHeight = HEIGHT;

@@ -21,6 +21,7 @@ Graphic::Loader::ModelFactoryClass::ModelFactoryClass()
 Graphic::Loader::ModelFactoryClass::~ModelFactoryClass()
 {
 	IsInitialize = false;
+	m_Creator.clear();
 }
 
 std::unique_ptr<Graphic::Model::IModelClass> Graphic::Loader::ModelFactoryClass::Load(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Model::ID ModelID) const
@@ -49,6 +50,7 @@ std::unique_ptr<Graphic::Model::IModelClass> Graphic::Loader::LoadDefaultSpacesh
 }
 
 #ifdef _DEBUG
+
 std::unique_ptr<Graphic::Model::IModelClass> Graphic::Loader::LoadCollision(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext)
 {
 	std::unique_ptr<Model::IModelClass> model = nullptr;
@@ -63,4 +65,5 @@ std::unique_ptr<Graphic::Model::IModelClass> Graphic::Loader::LoadCollision(HWND
 
 	return model;
 }
+
 #endif

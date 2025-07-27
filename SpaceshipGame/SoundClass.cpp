@@ -14,6 +14,8 @@ Sound::SoundClass::SoundClass(SoundClass&& other) noexcept :
 Sound::SoundClass::~SoundClass()
 {
 	m_EffectInstance->Stop();
+	m_EffectInstance.reset();
+	m_Effect.reset();
 }
 
 Sound::SoundClass& Sound::SoundClass::operator=(SoundClass&& other) noexcept

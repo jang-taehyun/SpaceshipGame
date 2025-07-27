@@ -9,12 +9,12 @@ std::vector<Graphic::Model::PTN_VertexType> Graphic::Loader::PTN_DNSR_ModelLoade
 	Model::PTN_VertexType vertex = {};
 	std::vector<Model::PTN_VertexType> vertices;					// mesh의 vertex 데이터들
 
-	for (unsigned int j = 0; j < mesh->mNumVertices; ++j)
+	for (UINT i = 0; i < mesh->mNumVertices; ++i)
 	{
 		// vertex data 파싱
-		vertex.position = DirectX::XMFLOAT4(mesh->mVertices[j].x, mesh->mVertices[j].y, mesh->mVertices[j].z, 1.f);
-		vertex.texture = DirectX::XMFLOAT2(mesh->mTextureCoords[0][j].x, mesh->mTextureCoords[0][j].y);
-		vertex.normal = DirectX::XMFLOAT3(mesh->mNormals[j].x, mesh->mNormals[j].y, mesh->mNormals[j].z);
+		vertex.position = DirectX::XMFLOAT4(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z, 1.f);
+		vertex.texture = DirectX::XMFLOAT2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
+		vertex.normal = DirectX::XMFLOAT3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
 
 		vertices.push_back(vertex);
 

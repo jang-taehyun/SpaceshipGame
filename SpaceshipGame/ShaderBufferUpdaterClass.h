@@ -11,8 +11,11 @@ namespace Graphic
 {
 	namespace Shader
 	{
-		void UpdateDefaultSpaceshipShaderBuffer(ID3D11DeviceContext* DeviceContext, const BuffersData& data, IShaderClass* shader);
+#ifdef _DEBUG
 		void UpdateCubeShaderBuffer(ID3D11DeviceContext* DeviceContext, const BuffersData& data, IShaderClass* shader);
+#endif // _DEBUG
+
+		void UpdateDefaultSpaceshipShaderBuffer(ID3D11DeviceContext* DeviceContext, const BuffersData& data, IShaderClass* shader);
 
 		class ShaderBufferUpdaterClass
 		{

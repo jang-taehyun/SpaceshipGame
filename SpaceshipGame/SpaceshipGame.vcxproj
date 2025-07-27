@@ -80,14 +80,14 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)assimp\build\include;$(SolutionDir)assimp\include;$(SolutionDir)DirectXTK\Inc;$(SolutionDir)imgui;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)assimp\build\lib\Debug;$(SolutionDir)assimp\build\bin\Debug;$(SolutionDir)DirectXTK\Bin\Desktop_2022\x64\Debug\;$(SolutionDir)IMGUI_Library\ImGui\lib\x64\Debug\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)external\assimp\build\include;$(SolutionDir)external\assimp\include;$(SolutionDir)external\DirectXTK\Inc;$(SolutionDir)external\imgui;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)external\assimp\build\lib\Debug;$(SolutionDir)external\assimp\build\bin\Debug;$(SolutionDir)external\DirectXTK\Bin\Desktop_2022\$(Platform)\$(Configuration)\;$(SolutionDir)IMGUI_Library\ImGui\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)assimp\build\include;$(SolutionDir)assimp\include;$(SolutionDir)DirectXTK\Inc;$(SolutionDir)imgui;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)assimp\build\lib\Release;$(SolutionDir)assimp\build\bin\Release;$(SolutionDir)DirectXTK\Bin\Desktop_2022\x64\Release;$(SolutionDir)IMGUI_Library\ImGui\lib\x64\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)external\assimp\build\include;$(SolutionDir)external\assimp\include;$(SolutionDir)external\DirectXTK\Inc;$(SolutionDir)external\imgui;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)external\assimp\build\lib\Release;$(SolutionDir)external\assimp\build\bin\Release;$(SolutionDir)external\DirectXTK\Bin\Desktop_2022\x64\Release;$(SolutionDir)external\IMGUI_Library\ImGui\x64\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -147,6 +147,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -164,6 +165,7 @@
     <ClInclude Include="ButtonOnPressedStateClass.h" />
     <ClInclude Include="Cube_ShaderClass.h" />
     <ClInclude Include="GameObjectClass.h" />
+    <ClInclude Include="GlobalVariableInitializerClass.h" />
     <ClInclude Include="IButtonStateClass.h" />
     <ClInclude Include="ModeChooseSceneClass.h" />
     <ClInclude Include="ModelFactoryClass.h" />
@@ -235,6 +237,7 @@
     <ClCompile Include="config.cpp" />
     <ClCompile Include="Cube_ShaderClass.cpp" />
     <ClCompile Include="GameObjectClass.cpp" />
+    <ClCompile Include="GlobalVariableInitializerClass.cpp" />
     <ClCompile Include="IButtonStateClass.cpp" />
     <ClCompile Include="ModeChooseSceneClass.cpp" />
     <ClCompile Include="ModelFactoryClass.cpp" />

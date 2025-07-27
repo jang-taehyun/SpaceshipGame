@@ -4,6 +4,7 @@
 
 /*
 * TODO: terrain 공부해서 추가
+* TODO: json으로 게임 데이터 관리
 */
 
 /**
@@ -60,7 +61,7 @@
 *	1-1) 새로운 sound의 ID를 config.cpp 파일에 등록할 것
 *		- sound 파일은 resource 디렉토리에 저장할 것
 *		- sound 파일의 상대 경로는 config.cpp 안에 있는 map에 ID와 함께 등록할 것
-*		- sound 파일은 .wav 파일을 사용할 것
+*		- sound 파일은 wav 포맷을 사용할 것
 * 
 * 7. Object, UI, Text 관련 규칙
 * 1) Object, UI, Text 클래스의 인스턴스를 생성할 때 manager를 통해서 생성을 요청할 것

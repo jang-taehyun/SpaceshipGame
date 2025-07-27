@@ -245,6 +245,9 @@
     <Filter Include="UI\Button\ButtonState\ButtonOnClickedStateClass">
       <UniqueIdentifier>{68c47f60-dd4f-4fae-aab0-800706256807}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GlobalVariableInitializerClass">
+      <UniqueIdentifier>{2acf8fc9-a873-4930-a355-9dc160b5f24f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemClass.h">
@@ -451,6 +454,9 @@
     <ClInclude Include="ButtonOnClickedStateClass.h">
       <Filter>UI\Button\ButtonState\ButtonOnClickedStateClass</Filter>
     </ClInclude>
+    <ClInclude Include="GlobalVariableInitializerClass.h">
+      <Filter>GlobalVariableInitializerClass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -647,6 +653,9 @@
     </ClCompile>
     <ClCompile Include="ButtonOnClickedStateClass.cpp">
       <Filter>UI\Button\ButtonState\ButtonOnClickedStateClass</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobalVariableInitializerClass.cpp">
+      <Filter>GlobalVariableInitializerClass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

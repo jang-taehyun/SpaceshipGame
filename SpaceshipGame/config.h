@@ -161,7 +161,7 @@ namespace Graphic
 		extern UINT ShaderIDCount;
 		enum class ID
 		{
-			NONE, DEFAULT_SPACESHIP, CUBE, ALPHA_MAP, TEXTURE, MULTI_TEXTURE, LIGHT, LIGHT_MAP,
+			NONE, DEFAULT_SPACESHIP, CUBE, 
 		};
 
 		// shader buffer type //

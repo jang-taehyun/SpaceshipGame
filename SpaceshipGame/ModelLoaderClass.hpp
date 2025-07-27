@@ -28,6 +28,9 @@ void Graphic::Loader::ModelLoaderClass<VertexType>::Load(ID3D11Device* Device, I
 
 	// Model의 OBB 박스 생성(frustum culling용 OBB 박스) //
 	DirectX::BoundingOrientedBox::CreateFromPoints(m_ModelOBB, m_Positions.size(), m_Positions.data(), sizeof(DirectX::XMFLOAT3));
+
+	// importer 객체 해제
+	importer.FreeScene();
 }
 
 template<typename VertexType>
@@ -50,11 +53,11 @@ void Graphic::Loader::ModelLoaderClass<VertexType>::LoadVertex(const aiScene* sc
 		PushVerticesData(std::move(LoadVertexData(mesh)));
 
 		// index 데이터 파싱 //
-		for (unsigned int j = 0; j < mesh->mNumFaces; ++j)
+		for (UINT j = 0; j < mesh->mNumFaces; ++j)
 		{
 			face = mesh->mFaces[j];
 
-			for (unsigned int k = 0; k < face.mNumIndices; ++k)
+			for (UINT k = 0; k < face.mNumIndices; ++k)
 				indices.push_back(face.mIndices[k]);
 		}
 		PushIndicesData(indices);
@@ -78,7 +81,7 @@ HRESULT Graphic::Loader::ModelLoaderClass<VertexType>::LoadTextureData(ID3D11Dev
 
 	// texture 생성 및 저장
 	texture = std::make_unique<Texture::TextureClass>(Device, DeviceContext, wpath);
-	MaterialList.push_back(std::move(texture->GetTexture()));
+	MaterialList.push_back(texture->MoveTexture());
 
 	return result;
 }
