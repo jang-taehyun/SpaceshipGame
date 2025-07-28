@@ -3,18 +3,25 @@
 // system 관련 //
 namespace System
 {
-	// 해상도
-	extern UINT WIDTH;
-	extern UINT HEIGHT;
+	// 해상도 관련
+	struct RESOLUTION
+	{
+		UINT WIDTH;
+		UINT HEIGHT;
+	};
+
+	UINT RESOLUTION_COUNT;
+	UINT CURRENT_RESOLUTION_INDEX;
+	RESOLUTION RESOLUTIONS[3];
 
 	// Graphics 설정
-	extern bool FULL_SCREEN;
-	extern bool VSYNC_ENABLED;
-	extern float SCREEN_DEPTH;
-	extern float SCREEN_NEAR;
+	bool FULL_SCREEN;
+	bool VSYNC_ENABLED;
+	float SCREEN_DEPTH;
+	float SCREEN_NEAR;
 
 	// MOUSE 감도 설정
-	extern float MOUSE_SENSITIVITY;
+	float MOUSE_SENSITIVITY;
 }
 
 // object 관련 //
@@ -96,13 +103,13 @@ namespace Text
 // sound 관련 //
 namespace Sound
 {
-	extern UINT SoundIDCount;
+	UINT SoundIDCount;
 	enum class ID
 	{
 		NONE, BACKGROUND, EFFECT, HIT,
 	};
 
-	extern std::map<ID, const std::wstring> SoundFileList;
+	std::map<ID, const std::wstring> SoundFileList;
 }
 
 // Graphic 관련 //
@@ -111,7 +118,7 @@ namespace Graphic
 	// 3D model 관련 //
 	namespace Model
 	{
-		extern UINT ModelIDCount;
+		UINT ModelIDCount;
 		enum class ID
 		{
 			NONE,
@@ -120,8 +127,8 @@ namespace Graphic
 			ASTEROID,
 		};
 
-		extern std::map<ID, const std::string> ModelFileList;
-		extern std::map<ID, const std::wstring> ModelTexturePathList;
+		std::map<ID, const std::string> ModelFileList;
+		std::map<ID, const std::wstring> ModelTexturePathList;
 
 		// instance buffer type
 		struct InstanceBufferType
@@ -145,20 +152,20 @@ namespace Graphic
 	// UI texture 관련 //
 	namespace Texture
 	{
-		extern UINT UITextureIDCount;
+		UINT UITextureIDCount;
 		enum class UITextureID
 		{
 			NONE, START_BACKGROUND, START_BUTTON,
 		};
 
 		// UI texture의 파일 정보 //
-		extern std::map<UITextureID, const std::wstring> UITextureFileList;
+		std::map<UITextureID, const std::wstring> UITextureFileList;
 	}
 
 	// shader 관련 //
 	namespace Shader
 	{
-		extern UINT ShaderIDCount;
+		UINT ShaderIDCount;
 		enum class ID
 		{
 			NONE, DEFAULT_SPACESHIP, CUBE, 
@@ -216,13 +223,13 @@ namespace Graphic
 	// font 관련 //
 	namespace Font
 	{
-		extern UINT FontIDCount;
+		UINT FontIDCount;
 		enum class ID
 		{
 			NONE, DEFAULT, 
 		};
 
-		extern std::map<ID, const std::wstring> FontFileList;
+		std::map<ID, const std::wstring> FontFileList;
 	}
 
 	// loader 관련 //

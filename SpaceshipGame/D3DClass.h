@@ -17,8 +17,8 @@ namespace Graphic
 		inline ID3D11Device* GetDevice() const { return m_Device.Get(); }
 		inline ID3D11DeviceContext* GetDeviceContext() const { return m_DeviceContext.Get(); }
 
-		inline const DirectX::XMFLOAT4X4& GetProjectionMatrix() { return m_ProjectionMatrix; }
-		inline const DirectX::XMFLOAT4X4& GetOrthoMatrix() { return m_OrthoMatrix; }
+		inline DirectX::XMFLOAT4X4 GetProjectionMatrix() const { return m_ProjectionMatrix; }
+		inline DirectX::XMFLOAT4X4 GetOrthoMatrix() const { return m_OrthoMatrix; }
 
 		void TurnDepthBufferOn() const;
 		void TurnDepthBufferOff() const;

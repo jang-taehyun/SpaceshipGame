@@ -25,8 +25,8 @@ System::SystemClass::~SystemClass()
 
 void System::SystemClass::Initialize()
 {
-	int ScreenWidth = WIDTH;
-	int ScreenHeight = HEIGHT;
+	UINT ScreenWidth = System::RESOLUTIONS[System::CURRENT_RESOLUTION_INDEX].WIDTH;
+	UINT ScreenHeight = System::RESOLUTIONS[System::CURRENT_RESOLUTION_INDEX].HEIGHT;
 
 	// 윈도우의 가로, 세로 길이 초기화
 	InitializeWindows(ScreenWidth, ScreenHeight);
@@ -101,7 +101,7 @@ void System::SystemClass::Frame()
 	);
 }
 
-void System::SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)
+void System::SystemClass::InitializeWindows(UINT& ScreenWidth, UINT& ScreenHeight)
 {
 	int width = 0, height = 0, PosX = 0, PosY = 0;
 
@@ -156,8 +156,8 @@ void System::SystemClass::InitializeWindows(int& ScreenWidth, int& ScreenHeight)
 		// 윈도우 모드 //
 		// 모니터 화면 해상도를 1280*800으로 지정
 		// 윈도우의 위치 : 정가운데
-		ScreenWidth = WIDTH;
-		ScreenHeight = HEIGHT;
+		ScreenWidth = System::RESOLUTIONS[System::CURRENT_RESOLUTION_INDEX].WIDTH;
+		ScreenHeight = System::RESOLUTIONS[System::CURRENT_RESOLUTION_INDEX].HEIGHT;
 		width = ScreenWidth;
 		height = ScreenHeight;
 

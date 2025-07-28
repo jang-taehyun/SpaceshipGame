@@ -53,6 +53,7 @@ void Graphic::GraphicsClass::Frame(HWND hwnd, Scene::SceneManagerClass* SceneMan
 	bool IsRender = false;
 	UINT cnt = 0;
 	DirectX::XMFLOAT4X4 view = {};
+	DirectX::XMFLOAT4X4 proj = {};
 	Model::InstanceBufferType instance = {};
 	Shader::BuffersData BufferData = {};
 	Object::GameObjectClass* obj = nullptr;
@@ -118,7 +119,8 @@ void Graphic::GraphicsClass::Frame(HWND hwnd, Scene::SceneManagerClass* SceneMan
 	m_ModelManager->UpdateInstanceBuffers(m_D3D->GetDeviceContext());
 
 	// shader의 모든 buffer 업데이트 //
-	BufferData.transform.Projection = DirectX::XMLoadFloat4x4(&(m_D3D->GetProjectionMatrix()));
+	proj = m_D3D->GetProjectionMatrix();
+	BufferData.transform.Projection = DirectX::XMLoadFloat4x4(&proj);
 	BufferData.transform.View = DirectX::XMLoadFloat4x4(&view);
 
 	BufferData.light.AmbientColor = m_Light->GetAmbientColor();

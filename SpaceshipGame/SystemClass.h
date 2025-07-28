@@ -26,7 +26,7 @@ namespace System
 		void Initialize();
 
 		void Frame();
-		void InitializeWindows(int& ScreenWidth, int& ScreenHeight);
+		void InitializeWindows(UINT& ScreenWidth, UINT& ScreenHeight);
 		void ShutdownWindows();
 
 	private:

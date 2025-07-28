@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
+#include "GlobalVariableInitializerClass.h"
 #include "SystemClass.h"
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
@@ -13,6 +14,9 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	// _CrtSetBreakAlloc(496);
 
 	{
+		std::unique_ptr<System::GlobalVariableInitializerClass> init(std::make_unique<System::GlobalVariableInitializerClass>());
+		init->InputData();
+
 		std::unique_ptr<System::SystemClass> system(std::make_unique<System::SystemClass>());
 		assert(system);
 

@@ -80,7 +80,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)external\assimp\build\include;$(SolutionDir)external\assimp\include;$(SolutionDir)external\DirectXTK\Inc;$(SolutionDir)external\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)external\assimp\build\include;$(SolutionDir)external\assimp\include;$(SolutionDir)external\DirectXTK\Inc;$(SolutionDir)external\imgui;$(SolutionDir)external\json\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)external\assimp\build\lib\Debug;$(SolutionDir)external\assimp\build\bin\Debug;$(SolutionDir)external\DirectXTK\Bin\Desktop_2022\$(Platform)\$(Configuration)\;$(SolutionDir)IMGUI_Library\ImGui\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
