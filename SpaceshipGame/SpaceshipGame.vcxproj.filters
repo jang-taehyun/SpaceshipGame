@@ -630,9 +630,6 @@
     <ClCompile Include="Cube_ShaderClass.cpp">
       <Filter>Shader\Cube_ShaderClass</Filter>
     </ClCompile>
-    <ClCompile Include="config.cpp">
-      <Filter>Default\header</Filter>
-    </ClCompile>
     <ClCompile Include="ModeChooseSceneClass.cpp">
       <Filter>Scene\ModeChooseSceneClass</Filter>
     </ClCompile>
@@ -656,6 +653,9 @@
     </ClCompile>
     <ClCompile Include="GlobalVariableInitializerClass.cpp">
       <Filter>GlobalVariableInitializerClass</Filter>
+    </ClCompile>
+    <ClCompile Include="config.cpp">
+      <Filter>Default\header</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

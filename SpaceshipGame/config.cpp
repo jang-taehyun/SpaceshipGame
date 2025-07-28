@@ -1,51 +1,31 @@
 #include "pch.h"
 #include "config.h"
 
-// // System 관련 전역 변수 초기화 //
-// UINT System::WIDTH = 1280;
-// UINT System::HEIGHT = 800;
-// 
-// bool System::FULL_SCREEN = false;
-// bool System::VSYNC_ENABLED = true;
-// float System::SCREEN_DEPTH = 1000.0f;
-// float System::SCREEN_NEAR = 0.1f;
-// 
-// float System::MOUSE_SENSITIVITY = 0.0015f;
-// 
-// // Sound 관련 전역 변수 초기화 //
-// UINT Sound::SoundIDCount = 3;
-// std::map<Sound::ID, const std::wstring> Sound::SoundFileList =
-// {
-// 	{ Sound::ID::BACKGROUND, _T("./resource/dedede.wav") },
-// 	{ Sound::ID::EFFECT, _T("./resource/sound01.wav") }
-// };
-// 
-// // Model 관련 전역 변수 초기화 //
-// UINT Graphic::Model::ModelIDCount = 3;
-// std::map<Graphic::Model::ID, const std::string> Graphic::Model::ModelFileList =
-// {
-// 	{ Graphic::Model::ID::COLLISION, "./resource/uploads_files_3862208_Cube.obj" },
-// 	{ Graphic::Model::ID::DEFAULT_SPACESHIP, "./resource/E-45-Aircraft/E 45 Aircraft_obj.obj" },
-// };
-// std::map<Graphic::Model::ID, const std::wstring> Graphic::Model::ModelTexturePathList =
-// {
-// 	{ Graphic::Model::ID::DEFAULT_SPACESHIP, _T("./resource/E-45-Aircraft/") },
-// };
-// 
-// // UI texture 관련 전역 변수 초기화 //
-// UINT Graphic::Texture::UITextureIDCount = 3;
-// std::map<Graphic::Texture::UITextureID, const std::wstring> Graphic::Texture::UITextureFileList =
-// {
-// 	{ Graphic::Texture::UITextureID::START_BACKGROUND, _T("./resource/StartBackground.jpg") },
-// 	{ Graphic::Texture::UITextureID::START_BUTTON, _T("./resource/button-icon-png-21058.png") }
-// };
-// 
-// // Shader 관련 전역 변수 초기화 //
-// UINT Graphic::Shader::ShaderIDCount = 3;
-// 
-// // Font 관련 전역 변수 초기화 //
-// UINT Graphic::Font::FontIDCount = 2;
-// std::map<Graphic::Font::ID, const std::wstring> Graphic::Font::FontFileList =
-// {
-// 	{ Graphic::Font::ID::DEFAULT, _T("./resource/굴림.spritefont") },
-// };
+UINT System::RESOLUTION_COUNT;
+UINT System::CURRENT_RESOLUTION_INDEX;
+std::vector<System::RESOLUTION> System::RESOLUTIONS;
+
+bool System::FULL_SCREEN;
+bool System::VSYNC_ENABLED;
+float System::SCREEN_DEPTH;
+float System::SCREEN_NEAR;
+
+float System::MOUSE_SENSITIVITY;
+
+UINT Sound::SoundIDCount;
+std::map<Sound::ID, const std::wstring> Sound::SoundFileList;
+
+UINT Graphic::Model::ModelIDCount;
+std::map<Graphic::Model::ID, const std::string> Graphic::Model::ModelFileList;
+std::map<Graphic::Model::ID, const std::wstring> Graphic::Model::ModelTexturePathList;
+
+// UI texture 관련 전역 변수 초기화 //
+UINT Graphic::Texture::UITextureIDCount;
+std::map<Graphic::Texture::UITextureID, const std::wstring> Graphic::Texture::UITextureFileList;
+
+// Shader 관련 전역 변수 초기화 //
+UINT Graphic::Shader::ShaderIDCount;
+
+// Font 관련 전역 변수 초기화 //
+UINT Graphic::Font::FontIDCount;
+std::map<Graphic::Font::ID, const std::wstring> Graphic::Font::FontFileList;

@@ -4,13 +4,13 @@
 
 bool System::GlobalVariableInitializerClass::InputData()
 {
-	std::wifstream FileIn("./data/data.dat", std::ios::in);
+	std::ifstream FileIn("./data/data.json", std::ios::in);
 	nlohmann::json data;
 
 	if (FileIn.fail())
 		return false;
 
-	data = nlohmann::json::parse(FileIn);
+	FileIn >> data;
 
 	FileIn.close();
 
@@ -48,6 +48,8 @@ bool System::GlobalVariableInitializerClass::InitializeGlobalVariable(nlohmann::
 
 bool System::GlobalVariableInitializerClass::InitializeResolution(nlohmann::json& data)
 {
+	System::RESOLUTION resol;
+
 	if (data["resolution count"].empty())
 		return false;
 	RESOLUTION_COUNT = data["resolution count"];
@@ -61,8 +63,10 @@ bool System::GlobalVariableInitializerClass::InitializeResolution(nlohmann::json
 		if (data["resolution"][i]["width"].empty() || data["resolution"][i]["height"].empty())
 			return false;
 
-		RESOLUTIONS[i].WIDTH = data["resolution"][i]["width"];
-		RESOLUTIONS[i].HEIGHT = data["resolution"][i]["height"];
+		resol.WIDTH = data["resolution"][i]["width"];
+		resol.HEIGHT = data["resolution"][i]["height"];
+
+		System::RESOLUTIONS.push_back(resol);
 	}
 
 	return true;
@@ -72,11 +76,11 @@ bool System::GlobalVariableInitializerClass::InitializeGraphicSetting(nlohmann::
 {
 	if (data["full screen"].empty())
 		return false;
-	FULL_SCREEN = (data["full screen"] == _T("true") ? true : false);
+	FULL_SCREEN = (data["full screen"] == "true" ? true : false);
 
 	if (data["VSYNC"].empty())
 		return false;
-	VSYNC_ENABLED = (data["VSYNC"] == _T("true") ? true : false);
+	VSYNC_ENABLED = (data["VSYNC"] == "true" ? true : false);
 
 	if (data["screen depth"].empty())
 		return false;
@@ -107,7 +111,7 @@ bool System::GlobalVariableInitializerClass::InitializeSound(nlohmann::json& dat
 		return false;
 	Sound::SoundIDCount = data["sound count"];
 
-	for (UINT i = 1; i <= Sound::SoundIDCount; ++i)
+	for (UINT i = 0; i < data["sound path"].size(); ++i)
 	{
 		if (data["sound path"][i].empty())
 			return false;
@@ -115,7 +119,7 @@ bool System::GlobalVariableInitializerClass::InitializeSound(nlohmann::json& dat
 		path = data["sound path"][i];
 		wpath.assign(path.begin(), path.end());
 
-		Sound::SoundFileList.insert(std::make_pair(static_cast<Sound::ID>(i), wpath));
+		Sound::SoundFileList.insert(std::make_pair(static_cast<Sound::ID>(i+1), wpath));
 	}
 
 	return true;
@@ -130,21 +134,21 @@ bool System::GlobalVariableInitializerClass::InitializeModel(nlohmann::json& dat
 		return false;
 	Graphic::Model::ModelIDCount = data["model count"];
 
-	for (UINT i = 1; i <= Graphic::Model::ModelIDCount; ++i)
+	for (UINT i = 0; i < data["model path"].size(); ++i)
 	{
 		if (data["model path"][i]["path"].empty())
 			return false;
 
 		path = data["model path"][i]["path"];
 
-		Graphic::Model::ModelFileList.insert(std::make_pair(static_cast<Graphic::Model::ID>(i), path));
+		Graphic::Model::ModelFileList.insert(std::make_pair(static_cast<Graphic::Model::ID>(i+1), path));
 
 		if (!data["model path"][i]["texture path"].empty())
 		{
 			path = data["model path"][i]["texture path"];
 			wpath.assign(path.begin(), path.end());
 
-			Graphic::Model::ModelTexturePathList.insert(std::make_pair(static_cast<Graphic::Model::ID>(i), wpath));
+			Graphic::Model::ModelTexturePathList.insert(std::make_pair(static_cast<Graphic::Model::ID>(i+1), wpath));
 		}
 	}
 
@@ -160,7 +164,7 @@ bool System::GlobalVariableInitializerClass::InitializeUITexture(nlohmann::json&
 		return false;
 	Graphic::Texture::UITextureIDCount = data["UI texture count"];
 
-	for (UINT i = 1; i <= Graphic::Texture::UITextureIDCount; ++i)
+	for (UINT i = 0; i < data["UI texture path"].size(); ++i)
 	{
 		if (data["UI texture path"][i].empty())
 			return false;
@@ -168,7 +172,7 @@ bool System::GlobalVariableInitializerClass::InitializeUITexture(nlohmann::json&
 		path = data["UI texture path"][i];
 		wpath.assign(path.begin(), path.end());
 
-		Graphic::Texture::UITextureFileList.insert(std::make_pair(static_cast<Graphic::Texture::UITextureID>(i), wpath));
+		Graphic::Texture::UITextureFileList.insert(std::make_pair(static_cast<Graphic::Texture::UITextureID>(i+1), wpath));
 	}
 
 	return true;
@@ -192,7 +196,7 @@ bool System::GlobalVariableInitializerClass::InitializeFont(nlohmann::json& data
 		return false;
 	Graphic::Font::FontIDCount = data["font count"];
 
-	for (UINT i = 1; i <= Graphic::Font::FontIDCount; ++i)
+	for (UINT i = 0; i < data["font path"].size(); ++i)
 	{
 		if (data["font path"][i].empty())
 			return false;
@@ -200,7 +204,7 @@ bool System::GlobalVariableInitializerClass::InitializeFont(nlohmann::json& data
 		path = data["font path"][i];
 		wpath.assign(path.begin(), path.end());
 
-		Graphic::Font::FontFileList.insert(std::make_pair(static_cast<Graphic::Font::ID>(i), wpath));
+		Graphic::Font::FontFileList.insert(std::make_pair(static_cast<Graphic::Font::ID>(i+1), wpath));
 	}
 
 	return true;

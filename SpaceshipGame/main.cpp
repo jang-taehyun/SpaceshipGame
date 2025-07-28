@@ -15,7 +15,12 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 
 	{
 		std::unique_ptr<System::GlobalVariableInitializerClass> init(std::make_unique<System::GlobalVariableInitializerClass>());
-		init->InputData();
+		if (!init->InputData())
+		{
+			OutputDebugString(_T("fail to initialize"));
+			return 0;
+		}
+		init.reset();
 
 		std::unique_ptr<System::SystemClass> system(std::make_unique<System::SystemClass>());
 		assert(system);
