@@ -30,9 +30,14 @@ namespace System
 
 		// json 파일 쓰기 //
 	public:
-		// bool OutputData();
+		bool OutputData();
 
 	private:
+		bool EditGlobalVariable(nlohmann::json& data);
 
+	private:
+		bool EditResolution(nlohmann::json& data);
+		bool EditGraphicSetting(nlohmann::json& data);
+		bool EditMouseSensitivity(nlohmann::json& data);
 	};
 }

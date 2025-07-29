@@ -14,7 +14,10 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	// _CrtSetBreakAlloc(496);
 
 	{
-		std::unique_ptr<System::GlobalVariableInitializerClass> init(std::make_unique<System::GlobalVariableInitializerClass>());
+		std::unique_ptr<System::GlobalVariableInitializerClass> init;
+		std::unique_ptr<System::SystemClass> system;
+		
+		init = std::make_unique<System::GlobalVariableInitializerClass>();
 		if (!init->InputData())
 		{
 			OutputDebugString(_T("fail to initialize"));
@@ -22,18 +25,25 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		}
 		init.reset();
 
-		std::unique_ptr<System::SystemClass> system(std::make_unique<System::SystemClass>());
+		system = std::make_unique<System::SystemClass>();
 		assert(system);
 
 		system->Run();
+		system.reset();
+
+		init = std::make_unique<System::GlobalVariableInitializerClass>();
+		if (!init->OutputData())
+		{
+			OutputDebugString(_T("fail to save data"));
+			return 0;
+		}
+		init.reset();
 
 		Sound::SoundFileList.clear();
 		Graphic::Model::ModelFileList.clear();
 		Graphic::Model::ModelTexturePathList.clear();
 		Graphic::Texture::UITextureFileList.clear();
 		Graphic::Font::FontFileList.clear();
-
-		system.reset();
 	}
 
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
