@@ -33,10 +33,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 
 		init = std::make_unique<System::GlobalVariableInitializerClass>();
 		if (!init->OutputData())
-		{
 			OutputDebugString(_T("fail to save data"));
-			return 0;
-		}
 		init.reset();
 
 		Sound::SoundFileList.clear();

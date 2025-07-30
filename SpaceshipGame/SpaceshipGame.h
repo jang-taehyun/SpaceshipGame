@@ -4,7 +4,8 @@
 
 /*
 * TODO: terrain 공부해서 추가
-* TODO: json으로 게임 데이터 관리
+* TODO: scene 추가
+* TODO: 멀티쓰레드 도입
 */
 
 /**
