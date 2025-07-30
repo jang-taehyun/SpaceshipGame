@@ -25,7 +25,7 @@
 * 2) Scene 클래스에서 무조건 Camera 클래스의 인스턴스는 한 개 이상 만들 것
 * 3) 새로운 Scene을 프로젝트에 추가할 때의 규칙
 *	3-1) SceneClass를 상속받아서 새로운 Class를 정의할 것
-*	3-2) 새로운 Scene의 ID를 config.cpp 파일에 등록할 것
+*	3-2) 새로운 Scene의 ID를 config.h 파일에 등록할 것
 *	3-3) SceneClass를 상속받은 새로운 Class를 SceneFactoryClass에 등록할 것
 * 4) Scene 클래스를 상속받은 자식 클래스에서는 반드시 필요한 object, text, ui, sound를 manager를 통해서 생성할 것
 *	4-1) object, text, ui는 load() 함수를 호출하여 생성할 것
@@ -39,7 +39,7 @@
 *	3-2) 새로운 Shader의 ID를 config.cpp 파일에 등록할 것
 *		- vertex shader 파일은 shader 디렉토리 내의 vertex 디렉토리에 저장할 것
 *		- pixel shader 파일은 shader 디렉토리 내의 pixel 디렉토리에 저장할 것
-*		- vertex shader 파일의 상대 경로, pixel shader 파일의 상대 경로는 config.cpp 안에 있는 map에 ID와 함께 등록할 것
+*		- vertex shader 파일의 상대 경로, pixel shader 파일의 상대 경로는 shader factory의 함수 안에 정의할 것
 *	3-3) ShaderClass를 상속받은 새로운 Class를 ShaderFactoryClass에 등록할 것
 *	3-4) 새로운 ShaderClass의 buffer를 업데이트하는 함수를 ShaderBufferUpdaterClass에 등록할 것
 *		- 만약 새로운 buffer type이 필요하다면,
@@ -51,17 +51,16 @@
 * 2) Model 클래스의 인스턴스를 생성할 때 manager를 통해서 생성을 요청할 것
 * 3) 새로운 Model을 프로젝트에 추가할 때의 규칙
 *	3-1) 새로운 Model을 메모리에 load 시 ModelLoaderClass를 상속받아서 새로운 Class를 정의할 것
-*	3-2) 새로운 Model의 ID를 config.cpp 파일에 등록할 것
+*	3-2) 새로운 Model의 ID를 config.h 파일에 등록할 것
 *		- model 파일은 resource 디렉토리에 저장할 것
-*		- model 파일의 상대 경로는 config.cpp 안에 있는 map에 ID와 함께 등록할 것
-*		- model 파일 안에 필요한 texture의 경로는 config.cpp 안에 있는 map에 ID와 함께 등록할 것
+*		- model 파일의 상대 경로, 필요한 texture의 상대 경로는 data.json 파일 안에 등록할 것
 *	3-3) ModelLoaderClass를 상속받은 새로운 Class를 ModelFactoryClass에 등록할 것
 * 
 * 6. Sound 관련 규칙
 * 1) 새로운 sound를 프로젝트에 추가할 때의 규칙
-*	1-1) 새로운 sound의 ID를 config.cpp 파일에 등록할 것
+*	1-1) 새로운 sound의 ID를 config.h 파일에 등록할 것
 *		- sound 파일은 resource 디렉토리에 저장할 것
-*		- sound 파일의 상대 경로는 config.cpp 안에 있는 map에 ID와 함께 등록할 것
+*		- sound 파일의 상대 경로는 data.json 파일 안에 등록할 것
 *		- sound 파일은 wav 포맷을 사용할 것
 * 
 * 7. Object, UI, Text 관련 규칙
