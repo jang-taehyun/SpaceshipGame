@@ -14,17 +14,20 @@ namespace Graphic
 		// 화면에 back buffer의 내용을 표시하는 함수
 		void EndScene() const;
 
-		inline ID3D11Device* GetDevice() const { return m_Device.Get(); }
-		inline ID3D11DeviceContext* GetDeviceContext() const { return m_DeviceContext.Get(); }
+		ID3D11Device* GetDevice() const { return m_Device.Get(); }
+		ID3D11DeviceContext* GetDeviceContext() const { return m_DeviceContext.Get(); }
 
-		inline DirectX::XMFLOAT4X4 GetProjectionMatrix() const { return m_ProjectionMatrix; }
-		inline DirectX::XMFLOAT4X4 GetOrthoMatrix() const { return m_OrthoMatrix; }
+		DirectX::XMFLOAT4X4 GetProjectionMatrix() const { return m_ProjectionMatrix; }
+		DirectX::XMFLOAT4X4 GetOrthoMatrix() const { return m_OrthoMatrix; }
 
 		void TurnDepthBufferOn() const;
 		void TurnDepthBufferOff() const;
 
 		void TurnOnAlphaBlending() const;
 		void TurnOffAlphaBlending() const;
+
+		void TurnOnCulling() const;
+		void TurnOffCulling() const;
 
 	private:
 		// D3D 객체 초기화 함수 //
@@ -76,6 +79,7 @@ namespace Graphic
 
 		// rasterizer
 		Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_RasterizerState = nullptr;
+		Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_RasterizerStateNoCulling = nullptr;
 
 		// matrix
 		DirectX::XMFLOAT4X4 m_ProjectionMatrix;

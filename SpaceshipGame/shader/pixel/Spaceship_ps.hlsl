@@ -5,7 +5,7 @@ Texture2D SpecularTexture;
 Texture2D ReflectionTexture;
 SamplerState SampleType;
 
-// 조명 관련 상수 버퍼 //
+// 조명 관련 상수 버퍼
 cbuffer LightBuffer : register(b1)
 {
 	float4 AmbientColor;	// ambient의 색상

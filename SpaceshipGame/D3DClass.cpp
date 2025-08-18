@@ -115,6 +115,17 @@ void Graphic::D3DClass::TurnOffAlphaBlending() const
 	m_DeviceContext->OMSetBlendState(m_AlphaDisableBlendingState.Get(), BlendFactor, 0xffffffff);
 }
 
+void Graphic::D3DClass::TurnOnCulling() const
+{
+	m_DeviceContext->RSSetState(m_RasterizerState.Get());
+}
+
+void Graphic::D3DClass::TurnOffCulling() const
+{
+	// 뒷면 없음 컬링 래스터 라이저 상태를 설정합니다.
+	m_DeviceContext->RSSetState(m_RasterizerStateNoCulling.Get());
+}
+
 HRESULT Graphic::D3DClass::GetRefreshRate(int ScreenWidth, int ScreenHeight, int& Numerator, int& Denominator)
 {
 	HRESULT result = S_OK;
@@ -318,17 +329,17 @@ HRESULT Graphic::D3DClass::SetRasterizer()
 	HRESULT result = S_OK;
 	D3D11_RASTERIZER_DESC RasterizerDesc = {};			// rasterizer 설정 정보
 
-	// Rasterizer 정보 입력 //
+	// Rasterizer 정보 설정 //
 	RasterizerDesc.AntialiasedLineEnable = false;
 	RasterizerDesc.CullMode = D3D11_CULL_BACK;
 	RasterizerDesc.DepthBias = 0;
-	RasterizerDesc.DepthBiasClamp = 0.0f;
+	RasterizerDesc.DepthBiasClamp = 0.f;
 	RasterizerDesc.DepthClipEnable = true;
 	RasterizerDesc.FillMode = D3D11_FILL_SOLID;
-	RasterizerDesc.FrontCounterClockwise = false;
+	RasterizerDesc.FrontCounterClockwise = true;
 	RasterizerDesc.MultisampleEnable = false;
 	RasterizerDesc.ScissorEnable = false;
-	RasterizerDesc.SlopeScaledDepthBias = 0.0f;
+	RasterizerDesc.SlopeScaledDepthBias = 0.f;
 
 	// Rasterizer state 생성 //
 	result = m_Device->CreateRasterizerState(&RasterizerDesc, m_RasterizerState.GetAddressOf());
@@ -336,6 +347,13 @@ HRESULT Graphic::D3DClass::SetRasterizer()
 
 	// Device context에서 Rasterizer state를 설정 //
 	m_DeviceContext->RSSetState(m_RasterizerState.Get());
+
+	// sky dome 렌더링 때 사용할 rasterizer 설정 //
+	RasterizerDesc.CullMode = D3D11_CULL_NONE;
+	RasterizerDesc.FrontCounterClockwise = false;
+
+	result = m_Device->CreateRasterizerState(&RasterizerDesc, m_RasterizerStateNoCulling.GetAddressOf());
+	assert(SUCCEEDED(result));
 
 	return result;
 }

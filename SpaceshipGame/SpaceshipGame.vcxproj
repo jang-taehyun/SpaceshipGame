@@ -171,6 +171,7 @@
     <ClInclude Include="ModelFactoryClass.h" />
     <ClInclude Include="ObjectFactoryClass.h" />
     <ClInclude Include="ObjectManagerClass.h" />
+    <ClInclude Include="QuadTreeClass.h" />
     <ClInclude Include="SceneClass.h" />
     <ClInclude Include="CameraClass.h" />
     <ClInclude Include="ComputeDirectionVectorClass.h" />
@@ -209,12 +210,16 @@
     <ClInclude Include="ShaderClass.h" />
     <ClInclude Include="ShaderFactoryClass.h" />
     <ClInclude Include="ShaderManagerClass.h" />
+    <ClInclude Include="SkyDomeClass.h" />
+    <ClInclude Include="SkyDomeShaderClass.h" />
     <ClInclude Include="SoundClass.h" />
     <ClInclude Include="SoundManagerClass.h" />
     <ClInclude Include="SpaceshipGame.h" />
     <ClInclude Include="StartSceneClass.h" />
     <ClInclude Include="SystemClass.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TerrainClass.h" />
+    <ClInclude Include="TerrainShaderClass.h" />
     <ClInclude Include="TextClass.h" />
     <ClInclude Include="TextManagerClass.h" />
     <ClInclude Include="TextureClass.h" />
@@ -243,6 +248,7 @@
     <ClCompile Include="ModelFactoryClass.cpp" />
     <ClCompile Include="ObjectFactoryClass.cpp" />
     <ClCompile Include="ObjectManagerClass.cpp" />
+    <ClCompile Include="QuadTreeClass.cpp" />
     <ClCompile Include="SceneClass.cpp" />
     <ClCompile Include="CameraClass.cpp" />
     <ClCompile Include="ComputeDirectionVectorClass.cpp" />
@@ -284,10 +290,14 @@
     <ClCompile Include="ShaderClass.hpp" />
     <ClCompile Include="ShaderFactoryClass.cpp" />
     <ClCompile Include="ShaderManagerClass.cpp" />
+    <ClCompile Include="SkyDomeClass.cpp" />
+    <ClCompile Include="SkyDomeShaderClass.cpp" />
     <ClCompile Include="SoundClass.cpp" />
     <ClCompile Include="SoundManagerClass.cpp" />
     <ClCompile Include="StartSceneClass.cpp" />
     <ClCompile Include="SystemClass.cpp" />
+    <ClCompile Include="TerrainClass.cpp" />
+    <ClCompile Include="TerrainShaderClass.cpp" />
     <ClCompile Include="TextClass.cpp" />
     <ClCompile Include="TextManagerClass.cpp" />
     <ClCompile Include="TextureClass.cpp" />
@@ -309,10 +319,52 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
-    <None Include="shader\pixel\color.ps" />
-    <None Include="shader\pixel\Spaceship.ps" />
-    <None Include="shader\vertex\color.vs" />
-    <None Include="shader\vertex\Spaceship.vs" />
+    <FxCompile Include="shader\pixel\color_ps.hlsl">
+      <FileType>Document</FileType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ColorPixelShader</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="shader\pixel\Spaceship_ps.hlsl">
+      <FileType>Document</FileType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">SpaceshipPixelShader</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="shader\vertex\color_vs.hlsl">
+      <FileType>Document</FileType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ColorVertexShader</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="shader\vertex\Spaceship_vs.hlsl">
+      <FileType>Document</FileType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">SpaceshipVertexShader</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="shader\pixel\skydome_ps.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">SkyDomePixelShader</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="shader\pixel\terrain_ps.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">TerrainPixelShader</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="shader\vertex\skydome_vs.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">SkyDomeVertexShader</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="shader\vertex\terrain_vs.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">TerrainVertexShader</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
