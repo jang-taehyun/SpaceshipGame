@@ -149,6 +149,20 @@ namespace Graphic
 		};
 	}
 
+	// Terrain 관련 //
+	namespace Terrain
+	{
+		enum class TerrainID
+		{
+			NONE, DEFAULT, 
+		};
+
+		enum class SkyDomeID
+		{
+			NONE, DEFAULT,
+		};
+	}
+
 	// UI texture 관련 //
 	namespace Texture
 	{
@@ -168,7 +182,7 @@ namespace Graphic
 		extern UINT ShaderIDCount;
 		enum class ID
 		{
-			NONE, DEFAULT_SPACESHIP, CUBE, 
+			NONE, DEFAULT_SPACESHIP, CUBE, TERRAIN, 
 		};
 
 		// shader buffer type //
@@ -217,6 +231,13 @@ namespace Graphic
 			MatrixBufferType transform = {};
 			LightBufferType light = {};
 			CameraBufferType camera = {};
+		};
+
+		// matrix, light
+		struct ML_ShaderBuffers
+		{
+			MatrixBufferType transform = {};
+			LightBufferType light = {};
 		};
 	}
 

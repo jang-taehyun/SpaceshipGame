@@ -19,7 +19,7 @@ namespace Graphic
 			ShaderClass<ShaderBuffers>& operator=(ShaderClass&& other) noexcept;
 
 			// shader 객체 초기화 함수 //
-			virtual HRESULT Initialize(HWND hwnd, ID3D11Device* Device, const Loader::ShaderFileInfo& info, const std::vector<std::string>& VertexDataSemantics) override;
+			virtual HRESULT Initialize(HWND hwnd, ID3D11Device* Device, const Loader::ShaderFileInfo& info, const std::vector<std::string>& VertexDataSemantics, bool IsTerrain = false) override;
 
 
 			// 렌더링 함수들 //
@@ -31,16 +31,16 @@ namespace Graphic
 			virtual void BeginRender(ID3D11DeviceContext* DeviceContext) override;
 
 			// shader 렌더링 함수
-			virtual HRESULT Render(ID3D11DeviceContext* DeviceContext, int IndexCount, int InstanceCount, const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& Material) override;
+			virtual void Render(ID3D11DeviceContext* DeviceContext, int IndexCount, int InstanceCount, const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& Material) override;
 
 
 			// 초기화 관련 함수들 //
 		private:
 			// shader 컴파일 및 생성 함수
-			virtual HRESULT InitializeShaderInputLayout(HWND hwnd, ID3D11Device* Device, const Loader::ShaderFileInfo& info, const std::vector<std::string>& VertexDataSemantics) override;
+			virtual HRESULT InitializeShaderInputLayout(HWND hwnd, ID3D11Device* Device, const Loader::ShaderFileInfo& info, const std::vector<std::string>& VertexDataSemantics, bool IsTerrain) override;
 
 			// input layout 생성 함수
-			virtual HRESULT CreateInputLayout(ID3D11Device* Device, ID3D10Blob* VertexShaderBuffer, const std::vector<std::string>& VertexDataSemantics) override;
+			virtual HRESULT CreateInputLayout(ID3D11Device* Device, ID3D10Blob* VertexShaderBuffer, const std::vector<std::string>& VertexDataSemantics, bool IsTerrain) override;
 
 			// texture sampler state 생성 함수
 			virtual HRESULT CreateTextureSamplerState(ID3D11Device* Device) override;

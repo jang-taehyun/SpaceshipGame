@@ -2,7 +2,10 @@
 
 #include "TextureClass.h"
 
-namespace Graphic { class TerrainShaderClass; }
+namespace Graphic
+{
+	namespace Shader { class TerrainShaderClass; }
+}
 namespace Object { class CameraClass; }
 
 namespace Graphic
@@ -32,21 +35,21 @@ namespace Graphic
 			QuadTreeClass(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const char* HeightMap, const WCHAR* TextureFilename);
 			virtual ~QuadTreeClass();
 
-			void Render(ID3D11DeviceContext* DeviceContext, TerrainShaderClass* Shader, Object::CameraClass* Camera);
+			void Render(ID3D11DeviceContext* DeviceContext, Shader::TerrainShaderClass* Shader, Object::CameraClass* Camera);
 
 			ID3D11ShaderResourceView* GetTexture() const { return m_Texture->GetTexture(); }
 
 		private:
-			bool Initialize(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const char* HeightMap, const WCHAR* TextureFilename);
+			void Initialize(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const char* HeightMap, const WCHAR* TextureFilename);
 			void Shutdown();
 
 		private:
 			bool CreateVertexData(ID3D11Device* Device, const char* HeightMap);
-			bool CreateQuadTree(ID3D11Device* Device, int sy, int sx, int current_height, int current_width, QuadTree* cur);
+			void CreateQuadTree(ID3D11Device* Device, int sy, int sx, int current_height, int current_width, QuadTree* cur);
 
 			void ReleaseQuadTree(QuadTree* node);
 
-			void RenderBuffers(ID3D11DeviceContext* DeviceContext, QuadTree* node, TerrainShaderClass* Shader, Object::CameraClass* Camera);
+			void RenderBuffers(ID3D11DeviceContext* DeviceContext, QuadTree* node, Shader::TerrainShaderClass* Shader, Object::CameraClass* Camera);
 
 		private:
 			bool LoadHeightMap(const char* HeightMap);

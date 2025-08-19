@@ -14,6 +14,7 @@ namespace Graphic
 {
 	namespace Loader
 	{
+
 #ifdef _DEBUG
 		std::unique_ptr<Model::IModelClass> LoadCollision(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext);
 #endif

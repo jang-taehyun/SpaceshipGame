@@ -1,12 +1,12 @@
 // GLOBAL //
-Texture2D DiffuseTexture;
-Texture2D NormalTexture;
-Texture2D SpecularTexture;
-Texture2D ReflectionTexture;
+Texture2D DiffuseTexture : register(t0);
+Texture2D NormalTexture : register(t1);
+Texture2D SpecularTexture : register(t2);
+Texture2D ReflectionTexture : register(t3);
 SamplerState SampleType;
 
 // 조명 관련 상수 버퍼
-cbuffer LightBuffer : register(b1)
+cbuffer LightBuffer : register(b0)
 {
 	float4 AmbientColor;	// ambient의 색상
 	float4 DiffuseColor;    // diffuse의 색상

@@ -26,11 +26,14 @@ namespace Scene
 	public:
 		bool Frame(const System::InputClass* input, float frame_time);
 
-		inline Text::TextManagerClass* GetTextManager() const { return m_TextManager.get(); }
-		inline UI::UIManagerClass* GetUIManager() const { return m_UIManager.get(); }
-		inline Object::ObjectManagerClass* GetObjectManager() { return m_ObjectManager.get(); }
-		inline Sound::SoundManagerClass* GetSoundManager() const { return m_SoundManager.get(); }
+		Text::TextManagerClass* GetTextManager() const { return m_TextManager.get(); }
+		UI::UIManagerClass* GetUIManager() const { return m_UIManager.get(); }
+		Object::ObjectManagerClass* GetObjectManager() { return m_ObjectManager.get(); }
+		Sound::SoundManagerClass* GetSoundManager() const { return m_SoundManager.get(); }
 		Object::IObjectClass* GetCamera();
+
+		Graphic::Terrain::TerrainID GetTerrainID() const { return m_Scene->GetTerrainID(); }
+		Graphic::Terrain::SkyDomeID GetSkyDomeID() const { return m_Scene->GetSkyDomeID(); }
 
 	private:
 		void Release();

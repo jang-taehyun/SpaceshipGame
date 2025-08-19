@@ -6,8 +6,7 @@
 
 Graphic::Terrain::QuadTreeClass::QuadTreeClass(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const char* HeightMap, const WCHAR* TextureFilename)
 {
-    bool result = Initialize(Device, DeviceContext, HeightMap, TextureFilename);
-    assert(result);
+    Initialize(Device, DeviceContext, HeightMap, TextureFilename);
 }
 
 Graphic::Terrain::QuadTreeClass::~QuadTreeClass()
@@ -47,7 +46,7 @@ void Graphic::Terrain::QuadTreeClass::ReleaseQuadTree(QuadTree* node)
     node->indexBuffer.Reset();
 }
 
-bool Graphic::Terrain::QuadTreeClass::Initialize(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const char* HeightMap, const WCHAR* TextureFilename)
+void Graphic::Terrain::QuadTreeClass::Initialize(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const char* HeightMap, const WCHAR* TextureFilename)
 {
     // texture 로드 //
     m_Texture = std::make_unique<Texture::TextureClass>(Device, DeviceContext, TextureFilename);
@@ -55,27 +54,24 @@ bool Graphic::Terrain::QuadTreeClass::Initialize(ID3D11Device* Device, ID3D11Dev
 
     // 지형 데이터 로드 //
     if (!CreateVertexData(Device, HeightMap))
-        return false;
+        assert(false);
 
     // 지형에 대한 quad tree 생성 //
     m_QuadTree = std::make_unique<QuadTree>();
-    if (!m_QuadTree)
-        return false;
+    assert(m_QuadTree);
 
     CreateQuadTree(Device, 0, 0, m_TerrainHeight, m_TerrainWidth, m_QuadTree.get());
 
     // 전체 vertex 데이터 배열 해제 //
     m_Vertices.reset();
-
-    return true;
 }
 
-void Graphic::Terrain::QuadTreeClass::Render(ID3D11DeviceContext* DeviceContext, TerrainShaderClass* Shader, Object::CameraClass* Camera)
+void Graphic::Terrain::QuadTreeClass::Render(ID3D11DeviceContext* DeviceContext, Shader::TerrainShaderClass* Shader, Object::CameraClass* Camera)
 {
     RenderBuffers(DeviceContext, m_QuadTree.get(), Shader, Camera);
 }
 
-void Graphic::Terrain::QuadTreeClass::RenderBuffers(ID3D11DeviceContext* DeviceContext, QuadTree* node, TerrainShaderClass* Shader, Object::CameraClass* Camera)
+void Graphic::Terrain::QuadTreeClass::RenderBuffers(ID3D11DeviceContext* DeviceContext, QuadTree* node, Shader::TerrainShaderClass* Shader, Object::CameraClass* Camera)
 {
     float x = (node->max_x + node->min_x) * 0.5f;
     float y = (node->max_y + node->min_y) * 0.5f;
@@ -84,7 +80,7 @@ void Graphic::Terrain::QuadTreeClass::RenderBuffers(ID3D11DeviceContext* DeviceC
     UINT offset = 0;
 
     // frustum 체크
-    if (!Camera->CheckCube(x, y, z, node->width * 0.5f))
+    if (!Camera->IsRenderQuadTree(x, y, z, node->width * 0.5f))
         return;
 
     // child node를 체크하여 frustum volume에 포함되면 렌더링
@@ -102,7 +98,7 @@ void Graphic::Terrain::QuadTreeClass::RenderBuffers(ID3D11DeviceContext* DeviceC
         DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
         // shader를 통해서 렌더링
-        Shader->RenderShader(DeviceContext, node->indexCount);
+        Shader->Render(DeviceContext, node->indexCount, m_Texture->GetTexture());
     }
 }
 
@@ -320,10 +316,8 @@ bool Graphic::Terrain::QuadTreeClass::CreateVertexData(ID3D11Device* device, con
     return true;
 }
 
-bool Graphic::Terrain::QuadTreeClass::CreateQuadTree(ID3D11Device* Device, int sy, int sx, int current_height, int current_width, QuadTree* cur)
+void Graphic::Terrain::QuadTreeClass::CreateQuadTree(ID3D11Device* Device, int sy, int sx, int current_height, int current_width, QuadTree* cur)
 {
-    bool result = false;
-
     // 현재 node에 존재하는 삼각형의 개수 계산
     int traingleCount = current_width * current_height * 2;
 
@@ -339,50 +333,46 @@ bool Graphic::Terrain::QuadTreeClass::CreateQuadTree(ID3D11Device* Device, int s
         assert(cur->nodes[0]);
         cur->nodes[0] = std::make_unique<QuadTree>();
         assert(cur->nodes[0]);
-        result = CreateQuadTree(
+        CreateQuadTree(
             Device,
             sy + current_height / 2 - 1,
             sx,
             current_height / 2 + 1,
             current_width / 2,
             cur->nodes[0].get());
-        assert(result);
 
         assert(cur->nodes[1]);
         cur->nodes[1] = std::make_unique<QuadTree>();
         assert(cur->nodes[1]);
-        result = CreateQuadTree(
+        CreateQuadTree(
             Device,
             sy + current_height / 2 - 1,
             sx + current_width / 2 - 1,
             current_height / 2 + 1,
             current_width / 2 + 1,
             cur->nodes[1].get());
-        assert(result);
 
         assert(cur->nodes[2]);
         cur->nodes[2] = std::make_unique<QuadTree>();
         assert(cur->nodes[2]);
-        result = CreateQuadTree(
+        CreateQuadTree(
             Device,
             sy,
             sx,
             current_height / 2,
             current_width / 2,
             cur->nodes[2].get());
-        assert(result);
 
         assert(cur->nodes[3]);
         cur->nodes[3] = std::make_unique<QuadTree>();
         assert(cur->nodes[3]);
-        result = CreateQuadTree(
+        CreateQuadTree(
             Device,
             sy,
             sx + current_width / 2 - 1,
             current_height / 2,
             current_width / 2 + 1,
             cur->nodes[3].get());
-        assert(result);
 
         // 현재 node의 최대, 최소점 찾기
         cur->max_x = cur->nodes[0]->max_x;
@@ -407,8 +397,6 @@ bool Graphic::Terrain::QuadTreeClass::CreateQuadTree(ID3D11Device* Device, int s
     // vertex buffer, index buffer 생성
     else
         InitializeBuffers(Device, cur);
-
-    return true;
 }
 
 bool Graphic::Terrain::QuadTreeClass::InitializeBuffers(ID3D11Device* Device, QuadTree* node)
@@ -549,65 +537,52 @@ bool Graphic::Terrain::QuadTreeClass::InitializeBuffers(ID3D11Device* Device, Qu
 
 void Graphic::Terrain::QuadTreeClass::CalculateTextureCoordinates()
 {
-    int textureWidth = m_Texture->GetTextureInfo()->Width;
-    int textureHeight = m_Texture->GetTextureInfo()->Height;
+    float tu = 0.f;
+    float tv = 1.f;
+    float incrementU = 0.f;
+    float incrementV = 0.f;
+    int idx = 0;
 
-    int TEXTURE_REPEAT_U = static_cast<int>(m_terrainWidth / textureWidth);
-    int TEXTURE_REPEAT_V = static_cast<int>(m_terrainHeight / textureHeight);
+    // texture의 width, height 가져오기 //
+    int textureWidth = m_Texture->GetTextureInfo().Width;
+    int textureHeight = m_Texture->GetTextureInfo().Height;
+
+    // 지형에 texture를 얼마나 반복할지 계산하기 //
+    int TEXTURE_REPEAT_U = static_cast<int>(m_TerrainWidth / textureWidth);
+    int TEXTURE_REPEAT_V = static_cast<int>(m_TerrainHeight / textureHeight);
 
     if (!TEXTURE_REPEAT_U)
         TEXTURE_REPEAT_U = 1;
     if (!TEXTURE_REPEAT_V)
         TEXTURE_REPEAT_V = 1;
 
-    // 텍스처 좌표를 얼마나 많이 증가 시킬지 계산합니다.
-    float incrementValueU = (float)TEXTURE_REPEAT_U / (float)m_terrainWidth;
-    float incrementValueV = (float)TEXTURE_REPEAT_V / (float)m_terrainHeight;
+    // texture 좌표를 얼마나 많이 증가 시킬지 계산 //
+    incrementU = static_cast<float>(TEXTURE_REPEAT_U) / static_cast<float>(m_TerrainWidth);
+    incrementV = static_cast<float>(TEXTURE_REPEAT_V) / static_cast<float>(m_TerrainHeight);
 
-    // 텍스처를 반복 할 횟수를 계산합니다.
-    int incrementCountU = m_terrainWidth / TEXTURE_REPEAT_U;
-    int incrementCountV = m_terrainHeight / TEXTURE_REPEAT_V;
-
-    // tu 및 tv 좌표 값을 초기화합니다.
-    float tuCoordinate = 0.f;
-    float tvCoordinate = 1.f;
-
-    //  tu 및 tv 좌표 인덱스를 초기화합니다.
-    int tuCount = 0;
-    int tvCount = 0;
-
-    // 전체 높이 맵을 반복하고 각 꼭지점의 tu 및 tv 텍스처 좌표를 계산합니다.
-    int idx = 0;
-    for (int j = 0; j < m_terrainHeight; j++)
+    // 각 vertex의 texture 좌표 계산 //
+    for (int i = 0; i < m_TerrainHeight; i++)
     {
-        for (int i = 0; i < m_terrainWidth; i++)
+        for (int j = 0; j < m_TerrainWidth; j++)
         {
-            // 높이 맵에 텍스처 좌표를 저장한다.
-            idx = (m_terrainWidth * j) + i;
-            m_heightMap[idx].tu = tuCoordinate;
-            m_heightMap[idx].tv = tvCoordinate;
+            // vertex의 index 가져오기
+            idx = (m_TerrainWidth * i) + j;
+            m_Vertices[idx].texture.x = tu;
+            m_Vertices[idx].texture.y = tv;
 
-            // tu 텍스처 좌표를 증가 값만큼 증가시키고 인덱스를 1 씩 증가시킨다.
-            tuCoordinate += incrementValueU;
-            tuCount++;
+            // tu 값 증가
+            tu += incrementU;
 
-            // 텍스처의 오른쪽 끝에 있는지 확인하고, 그렇다면 처음부터 다시 시작하십시오.
-            if (tuCount == incrementCountU || tuCoordinate >= 1.f)
-            {
-                tuCoordinate = 0.f;
-                tuCount = 0;
-            }
+            // tu가 오른쪽 끝에 도달했는지 검사
+            if (tu >= 1.f)
+                tu = 0.f;
         }
 
-        // tv 텍스처 좌표를 증가 값만큼 증가시키고 인덱스를 1 씩 증가시킵니다.
-        tvCoordinate -= incrementValueV;
-        tvCount++;
+        // tv 값 감소
+        tv -= incrementV;
 
-        // 텍스처의 상단에 있는지 확인하고, 그렇다면 하단에서 다시 시작합니다.
-        if (tvCount == incrementCountV || tvCoordinate <= 0.f)
-        {
-            tvCoordinate = 1.f;
-            tvCount = 0;
-        }
+        // tv가 위쪽 끝에 도달했는지 검사
+        if (tv <= 0.f)
+            tv = 1.f;
     }
 }

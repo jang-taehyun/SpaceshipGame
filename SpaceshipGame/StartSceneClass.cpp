@@ -1,4 +1,5 @@
 #include "pch.h"
+
 #include "ObjectManagerClass.h"
 #include "TextManagerClass.h"
 #include "UIManagerClass.h"
@@ -15,6 +16,7 @@
 #include "ButtonClass.h"
 
 #include "ITextClass.h"
+
 #include "StartSceneClass.h"
 
 Scene::StartSceneClass::StartSceneClass(SceneID next, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds) : SceneClass(Scene::SceneID::START, next)

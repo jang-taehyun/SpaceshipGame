@@ -82,7 +82,7 @@ void Graphic::GraphicsClass::Frame(HWND hwnd, Scene::SceneManagerClass* SceneMan
 		obj = static_cast<Object::GameObjectClass*>(SceneManager->GetObjectManager()->GetGameObject(i));
 		assert(obj);
 
-		IsRender = cam->IsRender(
+		IsRender = cam->IsRenderModel(
 			m_ModelManager->GetModel(obj->GetModelID())->GetModelOBB(),
 			obj->GetAffineMatrix()
 		);
@@ -98,7 +98,7 @@ void Graphic::GraphicsClass::Frame(HWND hwnd, Scene::SceneManagerClass* SceneMan
 		col = static_cast<Object::CollisionClass*>(obj->GetCollision());
 		assert(col);
 
-		IsRender = cam->IsRender(
+		IsRender = cam->IsRenderModel(
 			m_ModelManager->GetModel(obj->GetModelID())->GetModelOBB(),
 			col->GetAffineMatrix()
 		);
@@ -182,9 +182,15 @@ void Graphic::GraphicsClass::Initialize(HWND hwnd, int ScreenWidth, int ScreenHe
 
 void Graphic::GraphicsClass::Load(HWND hwnd, Scene::SceneManagerClass* SceneManager)
 {
+	UINT ShaderMask = 0;
+
 	m_ModelManager->Load(hwnd, m_D3D->GetDevice(), m_D3D->GetDeviceContext(), SceneManager->GetObjectManager()->GetModelMask());
 	m_UITextureManager->Load(m_D3D->GetDevice(), m_D3D->GetDeviceContext(), SceneManager->GetUIManager()->GetUITextureMask());
 	m_UIRender->LoadFont(m_D3D->GetDevice(), SceneManager->GetTextManager()->GetFontMask());
+
+	ShaderMask = m_ModelManager->GetNeedShaderMask();
+	if (SceneManager->GetTerrainID() != Graphic::Terrain::TerrainID::NONE)
+		ShaderMask |= (1 << static_cast<UINT>());
 	m_ShaderManager->Load(hwnd, m_D3D->GetDevice(), m_ModelManager->GetNeedShaderMask());
 }
 

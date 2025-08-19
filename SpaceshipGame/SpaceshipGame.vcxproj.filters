@@ -460,7 +460,6 @@
     <ClInclude Include="TerrainClass.h" />
     <ClInclude Include="TerrainShaderClass.h" />
     <ClInclude Include="SkyDomeClass.h" />
-    <ClInclude Include="SkyDomeShaderClass.h" />
     <ClInclude Include="QuadTreeClass.h" />
   </ItemGroup>
   <ItemGroup>
@@ -665,7 +664,6 @@
     <ClCompile Include="TerrainClass.cpp" />
     <ClCompile Include="TerrainShaderClass.cpp" />
     <ClCompile Include="SkyDomeClass.cpp" />
-    <ClCompile Include="SkyDomeShaderClass.cpp" />
     <ClCompile Include="QuadTreeClass.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -685,9 +683,6 @@
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="shader\pixel\Spaceship_ps.hlsl">
-      <Filter>Shader\1. ShaderCode\PixelShader</Filter>
-    </FxCompile>
     <FxCompile Include="shader\pixel\color_ps.hlsl">
       <Filter>Shader\1. ShaderCode\PixelShader</Filter>
     </FxCompile>
@@ -697,17 +692,14 @@
     <FxCompile Include="shader\vertex\color_vs.hlsl">
       <Filter>Shader\1. ShaderCode\VertexShader</Filter>
     </FxCompile>
-    <FxCompile Include="shader\pixel\skydome_ps.hlsl">
-      <Filter>Shader\1. ShaderCode\PixelShader</Filter>
-    </FxCompile>
     <FxCompile Include="shader\pixel\terrain_ps.hlsl">
       <Filter>Shader\1. ShaderCode\PixelShader</Filter>
     </FxCompile>
-    <FxCompile Include="shader\vertex\skydome_vs.hlsl">
-      <Filter>Shader\1. ShaderCode\VertexShader</Filter>
-    </FxCompile>
     <FxCompile Include="shader\vertex\terrain_vs.hlsl">
       <Filter>Shader\1. ShaderCode\VertexShader</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\pixel\Spaceship_ps.hlsl">
+      <Filter>Shader\1. ShaderCode\PixelShader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

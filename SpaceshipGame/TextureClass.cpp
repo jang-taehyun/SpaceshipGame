@@ -22,11 +22,14 @@ Graphic::Texture::TextureClass::TextureClass(ID3D11Device* Device, ID3D11DeviceC
 Graphic::Texture::TextureClass::TextureClass(const TextureClass& other)
 {
 	other.m_Texture.CopyTo(m_Texture.GetAddressOf());
+
+	m_TextureInfo = other.m_TextureInfo;
 }
 
 Graphic::Texture::TextureClass::TextureClass(TextureClass&& other) noexcept
 {
 	m_Texture = std::move(other.m_Texture);
+	m_TextureInfo = other.m_TextureInfo;
 }
 
 Graphic::Texture::TextureClass& Graphic::Texture::TextureClass::operator=(const TextureClass& other)
@@ -36,6 +39,8 @@ Graphic::Texture::TextureClass& Graphic::Texture::TextureClass::operator=(const 
 
 	other.m_Texture.CopyTo(this->m_Texture.ReleaseAndGetAddressOf());
 
+	m_TextureInfo = other.m_TextureInfo;
+
 	return *this;
 }
 
@@ -44,7 +49,11 @@ Graphic::Texture::TextureClass& Graphic::Texture::TextureClass::operator=(Textur
 	if (this == &other)
 		return *this;
 
-	this->m_Texture = std::move(other.m_Texture);
+	if (m_Texture)
+		m_Texture.Reset();
+
+	m_Texture = std::move(other.m_Texture);
+	m_TextureInfo = other.m_TextureInfo;
 
 	return *this;
 }
@@ -103,9 +112,23 @@ HRESULT Graphic::Texture::TextureClass::LoadTarga(ID3D11Device* Device, ID3D11De
 HRESULT Graphic::Texture::TextureClass::LoadWIC(ID3D11Device* Device, const std::wstring& FileName)
 {
 	HRESULT result = S_OK;
-	
+	Microsoft::WRL::ComPtr<ID3D11Resource> resource = nullptr;
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> texture = nullptr;
+
+	// shader resource view 생성 //
 	result = DirectX::CreateWICTextureFromFile(Device, FileName.c_str(), nullptr, m_Texture.GetAddressOf());
 	assert(SUCCEEDED(result));
+
+	// texture 정보 가져오기 //
+	// texture를 ID3D11Resource 형태로 가져오기
+	m_Texture->GetResource(resource.GetAddressOf());
+
+	// 가져온 texture를 ID3D11Texture2D 형태로 변환
+	if (FAILED(resource.As(&texture)))
+		assert(false);
+
+	// texture 정보 가져오기
+	texture->GetDesc(&m_TextureInfo);
 
 	return result;
 }
@@ -113,9 +136,23 @@ HRESULT Graphic::Texture::TextureClass::LoadWIC(ID3D11Device* Device, const std:
 HRESULT Graphic::Texture::TextureClass::LoadDDS(ID3D11Device* Device, const std::wstring& FileName)
 {
 	HRESULT result = S_OK;
+	Microsoft::WRL::ComPtr<ID3D11Resource> resource = nullptr;
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> texture = nullptr;
 
+	// shader resource view 생성 //
 	result = DirectX::CreateDDSTextureFromFile(Device, FileName.c_str(), nullptr, m_Texture.GetAddressOf());
 	assert(SUCCEEDED(result));
+
+	// texture 정보 가져오기 //
+	// texture를 ID3D11Resource 형태로 가져오기
+	m_Texture->GetResource(resource.GetAddressOf());
+
+	// 가져온 texture를 ID3D11Texture2D 형태로 변환
+	if (FAILED(resource.As(&texture)))
+		assert(false);
+
+	// texture 정보 가져오기
+	texture->GetDesc(&m_TextureInfo);
 
 	return result;
 }
@@ -160,27 +197,26 @@ std::unique_ptr<char> Graphic::Texture::TextureClass::LoadTargaFile(const std::w
 HRESULT Graphic::Texture::TextureClass::CreateShaderResourceView(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, char* ImageData, UINT Height, UINT Width)
 {
 	HRESULT result = S_OK;
-	D3D11_TEXTURE2D_DESC TextureDesc = {};							// texture 설정 정보
 	D3D11_SHADER_RESOURCE_VIEW_DESC ShaderResourceViewDesc = {};	// shader resoure view 설정 정보
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> texture = nullptr;		// texture
 	UINT RowPitch = 0;
 	
 	// 빈 texture 생성 //
 	// texure 구조체 설정
-	TextureDesc.Height = Height;
-	TextureDesc.Width = Width;
-	TextureDesc.MipLevels = 0;
-	TextureDesc.ArraySize = 1;
-	TextureDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-	TextureDesc.SampleDesc.Count = 1;
-	TextureDesc.SampleDesc.Quality = 0;
-	TextureDesc.Usage = D3D11_USAGE_DEFAULT;
-	TextureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
-	TextureDesc.CPUAccessFlags = 0;
-	TextureDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
+	m_TextureInfo.Height = Height;
+	m_TextureInfo.Width = Width;
+	m_TextureInfo.MipLevels = 0;
+	m_TextureInfo.ArraySize = 1;
+	m_TextureInfo.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+	m_TextureInfo.SampleDesc.Count = 1;
+	m_TextureInfo.SampleDesc.Quality = 0;
+	m_TextureInfo.Usage = D3D11_USAGE_DEFAULT;
+	m_TextureInfo.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+	m_TextureInfo.CPUAccessFlags = 0;
+	m_TextureInfo.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
 
 	// 빈 texture 생성
-	result = Device->CreateTexture2D(&TextureDesc, NULL, texture.GetAddressOf());
+	result = Device->CreateTexture2D(&m_TextureInfo, NULL, texture.GetAddressOf());
 	assert(SUCCEEDED(result));
 
 	// 이미지 데이터를 빈 texture에 복사 //
@@ -194,7 +230,7 @@ HRESULT Graphic::Texture::TextureClass::CreateShaderResourceView(ID3D11Device* D
 
 	// shader resource view 생성 //
 	// shader resource view 설정
-	ShaderResourceViewDesc.Format = TextureDesc.Format;
+	ShaderResourceViewDesc.Format = m_TextureInfo.Format;
 	ShaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	ShaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
 	ShaderResourceViewDesc.Texture2D.MipLevels = -1;

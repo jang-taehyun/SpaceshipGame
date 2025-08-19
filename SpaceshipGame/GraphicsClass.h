@@ -52,6 +52,8 @@ namespace Graphic
 		std::unique_ptr<Shader::ShaderManagerClass> m_ShaderManager = nullptr;
 		std::unique_ptr<Texture::UITextureManagerClass> m_UITextureManager = nullptr;
 		std::unique_ptr<Texture::UIRenderClass> m_UIRender = nullptr;
+
+
 		
 	public:
 		GraphicsClass(const GraphicsClass& other) = delete;

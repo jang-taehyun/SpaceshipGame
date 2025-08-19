@@ -23,8 +23,9 @@ namespace Graphic
 			TextureClass(TextureClass&& other) noexcept;
 			virtual ~TextureClass() = default;
 
-			inline ID3D11ShaderResourceView* GetTexture() { return m_Texture.Get(); }
-			inline Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> MoveTexture() { return std::move(m_Texture); }
+			ID3D11ShaderResourceView* GetTexture() const { return m_Texture.Get(); }
+			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> MoveTexture() { return std::move(m_Texture); }
+			D3D11_TEXTURE2D_DESC GetTextureInfo() const { return m_TextureInfo; }
 
 			TextureClass& operator=(const TextureClass& other);
 			TextureClass& operator=(TextureClass&& other) noexcept;
@@ -43,6 +44,7 @@ namespace Graphic
 
 		private:
 			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_Texture = nullptr;
+			D3D11_TEXTURE2D_DESC m_TextureInfo = {};
 		};
 	}
 }

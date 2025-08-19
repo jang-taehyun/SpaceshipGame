@@ -62,12 +62,12 @@ Graphic::Shader::ShaderClass<ShaderBuffers>& Graphic::Shader::ShaderClass<Shader
 }
 
 template<typename ShaderBuffers>
-HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::Initialize(HWND hwnd, ID3D11Device* Device, const Loader::ShaderFileInfo& info, const std::vector<std::string>& VertexDataSemantics)
+HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::Initialize(HWND hwnd, ID3D11Device* Device, const Loader::ShaderFileInfo& info, const std::vector<std::string>& VertexDataSemantics, bool IsTerrain)
 {
 	HRESULT result = S_OK;
 
 	// shader, input layout 초기화
-	result = InitializeShaderInputLayout(hwnd, Device, info, VertexDataSemantics);
+	result = InitializeShaderInputLayout(hwnd, Device, info, VertexDataSemantics, IsTerrain);
 	assert(SUCCEEDED(result));
 
 	// shader에서 사용하는 buffer들 생성
@@ -87,10 +87,8 @@ void Graphic::Shader::ShaderClass<ShaderBuffers>::BeginRender(ID3D11DeviceContex
 }
 
 template<typename ShaderBuffers>
-HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::Render(ID3D11DeviceContext* DeviceContext, int IndexCount, int InstanceCount, const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& Material)
+void Graphic::Shader::ShaderClass<ShaderBuffers>::Render(ID3D11DeviceContext* DeviceContext, int IndexCount, int InstanceCount, const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& Material)
 {
-	HRESULT result = S_OK;
-
 	// pixel shader에서 사용할 shader texture resource(Texture2D) 설정 //
 	// GPU 파이프라인에 텍스처 데이터를 바인드
 	for(int i=0; i<Material.size(); ++i)
@@ -98,12 +96,10 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::Render(ID3D11DeviceContext*
 
 	// 렌더링 //
 	DeviceContext->DrawIndexedInstanced(IndexCount, InstanceCount, 0, 0, 0);
-
-	return result;
 }
 
 template<typename ShaderBuffers>
-HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::InitializeShaderInputLayout(HWND hwnd, ID3D11Device* Device, const Loader::ShaderFileInfo& info, const std::vector<std::string>& VertexDataSemantics)
+HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::InitializeShaderInputLayout(HWND hwnd, ID3D11Device* Device, const Loader::ShaderFileInfo& info, const std::vector<std::string>& VertexDataSemantics, bool IsTerrain)
 {
 	HRESULT result = S_OK;
 	Microsoft::WRL::ComPtr<ID3D10Blob> ErrorMessage = nullptr;				// shader compile 에러메세지
@@ -163,18 +159,18 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::InitializeShaderInputLayout
 	assert(SUCCEEDED(result));
 
 	// input layout 생성
-	result = CreateInputLayout(Device, VertexShaderBuffer.Get(), VertexDataSemantics);
+	result = CreateInputLayout(Device, VertexShaderBuffer.Get(), VertexDataSemantics, IsTerrain);
 
 	return result;
 }
 
 template<typename ShaderBuffers>
-HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::CreateInputLayout(ID3D11Device* Device, ID3D10Blob* VertexShaderBuffer, const std::vector<std::string>& VertexDataSemantics)
+HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::CreateInputLayout(ID3D11Device* Device, ID3D10Blob* VertexShaderBuffer, const std::vector<std::string>& VertexDataSemantics, bool IsTerrain)
 {
 	HRESULT result = S_OK;
 	std::vector<D3D11_INPUT_ELEMENT_DESC> LayoutDesc;
 	D3D11_INPUT_ELEMENT_DESC desc = {};
-	std::string semantic;
+	// std::string semantic;
 
 	// vertex input layout 설정
 	// vertex input layout 설정는 ModelClass의 VertexType 구조, vertex shader 내부의 VertexInputType 모두 일치해야 함
@@ -199,35 +195,38 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::CreateInputLayout(ID3D11Dev
 		LayoutDesc.push_back(desc);
 	}
 
-	// instance layout 설정
-	// instance layout은 world matrix만 있으므로 따로 처리
-	desc.SemanticName = "INSTANCE_WORLD_COLUMN";
-	desc.SemanticIndex = 0;
-	desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	desc.InputSlot = 1;
-	desc.InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
-	desc.AlignedByteOffset = 0;
-	desc.InstanceDataStepRate = 1;
-	LayoutDesc.push_back(desc);
+	if (!IsTerrain)
+	{
+		// instance layout 설정
+		// instance layout은 world matrix 처리
+		desc.SemanticName = "INSTANCE_WORLD_COLUMN";
+		desc.SemanticIndex = 0;
+		desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		desc.InputSlot = 1;
+		desc.InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+		desc.AlignedByteOffset = 0;
+		desc.InstanceDataStepRate = 1;
+		LayoutDesc.push_back(desc);
 
-	desc.SemanticName = "INSTANCE_WORLD_COLUMN";
-	desc.SemanticIndex = 1;
-	desc.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-	LayoutDesc.push_back(desc);
+		desc.SemanticName = "INSTANCE_WORLD_COLUMN";
+		desc.SemanticIndex = 1;
+		desc.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+		LayoutDesc.push_back(desc);
 
-	desc.SemanticName = "INSTANCE_WORLD_COLUMN";
-	desc.SemanticIndex = 2;
-	LayoutDesc.push_back(desc);
+		desc.SemanticName = "INSTANCE_WORLD_COLUMN";
+		desc.SemanticIndex = 2;
+		LayoutDesc.push_back(desc);
 
-	desc.SemanticName = "INSTANCE_WORLD_COLUMN";
-	desc.SemanticIndex = 3;
-	LayoutDesc.push_back(desc);
+		desc.SemanticName = "INSTANCE_WORLD_COLUMN";
+		desc.SemanticIndex = 3;
+		LayoutDesc.push_back(desc);
 
 #ifdef _DEBUG
-	desc.SemanticName = "INSTANCE_WORLD_COLUMN";
-	desc.SemanticIndex = 4;
-	LayoutDesc.push_back(desc);
+		desc.SemanticName = "INSTANCE_WORLD_COLUMN";
+		desc.SemanticIndex = 4;
+		LayoutDesc.push_back(desc);
 #endif // DEBUG
+	}
 
 	// input layout 생성
 	result = Device->CreateInputLayout(LayoutDesc.data(), static_cast<UINT>(LayoutDesc.size()), VertexShaderBuffer->GetBufferPointer(), VertexShaderBuffer->GetBufferSize(), m_Layout.GetAddressOf());
@@ -251,11 +250,11 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::CreateTextureSamplerState(I
 	SamplerDesc.MipLODBias = 0.f;
 	SamplerDesc.MaxAnisotropy = 1;
 	SamplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-	SamplerDesc.BorderColor[0] = 0;
-	SamplerDesc.BorderColor[1] = 0;
-	SamplerDesc.BorderColor[2] = 0;
-	SamplerDesc.BorderColor[3] = 0;
-	SamplerDesc.MinLOD = 0;
+	SamplerDesc.BorderColor[0] = 0.f;
+	SamplerDesc.BorderColor[1] = 0.f;
+	SamplerDesc.BorderColor[2] = 0.f;
+	SamplerDesc.BorderColor[3] = 0.f;
+	SamplerDesc.MinLOD = 0.f;
 	SamplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	// texture sampler state 생성
@@ -270,7 +269,7 @@ void Graphic::Shader::ShaderClass<ShaderBuffers>::OutputShaderErrorMessage(HWND 
 {
 	const char* msg = reinterpret_cast<const char*>(ErrorMessage->GetBufferPointer());
 	int len = static_cast<UINT>(ErrorMessage->GetBufferSize());
-	wchar_t wmsg[2000] = { 0, };
+	wchar_t wmsg[1000] = { 0, };
 
 	MultiByteToWideChar(CP_ACP, 0, msg, len, wmsg, sizeof(wmsg));
 

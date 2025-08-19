@@ -5,7 +5,7 @@ cbuffer MatrixBuffer : register(b0)
 	matrix ProjectionMatrix;
 };
 
-cbuffer CameraBuffer : register(b2)
+cbuffer CameraBuffer : register(b1)
 {
 	float3 CameraPosition;
 	float padding;

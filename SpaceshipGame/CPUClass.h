@@ -13,8 +13,7 @@ namespace System
 
 		void Frame();
 
-		// Getter //
-		inline ULONGLONG GetCPUPercentage() const { return m_CPUUsage; }
+		ULONGLONG GetCPUPercentage() const { return m_CPUUsage; }
 
 	private:
 		void Initialize();

@@ -2,12 +2,15 @@
 Texture2D shaderTexture : register(t0);
 SamplerState SampleType;
  
-cbuffer LightBuffer : register(b1)
+cbuffer LightBuffer : register(b0)
 {
     float4 ambientColor;
     float4 diffuseColor;
     float3 lightDirection;
-    float padding;
+    float padding1;
+    float4 SpecularColor; // specular color
+    float SpecularPower; // specular 강도
+    float3 padding2;
 };
  
 // TYPEDEFS //

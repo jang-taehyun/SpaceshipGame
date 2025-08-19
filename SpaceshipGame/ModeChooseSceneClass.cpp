@@ -29,6 +29,9 @@ Scene::ModeChooseSceneClass::ModeChooseSceneClass(SceneID next, Object::ObjectMa
 	assert(m_Camera);
 	m_Camera->SetPosition(DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f));
 
+	SetTerrainID(Graphic::Terrain::TerrainID::DEFAULT);
+	SetSkyDomeID(Graphic::Terrain::SkyDomeID::DEFAULT);
+
 	UI_Idx = UIs->LoadUI(UI::ID::BUTTON, Graphic::Texture::UITextureID::START_BUTTON);
 	UIs->GetUI(UI_Idx)->SetPosition(DirectX::XMFLOAT2(50.f, 30.f));
 	UIs->GetUI(UI_Idx)->SetColor(DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f));

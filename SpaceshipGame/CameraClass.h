@@ -26,7 +26,8 @@ namespace Object
 		void UpdateFrustum(DirectX::XMFLOAT4X4 projection);
 		DirectX::XMFLOAT4X4 Render();
 
-		bool IsRender(DirectX::BoundingOrientedBox ModelOBB, DirectX::XMFLOAT4X4 ModelWorldMatrix) const;
+		bool IsRenderModel(DirectX::BoundingOrientedBox ModelOBB, DirectX::XMFLOAT4X4 ModelWorldMatrix) const;
+		bool IsRenderQuadTree(float x, float y, float z, float radius);
 
 		void Move(MoveState state, float frame_time, bool IsKeyDown);
 		void Rotate(long MouseX, long MouseY, float frame_time, bool IsKeyDown);

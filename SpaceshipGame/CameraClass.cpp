@@ -42,9 +42,9 @@ DirectX::XMFLOAT4X4 Object::CameraClass::Render()
 	return m_ViewMatrix;
 }
 
-bool Object::CameraClass::IsRender(DirectX::BoundingOrientedBox ModelOBB, DirectX::XMFLOAT4X4 ModelWorldMatrix) const
+bool Object::CameraClass::IsRenderModel(DirectX::BoundingOrientedBox ModelOBB, DirectX::XMFLOAT4X4 ModelWorldMatrix) const
 {
-	DirectX::BoundingOrientedBox comp = ModelOBB;
+	DirectX::BoundingOrientedBox comp(ModelOBB);
 	bool IsContain = false, IsIntersect = false;
 
 	// World matrix를 XMMATRIX로 변환 //
@@ -60,6 +60,27 @@ bool Object::CameraClass::IsRender(DirectX::BoundingOrientedBox ModelOBB, Direct
 	IsContain = m_Frustum.Contains(comp);
 
 	return (IsIntersect || IsContain);
+}
+
+bool Object::CameraClass::IsRenderQuadTree(float x, float y, float z, float radius)
+{
+	bool IsContain = false, IsIntersect = false;
+
+	// Quad Tree에 대한 OBB 박스 생성 //
+	DirectX::XMFLOAT3 pos(x, y, z);
+	DirectX::XMFLOAT3 extents(radius, radius, radius);
+	DirectX::XMFLOAT4 orientation(0.f, 0.f, 0.f, 1.f);
+	DirectX::BoundingOrientedBox comp(pos, extents, orientation);
+
+	// frustum volume 안에 있는지 체크 //
+	// 교차하는지 체크
+	IsIntersect = m_Frustum.Intersects(comp);
+	// 포함하는지 체크
+	IsContain = m_Frustum.Contains(comp);
+
+	return (IsIntersect || IsContain);
+
+	return false;
 }
 
 Object::CameraClass& Object::CameraClass::operator=(const CameraClass& other)

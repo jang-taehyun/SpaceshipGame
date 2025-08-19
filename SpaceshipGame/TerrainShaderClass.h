@@ -1,43 +1,44 @@
 #pragma once
 
-class TerrainShaderClass
+#include "ShaderClass.hpp"
+
+namespace Graphic
 {
-private:
-	struct MatrixBufferType
+	namespace Shader
 	{
-		DirectX::XMMATRIX World;
-		DirectX::XMMATRIX View;
-		DirectX::XMMATRIX Projection;
-	};
+		class TerrainShaderClass : public ShaderClass<ML_ShaderBuffers>
+		{
+		public:
+			explicit TerrainShaderClass(ID ShaderID);
+			TerrainShaderClass(const TerrainShaderClass& other);
+			TerrainShaderClass(TerrainShaderClass&& other) noexcept;
+			virtual ~TerrainShaderClass() = default;
 
-	struct LightBufferType
-	{
-		DirectX::XMFLOAT4 AmbientColor;
-		DirectX::XMFLOAT4 DiffuseColor;
-		DirectX::XMFLOAT3 LightDirection;
-		float padding = 0.f;
-	};
+			TerrainShaderClass& operator=(const TerrainShaderClass& other);
+			TerrainShaderClass& operator=(TerrainShaderClass&& other) noexcept;
 
-public:
-	TerrainShaderClass() = default;
-	~TerrainShaderClass() = default;
+			// shader 내부에 들어갈 데이터들 업데이트하는 함수 //
+			virtual void UpdateShaderBuffers(ID3D11DeviceContext* DeviceContext, const ML_ShaderBuffers& ShaderBufferDatas) override;
 
-	bool Initialize(ID3D11Device*, HWND);
-	bool Render(ID3D11DeviceContext*, int, DirectX::XMMATRIX, DirectX::XMMATRIX, DirectX::XMMATRIX, DirectX::XMFLOAT3, DirectX::XMFLOAT4, DirectX::XMFLOAT4, ID3D11ShaderResourceView*);
-	
-	bool SetShaderParameters(ID3D11DeviceContext*, DirectX::XMMATRIX, DirectX::XMMATRIX, DirectX::XMMATRIX, DirectX::XMFLOAT3, DirectX::XMFLOAT4, DirectX::XMFLOAT4, ID3D11ShaderResourceView*);
-	void RenderShader(ID3D11DeviceContext*, int);
+			void Render(ID3D11DeviceContext* DeviceContext, int IndexCount, ID3D11ShaderResourceView* texture);
 
-private:
-	bool InitializeShader(ID3D11Device*, HWND, const WCHAR*, const WCHAR*);
-	void OutputShaderErrorMessage(ID3D10Blob*, HWND, const WCHAR*);
+		private:
+			// shader에서 사용하는 buffer들을 생성하는 함수
+			virtual HRESULT CreateBuffers(ID3D11Device* Device) override;
 
-private:
-    Microsoft::WRL::ComPtr<ID3D11VertexShader> m_VertexShader = nullptr;
-    Microsoft::WRL::ComPtr<ID3D11PixelShader> m_PixelShader = nullptr;
-    Microsoft::WRL::ComPtr<ID3D11InputLayout> m_Layout = nullptr;
-    Microsoft::WRL::ComPtr<ID3D11SamplerState> m_SampleState = nullptr;
+			// shader buffer를 세팅하는 함수 //
+			virtual void SetShaderBuffers(ID3D11DeviceContext* DeviceContext) override;
 
-    Microsoft::WRL::ComPtr<ID3D11Buffer> m_MatrixBuffer = nullptr;
-    Microsoft::WRL::ComPtr<ID3D11Buffer> m_LightBuffer = nullptr;
-};
+		private:
+			// Matrix buffer를 업데이트 하는 함수 //
+			HRESULT UpdateMatrixBuffer(ID3D11DeviceContext* DeviceContext, const MatrixBufferType& transform);
+
+			// Light buffer를 업데이트 하는 함수 //
+			HRESULT UpdateLightBuffer(ID3D11DeviceContext* DeviceContext, const LightBufferType& light);
+
+		private:
+			Microsoft::WRL::ComPtr<ID3D11Buffer> m_MatrixBuffer = nullptr;
+			Microsoft::WRL::ComPtr<ID3D11Buffer> m_LightBuffer = nullptr;
+		};
+	}
+}
