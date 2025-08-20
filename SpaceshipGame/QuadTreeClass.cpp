@@ -73,14 +73,13 @@ void Graphic::Terrain::QuadTreeClass::Render(ID3D11DeviceContext* DeviceContext,
 
 void Graphic::Terrain::QuadTreeClass::RenderBuffers(ID3D11DeviceContext* DeviceContext, QuadTree* node, Shader::TerrainShaderClass* Shader, Object::CameraClass* Camera)
 {
-    float x = (node->max_x + node->min_x) * 0.5f;
-    float y = (node->max_y + node->min_y) * 0.5f;
-    float z = (node->max_z + node->min_z) * 0.5f;
+    DirectX::XMFLOAT4 point1(node->min_x, node->min_y, node->min_z, 1.f);
+    DirectX::XMFLOAT4 point2(node->max_x, node->max_y, node->max_z, 1.f);
     UINT stride = sizeof(Model::PTN_VertexType);
     UINT offset = 0;
 
     // frustum 체크
-    if (!Camera->IsRenderQuadTree(x, y, z, node->width * 0.5f))
+    if (!Camera->IsRenderQuadTree(point1,point2))
         return;
 
     // child node를 체크하여 frustum volume에 포함되면 렌더링

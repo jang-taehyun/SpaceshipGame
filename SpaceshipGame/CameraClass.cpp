@@ -62,15 +62,15 @@ bool Object::CameraClass::IsRenderModel(DirectX::BoundingOrientedBox ModelOBB, D
 	return (IsIntersect || IsContain);
 }
 
-bool Object::CameraClass::IsRenderQuadTree(float x, float y, float z, float radius)
+bool Object::CameraClass::IsRenderQuadTree(DirectX::XMFLOAT4 point1, DirectX::XMFLOAT4 point2)
 {
+	DirectX::BoundingBox comp;
 	bool IsContain = false, IsIntersect = false;
-
-	// Quad Tree에 대한 OBB 박스 생성 //
-	DirectX::XMFLOAT3 pos(x, y, z);
-	DirectX::XMFLOAT3 extents(radius, radius, radius);
-	DirectX::XMFLOAT4 orientation(0.f, 0.f, 0.f, 1.f);
-	DirectX::BoundingOrientedBox comp(pos, extents, orientation);
+	
+	// Quad Tree에 대한 AABB 박스 생성 //
+	DirectX::XMVECTOR p1 = DirectX::XMLoadFloat4(&point1);
+	DirectX::XMVECTOR p2 = DirectX::XMLoadFloat4(&point2);
+	DirectX::BoundingBox::CreateFromPoints(comp, p1, p2);
 
 	// frustum volume 안에 있는지 체크 //
 	// 교차하는지 체크
