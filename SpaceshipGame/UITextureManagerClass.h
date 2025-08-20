@@ -11,6 +11,14 @@ namespace Graphic
 	{
 		class UITextureManagerClass
 		{
+		private:
+			const UINT m_UITextureIDCount = 3;
+			std::map<UITextureID, const std::wstring> m_UITextureFileList =
+			{
+				{ UITextureID::START_BACKGROUND, _T("./resource/StartBackground.jpg") },
+				{ UITextureID::START_BUTTON, _T("./resource/button-icon-png-21058.png") },
+			};
+
 		public:
 			UITextureManagerClass();
 			virtual ~UITextureManagerClass();

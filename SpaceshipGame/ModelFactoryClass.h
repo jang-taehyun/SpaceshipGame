@@ -4,10 +4,7 @@
 
 namespace Graphic
 {
-	namespace Model
-	{
-		class IModelClass;
-	}
+	namespace Model { class IModelClass; }
 }
 
 namespace Graphic
@@ -16,22 +13,36 @@ namespace Graphic
 	{
 
 #ifdef _DEBUG
-		std::unique_ptr<Model::IModelClass> LoadCollision(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext);
+		std::unique_ptr<Model::IModelClass> LoadCollision(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::string& ModelFilename, const std::wstring& AdditionalPath);
 #endif
-
-		std::unique_ptr<Model::IModelClass> LoadDefaultSpaceship(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext);
+		std::unique_ptr<Model::IModelClass> LoadDefaultSpaceship(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::string& ModelFilename, const std::wstring& AdditionalPath);
 
 		class ModelFactoryClass
 		{
+		private:
+			const UINT m_ModelIDCount = 3;
+			std::map<Model::ID, const std::string> m_ModelFileList =
+			{
+				{ Model::ID::DEFAULT_SPACESHIP, "./resource/E-45-Aircraft/E 45 Aircraft_obj.obj" },
+				{ Model::ID::COLLISION, "./resource/uploads_files_3862208_Cube.obj" },
+			};
+
+			std::map<Model::ID, const std::wstring> m_ModelAdditionPathList =
+			{
+				{ Model::ID::DEFAULT_SPACESHIP, _T("./resource/E-45-Aircraft/") },
+				{ Model::ID::COLLISION, _T("")},
+			};
+
 		public:
 			ModelFactoryClass();
 			~ModelFactoryClass();
 
+			UINT GetModelIDCount() const { return m_ModelIDCount; }
 			std::unique_ptr<Model::IModelClass> Load(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Model::ID ModelID) const;
 
 		private:
 			static bool IsInitialize;
-			std::map<Model::ID, std::function<std::unique_ptr<Model::IModelClass>(HWND, ID3D11Device*, ID3D11DeviceContext*)>> m_Creator;
+			std::map<Model::ID, std::function<std::unique_ptr<Model::IModelClass>(HWND, ID3D11Device*, ID3D11DeviceContext*, const std::string&, const std::wstring&)>> m_Creator;
 		};
 	}
 }

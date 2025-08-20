@@ -22,7 +22,8 @@ namespace Graphic
 
 			void UpdateInstanceBuffers(ID3D11DeviceContext* DeviceContext);
 
-			inline UINT GetNeedShaderMask() const { return m_NeedShaderMask; }
+			UINT GetNeedShaderMask() const { return m_NeedShaderMask; }
+			UINT GetModelIDCount() const;
 
 		private:
 			static bool IsInitialize;

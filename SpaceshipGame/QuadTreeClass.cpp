@@ -156,7 +156,7 @@ bool Graphic::Terrain::QuadTreeClass::LoadHeightMap(const char* HeightMap)
     // 파일을 닫기
     FileIn.close();
 
-    // 이미지 데이터를 높이 맵으로 읽어들입니다.
+    // 높이 데이터 가져오기
     k = 0;
     idx = 0;
     for (int i = 0; i < m_TerrainHeight; i++)

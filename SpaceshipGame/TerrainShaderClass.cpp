@@ -70,7 +70,7 @@ HRESULT Graphic::Shader::TerrainShaderClass::CreateBuffers(ID3D11Device* Device)
 	HRESULT result = S_OK;
 
 	// 행렬 상수 버퍼 생성 //
-	result = CreateConstantBuffer(Device, m_MatrixBuffer.GetAddressOf(), sizeof(MatrixBufferType));
+	result = CreateConstantBuffer(Device, m_MatrixBuffer.GetAddressOf(), sizeof(WMatrixBufferType));
 
 	// light 상수 버퍼 생성 //
 	result = CreateConstantBuffer(Device, m_LightBuffer.GetAddressOf(), sizeof(LightBufferType));
@@ -136,7 +136,7 @@ HRESULT Graphic::Shader::TerrainShaderClass::UpdateLightBuffer(ID3D11DeviceConte
 	result = DeviceContext->Map(m_LightBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource);
 	assert(SUCCEEDED(result));
 
-	// 광원 상수 버퍼의 데이터에 대한 포인터를 가져온다.
+	// 광원 상수 버퍼의 데이터에 대한 포인터 가져오기
 	DataPtr = static_cast<LightBufferType*>(MappedResource.pData);
 
 	// 광원 상수 버퍼에 데이터(행렬) 복사

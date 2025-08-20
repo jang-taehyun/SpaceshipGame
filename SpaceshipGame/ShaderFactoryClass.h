@@ -24,10 +24,13 @@ namespace Graphic
 			ShaderFactoryClass();
 			~ShaderFactoryClass();
 
+			UINT GetShaderIDCount() const { return m_ShaderIDCount; }
+
 			std::unique_ptr<Shader::IShaderClass> Load(HWND hwnd, ID3D11Device* Device, Shader::ID id) const;
 
 		private:
 			static bool IsInitialize;
+			const UINT m_ShaderIDCount = 4;
 
 			std::map<Shader::ID, std::function<std::unique_ptr<Shader::IShaderClass>(HWND, ID3D11Device*, Shader::ID)>> m_Creator;
 		};

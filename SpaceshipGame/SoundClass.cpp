@@ -1,14 +1,15 @@
 #include "pch.h"
 #include "SoundClass.h"
 
-Sound::SoundClass::SoundClass(DirectX::AudioEngine* engine, ID SoundID) : m_ID(SoundID), m_IsLoop(false)
+Sound::SoundClass::SoundClass(DirectX::AudioEngine* engine, const std::wstring& filename)
 {
-	LoadWaveFile(engine);
+	LoadWaveFile(engine, filename);
 }
 
 Sound::SoundClass::SoundClass(SoundClass&& other) noexcept :
-	m_ID(other.m_ID), m_IsLoop(other.m_IsLoop),
-	m_Effect(std::move(other.m_Effect)), m_EffectInstance(std::move(other.m_EffectInstance))
+	m_IsLoop(other.m_IsLoop),
+	m_Effect(std::move(other.m_Effect)),
+	m_EffectInstance(std::move(other.m_EffectInstance))
 {}
 
 Sound::SoundClass::~SoundClass()
@@ -29,7 +30,6 @@ Sound::SoundClass& Sound::SoundClass::operator=(SoundClass&& other) noexcept
 	m_Effect.reset();
 
 	// 멤버 변수 모두 이동 //
-	m_ID = other.m_ID;
 	m_IsLoop = other.m_IsLoop;
 	m_Effect = std::move(other.m_Effect);
 	m_EffectInstance = std::move(other.m_EffectInstance);
@@ -37,10 +37,10 @@ Sound::SoundClass& Sound::SoundClass::operator=(SoundClass&& other) noexcept
 	return *this;
 }
 
-void Sound::SoundClass::LoadWaveFile(DirectX::AudioEngine* engine)
+void Sound::SoundClass::LoadWaveFile(DirectX::AudioEngine* engine, const std::wstring& filename)
 {
 	// wave 파일을 load하면서 sound effect 객체 생성 //
-	m_Effect = std::make_unique<DirectX::SoundEffect>(engine, Sound::SoundFileList.at(m_ID).c_str());
+	m_Effect = std::make_unique<DirectX::SoundEffect>(engine, filename.c_str());
 	assert(m_Effect);
 	m_EffectInstance = std::move(m_Effect->CreateInstance());
 	assert(m_EffectInstance);

@@ -4,25 +4,14 @@
 #include <DDSTextureLoader.h>
 #include "TextureClass.h"
 
-Graphic::Texture::TextureClass::TextureClass(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, UITextureID ID)
-{
-	std::map<UITextureID, const std::wstring>::const_iterator iter;
-
-	iter = UITextureFileList.find(ID);
-	assert(UITextureFileList.end() != iter);
-
-	HRESULT result = Initialize(Device, DeviceContext, iter->second);
-}
-
 Graphic::Texture::TextureClass::TextureClass(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::wstring& filename)
 {
-	HRESULT result = Initialize(Device, DeviceContext, filename);
+	Initialize(Device, DeviceContext, filename);
 }
 
 Graphic::Texture::TextureClass::TextureClass(const TextureClass& other)
 {
 	other.m_Texture.CopyTo(m_Texture.GetAddressOf());
-
 	m_TextureInfo = other.m_TextureInfo;
 }
 
@@ -58,7 +47,7 @@ Graphic::Texture::TextureClass& Graphic::Texture::TextureClass::operator=(Textur
 	return *this;
 }
 
-HRESULT Graphic::Texture::TextureClass::Initialize(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::wstring& FileName)
+void Graphic::Texture::TextureClass::Initialize(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::wstring& FileName)
 {
 	HRESULT result = S_OK;
 	std::wstring Extension;
@@ -73,7 +62,7 @@ HRESULT Graphic::Texture::TextureClass::Initialize(ID3D11Device* Device, ID3D11D
 	Extension = FileName.substr(DotIdx + (size_t)1);
 
 	// 파일의 확장자에 따라 이미지 로드 함수를 호출해 메모리에 이미지 데이터 로드
-	return Load(Device, DeviceContext, FileName, Extension);
+	Load(Device, DeviceContext, FileName, Extension);
 }
 
 HRESULT Graphic::Texture::TextureClass::Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::wstring& FileName, const std::wstring& Extension)

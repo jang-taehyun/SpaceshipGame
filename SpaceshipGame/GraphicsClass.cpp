@@ -210,6 +210,7 @@ void Graphic::GraphicsClass::Render(HWND hwnd, Scene::SceneManagerClass* SceneMa
 	Shader::IShaderClass* shader = nullptr;
 	UI::IUIClass* ui = nullptr;
 	Text::ITextClass* text = nullptr;
+	UINT cnt = m_ModelManager->GetModelIDCount();
 
 	// front buffer 초기화 //
 	m_D3D->BeginScene(DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f));
@@ -219,7 +220,7 @@ void Graphic::GraphicsClass::Render(HWND hwnd, Scene::SceneManagerClass* SceneMa
 	m_Terrain->Render(m_D3D->GetDeviceContext(), m_D3D.get(), shader, SceneManager->GetCamera(), m_D3D->GetProjectionMatrix());
 
 	// 3D 물체 렌더링 //
-	for (UINT i = 0; i < Model::ModelIDCount; ++i)
+	for (UINT i = 0; i < cnt; ++i)
 	{
 		model = m_ModelManager->GetModel(static_cast<Model::ID>(i));
 

@@ -5,15 +5,12 @@
 #include "ModelLoaderClass.h"
 
 template<typename VertexType>
-Graphic::Loader::ModelLoaderClass<VertexType>::ModelLoaderClass(Model::ID ModelID) : m_ModelID(ModelID), m_Filename(Model::ModelFileList.find(ModelID)->second) {}
-
-template<typename VertexType>
-void Graphic::Loader::ModelLoaderClass<VertexType>::Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext)
+void Graphic::Loader::ModelLoaderClass<VertexType>::Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::string& ModelFilename, const std::wstring& AdditionalPath)
 {
 	Assimp::Importer importer;				// assimp 라이브러리 importer 객체
 
 	// assimp 라이브러리를 통해 모델 파일을 메모리에 로드 //
-	const aiScene* scene = importer.ReadFile(m_Filename.c_str(), aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs | aiProcess_MakeLeftHanded);
+	const aiScene* scene = importer.ReadFile(ModelFilename.c_str(), aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs | aiProcess_MakeLeftHanded);
 	assert(scene);
 	assert(scene->HasMeshes());
 
@@ -24,7 +21,7 @@ void Graphic::Loader::ModelLoaderClass<VertexType>::Load(ID3D11Device* Device, I
 	LoadVertex(scene);
 
 	// material 데이터 로드 //
-	LoadMaterial(Device, DeviceContext, scene);
+	LoadMaterial(Device, DeviceContext, scene, AdditionalPath);
 
 	// Model의 OBB 박스 생성(frustum culling용 OBB 박스) //
 	DirectX::BoundingOrientedBox::CreateFromPoints(m_ModelOBB, m_Positions.size(), m_Positions.data(), sizeof(DirectX::XMFLOAT3));
@@ -65,7 +62,7 @@ void Graphic::Loader::ModelLoaderClass<VertexType>::LoadVertex(const aiScene* sc
 }
 
 template<typename VertexType>
-HRESULT Graphic::Loader::ModelLoaderClass<VertexType>::LoadTextureData(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& MaterialList, const aiString& TexturePath)
+HRESULT Graphic::Loader::ModelLoaderClass<VertexType>::LoadTextureData(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& MaterialList, const aiString& TexturePath, const std::wstring& AdditionalPath)
 {
 	HRESULT result = S_OK;
 	std::string path;
@@ -77,7 +74,7 @@ HRESULT Graphic::Loader::ModelLoaderClass<VertexType>::LoadTextureData(ID3D11Dev
 	wpath = wpath.assign(path.begin(), path.end());
 
 	// 프로젝트의 상대 경로로 변경
-	wpath = Graphic::Model::ModelTexturePathList.find(m_ModelID)->second + wpath;
+	wpath = AdditionalPath + wpath;
 
 	// texture 생성 및 저장
 	texture = std::make_unique<Texture::TextureClass>(Device, DeviceContext, wpath);

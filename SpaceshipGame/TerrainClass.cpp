@@ -69,7 +69,7 @@ void Graphic::Terrain::TerrainClass::Load(ID3D11Device* Device, ID3D11DeviceCont
 
 void Graphic::Terrain::TerrainClass::Render(ID3D11DeviceContext* DeviceContext, D3DClass* d3d, Shader::IShaderClass* TerrainShader, Object::IObjectClass* Camera, DirectX::XMFLOAT4X4 projection)
 {
-	Shader::TerrainShaderClass* shader = nullptr;
+	Shader::TerrainShaderClass* shader = static_cast<Shader::TerrainShaderClass*>(TerrainShader);
 	Object::CameraClass* c = static_cast<Object::CameraClass*>(Camera);
 
 	// sky dome 렌더링
@@ -79,7 +79,7 @@ void Graphic::Terrain::TerrainClass::Render(ID3D11DeviceContext* DeviceContext, 
 	// terrain 렌더링
 	if (m_QuadTree)
 	{
-		shader = static_cast<Shader::TerrainShaderClass*>(TerrainShader);
+		assert(shader);
 		shader->BeginRender(DeviceContext);
 		m_QuadTree->Render(DeviceContext, shader, c);
 	}

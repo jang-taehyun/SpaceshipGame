@@ -2,8 +2,6 @@
 #include "TypeConverterClass.h"
 #include "PTN_DNSR_ModelLoaderClass.h"
 
-Graphic::Loader::PTN_DNSR_ModelLoaderClass::PTN_DNSR_ModelLoaderClass(Model::ID ModelID) : ModelLoaderClass<Model::PTN_VertexType>(ModelID) {}
-
 std::vector<Graphic::Model::PTN_VertexType> Graphic::Loader::PTN_DNSR_ModelLoaderClass::LoadVertexData(aiMesh* mesh)
 {
 	Model::PTN_VertexType vertex = {};
@@ -25,7 +23,7 @@ std::vector<Graphic::Model::PTN_VertexType> Graphic::Loader::PTN_DNSR_ModelLoade
 	return vertices;
 }
 
-void Graphic::Loader::PTN_DNSR_ModelLoaderClass::LoadMaterial(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const aiScene* scene)
+void Graphic::Loader::PTN_DNSR_ModelLoaderClass::LoadMaterial(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const aiScene* scene, const std::wstring& AdditionalPath)
 {
 	aiMesh* mesh = nullptr;														// scene에 존재하는 mesh 객체
 	aiMaterial* material = nullptr;												// mesh에 존재하는 material 객체
@@ -42,22 +40,22 @@ void Graphic::Loader::PTN_DNSR_ModelLoaderClass::LoadMaterial(ID3D11Device* Devi
 		// diffuse texture 파싱 및 저장 //
 		ret = material->GetTexture(aiTextureType_DIFFUSE, 0, &TexturePath);
 		if (ret == aiReturn_SUCCESS)
-			LoadTextureData(Device, DeviceContext, MaterialList, TexturePath);
+			LoadTextureData(Device, DeviceContext, MaterialList, TexturePath, AdditionalPath);
 
 		// normal texture 파싱 및 저장 //
 		ret = material->GetTexture(aiTextureType_NORMALS, 0, &TexturePath);
 		if (ret == aiReturn_SUCCESS)
-			LoadTextureData(Device, DeviceContext, MaterialList, TexturePath);
+			LoadTextureData(Device, DeviceContext, MaterialList, TexturePath, AdditionalPath);
 
 		// specular texture 파싱 및 저장 //
 		ret = material->GetTexture(aiTextureType_SPECULAR, 0, &TexturePath);
 		if (ret == aiReturn_SUCCESS)
-			LoadTextureData(Device, DeviceContext, MaterialList, TexturePath);
+			LoadTextureData(Device, DeviceContext, MaterialList, TexturePath, AdditionalPath);
 
 		// reflect texture 파싱 및 저장 //
 		ret = material->GetTexture(aiTextureType_REFLECTION, 0, &TexturePath);
 		if (ret == aiReturn_SUCCESS)
-			LoadTextureData(Device, DeviceContext, MaterialList, TexturePath);
+			LoadTextureData(Device, DeviceContext, MaterialList, TexturePath, AdditionalPath);
 
 		// 현재 mesh의 material 데이터 저장 //
 		PushMaterialsData(MaterialList);

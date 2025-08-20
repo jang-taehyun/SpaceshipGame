@@ -21,36 +21,33 @@ namespace Graphic
 		class ModelLoaderClass : public IModelLoaderClass
 		{
 		public:
-			explicit ModelLoaderClass(Model::ID ModelID);
+			ModelLoaderClass() = default;
 			virtual ~ModelLoaderClass() = default;
 
-			virtual void Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext) override;
+			virtual void Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::string& ModelFilename, const std::wstring& AdditionalPath) override;
 
-			virtual inline ULONG GetMeshCount() const override { return m_MeshCount; }
-			virtual inline DirectX::BoundingOrientedBox GetModelOBB() const override { return m_ModelOBB; }
-			virtual inline std::vector<std::vector<ULONG>> MoveIndicesDatas() override { return std::move(m_Indices); }
-			virtual inline std::vector<std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>> MoveMaterialsDatas() override { return std::move(m_Materials); }
-			inline std::vector<std::vector<VertexType>> MoveVerticesDatas() { return std::move(m_Vertices); }
+			virtual ULONG GetMeshCount() const override { return m_MeshCount; }
+			virtual DirectX::BoundingOrientedBox GetModelOBB() const override { return m_ModelOBB; }
+			virtual std::vector<std::vector<ULONG>> MoveIndicesDatas() override { return std::move(m_Indices); }
+			virtual std::vector<std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>> MoveMaterialsDatas() override { return std::move(m_Materials); }
+			std::vector<std::vector<VertexType>> MoveVerticesDatas() { return std::move(m_Vertices); }
 
 		private:
 			void LoadVertex(const aiScene* scene);
 
 			virtual std::vector<VertexType> LoadVertexData(aiMesh* mesh) = 0;
-			virtual void LoadMaterial(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const aiScene* scene) = 0;
+			virtual void LoadMaterial(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const aiScene* scene, const std::wstring& AdditionalPath) = 0;
 
 		protected:
-			inline void PushPositionData(DirectX::XMFLOAT3 pos) { m_Positions.push_back(pos); }
+			void PushPositionData(DirectX::XMFLOAT3 pos) { m_Positions.push_back(pos); }
 
-			inline void PushVerticesData(std::vector<VertexType> vertices) { m_Vertices.push_back(std::move(vertices)); }
-			inline void PushIndicesData(std::vector<ULONG> indices) { m_Indices.push_back(std::move(indices)); }
-			inline void PushMaterialsData(std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> materials) { m_Materials.push_back(std::move(materials)); }
+			void PushVerticesData(std::vector<VertexType> vertices) { m_Vertices.push_back(std::move(vertices)); }
+			void PushIndicesData(std::vector<ULONG> indices) { m_Indices.push_back(std::move(indices)); }
+			void PushMaterialsData(std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> materials) { m_Materials.push_back(std::move(materials)); }
 
-			HRESULT LoadTextureData(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& MaterialList, const aiString& TexturePath);
+			HRESULT LoadTextureData(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& MaterialList, const aiString& TexturePath, const std::wstring& AdditionalPath);
 
 		private:
-			std::string m_Filename = "";
-			Model::ID m_ModelID = Model::ID::NONE;
-
 			ULONG m_MeshCount = 0;																				// mesh 개수
 			std::vector<std::vector<VertexType>> m_Vertices;													// 각 mesh에 있는 vertex 데이터들
 			std::vector<std::vector<ULONG>> m_Indices;															// 각 mesh에 있는 index 데이터들

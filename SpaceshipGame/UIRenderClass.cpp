@@ -28,9 +28,10 @@ void Graphic::Texture::UIRenderClass::LoadFont(ID3D11Device* Device, UINT FontMa
 	Font::ID id = Font::ID::NONE;
 	UINT flag = 0;
 	std::unique_ptr<DirectX::SpriteFont> font = nullptr;
+	std::map<Font::ID, const std::wstring>::iterator iter;
 
 	// 필요한 bitmap 폰트를 메모리에 로드 및 sprite font 생성 //
-	for (UINT i = 0; i < Font::FontIDCount; ++i)
+	for (UINT i = 0; i < m_FontIDCount; ++i)
 	{
 		IsLoad = (FontMask & (1 << i));
 		IsExist = (m_CurrentFontMask & (1 << i));
@@ -40,7 +41,9 @@ void Graphic::Texture::UIRenderClass::LoadFont(ID3D11Device* Device, UINT FontMa
 		if (IsLoad && !IsExist)
 		{
 			// instance 생성
-			font = std::make_unique<DirectX::SpriteFont>(Device, Font::FontFileList.find(Font::ID::DEFAULT)->second.c_str());
+			iter = m_FontFileList.find(id);
+			assert(m_FontFileList.end() != iter);
+			font = std::make_unique<DirectX::SpriteFont>(Device, iter->second.c_str());
 			assert(font);
 
 			// 현재 로드된 UI texture ID 업데이트

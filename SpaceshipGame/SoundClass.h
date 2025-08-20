@@ -7,7 +7,7 @@ namespace Sound
 	class SoundClass
 	{
 	public:
-		SoundClass(DirectX::AudioEngine* engine, ID SoundID);
+		SoundClass(DirectX::AudioEngine* engine, const std::wstring& filename);
 		SoundClass(SoundClass&& other) noexcept;
 		virtual ~SoundClass();
 
@@ -19,10 +19,9 @@ namespace Sound
 		inline void SetLoop(bool IsLoop) { m_IsLoop = IsLoop; }
 
 	private:
-		void LoadWaveFile(DirectX::AudioEngine* engine);
+		void LoadWaveFile(DirectX::AudioEngine* engine, const std::wstring& filename);
 
 	private:
-		ID m_ID = ID::NONE;
 		bool m_IsLoop = false;
 		std::unique_ptr<DirectX::SoundEffect> m_Effect = nullptr;
 		std::unique_ptr<DirectX::SoundEffectInstance> m_EffectInstance = nullptr;

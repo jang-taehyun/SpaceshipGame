@@ -57,7 +57,7 @@ void Sound::SoundManagerClass::AllStop() const
 	bool IsExist = false;
 	ID id = ID::NONE;
 
-	for (UINT i = 0; i < SoundIDCount; ++i)
+	for (UINT i = 0; i < m_SoundIDCount; ++i)
 	{
 		IsExist = (m_CurrentSoundMask & (1 << i));
 		id = static_cast<ID>(i);
@@ -92,8 +92,9 @@ void Sound::SoundManagerClass::Load(UINT SoundMask)
 	ID id = ID::NONE;
 	UINT flag = 0;
 	std::unique_ptr<SoundClass> sound = nullptr;
+	std::map<ID, const std::wstring>::iterator iter;
 
-	for(UINT i=0; i<SoundIDCount; ++i)
+	for (UINT i = 0; i < m_SoundIDCount; ++i)
 	{
 		IsLoad = (SoundMask & (1 << i));
 		IsExist = (m_CurrentSoundMask & (1 << i));
@@ -103,7 +104,9 @@ void Sound::SoundManagerClass::Load(UINT SoundMask)
 		if (IsLoad && !IsExist)
 		{
 			// instance 생성
-			sound = std::make_unique<SoundClass>(m_AudioEngine.get(), id);
+			iter = m_SoundFileList.find(id);
+			assert(m_SoundFileList.end() != iter);
+			sound = std::make_unique<SoundClass>(m_AudioEngine.get(), iter->second);
 			assert(sound);
 
 			// 현재 로드된 Sound ID 업데이트

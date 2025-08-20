@@ -38,8 +38,9 @@ void Graphic::Model::ModelManagerClass::Load(HWND hwnd, ID3D11Device* Device, ID
 	UINT flag = 0;
 	std::unique_ptr<IModelClass> model = nullptr;
 	std::map<ID, std::unique_ptr<IModelClass>>::iterator iter;
+	UINT cnt = m_Factory->GetModelIDCount();
 
-	for (UINT i = 0; i < ModelIDCount; ++i)
+	for (UINT i = 0; i < cnt; ++i)
 	{
 		IsLoad = (ModelMask & (1 << i));
 		IsExist = (m_CurrentModelMask & (1 << i));
@@ -88,4 +89,9 @@ void Graphic::Model::ModelManagerClass::UpdateInstanceBuffers(ID3D11DeviceContex
 
 	for (iter = m_ModelList.begin(); iter != m_ModelList.end(); ++iter)
 		iter->second->UpdateInstanceBuffer(DeviceContext);
+}
+
+UINT Graphic::Model::ModelManagerClass::GetModelIDCount() const
+{
+	return m_Factory->GetModelIDCount();
 }

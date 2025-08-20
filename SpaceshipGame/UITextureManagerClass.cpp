@@ -32,8 +32,9 @@ void Graphic::Texture::UITextureManagerClass::Load(ID3D11Device* Device, ID3D11D
 	UITextureID id = UITextureID::NONE;
 	UINT flag = 0;
 	std::unique_ptr<TextureClass> texture = nullptr;
+	std::map<UITextureID, const std::wstring>::iterator iter;
 
-	for (UINT i = 0; i < UITextureIDCount; ++i)
+	for (UINT i = 0; i < m_UITextureIDCount; ++i)
 	{
 		IsLoad = (UITextureMask & (1 << i));
 		IsExist = (m_CurrentUITextureMask & (1 << i));
@@ -43,7 +44,9 @@ void Graphic::Texture::UITextureManagerClass::Load(ID3D11Device* Device, ID3D11D
 		if (IsLoad && !IsExist)
 		{
 			// instance 생성
-			texture = std::make_unique<TextureClass>(Device, DeviceContext, id);
+			iter = m_UITextureFileList.find(id);
+			assert(m_UITextureFileList.end() != iter);
+			texture = std::make_unique<TextureClass>(Device, DeviceContext, iter->second);
 			assert(texture);
 
 			// 현재 로드된 UI texture ID 업데이트

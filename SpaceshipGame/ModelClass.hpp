@@ -104,9 +104,6 @@ HRESULT Graphic::Model::ModelClass<VertexType>::Initialize(HWND hwnd, ID3D11Devi
 {
 	HRESULT result = S_OK;
 
-	// model load //
-	loader->Load(Device, DeviceContext);
-
 	// vertex buffer, index buffer 생성 및 초기화 //
 	result = InitializeBuffers(Device, DeviceContext, loader);
 	if (FAILED(result))

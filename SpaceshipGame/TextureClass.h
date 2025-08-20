@@ -9,15 +9,14 @@ namespace Graphic
 		private:
 			struct TargaHeader
 			{
-				unsigned char data1[12];
-				unsigned short width;
-				unsigned short height;
-				unsigned char bpp;
-				unsigned char data2;
+				unsigned char data1[12] = { 0, };
+				unsigned short width = 0;
+				unsigned short height = 0;
+				unsigned char bpp = 0;
+				unsigned char data2 = 0;
 			};
 
 		public:
-			TextureClass(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, UITextureID ID);
 			TextureClass(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::wstring& filename);
 			TextureClass(const TextureClass& other);
 			TextureClass(TextureClass&& other) noexcept;
@@ -31,7 +30,7 @@ namespace Graphic
 			TextureClass& operator=(TextureClass&& other) noexcept;
 
 		private:
-			HRESULT Initialize(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::wstring& FileName);
+			void Initialize(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::wstring& FileName);
 
 			HRESULT Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::wstring& FileName, const std::wstring& Extension);
 

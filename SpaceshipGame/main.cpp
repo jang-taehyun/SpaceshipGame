@@ -36,11 +36,8 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 			OutputDebugString(_T("fail to save data"));
 		init.reset();
 
-		Sound::SoundFileList.clear();
-		Graphic::Model::ModelFileList.clear();
-		Graphic::Model::ModelTexturePathList.clear();
-		Graphic::Texture::UITextureFileList.clear();
-		Graphic::Font::FontFileList.clear();
+		// Graphic::Model::ModelFileList.clear();
+		// Graphic::Model::ModelTexturePathList.clear();
 	}
 
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);

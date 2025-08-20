@@ -8,6 +8,13 @@ namespace Sound
 {
 	class SoundManagerClass
 	{
+	private:
+		std::map<ID, const std::wstring> m_SoundFileList =
+		{
+			{ ID::BACKGROUND, _T("./resource/dedede.wav") },
+			{ ID::EFFECT, _T("./resource/sound01.wav") },
+		};
+
 	public:
 		SoundManagerClass();
 		virtual ~SoundManagerClass();
@@ -18,7 +25,8 @@ namespace Sound
 		void SetLoop(ID SoundID, bool IsLoop);
 		void Frame() const;
 
-		inline UINT GetSoundMask() const { return m_CurrentSoundMask; } 
+		UINT GetSoundIDCount() const { return m_SoundIDCount; }
+		UINT GetSoundMask() const { return m_CurrentSoundMask; } 
 
 		void AllStop() const;
 
@@ -28,15 +36,10 @@ namespace Sound
 
 	private:
 		static bool IsInitailize;
+		const UINT m_SoundIDCount = 3;
 
 		std::unique_ptr<DirectX::AudioEngine> m_AudioEngine = nullptr;
 		std::map<ID, std::unique_ptr<SoundClass>> m_SoundList;
 		UINT m_CurrentSoundMask = 0;
-
-#ifdef DEBUG
-	public:
-		inline UINT GetCurrentSoundMask() const { return m_CurrentSoundMask; }
-#endif // DEBUG
-
 	};
 }

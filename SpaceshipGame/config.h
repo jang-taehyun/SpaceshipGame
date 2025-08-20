@@ -12,7 +12,7 @@ namespace System
 
 	extern UINT RESOLUTION_COUNT;
 	extern UINT CURRENT_RESOLUTION_INDEX;
-	extern std::vector<System::RESOLUTION> RESOLUTIONS;
+	extern RESOLUTION RESOLUTIONS[2];
 
 	// Graphics 설정
 	extern bool FULL_SCREEN;
@@ -103,13 +103,10 @@ namespace Text
 // sound 관련 //
 namespace Sound
 {
-	extern UINT SoundIDCount;
 	enum class ID
 	{
 		NONE, BACKGROUND, EFFECT, HIT,
 	};
-
-	extern std::map<ID, const std::wstring> SoundFileList;
 }
 
 // Graphic 관련 //
@@ -118,7 +115,6 @@ namespace Graphic
 	// 3D model 관련 //
 	namespace Model
 	{
-		extern UINT ModelIDCount;
 		enum class ID
 		{
 			NONE,
@@ -126,9 +122,6 @@ namespace Graphic
 			DEFAULT_SPACESHIP,
 			ASTEROID,
 		};
-
-		extern std::map<ID, const std::string> ModelFileList;
-		extern std::map<ID, const std::wstring> ModelTexturePathList;
 
 		// instance buffer type
 		struct InstanceBufferType
@@ -166,20 +159,15 @@ namespace Graphic
 	// UI texture 관련 //
 	namespace Texture
 	{
-		extern UINT UITextureIDCount;
 		enum class UITextureID
 		{
 			NONE, START_BACKGROUND, START_BUTTON,
 		};
-
-		// UI texture의 파일 정보 //
-		extern std::map<UITextureID, const std::wstring> UITextureFileList;
 	}
 
 	// shader 관련 //
 	namespace Shader
 	{
-		extern UINT ShaderIDCount;
 		enum class ID
 		{
 			NONE, DEFAULT_SPACESHIP, CUBE, TERRAIN, 
@@ -244,13 +232,10 @@ namespace Graphic
 	// font 관련 //
 	namespace Font
 	{
-		extern UINT FontIDCount;
 		enum class ID
 		{
 			NONE, DEFAULT, 
 		};
-
-		extern std::map<ID, const std::wstring> FontFileList;
 	}
 
 	// loader 관련 //

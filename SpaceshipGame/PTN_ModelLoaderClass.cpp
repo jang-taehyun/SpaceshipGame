@@ -3,8 +3,6 @@
 #include "TypeConverterClass.h"
 #include "PTN_ModelLoaderClass.h"
 
-Graphic::Loader::PTN_ModelLoaderClass::PTN_ModelLoaderClass(Model::ID ModelID) : ModelLoaderClass<Model::PTN_VertexType>(ModelID) {}
-
 std::vector<Graphic::Model::PTN_VertexType> Graphic::Loader::PTN_ModelLoaderClass::LoadVertexData(aiMesh* mesh)
 {
 	Model::PTN_VertexType vertex = {};
@@ -25,7 +23,7 @@ std::vector<Graphic::Model::PTN_VertexType> Graphic::Loader::PTN_ModelLoaderClas
 	return vertices;
 }
 
-void Graphic::Loader::PTN_ModelLoaderClass::LoadMaterial(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const aiScene* scene)
+void Graphic::Loader::PTN_ModelLoaderClass::LoadMaterial(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const aiScene* scene, const std::wstring& AdditionalPath)
 {
 
 }

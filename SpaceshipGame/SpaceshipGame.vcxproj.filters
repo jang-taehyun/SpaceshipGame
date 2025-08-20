@@ -248,6 +248,21 @@
     <Filter Include="GlobalVariableInitializerClass">
       <UniqueIdentifier>{2acf8fc9-a873-4930-a355-9dc160b5f24f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\TerrainShaderClass">
+      <UniqueIdentifier>{a001619d-e369-4e49-9207-41d98d8f8968}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Terrain">
+      <UniqueIdentifier>{77964223-0066-4d59-adf7-625231cc4875}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Terrain\TerrainClass">
+      <UniqueIdentifier>{1cad1a86-3d68-49ab-8ab4-7e65c6f2b504}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Terrain\QuadTreeClass">
+      <UniqueIdentifier>{49470b9c-f812-4b8c-9a31-e283223eb0c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Terrain\SkyDomeClass">
+      <UniqueIdentifier>{d9d6e05c-1a7f-46b8-8913-134ffae0d81b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemClass.h">
@@ -457,10 +472,18 @@
     <ClInclude Include="GlobalVariableInitializerClass.h">
       <Filter>GlobalVariableInitializerClass</Filter>
     </ClInclude>
-    <ClInclude Include="TerrainClass.h" />
-    <ClInclude Include="TerrainShaderClass.h" />
-    <ClInclude Include="SkyDomeClass.h" />
-    <ClInclude Include="QuadTreeClass.h" />
+    <ClInclude Include="TerrainShaderClass.h">
+      <Filter>Shader\TerrainShaderClass</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainClass.h">
+      <Filter>Terrain\TerrainClass</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadTreeClass.h">
+      <Filter>Terrain\QuadTreeClass</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyDomeClass.h">
+      <Filter>Terrain\SkyDomeClass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -661,10 +684,18 @@
     <ClCompile Include="config.cpp">
       <Filter>Default\header</Filter>
     </ClCompile>
-    <ClCompile Include="TerrainClass.cpp" />
-    <ClCompile Include="TerrainShaderClass.cpp" />
-    <ClCompile Include="SkyDomeClass.cpp" />
-    <ClCompile Include="QuadTreeClass.cpp" />
+    <ClCompile Include="TerrainShaderClass.cpp">
+      <Filter>Shader\TerrainShaderClass</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainClass.cpp">
+      <Filter>Terrain\TerrainClass</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadTreeClass.cpp">
+      <Filter>Terrain\QuadTreeClass</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyDomeClass.cpp">
+      <Filter>Terrain\SkyDomeClass</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SpaceshipGame.rc">

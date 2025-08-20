@@ -198,12 +198,13 @@ void Graphic::IMGUIClass::SetSoundInfo(const std::string& title, UINT IMGUI_Wind
 	bool IsPress = false;
 	UINT mask = sound_manager->GetSoundMask();
 	std::string contents;
+	UINT cnt = sound_manager->GetSoundIDCount();
 
 	// 사운드 재생 UI //
 	ImGui::SetNextWindowPos(m_WindowsPositions[IMGUI_Window_idx], ImGuiCond_Appearing);
 	ImGui::Begin(title.c_str(), NULL);
 
-	for (UINT i = 0; i < Sound::SoundIDCount; ++i)
+	for (UINT i = 0; i < cnt; ++i)
 	{
 		// 해당 sound가 존재할 때
 		if (mask & (1 << i))
