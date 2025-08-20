@@ -14,12 +14,14 @@ namespace Graphic
 #ifdef _DEBUG
 		std::unique_ptr<Shader::IShaderClass> CreateCubeShader(HWND hwnd, ID3D11Device* Device, Shader::ID id);
 #endif
-
 		std::unique_ptr<Shader::IShaderClass> CreateDefaultSpaceshipShader(HWND hwnd, ID3D11Device* Device, Shader::ID id);
 		std::unique_ptr<Shader::IShaderClass> CreateDefaultTerrainShader(HWND hwnd, ID3D11Device* Device, Shader::ID id);
 
 		class ShaderFactoryClass
 		{
+		private:
+			const UINT m_ShaderIDCount = 4;
+
 		public:
 			ShaderFactoryClass();
 			~ShaderFactoryClass();
@@ -30,7 +32,6 @@ namespace Graphic
 
 		private:
 			static bool IsInitialize;
-			const UINT m_ShaderIDCount = 4;
 
 			std::map<Shader::ID, std::function<std::unique_ptr<Shader::IShaderClass>(HWND, ID3D11Device*, Shader::ID)>> m_Creator;
 		};

@@ -15,6 +15,7 @@ namespace Graphic
 		class UIRenderClass
 		{
 		private:
+			const UINT m_FontIDCount = 2;
 			std::map<Font::ID, const std::wstring> m_FontFileList =
 			{
 				{ Font::ID::DEFAULT, _T("./resource/Gulim.spritefont") },
@@ -34,7 +35,6 @@ namespace Graphic
 
 		private:
 			static bool IsInitialize;
-			const UINT m_FontIDCount = 2;
 
 			std::unique_ptr<DirectX::SpriteBatch> m_Renderer = nullptr;
 			std::map<Font::ID, std::unique_ptr<DirectX::SpriteFont>> m_FontList;

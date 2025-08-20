@@ -35,9 +35,6 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		if (!init->OutputData())
 			OutputDebugString(_T("fail to save data"));
 		init.reset();
-
-		// Graphic::Model::ModelFileList.clear();
-		// Graphic::Model::ModelTexturePathList.clear();
 	}
 
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);

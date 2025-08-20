@@ -9,6 +9,7 @@ namespace Sound
 	class SoundManagerClass
 	{
 	private:
+		const UINT m_SoundIDCount = 3;
 		std::map<ID, const std::wstring> m_SoundFileList =
 		{
 			{ ID::BACKGROUND, _T("./resource/dedede.wav") },
@@ -36,7 +37,6 @@ namespace Sound
 
 	private:
 		static bool IsInitailize;
-		const UINT m_SoundIDCount = 3;
 
 		std::unique_ptr<DirectX::AudioEngine> m_AudioEngine = nullptr;
 		std::map<ID, std::unique_ptr<SoundClass>> m_SoundList;

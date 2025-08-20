@@ -3,7 +3,6 @@
 #include "resource.h"
 
 /*
-* TODO: terrain 공부해서 추가
 * TODO: scene 추가
 * TODO: 멀티쓰레드 도입
 */
@@ -28,7 +27,7 @@
 *	3-2) 새로운 Scene의 ID를 config.h 파일에 등록할 것
 *	3-3) SceneClass를 상속받은 새로운 Class를 SceneFactoryClass에 등록할 것
 * 4) Scene 클래스를 상속받은 자식 클래스에서는 반드시 필요한 object, text, ui, sound를 manager를 통해서 생성할 것
-*	4-1) object, text, ui는 load() 함수를 호출하여 생성할 것
+*	4-1) object, text, UI는 load() 함수를 호출하여 생성할 것
 *	4-2) sound는 비트마스크를 통해 필요한 sound의 ID를 표시한 후에 load() 함수를 호출하여 생성할 것 
 * 
 * 4. Shader 관련 규칙
@@ -40,6 +39,7 @@
 *		- vertex shader 파일은 shader 디렉토리 내의 vertex 디렉토리에 저장할 것
 *		- pixel shader 파일은 shader 디렉토리 내의 pixel 디렉토리에 저장할 것
 *		- vertex shader 파일의 상대 경로, pixel shader 파일의 상대 경로는 shader factory의 함수 안에 정의할 것
+*		- 새로운 Shader의 ID를 추가했다면, ShaderFactoryClass의 m_ShaderIDCount 값을 1 증가시킬 것
 *	3-3) ShaderClass를 상속받은 새로운 Class를 ShaderFactoryClass에 등록할 것
 *	3-4) 새로운 ShaderClass의 buffer를 업데이트하는 함수를 ShaderBufferUpdaterClass에 등록할 것
 *		- 만약 새로운 buffer type이 필요하다면,
@@ -49,28 +49,42 @@
 * 5. Model 관련 규칙
 * 1) Model 클래스를 상속받은 자식 클래스에서는 반드시 복사 생성자, 이동 생성자, 복사 대입연산자, 이동 대입 연산자를 구현할 것
 * 2) Model 클래스의 인스턴스를 생성할 때 manager를 통해서 생성을 요청할 것
-* 3) 새로운 Model을 프로젝트에 추가할 때의 규칙
+* 3) model 파일명은 영문으로 저장할 것
+*	- model 파일은 resource 디렉토리에 저장할 것
+* 4) 새로운 Model을 프로젝트에 추가할 때의 규칙
 *	3-1) 새로운 Model을 메모리에 load 시 ModelLoaderClass를 상속받아서 새로운 Class를 정의할 것
 *	3-2) 새로운 Model의 ID를 config.h 파일에 등록할 것
-*		- model 파일은 resource 디렉토리에 저장할 것
-*		- model 파일의 상대 경로, 필요한 texture의 상대 경로는 data.json 파일 안에 등록할 것
+*		- model 파일의 상대 경로는 ModelFactoryClass 내부의 m_ModelFileList에 등록할 것
+*		- model의 추가적인 texture의 상대 ModelFactoryClass 내부의 m_ModelAdditionPathList에 등록할 것
+*		- 새로운 model의 ID를 추가했다면, ModelFactoryClass의 m_ModelIDCount 값을 1 증가시킬 것
 *	3-3) ModelLoaderClass를 상속받은 새로운 Class를 ModelFactoryClass에 등록할 것
 * 
 * 6. Sound 관련 규칙
-* 1) 새로운 sound를 프로젝트에 추가할 때의 규칙
-*	1-1) 새로운 sound의 ID를 config.h 파일에 등록할 것
-*		- sound 파일은 resource 디렉토리에 저장할 것
-*		- sound 파일의 상대 경로는 data.json 파일 안에 등록할 것
-*		- sound 파일은 wav 포맷을 사용할 것
+* 1) sound 파일은 wav 포맷을 사용할 것
+*	1-1) sound 파일은 resource 디렉토리에 저장할 것
+*	1-2) sound 파일명은 영문으로 저장할 것
+* 2) 새로운 sound를 프로젝트에 추가할 때의 규칙
+*	2-1) 새로운 sound의 ID를 config.h 파일에 등록할 것
+*	2-2) sound 파일의 상대 경로는 SoundManagerClass 내부의 m_SoundFileList에 등록할 것
+*	2-3) 새로운 sound의 ID를 추가했다면, SoundManagerClass의 m_SoundIDCount 값을 1 증가시킬 것
 * 
-* 7. Object, UI, Text 관련 규칙
+* 7. Font 관련 규칙
+* 1) Font 파일은 MakeSpriteFont.exe 파일을 통해 생성할 것
+*	1-1) Font 파일은 resource 디렉토리에 저장할 것
+*	1-2) Font 파일명은 영문으로 저장할 것
+* 2) 새로운 Font를 프로젝트에 추가할 때의 규칙
+*	2-1) 새로운 Font의 ID를 config.h 파일에 등록할 것
+*	2-2) Font 파일의 상대 경로는 UIRenderClass 내부의 m_FontFileList에 등록할 것
+*	2-3) 새로운 Font의 ID를 추가했다면, UIRenderClass의 m_FontIDCount 값을 1 증가시킬 것
+* 
+* 8. Object, UI, Text 관련 규칙
 * 1) Object, UI, Text 클래스의 인스턴스를 생성할 때 manager를 통해서 생성을 요청할 것
 * 2) Object, UI 클래스의 자식 클래스 생성 시, factory에 등록할 것
 * 
-* 8. 객체 생성 관련
+* 9. 객체 생성 관련
 * 1) 싱글톤 패턴 금지
 * 
-* 9. 예외 처리 관련
+* 10. 예외 처리 관련
 * 1) 예외 처리는 assert()를 사용할 것
 * 2) WINAPI, DirectX 관련 API를 사용하는 경우 HRESULT 자료형을 이용해 리턴값을 받고, assert()를 통해 검사할 것
 */
