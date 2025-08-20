@@ -16,6 +16,7 @@
 
 #include "IModelClass.h"
 #include "IShaderClass.h"
+#include "TerrainClass.h"
 
 #include "GameObjectClass.h"
 #include "IUIClass.h"
@@ -173,6 +174,10 @@ void Graphic::GraphicsClass::Initialize(HWND hwnd, int ScreenWidth, int ScreenHe
 	m_UIRender = std::make_unique<Texture::UIRenderClass>(m_D3D->GetDeviceContext());
 	assert(m_UIRender);
 
+	// terrain °´Ã¼ »ý¼º //
+	m_Terrain = std::make_unique<Terrain::TerrainClass>();
+	assert(m_Terrain);
+
 #ifdef _DEBUG
 	// IMGUI °´Ã¼ »ý¼º //
 	m_IMGUI = std::make_unique<IMGUIClass>(hwnd, m_D3D->GetDevice(), m_D3D->GetDeviceContext());
@@ -187,11 +192,12 @@ void Graphic::GraphicsClass::Load(HWND hwnd, Scene::SceneManagerClass* SceneMana
 	m_ModelManager->Load(hwnd, m_D3D->GetDevice(), m_D3D->GetDeviceContext(), SceneManager->GetObjectManager()->GetModelMask());
 	m_UITextureManager->Load(m_D3D->GetDevice(), m_D3D->GetDeviceContext(), SceneManager->GetUIManager()->GetUITextureMask());
 	m_UIRender->LoadFont(m_D3D->GetDevice(), SceneManager->GetTextManager()->GetFontMask());
+	m_Terrain->Load(m_D3D->GetDevice(), m_D3D->GetDeviceContext(), SceneManager->GetTerrainID(), SceneManager->GetSkyDomeID());
 
 	ShaderMask = m_ModelManager->GetNeedShaderMask();
 	if (SceneManager->GetTerrainID() != Graphic::Terrain::TerrainID::NONE)
-		ShaderMask |= (1 << static_cast<UINT>());
-	m_ShaderManager->Load(hwnd, m_D3D->GetDevice(), m_ModelManager->GetNeedShaderMask());
+		ShaderMask |= (1 << static_cast<UINT>(m_Terrain->GetShaderID()));
+	m_ShaderManager->Load(hwnd, m_D3D->GetDevice(), ShaderMask);
 }
 
 void Graphic::GraphicsClass::Render(HWND hwnd, Scene::SceneManagerClass* SceneManager
@@ -207,6 +213,10 @@ void Graphic::GraphicsClass::Render(HWND hwnd, Scene::SceneManagerClass* SceneMa
 
 	// front buffer ÃÊ±âÈ­ //
 	m_D3D->BeginScene(DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f));
+
+	// terrain ·»´õ¸µ //
+	shader = m_ShaderManager->GetShader(m_Terrain->GetShaderID());
+	m_Terrain->Render(m_D3D->GetDeviceContext(), m_D3D.get(), shader, SceneManager->GetCamera(), m_D3D->GetProjectionMatrix());
 
 	// 3D ¹°Ã¼ ·»´õ¸µ //
 	for (UINT i = 0; i < Model::ModelIDCount; ++i)

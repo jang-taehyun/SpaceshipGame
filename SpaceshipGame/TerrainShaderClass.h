@@ -8,6 +8,13 @@ namespace Graphic
 	{
 		class TerrainShaderClass : public ShaderClass<ML_ShaderBuffers>
 		{
+			struct WMatrixBufferType
+			{
+				DirectX::XMMATRIX worldMatrix;						// world
+				DirectX::XMMATRIX viewMatrix;						// view
+				DirectX::XMMATRIX projectionMatrix;					// projection
+			};
+
 		public:
 			explicit TerrainShaderClass(ID ShaderID);
 			TerrainShaderClass(const TerrainShaderClass& other);

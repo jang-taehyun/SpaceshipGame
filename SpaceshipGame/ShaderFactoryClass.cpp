@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "MLC_ShaderClass.h"
+#include "TerrainShaderClass.h"
 
 #ifdef _DEBUG
 #include "Cube_ShaderClass.h"
@@ -19,6 +20,7 @@ Graphic::Loader::ShaderFactoryClass::ShaderFactoryClass()
 #endif // _DEBUG
 
 	m_Creator.insert(std::make_pair(Shader::ID::DEFAULT_SPACESHIP, CreateDefaultSpaceshipShader));
+	m_Creator.insert(std::make_pair(Shader::ID::TERRAIN, CreateDefaultTerrainShader));
 }
 
 Graphic::Loader::ShaderFactoryClass::~ShaderFactoryClass()
@@ -42,8 +44,8 @@ std::unique_ptr<Graphic::Shader::IShaderClass> Graphic::Loader::CreateDefaultSpa
 	// shader 정보 설정
 	const ShaderFileInfo info =
 	{
-		_T("./shader/vertex/Spaceship.vs"),
-		_T("./shader/pixel/Spaceship.ps"),
+		_T("./shader/vertex/Spaceship_vs.hlsl"),
+		_T("./shader/pixel/Spaceship_ps.hlsl"),
 		"SpaceshipVertexShader",
 		"SpaceshipPixelShader"
 	};
@@ -66,6 +68,35 @@ std::unique_ptr<Graphic::Shader::IShaderClass> Graphic::Loader::CreateDefaultSpa
 	return shader;
 }
 
+std::unique_ptr<Graphic::Shader::IShaderClass> Graphic::Loader::CreateDefaultTerrainShader(HWND hwnd, ID3D11Device* Device, Shader::ID id)
+{
+	// shader 정보 설정
+	const ShaderFileInfo info =
+	{
+		_T("./shader/vertex/terrain_vs.hlsl"),
+		_T("./shader/pixel/terrain_ps.hlsl"),
+		"TerrainVertexShader",
+		"TerrainPixelShader"
+	};
+
+	// semantic 정보 설정
+	std::vector<std::string> semantics =
+	{
+		"POSITION",
+		"TEXCOORD",
+		"NORMAL",
+	};
+
+	// instance 생성
+	std::unique_ptr<Shader::IShaderClass> shader = std::make_unique<Shader::TerrainShaderClass>(id);
+	assert(shader);
+
+	// instance 초기화
+	shader->Initialize(hwnd, Device, info, semantics, true);
+
+	return shader;
+}
+
 #ifdef _DEBUG
 
 std::unique_ptr<Graphic::Shader::IShaderClass> Graphic::Loader::CreateCubeShader(HWND hwnd, ID3D11Device* Device, Shader::ID id)
@@ -73,8 +104,8 @@ std::unique_ptr<Graphic::Shader::IShaderClass> Graphic::Loader::CreateCubeShader
 	// shader 정보 설정
 	const ShaderFileInfo info =
 	{
-		_T("./shader/vertex/color.vs"),
-		_T("./shader/pixel/color.ps"),
+		_T("./shader/vertex/color_vs.hlsl"),
+		_T("./shader/pixel/color_ps.hlsl"),
 		"ColorVertexShader",
 		"ColorPixelShader"
 	};

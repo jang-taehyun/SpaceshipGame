@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ISceneClass.h"
+
 namespace System { class InputClass; }
 namespace Text { class TextManagerClass; }
 namespace UI { class UIManagerClass; }
@@ -11,7 +13,6 @@ namespace Object
 }
 namespace Scene
 {
-	class ISceneClass;
 	class SceneFactoryClass;
 }
 

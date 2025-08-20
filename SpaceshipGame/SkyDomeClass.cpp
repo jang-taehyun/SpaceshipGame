@@ -3,12 +3,12 @@
 #include "TextureClass.h"
 #include "SkyDomeClass.h"
 
-Graphic::Terrain::SkyDomeClass::SkyDomeClass(ID3D11DeviceContext* DeviceContext, DirectX::XMFLOAT4 color) : m_Color(color)
+Graphic::Terrain::SkyDomeClass::SkyDomeClass(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const WCHAR* texture, DirectX::XMFLOAT4 color) : m_Color(color)
 {
-	Initialize(DeviceContext);
+	Initialize(Device, DeviceContext, texture);
 }
 
-void Graphic::Terrain::SkyDomeClass::Render(D3DClass* d3d, DirectX::XMFLOAT4X4 world, DirectX::XMFLOAT4X4 view, DirectX::XMFLOAT4X4 projection)
+void Graphic::Terrain::SkyDomeClass::Render(D3DClass* d3d, DirectX::XMFLOAT4X4 CameraPos, DirectX::XMFLOAT4X4 view, DirectX::XMFLOAT4X4 projection)
 {
 	DirectX::XMMATRIX w = {}, v = {}, p = {};
 	DirectX::XMVECTOR c = {};
@@ -19,7 +19,7 @@ void Graphic::Terrain::SkyDomeClass::Render(D3DClass* d3d, DirectX::XMFLOAT4X4 w
 
 	// sky dome 렌더링 //
 	// 각 matrix를 XMMATRIX 형태로 변환
-	w = DirectX::XMLoadFloat4x4(&world);
+	w = DirectX::XMLoadFloat4x4(&CameraPos);
 	v = DirectX::XMLoadFloat4x4(&view);
 	p = DirectX::XMLoadFloat4x4(&projection);
 
@@ -34,8 +34,14 @@ void Graphic::Terrain::SkyDomeClass::Render(D3DClass* d3d, DirectX::XMFLOAT4X4 w
 	d3d->TurnOnCulling();
 }
 
-void Graphic::Terrain::SkyDomeClass::Initialize(ID3D11DeviceContext* DeviceContext)
+void Graphic::Terrain::SkyDomeClass::Initialize(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const WCHAR* texture)
 {
-	m_SkyDome = DirectX::GeometricPrimitive::CreateSphere(DeviceContext);
+	m_SkyDome = DirectX::GeometricPrimitive::CreateSphere(DeviceContext, 1000.f);
 	assert(m_SkyDome);
+
+	if (texture)
+	{
+		m_Texture = std::make_unique<Texture::TextureClass>(Device, DeviceContext, texture);
+		assert(m_Texture);
+	}
 }

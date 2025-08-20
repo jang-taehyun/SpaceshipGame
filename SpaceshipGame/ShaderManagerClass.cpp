@@ -43,7 +43,7 @@ void Graphic::Shader::ShaderManagerClass::Load(HWND hwnd, ID3D11Device* Device, 
 	std::unique_ptr<IShaderClass> shader = nullptr;
 	std::map<ID, std::unique_ptr<IShaderClass>>::iterator iter;
 
-	for (UINT i = 0; i < ShaderIDCount; ++i)
+	for (UINT i = 0; i < ShaderIDCount+1; ++i)
 	{
 		IsLoad = (ShaderMask & (1 << i));
 		IsExist = (m_CurrentShaderMask & (1 << i));

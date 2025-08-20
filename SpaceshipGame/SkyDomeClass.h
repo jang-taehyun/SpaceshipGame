@@ -16,13 +16,13 @@ namespace Graphic
         class SkyDomeClass
         {
         public:
-            SkyDomeClass(ID3D11DeviceContext* DeviceContext, DirectX::XMFLOAT4 color = DirectX::XMFLOAT4(0.33f, 0.54f, 0.81f, 1.f));
+            SkyDomeClass(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const WCHAR* texture, DirectX::XMFLOAT4 color = DirectX::XMFLOAT4(0.33f, 0.54f, 0.81f, 1.f));
             virtual ~SkyDomeClass() = default;
 
-            void Render(D3DClass* d3d, DirectX::XMFLOAT4X4 world, DirectX::XMFLOAT4X4 view, DirectX::XMFLOAT4X4 projection);
+            void Render(D3DClass* d3d, DirectX::XMFLOAT4X4 CameraPos, DirectX::XMFLOAT4X4 view, DirectX::XMFLOAT4X4 projection);
 
         private:
-            void Initialize(ID3D11DeviceContext* DeviceContext);
+            void Initialize(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const WCHAR* texture);
 
         private:
             std::unique_ptr<DirectX::GeometricPrimitive> m_SkyDome = nullptr;

@@ -23,6 +23,8 @@ namespace Object
 		CameraClass(CameraClass&& other) noexcept;
 		virtual ~CameraClass() = default;
 
+		DirectX::XMFLOAT4X4 GetViewMatrix() const { return m_ViewMatrix; }
+
 		void UpdateFrustum(DirectX::XMFLOAT4X4 projection);
 		DirectX::XMFLOAT4X4 Render();
 

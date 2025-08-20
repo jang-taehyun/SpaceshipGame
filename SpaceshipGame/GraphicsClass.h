@@ -8,6 +8,7 @@ namespace Graphic
 
 	namespace Model { class ModelManagerClass; }
 	namespace Shader { class ShaderManagerClass; }
+	namespace Terrain { class TerrainClass; }
 	namespace Texture
 	{
 		class UITextureManagerClass;
@@ -52,8 +53,7 @@ namespace Graphic
 		std::unique_ptr<Shader::ShaderManagerClass> m_ShaderManager = nullptr;
 		std::unique_ptr<Texture::UITextureManagerClass> m_UITextureManager = nullptr;
 		std::unique_ptr<Texture::UIRenderClass> m_UIRender = nullptr;
-
-
+		std::unique_ptr<Terrain::TerrainClass> m_Terrain = nullptr;
 		
 	public:
 		GraphicsClass(const GraphicsClass& other) = delete;

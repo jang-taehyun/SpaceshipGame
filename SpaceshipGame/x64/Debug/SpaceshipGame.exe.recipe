@@ -5,7 +5,26 @@
       <FullPath>D:\SpaceshipGame\SpaceshipGame\x64\Debug\SpaceshipGame.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
-  <ContentFiles />
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>D:\SpaceshipGame\SpaceshipGame\x64\Debug\color_ps.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\SpaceshipGame\SpaceshipGame\x64\Debug\Spaceship_ps.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\SpaceshipGame\SpaceshipGame\x64\Debug\color_vs.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\SpaceshipGame\SpaceshipGame\x64\Debug\Spaceship_vs.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\SpaceshipGame\SpaceshipGame\x64\Debug\terrain_ps.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\SpaceshipGame\SpaceshipGame\x64\Debug\terrain_vs.cso</FullPath>
+    </ContentFile>
+  </ContentFiles>
   <SatelliteDlls />
   <NonRecipeFileRefs />
 </Project>

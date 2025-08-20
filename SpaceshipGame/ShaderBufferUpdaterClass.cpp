@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "MLC_ShaderClass.h"
+#include "TerrainShaderClass.h"
 
 #ifdef _DEBUG
 #include "Cube_ShaderClass.h"
@@ -19,12 +20,13 @@ Graphic::Shader::ShaderBufferUpdaterClass::ShaderBufferUpdaterClass()
 #endif // _DEBUG
 	
 	m_UpdaterList.insert(std::make_pair(ID::DEFAULT_SPACESHIP, UpdateDefaultSpaceshipShaderBuffer));
+	m_UpdaterList.insert(std::make_pair(ID::TERRAIN, UpdateDefaultTerrainShaderBuffer));
 }
 
 Graphic::Shader::ShaderBufferUpdaterClass::~ShaderBufferUpdaterClass()
 {
-	IsInitialize = false;
 	m_UpdaterList.clear();
+	IsInitialize = false;
 }
 
 void Graphic::Shader::ShaderBufferUpdaterClass::Update(ID3D11DeviceContext* DeviceContext, const BuffersData& data, ID ShaderID, IShaderClass* shader) const
@@ -46,6 +48,16 @@ void Graphic::Shader::UpdateDefaultSpaceshipShaderBuffer(ID3D11DeviceContext* De
 	buffers.camera = data.camera;
 	
 	static_cast<MLC_ShaderClass*>(shader)->UpdateShaderBuffers(DeviceContext, buffers);
+}
+
+void Graphic::Shader::UpdateDefaultTerrainShaderBuffer(ID3D11DeviceContext* DeviceContext, const BuffersData& data, IShaderClass* shader)
+{
+	ML_ShaderBuffers buffers;
+
+	buffers.transform = data.transform;
+	buffers.light = data.light;
+
+	static_cast<TerrainShaderClass*>(shader)->UpdateShaderBuffers(DeviceContext, buffers);
 }
 
 #ifdef _DEBUG

@@ -96,6 +96,7 @@ void Graphic::Terrain::QuadTreeClass::RenderBuffers(ID3D11DeviceContext* DeviceC
         DeviceContext->IASetVertexBuffers(0, 1, (node->vertexBuffer).GetAddressOf(), &stride, &offset);
         DeviceContext->IASetIndexBuffer((node->indexBuffer).Get(), DXGI_FORMAT_R32_UINT, 0);
         DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        // DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 
         // shader를 통해서 렌더링
         Shader->Render(DeviceContext, node->indexCount, m_Texture->GetTexture());
@@ -170,7 +171,7 @@ bool Graphic::Terrain::QuadTreeClass::LoadHeightMap(const char* HeightMap)
             height = bitmapImage[k];
 
             // vertex 데이터의 위치(position) 설정
-            m_Vertices[idx].position = DirectX::XMFLOAT4(j, height, i, 1.f);
+            m_Vertices[idx].position = DirectX::XMFLOAT4(static_cast<float>(j), height, static_cast<float>(i), 1.f);
 
             // BITMAP 이미지 데이터 배열의 index 증가
             k += 3;
@@ -188,7 +189,7 @@ void Graphic::Terrain::QuadTreeClass::NormalizeHeightMap()
     {
         for (int j = 0; j < m_TerrainWidth; j++)
         {
-            idx = (m_TerrainWidth * j) + i;
+            idx = (m_TerrainWidth * i) + j;
             m_Vertices[idx].position.y /= 15.f;
         }
     }
@@ -214,6 +215,7 @@ bool Graphic::Terrain::QuadTreeClass::CalculateNormals()
     assert(normals);
     cnt = std::make_unique<int[]>(size);
     assert(cnt);
+    std::fill_n(cnt.get(), size, 0);
 
     // 각 vertex의 normal vector 계산
     for (int i = 0; i < (m_TerrainHeight - 1); i++)
@@ -330,7 +332,7 @@ void Graphic::Terrain::QuadTreeClass::CreateQuadTree(ID3D11Device* Device, int s
     // QuadTree 생성
     if (traingleCount > MAX_TRAINGLES)
     {
-        assert(cur->nodes[0]);
+        assert(!cur->nodes[0]);
         cur->nodes[0] = std::make_unique<QuadTree>();
         assert(cur->nodes[0]);
         CreateQuadTree(
@@ -341,7 +343,7 @@ void Graphic::Terrain::QuadTreeClass::CreateQuadTree(ID3D11Device* Device, int s
             current_width / 2,
             cur->nodes[0].get());
 
-        assert(cur->nodes[1]);
+        assert(!cur->nodes[1]);
         cur->nodes[1] = std::make_unique<QuadTree>();
         assert(cur->nodes[1]);
         CreateQuadTree(
@@ -352,7 +354,7 @@ void Graphic::Terrain::QuadTreeClass::CreateQuadTree(ID3D11Device* Device, int s
             current_width / 2 + 1,
             cur->nodes[1].get());
 
-        assert(cur->nodes[2]);
+        assert(!cur->nodes[2]);
         cur->nodes[2] = std::make_unique<QuadTree>();
         assert(cur->nodes[2]);
         CreateQuadTree(
@@ -363,7 +365,7 @@ void Graphic::Terrain::QuadTreeClass::CreateQuadTree(ID3D11Device* Device, int s
             current_width / 2,
             cur->nodes[2].get());
 
-        assert(cur->nodes[3]);
+        assert(!cur->nodes[3]);
         cur->nodes[3] = std::make_unique<QuadTree>();
         assert(cur->nodes[3]);
         CreateQuadTree(

@@ -96,13 +96,15 @@ void Graphic::Shader::TerrainShaderClass::SetShaderBuffers(ID3D11DeviceContext* 
 HRESULT Graphic::Shader::TerrainShaderClass::UpdateMatrixBuffer(ID3D11DeviceContext* DeviceContext, const MatrixBufferType& transform)
 {
 	HRESULT result = S_OK;
-	D3D11_MAPPED_SUBRESOURCE MappedResource;			// lock
-	MatrixBufferType* DataPtr = nullptr;				// buffer의 포인터
-	DirectX::XMMATRIX viewMatrix;						// view
-	DirectX::XMMATRIX projectionMatrix;					// projection
+	D3D11_MAPPED_SUBRESOURCE MappedResource;						// lock
+	WMatrixBufferType* DataPtr = nullptr;							// buffer의 포인터
+	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixIdentity();	// world
+	DirectX::XMMATRIX viewMatrix;									// view
+	DirectX::XMMATRIX projectionMatrix;								// projection
 
 	// 행렬들을 HLSL에 맞게 변환 //
 	// 행렬들을 transpose 연산하여 shader에서 사용할 수 있도록 한다.
+	worldMatrix = DirectX::XMMatrixTranspose(worldMatrix);
 	viewMatrix = DirectX::XMMatrixTranspose(transform.View);
 	projectionMatrix = DirectX::XMMatrixTranspose(transform.Projection);
 
@@ -111,11 +113,12 @@ HRESULT Graphic::Shader::TerrainShaderClass::UpdateMatrixBuffer(ID3D11DeviceCont
 	assert(SUCCEEDED(result));
 
 	// matrix constant buffer의 데이터에 대한 포인터를 가져오기 //
-	DataPtr = static_cast<MatrixBufferType*>(MappedResource.pData);
+	DataPtr = static_cast<WMatrixBufferType*>(MappedResource.pData);
 
 	// matrix constant buffer에 데이터(행렬) 복사
-	DataPtr->View = viewMatrix;
-	DataPtr->Projection = projectionMatrix;
+	DataPtr->worldMatrix = worldMatrix;
+	DataPtr->viewMatrix = viewMatrix;
+	DataPtr->projectionMatrix = projectionMatrix;
 
 	// matrix constant buffer의 잠금을 풀어 GPU에 반영
 	DeviceContext->Unmap(m_MatrixBuffer.Get(), 0);

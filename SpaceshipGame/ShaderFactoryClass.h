@@ -16,6 +16,7 @@ namespace Graphic
 #endif
 
 		std::unique_ptr<Shader::IShaderClass> CreateDefaultSpaceshipShader(HWND hwnd, ID3D11Device* Device, Shader::ID id);
+		std::unique_ptr<Shader::IShaderClass> CreateDefaultTerrainShader(HWND hwnd, ID3D11Device* Device, Shader::ID id);
 
 		class ShaderFactoryClass
 		{

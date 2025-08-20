@@ -16,6 +16,7 @@ namespace Graphic
 #endif // _DEBUG
 
 		void UpdateDefaultSpaceshipShaderBuffer(ID3D11DeviceContext* DeviceContext, const BuffersData& data, IShaderClass* shader);
+		void UpdateDefaultTerrainShaderBuffer(ID3D11DeviceContext* DeviceContext, const BuffersData& data, IShaderClass* shader);
 
 		class ShaderBufferUpdaterClass
 		{
