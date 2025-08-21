@@ -2,7 +2,7 @@
 #include "CameraClass.h"
 #include "SceneClass.h"
 
-Scene::SceneClass::SceneClass(SceneID current, SceneID next) : m_CurrentSceneState(current), m_NextSceneState(next) {}
+Scene::SceneClass::SceneClass(ID current, ID next) : m_CurrentSceneState(current), m_NextSceneState(next) {}
 
 Scene::SceneClass::~SceneClass()
 {

@@ -263,6 +263,9 @@
     <Filter Include="Terrain\SkyDomeClass">
       <UniqueIdentifier>{d9d6e05c-1a7f-46b8-8913-134ffae0d81b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene\SingleModeSceneClass">
+      <UniqueIdentifier>{18005d7e-0f32-4df6-8252-7d82b8ab83bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemClass.h">
@@ -484,6 +487,9 @@
     <ClInclude Include="SkyDomeClass.h">
       <Filter>Terrain\SkyDomeClass</Filter>
     </ClInclude>
+    <ClInclude Include="SingleModeSceneClass.h">
+      <Filter>Scene\SingleModeSceneClass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -695,6 +701,9 @@
     </ClCompile>
     <ClCompile Include="SkyDomeClass.cpp">
       <Filter>Terrain\SkyDomeClass</Filter>
+    </ClCompile>
+    <ClCompile Include="SingleModeSceneClass.cpp">
+      <Filter>Scene\SingleModeSceneClass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

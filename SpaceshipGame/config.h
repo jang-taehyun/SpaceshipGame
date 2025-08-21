@@ -60,9 +60,9 @@ namespace Object
 // scene ฐüทร //
 namespace Scene
 {
-	enum class SceneID
+	enum class ID
 	{
-		NONE, START, LOADING, LOGIN, MATCH, INGAME, MODE_CHOOSE,
+		NONE, START, LOADING, LOGIN, MATCH, INGAME, MODE_CHOOSE, SINGLE_MODE, 
 	};
 }
 
@@ -87,6 +87,8 @@ namespace UI
 	{
 		NONE, HOVER, ONPRESSED, ONCLICKED, 
 	};
+
+	extern const float ExtendSize;
 }
 
 

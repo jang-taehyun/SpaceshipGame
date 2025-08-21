@@ -11,3 +11,5 @@ float System::SCREEN_DEPTH;
 float System::SCREEN_NEAR;
 
 float System::MOUSE_SENSITIVITY;
+
+const float UI::ExtendSize = 1.3f;

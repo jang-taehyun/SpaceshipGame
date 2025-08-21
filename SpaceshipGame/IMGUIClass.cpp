@@ -90,28 +90,31 @@ void Graphic::IMGUIClass::SetUI(Scene::SceneManagerClass* SceneManager, Graphic:
 	std::string title = u8"마우스 위치";
 	SetMousePosition(title, 0, input);
 
-	title = u8"카메라 위치, 회전";
-	SetCameraInfo(title, 1, SceneManager->GetCamera());
-
 	title = u8"사운드 재생 조정";
 	SetSoundInfo(title, 2, SceneManager->GetSoundManager());
 
-	title = u8"광원 정보(ambient, diffuse, direction, specular color, specular power)";
-	SetLightInfo(title, 3, light);
-
-	for (UINT i = 0; i < SceneManager->GetObjectManager()->GetObjectCount(); ++i)
+	if (SceneManager->GetCamera())
 	{
-		obj = static_cast<Object::GameObjectClass*>(SceneManager->GetObjectManager()->GetGameObject(i));
+		title = u8"카메라 위치, 회전";
+		SetCameraInfo(title, 1, SceneManager->GetCamera());
 
-		if (i != SceneManager->GetObjectManager()->GetPlayerIdx())
+		title = u8"광원 정보(ambient, diffuse, direction, specular color, specular power)";
+		SetLightInfo(title, 3, light);
+
+		for (UINT i = 0; i < SceneManager->GetObjectManager()->GetObjectCount(); ++i)
 		{
-			title = u8"번째 other의 affine(position, rotate, scale), collision(center, rotate, extends)";
-			title = std::to_string(i + 1) + title;
-		}
-		else
-			title = u8"player의 affine(position, rotate, scale), collision(center, rotate, extends)";
+			obj = static_cast<Object::GameObjectClass*>(SceneManager->GetObjectManager()->GetGameObject(i));
 
-		SetObjectInfo(title, i + 4, obj);
+			if (i != SceneManager->GetObjectManager()->GetPlayerIdx())
+			{
+				title = u8"번째 other의 affine(position, rotate, scale), collision(center, rotate, extends)";
+				title = std::to_string(i + 1) + title;
+			}
+			else
+				title = u8"player의 affine(position, rotate, scale), collision(center, rotate, extends)";
+
+			SetObjectInfo(title, i + 4, obj);
+		}
 	}
 }
 

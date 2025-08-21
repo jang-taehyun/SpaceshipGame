@@ -10,8 +10,8 @@ UI::ButtonHoverStateClass::ButtonHoverStateClass(ButtonClass* caller)
 	DirectX::XMFLOAT2 scale;
 
 	scale = caller->GetScale();
-	scale.x *= 1.5f;
-	scale.y *= 1.5f;
+	scale.x *= ExtendSize;
+	scale.y *= ExtendSize;
 	caller->SetScale(scale);
 
 #ifdef _DEBUG

@@ -7,8 +7,10 @@
 
 UI::ButtonClass::ButtonClass(ID UIID, Graphic::Texture::UITextureID ID) : UIClass(UIID, ID)
 {
-	m_ButtonState = std::make_unique<ButtonNoneStateClass>();
+	m_ButtonState = std::make_unique<ButtonNoneStateClass>(this);
 	assert(m_ButtonState);
+
+	m_OriginScale = GetScale();
 }
 
 UI::ButtonClass::ButtonClass(const ButtonClass& other) : UIClass(other)
@@ -21,7 +23,7 @@ UI::ButtonClass::ButtonClass(ButtonClass&& other) noexcept : UIClass(other)
 	m_ButtonState = std::move(other.m_ButtonState);
 }
 
-UI::ButtonClass& UI::ButtonClass::operator=(const ButtonClass&& other)
+UI::ButtonClass& UI::ButtonClass::operator=(const ButtonClass& other)
 {
 	if (this == &other)
 		return *this;

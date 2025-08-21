@@ -10,7 +10,7 @@ namespace Scene
 	class StartSceneClass : public SceneClass
 	{
 	public:
-		StartSceneClass(SceneID next, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds);
+		StartSceneClass(ID next, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds);
 		StartSceneClass(const StartSceneClass& other);
 		StartSceneClass(StartSceneClass&& other) noexcept;
 		virtual ~StartSceneClass() = default;
@@ -19,10 +19,9 @@ namespace Scene
 		StartSceneClass& operator=(StartSceneClass&& other) noexcept;
 
 		virtual void Frame(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time) override;
-		virtual Object::IObjectClass* GetActiveCamera() override { return m_Camera.get(); }
 		virtual std::unique_ptr<ISceneClass> Clone() const override { return std::make_unique<StartSceneClass>(*this); }
 
 	private:
-		std::unique_ptr<Object::IObjectClass> m_Camera = nullptr;
+		UINT m_StartButtonIdx = 0;
 	};
 }

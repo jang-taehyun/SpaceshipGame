@@ -7,8 +7,8 @@ UI::ButtonOnClickedStateClass::ButtonOnClickedStateClass(ButtonClass* caller)
 {
 	DirectX::XMFLOAT2 scale = caller->GetScale();
 
-	scale.x /= 1.5f;
-	scale.y /= 1.5f;
+	scale.x /= ExtendSize;
+	scale.y /= ExtendSize;
 	caller->SetScale(scale);
 
 #ifdef _DEBUG
@@ -18,5 +18,5 @@ UI::ButtonOnClickedStateClass::ButtonOnClickedStateClass(ButtonClass* caller)
 
 std::unique_ptr<UI::IButtonStateClass> UI::ButtonOnClickedStateClass::Update(ButtonClass* caller, const System::InputClass* input, bool IsInCursor)
 {
-    return nullptr;
+    return std::make_unique<ButtonNoneStateClass>(caller);
 }

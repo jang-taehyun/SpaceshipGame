@@ -17,8 +17,8 @@ namespace Scene
 	public:
 		virtual ~ISceneClass() = default;
 
-		virtual SceneID GetCurrentSceneState() const = 0;
-		virtual SceneID GetNextSceneState() const = 0;
+		virtual ID GetCurrentSceneState() const = 0;
+		virtual ID GetNextSceneState() const = 0;
 		virtual Graphic::Terrain::TerrainID GetTerrainID() const = 0;
 		virtual Graphic::Terrain::SkyDomeID GetSkyDomeID() const = 0;
 		virtual bool IsSceneEnded() const = 0;
@@ -29,7 +29,7 @@ namespace Scene
 
 	protected:
 		virtual void SetSceneEnded() = 0;
-		virtual void SetNextScene(SceneID next) = 0;
+		virtual void SetNextScene(ID next) = 0;
 		virtual void SetTerrainID(Graphic::Terrain::TerrainID id) = 0;
 		virtual void SetSkyDomeID(Graphic::Terrain::SkyDomeID id) = 0;
 	};

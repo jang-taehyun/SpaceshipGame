@@ -72,67 +72,69 @@ void Graphic::GraphicsClass::Frame(HWND hwnd, Scene::SceneManagerClass* SceneMan
 
 	// frustum culling //
 	// 카메라 업데이트
-	assert(cam);
-	view = cam->Render();
-	cam->UpdateFrustum(m_D3D->GetProjectionMatrix());
-
-	// scene에 존재하는 object에 대해 frustum culling 진행
-	cnt = SceneManager->GetObjectManager()->GetObjectCount();
-	for (UINT i = 0; i < cnt; ++i)
+	if (cam)
 	{
-		obj = static_cast<Object::GameObjectClass*>(SceneManager->GetObjectManager()->GetGameObject(i));
-		assert(obj);
+		view = cam->Render();
+		cam->UpdateFrustum(m_D3D->GetProjectionMatrix());
 
-		IsRender = cam->IsRenderModel(
-			m_ModelManager->GetModel(obj->GetModelID())->GetModelOBB(),
-			obj->GetAffineMatrix()
-		);
-
-		if (IsRender)
+		// scene에 존재하는 object에 대해 frustum culling 진행
+		cnt = SceneManager->GetObjectManager()->GetObjectCount();
+		for (UINT i = 0; i < cnt; ++i)
 		{
-			instance.world = obj->GetAffineMatrix();
-			m_ModelManager->GetModel(obj->GetModelID())->AddWorldMatrix(instance);
-		}
+			obj = static_cast<Object::GameObjectClass*>(SceneManager->GetObjectManager()->GetGameObject(i));
+			assert(obj);
+
+			IsRender = cam->IsRenderModel(
+				m_ModelManager->GetModel(obj->GetModelID())->GetModelOBB(),
+				obj->GetAffineMatrix()
+			);
+
+			if (IsRender)
+			{
+				instance.world = obj->GetAffineMatrix();
+				m_ModelManager->GetModel(obj->GetModelID())->AddWorldMatrix(instance);
+			}
 
 #ifdef _DEBUG
-		// Collision
-		col = static_cast<Object::CollisionClass*>(obj->GetCollision());
-		assert(col);
+			// Collision
+			col = static_cast<Object::CollisionClass*>(obj->GetCollision());
+			assert(col);
 
-		IsRender = cam->IsRenderModel(
-			m_ModelManager->GetModel(obj->GetModelID())->GetModelOBB(),
-			col->GetAffineMatrix()
-		);
+			IsRender = cam->IsRenderModel(
+				m_ModelManager->GetModel(obj->GetModelID())->GetModelOBB(),
+				col->GetAffineMatrix()
+			);
 
-		if (IsRender)
-		{
-			instance.world = col->GetAffineMatrix();
-			instance.color = col->GetColor();
-			m_ModelManager->GetModel(col->GetModelID())->AddWorldMatrix(instance);
+			if (IsRender)
+			{
+				instance.world = col->GetAffineMatrix();
+				instance.color = col->GetColor();
+				m_ModelManager->GetModel(col->GetModelID())->AddWorldMatrix(instance);
 
-			instance.color = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);
-		}
-			
+				instance.color = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);
+			}
+
 #endif // DEBUG
+		}
+
+		// model들의 instance buffer 업데이트 //
+		m_ModelManager->UpdateInstanceBuffers(m_D3D->GetDeviceContext());
+
+		// shader의 모든 buffer 업데이트 //
+		proj = m_D3D->GetProjectionMatrix();
+		BufferData.transform.Projection = DirectX::XMLoadFloat4x4(&proj);
+		BufferData.transform.View = DirectX::XMLoadFloat4x4(&view);
+
+		BufferData.light.AmbientColor = m_Light->GetAmbientColor();
+		BufferData.light.DiffuseColor = m_Light->GetDiffuseColor();
+		BufferData.light.LightDirection = Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(m_Light->GetDirection());
+		BufferData.light.SpecularColor = m_Light->GetSpecularColor();
+		BufferData.light.SpecularPower = m_Light->GetSpecularPower();
+
+		BufferData.camera.CameraPosition = Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(SceneManager->GetCamera()->GetPosition());
+
+		m_ShaderManager->UpdateBuffer(m_D3D->GetDeviceContext(), BufferData);
 	}
-
-	// model들의 instance buffer 업데이트 //
-	m_ModelManager->UpdateInstanceBuffers(m_D3D->GetDeviceContext());
-
-	// shader의 모든 buffer 업데이트 //
-	proj = m_D3D->GetProjectionMatrix();
-	BufferData.transform.Projection = DirectX::XMLoadFloat4x4(&proj);
-	BufferData.transform.View = DirectX::XMLoadFloat4x4(&view);
-
-	BufferData.light.AmbientColor = m_Light->GetAmbientColor();
-	BufferData.light.DiffuseColor = m_Light->GetDiffuseColor();
-	BufferData.light.LightDirection = Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(m_Light->GetDirection());
-	BufferData.light.SpecularColor = m_Light->GetSpecularColor();
-	BufferData.light.SpecularPower = m_Light->GetSpecularPower();
-
-	BufferData.camera.CameraPosition = Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(SceneManager->GetCamera()->GetPosition());
-
-	m_ShaderManager->UpdateBuffer(m_D3D->GetDeviceContext(), BufferData);
 
 	// 렌더링 //
 	Render(hwnd, SceneManager
@@ -216,30 +218,33 @@ void Graphic::GraphicsClass::Render(HWND hwnd, Scene::SceneManagerClass* SceneMa
 	m_D3D->BeginScene(DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f));
 
 	// terrain 렌더링 //
-	shader = m_ShaderManager->GetShader(m_Terrain->GetShaderID());
-	m_Terrain->Render(m_D3D->GetDeviceContext(), m_D3D.get(), shader, SceneManager->GetCamera(), m_D3D->GetProjectionMatrix());
-
-	// 3D 물체 렌더링 //
-	for (UINT i = 0; i < cnt; ++i)
+	if (SceneManager->GetCamera())
 	{
-		model = m_ModelManager->GetModel(static_cast<Model::ID>(i));
+		shader = m_ShaderManager->GetShader(m_Terrain->GetShaderID());
+		m_Terrain->Render(m_D3D->GetDeviceContext(), m_D3D.get(), shader, SceneManager->GetCamera(), m_D3D->GetProjectionMatrix());
 
-		// 해당 model이 있다면 렌더링
-		if (model)
+		// 3D 물체 렌더링 //
+		for (UINT i = 0; i < cnt; ++i)
 		{
-			// shader, input layout 세팅
-			shader = m_ShaderManager->GetShader(model->GetShaderID());
-			shader->BeginRender(m_D3D->GetDeviceContext());
+			model = m_ModelManager->GetModel(static_cast<Model::ID>(i));
 
-			for (UINT j = 0; j < model->GetMeshCount(); ++j)
+			// 해당 model이 있다면 렌더링
+			if (model)
 			{
-				model->RenderMesh(m_D3D->GetDeviceContext(), j);
-				shader->Render(
-					m_D3D->GetDeviceContext(),
-					model->GetIndexCount(j),
-					model->GetInstanceCount(),
-					model->GetMaterial(j)
-				);
+				// shader, input layout 세팅
+				shader = m_ShaderManager->GetShader(model->GetShaderID());
+				shader->BeginRender(m_D3D->GetDeviceContext());
+
+				for (UINT j = 0; j < model->GetMeshCount(); ++j)
+				{
+					model->RenderMesh(m_D3D->GetDeviceContext(), j);
+					shader->Render(
+						m_D3D->GetDeviceContext(),
+						model->GetIndexCount(j),
+						model->GetInstanceCount(),
+						model->GetMaterial(j)
+					);
+				}
 			}
 		}
 	}

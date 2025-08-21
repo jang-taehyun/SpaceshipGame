@@ -210,6 +210,7 @@
     <ClInclude Include="ShaderClass.h" />
     <ClInclude Include="ShaderFactoryClass.h" />
     <ClInclude Include="ShaderManagerClass.h" />
+    <ClInclude Include="SingleModeSceneClass.h" />
     <ClInclude Include="SkyDomeClass.h" />
     <ClInclude Include="SoundClass.h" />
     <ClInclude Include="SoundManagerClass.h" />
@@ -289,6 +290,7 @@
     <ClCompile Include="ShaderClass.hpp" />
     <ClCompile Include="ShaderFactoryClass.cpp" />
     <ClCompile Include="ShaderManagerClass.cpp" />
+    <ClCompile Include="SingleModeSceneClass.cpp" />
     <ClCompile Include="SkyDomeClass.cpp" />
     <ClCompile Include="SoundClass.cpp" />
     <ClCompile Include="SoundManagerClass.cpp" />
