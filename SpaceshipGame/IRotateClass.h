@@ -11,10 +11,10 @@ namespace Object
 		virtual DirectX::XMFLOAT4 Rotate(DirectX::XMFLOAT4 rotate, long MouseX, long MouseY, float frame_time, bool IsKeyDown) = 0;
 
 		// 회전 속도 반환
-		virtual inline float GetRoteteSpeed() const = 0;
+		virtual float GetRoteteSpeed() const = 0;
 
 		// 회전 속도 세팅
-		virtual inline void SetRoteteSpeed(float value) = 0;
+		virtual void SetRoteteSpeed(float value) = 0;
 
 		virtual std::unique_ptr<IRotateClass> Clone() const = 0;
 

@@ -25,7 +25,7 @@ namespace Graphic
 			void Load(HWND hwnd, ID3D11Device* Device, UINT ShaderMask);
 			void UpdateBuffer(ID3D11DeviceContext* DeviceContext, const BuffersData& data);
 
-			inline UINT GetShaderMask() const { return m_CurrentShaderMask; }
+			UINT GetShaderMask() const { return m_CurrentShaderMask; }
 
 		private:
 			static bool IsInitialize;

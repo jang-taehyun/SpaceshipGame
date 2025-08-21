@@ -10,7 +10,7 @@ namespace System
 
 		void Frame();
 
-		inline float GetTime() const { return (m_Frequency ? m_FrameTime : -1.f); }
+		float GetTime() const { return (m_Frequency ? m_FrameTime : -1.f); }
 
 	private:
 		void Initialize();

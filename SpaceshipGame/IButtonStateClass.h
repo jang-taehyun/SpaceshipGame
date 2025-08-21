@@ -10,10 +10,10 @@ namespace UI
 	public:
 		virtual ~IButtonStateClass() = default;
 
-		virtual inline ButtonState GetButtonState() const = 0;
+		virtual ButtonState GetButtonState() const = 0;
 
 		virtual std::unique_ptr<IButtonStateClass> Update(ButtonClass* caller, const System::InputClass* input, bool IsInCursor) = 0;
 
-		virtual inline std::unique_ptr<IButtonStateClass> Clone() const = 0;
+		virtual std::unique_ptr<IButtonStateClass> Clone() const = 0;
 	};
 }

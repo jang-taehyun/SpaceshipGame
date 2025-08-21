@@ -15,8 +15,8 @@ namespace Object
 		GameObjectClass& operator=(const GameObjectClass& other);
 		GameObjectClass& operator=(GameObjectClass&& other) noexcept;
 
-		inline IObjectClass* GetCollision() const { return m_Collision.get(); }
-		inline Graphic::Model::ID GetModelID() const { return m_ModelID; }
+		IObjectClass* GetCollision() const { return m_Collision.get(); }
+		Graphic::Model::ID GetModelID() const { return m_ModelID; }
 
 	private:
 		std::unique_ptr<IObjectClass> m_Collision = nullptr;

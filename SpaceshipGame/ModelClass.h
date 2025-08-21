@@ -26,19 +26,19 @@ namespace Graphic
 			ModelClass<VertexType>& operator=(const ModelClass& other);
 			ModelClass<VertexType>& operator=(ModelClass&& other) noexcept;
 
-			virtual inline void AddWorldMatrix(const InstanceBufferType& world) override { m_WorldMatrix.push_back(world); }
+			virtual void AddWorldMatrix(const InstanceBufferType& world) override { m_WorldMatrix.push_back(world); }
 
 			virtual void UpdateInstanceBuffer(ID3D11DeviceContext* DeviceContext) override;
 			virtual void RenderMesh(ID3D11DeviceContext* DeviceContext, UINT MeshIdx) override;
 
-			virtual inline UINT GetMeshCount() const override { return m_MeshCount; }
-			virtual inline Shader::ID GetShaderID() const override { return m_ShaderID; }
-			virtual inline ULONG GetIndexCount(UINT idx) const override { assert(idx < m_MeshCount); return m_MeshesIndexCount[idx]; }
-			virtual inline ULONG GetInstanceCount() const override { assert(m_InstanceCount < MAX_INSTANCE_COUNT); return m_InstanceCount; }
+			virtual UINT GetMeshCount() const override { return m_MeshCount; }
+			virtual Shader::ID GetShaderID() const override { return m_ShaderID; }
+			virtual ULONG GetIndexCount(UINT idx) const override { assert(idx < m_MeshCount); return m_MeshesIndexCount[idx]; }
+			virtual ULONG GetInstanceCount() const override { assert(m_InstanceCount < MAX_INSTANCE_COUNT); return m_InstanceCount; }
 			virtual const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& GetMaterial(UINT idx) const override;
-			virtual inline DirectX::BoundingOrientedBox GetModelOBB() const { return m_ModelOBB; }
+			virtual DirectX::BoundingOrientedBox GetModelOBB() const { return m_ModelOBB; }
 
-			virtual inline ULONG GetVertexCount(UINT idx) const override { assert(idx < m_MeshCount); return m_MeshesVertexCount[idx]; }
+			virtual ULONG GetVertexCount(UINT idx) const override { assert(idx < m_MeshCount); return m_MeshesVertexCount[idx]; }
 
 		private:
 			HRESULT Initialize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Loader::IModelLoaderClass* loader);

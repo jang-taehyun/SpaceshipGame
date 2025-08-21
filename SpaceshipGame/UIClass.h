@@ -10,24 +10,24 @@ namespace UI
 		UIClass(ID UIID, Graphic::Texture::UITextureID ID);
 		virtual ~UIClass() = default;
 
-		virtual inline ID GetUIID() const { return m_UIID; }
-		virtual inline UIState GetUIState() const override { return m_State; }
-		virtual inline Graphic::Texture::UITextureID GetUITextureID() const override { return m_UITextureID; }
+		virtual ID GetUIID() const { return m_UIID; }
+		virtual UIState GetUIState() const override { return m_State; }
+		virtual Graphic::Texture::UITextureID GetUITextureID() const override { return m_UITextureID; }
 
-		virtual inline DirectX::XMFLOAT2 GetPosition() const override { return m_Position; }
-		virtual inline float GetRotation() const override { return m_Rotation; }
-		virtual inline DirectX::XMFLOAT2 GetOrigin() const override { return m_Origin; }
-		virtual inline DirectX::XMFLOAT2 GetScale() const override { return m_Scale; }
-		virtual inline DirectX::XMFLOAT4 GetColor() const override { return m_Color; }
+		virtual DirectX::XMFLOAT2 GetPosition() const override { return m_Position; }
+		virtual float GetRotation() const override { return m_Rotation; }
+		virtual DirectX::XMFLOAT2 GetOrigin() const override { return m_Origin; }
+		virtual DirectX::XMFLOAT2 GetScale() const override { return m_Scale; }
+		virtual DirectX::XMFLOAT4 GetColor() const override { return m_Color; }
 
-		virtual inline void SetUIState(UIState state) { m_State = state; }
-		virtual inline void SetUITextureID(Graphic::Texture::UITextureID ID) { m_UITextureID = ID; }
+		virtual void SetUIState(UIState state) { m_State = state; }
+		virtual void SetUITextureID(Graphic::Texture::UITextureID ID) { m_UITextureID = ID; }
 
-		virtual inline void SetPosition(DirectX::XMFLOAT2 pos) override { m_Position = pos; }
-		virtual inline void SetRotation(float rot) override { m_Rotation = rot; }
-		virtual inline void SetOrigin(DirectX::XMFLOAT2 origin) override { m_Origin = origin; }
-		virtual inline void SetScale(DirectX::XMFLOAT2 scale) override { m_Scale = scale; }
-		virtual inline void SetColor(DirectX::XMFLOAT4 color) override { m_Color = color; }
+		virtual void SetPosition(DirectX::XMFLOAT2 pos) override { m_Position = pos; }
+		virtual void SetRotation(float rot) override { m_Rotation = rot; }
+		virtual void SetOrigin(DirectX::XMFLOAT2 origin) override { m_Origin = origin; }
+		virtual void SetScale(DirectX::XMFLOAT2 scale) override { m_Scale = scale; }
+		virtual void SetColor(DirectX::XMFLOAT4 color) override { m_Color = color; }
 
 		virtual void Update(const System::InputClass* input) override;
 

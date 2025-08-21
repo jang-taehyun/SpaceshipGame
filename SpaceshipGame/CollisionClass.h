@@ -18,7 +18,7 @@ namespace Object
 		virtual DirectX::ContainmentType GetCollideState(const AffineInfo& affine);
 		virtual DirectX::ContainmentType GetCollideState(DirectX::XMFLOAT4 position, DirectX::XMFLOAT4 forward);
 
-		virtual inline std::unique_ptr<IObjectClass> Clone() const override { return std::make_unique<CollisionClass>(*this); }
+		virtual std::unique_ptr<IObjectClass> Clone() const override { return std::make_unique<CollisionClass>(*this); }
 
 	private:
 		float m_Range = 0.f;

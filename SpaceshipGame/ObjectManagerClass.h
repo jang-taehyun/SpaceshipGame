@@ -18,13 +18,13 @@ namespace Object
 		ObjectManagerClass();
 		virtual ~ObjectManagerClass();
 
-		inline UINT GetPlayerIdx() const { return (m_ObjectList.size() ? m_PlayerIdx : 0); }
+		UINT GetPlayerIdx() const { return (m_ObjectList.size() ? m_PlayerIdx : 0); }
 
-		inline void SetPlayerIdx(UINT idx) { m_PlayerIdx = idx; }
-		inline UINT GetObjectCount() const { return static_cast<UINT>(m_ObjectList.size()); }
+		void SetPlayerIdx(UINT idx) { m_PlayerIdx = idx; }
+		UINT GetObjectCount() const { return static_cast<UINT>(m_ObjectList.size()); }
 
 		IObjectClass* GetGameObject(UINT idx) const;
-		inline UINT GetModelMask() const { return m_ModelMask; }
+		UINT GetModelMask() const { return m_ModelMask; }
 
 		UINT Load(ID ObjectID, Graphic::Model::ID ModelID);
 		void Release();

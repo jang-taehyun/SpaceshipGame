@@ -10,23 +10,23 @@ namespace Text
 		TextClass(const std::wstring& text, Graphic::Font::ID FontID = Graphic::Font::ID::DEFAULT);
 		virtual ~TextClass() = default;
 
-		virtual inline const std::wstring& GetText() const override { return m_Text; }
-		virtual inline Graphic::Font::ID GetFontID() const override { return m_FontID; }
+		virtual const std::wstring& GetText() const override { return m_Text; }
+		virtual Graphic::Font::ID GetFontID() const override { return m_FontID; }
 
-		virtual inline DirectX::XMFLOAT2 GetPosition() const override { return m_Position; }
-		virtual inline float GetRotation() const override { return m_Rotation; }
-		virtual inline DirectX::XMFLOAT2 GetOrigin() const override { return m_Origin; }
-		virtual inline DirectX::XMFLOAT2 GetScale() const override { return m_Scale; }
-		virtual inline DirectX::XMFLOAT4 GetColor() const override { return m_Color; }
+		virtual DirectX::XMFLOAT2 GetPosition() const override { return m_Position; }
+		virtual float GetRotation() const override { return m_Rotation; }
+		virtual DirectX::XMFLOAT2 GetOrigin() const override { return m_Origin; }
+		virtual DirectX::XMFLOAT2 GetScale() const override { return m_Scale; }
+		virtual DirectX::XMFLOAT4 GetColor() const override { return m_Color; }
 
-		virtual inline void SetText(const std::wstring& text) override { m_Text = text; }
-		virtual inline void SetFontID(Graphic::Font::ID id) override { m_FontID = id; }
+		virtual void SetText(const std::wstring& text) override { m_Text = text; }
+		virtual void SetFontID(Graphic::Font::ID id) override { m_FontID = id; }
 		
-		virtual inline void SetPosition(DirectX::XMFLOAT2 pos) override { m_Position = pos; }
-		virtual inline void SetRotation(float rot) override { m_Rotation = rot; }
-		virtual inline void SetOrigin(DirectX::XMFLOAT2 origin) override { m_Origin = origin; }
-		virtual inline void SetScale(DirectX::XMFLOAT2 scale) override { m_Scale = scale; }
-		virtual inline void SetColor(DirectX::XMFLOAT4 color) override { m_Color = color; }
+		virtual void SetPosition(DirectX::XMFLOAT2 pos) override { m_Position = pos; }
+		virtual void SetRotation(float rot) override { m_Rotation = rot; }
+		virtual void SetOrigin(DirectX::XMFLOAT2 origin) override { m_Origin = origin; }
+		virtual void SetScale(DirectX::XMFLOAT2 scale) override { m_Scale = scale; }
+		virtual void SetColor(DirectX::XMFLOAT4 color) override { m_Color = color; }
 
 	private:
 		std::wstring m_Text = _T("");

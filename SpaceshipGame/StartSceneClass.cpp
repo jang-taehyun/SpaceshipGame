@@ -51,7 +51,7 @@ Scene::StartSceneClass::StartSceneClass(SceneID next, Object::ObjectManagerClass
 }
 
 Scene::StartSceneClass::StartSceneClass(const StartSceneClass& other) : SceneClass(other), m_Camera(std::move(other.m_Camera->Clone())) {}
-Scene::StartSceneClass::StartSceneClass(StartSceneClass&& other) noexcept : SceneClass(other), m_Camera(std::move(other.m_Camera)) {}
+Scene::StartSceneClass::StartSceneClass(StartSceneClass&& other) noexcept : SceneClass(std::move(other)), m_Camera(std::move(other.m_Camera)) {}
 
 Scene::StartSceneClass& Scene::StartSceneClass::operator=(const StartSceneClass& other)
 {

@@ -21,8 +21,8 @@ namespace UI
 		void Frame(const System::InputClass* input);
 
 		IUIClass* GetUI(UINT idx) const;
-		inline UINT GetUICount() const { return static_cast<UINT>(m_UIList.size()); }
-		inline UINT GetUITextureMask() const { return m_UITextureMask; }
+		UINT GetUICount() const { return static_cast<UINT>(m_UIList.size()); }
+		UINT GetUITextureMask() const { return m_UITextureMask; }
 
 	private:
 		static bool IsInitialize;

@@ -16,19 +16,19 @@ namespace Object
 		virtual const DirectX::XMFLOAT4X4 GetAffineMatrix() const = 0;			// affine matrxi(world matrix) 반환
 		virtual const AffineInfo& GetAffine() const = 0;						// affine 데이터 반환
 
-		virtual inline DirectX::XMFLOAT4 GetPosition() const = 0;				// position 반환
-		virtual inline DirectX::XMFLOAT4 GetRotation() const = 0;				// rotation 반환
-		virtual inline DirectX::XMFLOAT4 GetScale() const = 0;					// scale 반환
+		virtual DirectX::XMFLOAT4 GetPosition() const = 0;						// position 반환
+		virtual DirectX::XMFLOAT4 GetRotation() const = 0;						// rotation 반환
+		virtual DirectX::XMFLOAT4 GetScale() const = 0;							// scale 반환
 
-		virtual inline void SetPosition(DirectX::XMFLOAT4 pos) = 0;				// position 대입
-		virtual inline void SetPosition(float x, float y, float z) = 0;			// position 대입
-
-		virtual inline void SetRotation(DirectX::XMFLOAT4 rot) = 0;				// rotation 대입
-		virtual inline void SetRotation(float x, float y, float z) = 0;			// rotation 대입
-
-		virtual inline void SetScale(DirectX::XMFLOAT4 scale) = 0;				// scale 대입
-		virtual inline void SetScale(float x, float y, float z) = 0;			// scale 대입
-
-		virtual inline std::unique_ptr<IObjectClass> Clone() const = 0;
+		virtual void SetPosition(DirectX::XMFLOAT4 pos) = 0;					// position 대입
+		virtual void SetPosition(float x, float y, float z) = 0;				// position 대입
+			    
+		virtual void SetRotation(DirectX::XMFLOAT4 rot) = 0;					// rotation 대입
+		virtual void SetRotation(float x, float y, float z) = 0;				// rotation 대입
+			    
+		virtual void SetScale(DirectX::XMFLOAT4 scale) = 0;						// scale 대입
+		virtual void SetScale(float x, float y, float z) = 0;					// scale 대입
+			    
+		virtual std::unique_ptr<IObjectClass> Clone() const = 0;
 	};
 }

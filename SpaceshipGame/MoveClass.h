@@ -12,14 +12,13 @@ namespace Object
 	class MoveClass : public IMoveClass
 	{
 	public:
-		MoveClass() = default;
-		explicit MoveClass(float speed);
+		explicit MoveClass(float speed = 0.05f);
 		virtual ~MoveClass() = default;
 
 		DirectX::XMFLOAT4 Move(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 rotate, MoveState state, float frame_time, bool IsKeyDown) override;
 
-		inline float GetMoveSpeed() const override { return m_MoveSpeed; }
-		inline void SetMoveSpeed(float value) override { m_MoveSpeed = value; }
+		float GetMoveSpeed() const override { return m_MoveSpeed; }
+		void SetMoveSpeed(float value) override { m_MoveSpeed = value; }
 
 		virtual std::unique_ptr<IMoveClass> Clone() const override;
 

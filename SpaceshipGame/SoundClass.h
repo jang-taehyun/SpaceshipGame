@@ -16,7 +16,7 @@ namespace Sound
 		void Play() const;
 		void Stop() const;
 
-		inline void SetLoop(bool IsLoop) { m_IsLoop = IsLoop; }
+		void SetLoop(bool IsLoop) { m_IsLoop = IsLoop; }
 
 	private:
 		void LoadWaveFile(DirectX::AudioEngine* engine, const std::wstring& filename);

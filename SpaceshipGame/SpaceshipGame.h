@@ -28,7 +28,8 @@
 *	3-3) SceneClass를 상속받은 새로운 Class를 SceneFactoryClass에 등록할 것
 * 4) Scene 클래스를 상속받은 자식 클래스에서는 반드시 필요한 object, text, ui, sound를 manager를 통해서 생성할 것
 *	4-1) object, text, UI는 load() 함수를 호출하여 생성할 것
-*	4-2) sound는 비트마스크를 통해 필요한 sound의 ID를 표시한 후에 load() 함수를 호출하여 생성할 것 
+*	4-2) sound는 비트마스크를 통해 필요한 sound의 ID를 표시한 후에 load() 함수를 호출하여 생성할 것
+*	4-3) terrain, sky dome은 SetTerrainID(), SetSkyDomeID() 함수를 호출하여 생성할 것
 * 
 * 4. Shader 관련 규칙
 * 1) Shader 클래스를 상속받은 자식 클래스에서는 반드시 복사 생성자, 이동 생성자, 복사 대입연산자, 이동 대입 연산자를 구현할 것

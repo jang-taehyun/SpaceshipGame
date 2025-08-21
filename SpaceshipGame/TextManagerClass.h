@@ -11,8 +11,8 @@ namespace Text
 		~TextManagerClass();
 
 		ITextClass* GetTextObject(UINT idx) const;
-		inline UINT GetFontMask() const { return m_FontMask; }
-		inline UINT GetTextCount() const { return static_cast<UINT>(m_UITexts.size()); }
+		UINT GetFontMask() const { return m_FontMask; }
+		UINT GetTextCount() const { return static_cast<UINT>(m_UITexts.size()); }
 
 		UINT Load(ID id, const std::wstring& text, Graphic::Font::ID font = Graphic::Font::ID::DEFAULT);
 		void Release();

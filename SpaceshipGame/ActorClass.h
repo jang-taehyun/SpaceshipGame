@@ -28,7 +28,7 @@ namespace Object
 		ActorClass& operator=(const ActorClass& other);
 		ActorClass& operator=(ActorClass&& other) noexcept;
 
-		virtual inline std::unique_ptr<IObjectClass> Clone() const override { return std::make_unique<ActorClass>(*this); }
+		virtual std::unique_ptr<IObjectClass> Clone() const override { return std::make_unique<ActorClass>(*this); }
 
 	private:
 		std::unique_ptr<IMoveClass> m_Move = nullptr;

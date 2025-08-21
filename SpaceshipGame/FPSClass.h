@@ -10,7 +10,7 @@ namespace System
 
 		void Frame();
 
-		inline UINT GetFPS() const { return m_FPS; }
+		UINT GetFPS() const { return m_FPS; }
 
 	private:
 		void Initialize();

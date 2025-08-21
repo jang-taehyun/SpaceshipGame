@@ -10,7 +10,7 @@ Object::CameraClass::CameraClass(std::unique_ptr<IMoveClass> move, std::unique_p
 Object::CameraClass::CameraClass(const CameraClass& other) : ObjectClass(other), m_Move(other.m_Move->Clone()), m_Rotate(other.m_Rotate->Clone()), m_Frustum(other.m_Frustum)
 {}
 
-Object::CameraClass::CameraClass(CameraClass && other) noexcept : ObjectClass(other), m_Move(std::move(other.m_Move)), m_Rotate(std::move(other.m_Rotate)), m_Frustum(other.m_Frustum)
+Object::CameraClass::CameraClass(CameraClass && other) noexcept : ObjectClass(std::move(other)), m_Move(std::move(other.m_Move)), m_Rotate(std::move(other.m_Rotate)), m_Frustum(other.m_Frustum)
 {}
 
 DirectX::XMFLOAT4X4 Object::CameraClass::Render()

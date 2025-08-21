@@ -12,14 +12,13 @@ namespace Object
 	class RotateClass : public IRotateClass
 	{
 	public:
-		RotateClass() = default;
-		explicit RotateClass(float speed);
+		explicit RotateClass(float speed = 1.f);
 		virtual ~RotateClass() = default;
 
 		DirectX::XMFLOAT4 Rotate(DirectX::XMFLOAT4 rotate, long MouseX, long MouseY, float frame_time, bool IsKeyDown) override;
 
-		inline float GetRoteteSpeed() const override { return m_RotateSpeed; }
-		inline void SetRoteteSpeed(float value) override { m_RotateSpeed = value; }
+		float GetRoteteSpeed() const override { return m_RotateSpeed; }
+		void SetRoteteSpeed(float value) override { m_RotateSpeed = value; }
 
 		virtual std::unique_ptr<IRotateClass> Clone() const override;
 

@@ -19,8 +19,8 @@ namespace Scene
 		StartSceneClass& operator=(StartSceneClass&& other) noexcept;
 
 		virtual void Frame(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time) override;
-		virtual inline Object::IObjectClass* GetActiveCamera() override { return m_Camera.get(); }
-		virtual inline std::unique_ptr<ISceneClass> Clone() const override { return std::make_unique<StartSceneClass>(*this); }
+		virtual Object::IObjectClass* GetActiveCamera() override { return m_Camera.get(); }
+		virtual std::unique_ptr<ISceneClass> Clone() const override { return std::make_unique<StartSceneClass>(*this); }
 
 	private:
 		std::unique_ptr<Object::IObjectClass> m_Camera = nullptr;

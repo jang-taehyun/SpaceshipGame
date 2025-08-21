@@ -54,7 +54,7 @@ Scene::ModeChooseSceneClass::ModeChooseSceneClass(SceneID next, Object::ObjectMa
 }
 
 Scene::ModeChooseSceneClass::ModeChooseSceneClass(const ModeChooseSceneClass& other) : SceneClass(other), m_Camera(std::move(other.m_Camera->Clone())) {}
-Scene::ModeChooseSceneClass::ModeChooseSceneClass(ModeChooseSceneClass&& other) noexcept : SceneClass(other), m_Camera(std::move(other.m_Camera)) {}
+Scene::ModeChooseSceneClass::ModeChooseSceneClass(ModeChooseSceneClass&& other) noexcept : SceneClass(std::move(other)), m_Camera(std::move(other.m_Camera)) {}
 
 Scene::ModeChooseSceneClass& Scene::ModeChooseSceneClass::operator=(const ModeChooseSceneClass& other)
 {

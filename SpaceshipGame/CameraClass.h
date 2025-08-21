@@ -37,7 +37,7 @@ namespace Object
 		CameraClass& operator=(const CameraClass& other);
 		CameraClass& operator=(CameraClass&& other) noexcept;
 
-		virtual inline std::unique_ptr<IObjectClass> Clone() const override { return std::make_unique<CameraClass>(*this); }
+		virtual std::unique_ptr<IObjectClass> Clone() const override { return std::make_unique<CameraClass>(*this); }
 
 	private:
 		DirectX::BoundingFrustum m_Frustum;
