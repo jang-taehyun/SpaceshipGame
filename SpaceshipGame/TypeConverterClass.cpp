@@ -38,12 +38,26 @@ DirectX::XMFLOAT4X4 Utility::TypeConverterClass::XMFLOAT4toXMFLOAT4X4(DirectX::X
 	VOperand2 = XMQuaternionRotationRollPitchYaw(operand2.x, operand2.y, operand2.z);
 	VOperand3 = XMLoadFloat4(&operand3);
 
-	MOperand1 = (DirectX::XMVector3Equal(VOperand1, DirectX::XMVectorZero()) ? DirectX::XMMatrixIdentity() : XMMatrixTranslationFromVector(VOperand1));
-	MOperand2 = (DirectX::XMVector3Equal(VOperand2, DirectX::XMVectorZero()) ? DirectX::XMMatrixIdentity() : XMMatrixRotationQuaternion(VOperand2));
-	MOperand3 = (DirectX::XMVector3Equal(VOperand3, DirectX::XMVectorZero()) ? DirectX::XMMatrixIdentity() : XMMatrixScalingFromVector(VOperand3));
+	MOperand1 = (XMVector3Equal(VOperand1, XMVectorZero()) ? XMMatrixIdentity() : XMMatrixTranslationFromVector(VOperand1));
+	MOperand2 = (XMVector3Equal(VOperand2, XMVectorZero()) ? XMMatrixIdentity() : XMMatrixRotationQuaternion(VOperand2));
+	MOperand3 = (XMVector3Equal(VOperand3, XMVectorZero()) ? XMMatrixIdentity() : XMMatrixScalingFromVector(VOperand3));
 	tmp = MOperand3 * MOperand2 * MOperand1;
 
 	// XMMATRIX 타입을 XMFLOAT4X4 타입으로 변환 //
 	DirectX::XMStoreFloat4x4(&ret, tmp);
+	return ret;
+}
+
+DirectX::XMFLOAT4X4 Utility::TypeConverterClass::XMFLOAT4toXMFLOAT4X4(DirectX::XMFLOAT4 operand)
+{
+	// XMFLOAT4 타입을 XMVECTOR, XMMATRIX 타입으로 변환 후, XMFLOAT4X4로 변환 //
+	// 변환 과정 : XMFLOAT4 -> XMVECTOR -> XMMATRIX -> XMFLOAT4X4
+	DirectX::XMVECTOR VOperand(DirectX::XMLoadFloat4(&operand));
+	DirectX::XMMATRIX MOperand(DirectX::XMVector3Equal(VOperand, DirectX::XMVectorZero()) ? DirectX::XMMatrixIdentity() : DirectX::XMMatrixTranslationFromVector(VOperand));
+	DirectX::XMFLOAT4X4 ret = {};
+
+	// XMMATRIX 타입을 XMFLOAT4X4 타입으로 변환 //
+	DirectX::XMStoreFloat4x4(&ret, MOperand);
+
 	return ret;
 }

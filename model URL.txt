@@ -6,3 +6,6 @@ https://www.cgtrader.com/items/3862208/download-page
 
 // 시작 버튼
 https://www.freeiconspng.com/img/21058#google_vignette
+
+// sky dome 텍스처
+ChatGPT로 생성

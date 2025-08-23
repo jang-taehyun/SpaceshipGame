@@ -3,6 +3,7 @@
 #include "SkyDomeClass.h"
 #include "TerrainShaderClass.h"
 #include "CameraClass.h"
+#include "TypeConverterClass.h"
 #include "TerrainClass.h"
 
 bool Graphic::Terrain::TerrainClass::IsInitialize = false;
@@ -71,10 +72,11 @@ void Graphic::Terrain::TerrainClass::Render(ID3D11DeviceContext* DeviceContext, 
 {
 	Shader::TerrainShaderClass* shader = static_cast<Shader::TerrainShaderClass*>(TerrainShader);
 	Object::CameraClass* c = static_cast<Object::CameraClass*>(Camera);
+	DirectX::XMFLOAT4X4 cameraPos = Utility::TypeConverterClass::XMFLOAT4toXMFLOAT4X4(c->GetPosition());
 
 	// sky dome 렌더링
 	if(m_SkyDome)
-		m_SkyDome->Render(d3d, c->GetAffineMatrix(), c->GetViewMatrix(), projection);
+		m_SkyDome->Render(d3d, cameraPos, c->GetViewMatrix(), projection);
 
 	// terrain 렌더링
 	if (m_QuadTree)

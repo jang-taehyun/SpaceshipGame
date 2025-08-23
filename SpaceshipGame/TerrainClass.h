@@ -31,7 +31,7 @@ namespace Graphic
 
 			std::map<SkyDomeID, const WCHAR*> m_SkyDomeTextureList =
 			{
-
+				{ SkyDomeID::DEFAULT, _T("./resource/ChatGPT-Image.png") },
 			};
 
 			std::map<TerrainID, Shader::ID> m_TerrainShaderIDList =

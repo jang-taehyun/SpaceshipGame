@@ -2,15 +2,15 @@
 #include <fstream>
 #include "GlobalVariableInitializerClass.h"
 
-#define IS_FAILED(x) if(!(x)) return false;
-#define IS_TRUE(x) if((x)) return false;
+#define IS_FAILED(x) if(!(x)) return false
+#define IS_TRUE(x) if((x)) return false
 
 bool System::GlobalVariableInitializerClass::InputData()
 {
 	std::ifstream FileIn("./data/data.json");
 	nlohmann::json data;
 
-	IS_TRUE((FileIn.fail()));
+	assert(FileIn.is_open());
 	FileIn >> data;
 	FileIn.close();
 
@@ -19,24 +19,24 @@ bool System::GlobalVariableInitializerClass::InputData()
 
 bool System::GlobalVariableInitializerClass::InitializeGlobalVariable(nlohmann::json& data)
 {
-	IS_FAILED(InitializeResolution(data))
-	IS_FAILED(InitializeGraphicSetting(data))
-	IS_FAILED(InitializeInputSensitivity(data))
+	IS_FAILED(InitializeResolution(data));
+	IS_FAILED(InitializeGraphicSetting(data));
+	IS_FAILED(InitializeInputSensitivity(data));
 
 	return true;
 }
 
 bool System::GlobalVariableInitializerClass::InitializeResolution(nlohmann::json& data)
 {
-	IS_TRUE(data["resolution count"].empty())
+	IS_TRUE(data["resolution count"].empty());
 	RESOLUTION_COUNT = data["resolution count"];
 
-	IS_TRUE(data["current resolution index"].empty())
+	IS_TRUE(data["current resolution index"].empty());
 	CURRENT_RESOLUTION_INDEX = data["current resolution index"];
 
 	for (UINT i = 0; i < System::RESOLUTION_COUNT; ++i)
 	{
-		IS_TRUE((data["resolution"][i]["width"].empty() || data["resolution"][i]["height"].empty()))
+		IS_TRUE((data["resolution"][i]["width"].empty() || data["resolution"][i]["height"].empty()));
 
 		System::RESOLUTIONS[i].WIDTH = data["resolution"][i]["width"];
 		System::RESOLUTIONS[i].HEIGHT = data["resolution"][i]["height"];
@@ -47,16 +47,16 @@ bool System::GlobalVariableInitializerClass::InitializeResolution(nlohmann::json
 
 bool System::GlobalVariableInitializerClass::InitializeGraphicSetting(nlohmann::json& data)
 {
-	IS_TRUE(data["full screen"].empty())
+	IS_TRUE(data["full screen"].empty());
 	FULL_SCREEN = (data["full screen"] == "true" ? true : false);
 
-	IS_TRUE(data["VSYNC"].empty())
+	IS_TRUE(data["VSYNC"].empty());
 	VSYNC_ENABLED = (data["VSYNC"] == "true" ? true : false);
 
-	IS_TRUE(data["screen depth"].empty())
+	IS_TRUE(data["screen depth"].empty());
 	SCREEN_DEPTH = data["screen depth"];
 
-	IS_TRUE(data["screen near"].empty())
+	IS_TRUE(data["screen near"].empty());
 	SCREEN_NEAR = data["screen near"];
 
 	return true;
@@ -64,7 +64,7 @@ bool System::GlobalVariableInitializerClass::InitializeGraphicSetting(nlohmann::
 
 bool System::GlobalVariableInitializerClass::InitializeInputSensitivity(nlohmann::json& data)
 {
-	IS_TRUE(data["mouse sensitivity"].empty())
+	IS_TRUE(data["mouse sensitivity"].empty());
 	MOUSE_SENSITIVITY = data["mouse sensitivity"];
 
 	return true;
@@ -72,18 +72,18 @@ bool System::GlobalVariableInitializerClass::InitializeInputSensitivity(nlohmann
 
 bool System::GlobalVariableInitializerClass::OutputData()
 {
-	std::ifstream FileIn("./data/data.json", std::ios::in);
+	std::ifstream FileIn("./data/data.json");
 	std::ofstream FileOut;
 	nlohmann::json data;
 
-	IS_TRUE(FileIn.fail())
+	assert(FileIn.is_open());
 	FileIn >> data;
 	FileIn.close();
 
-	IS_FAILED(EditGlobalVariable(data))
+	IS_FAILED(EditGlobalVariable(data));
 
-	FileOut.open("./data/data.json", std::ios::out);
-	IS_TRUE(FileOut.fail())
+	FileOut.open("./data/data.json");
+	assert(FileOut.is_open());
 	FileOut << data;
 	FileOut.close();
 
@@ -92,16 +92,16 @@ bool System::GlobalVariableInitializerClass::OutputData()
 
 bool System::GlobalVariableInitializerClass::EditGlobalVariable(nlohmann::json& data)
 {
-	IS_FAILED(EditResolution(data))
-	IS_FAILED(EditGraphicSetting(data))
-	IS_FAILED(EditMouseSensitivity(data))
+	IS_FAILED(EditResolution(data));
+	IS_FAILED(EditGraphicSetting(data));
+	IS_FAILED(EditMouseSensitivity(data));
 
 	return true;
 }
 
 bool System::GlobalVariableInitializerClass::EditResolution(nlohmann::json& data)
 {
-	IS_TRUE(data["current resolution index"].empty())
+	IS_TRUE(data["current resolution index"].empty());
 	data["current resolution index"] = CURRENT_RESOLUTION_INDEX;
 
 	return true;
@@ -109,10 +109,10 @@ bool System::GlobalVariableInitializerClass::EditResolution(nlohmann::json& data
 
 bool System::GlobalVariableInitializerClass::EditGraphicSetting(nlohmann::json& data)
 {
-	IS_TRUE(data["full screen"].empty())
+	IS_TRUE(data["full screen"].empty());
 	data["full screen"] = (FULL_SCREEN ? "true" : "false");
 
-	IS_TRUE(data["VSYNC"].empty())
+	IS_TRUE(data["VSYNC"].empty());
 	data["VSYNC"] = (VSYNC_ENABLED ? "true" : "false");
 
 	return true;
@@ -120,7 +120,7 @@ bool System::GlobalVariableInitializerClass::EditGraphicSetting(nlohmann::json& 
 
 bool System::GlobalVariableInitializerClass::EditMouseSensitivity(nlohmann::json& data)
 {
-	IS_TRUE(data["mouse sensitivity"].empty())
+	IS_TRUE(data["mouse sensitivity"].empty());
 	data["mouse sensitivity"] = MOUSE_SENSITIVITY;
 
 	return true;

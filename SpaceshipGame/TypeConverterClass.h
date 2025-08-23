@@ -17,5 +17,6 @@ namespace Utility
 
 		// XMFLOAT4 -> XMFLOAT4X4
 		static DirectX::XMFLOAT4X4 XMFLOAT4toXMFLOAT4X4(DirectX::XMFLOAT4 operand1, DirectX::XMFLOAT4 operand2, DirectX::XMFLOAT4 operand3);
+		static DirectX::XMFLOAT4X4 XMFLOAT4toXMFLOAT4X4(DirectX::XMFLOAT4 operand);
 	};
 }

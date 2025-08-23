@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GeometricPrimitive.h>
+#include <Effects.h>
 
 namespace Graphic
 {
@@ -26,6 +27,8 @@ namespace Graphic
 
         private:
             std::unique_ptr<DirectX::GeometricPrimitive> m_SkyDome = nullptr;
+            std::unique_ptr<DirectX::BasicEffect> m_Effect = nullptr;
+            Microsoft::WRL::ComPtr<ID3D11InputLayout> m_Layout = nullptr;
             DirectX::XMFLOAT4 m_Color = {};
             std::unique_ptr<Texture::TextureClass> m_Texture = nullptr;
         };

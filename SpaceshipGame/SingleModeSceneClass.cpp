@@ -87,8 +87,7 @@ void Scene::SingleModeSceneClass::Frame(const System::InputClass* input, Object:
 	long x = 0, y = 0;
 
 	button = static_cast<UI::ButtonClass*>(UIs->GetUI(0));
-	if (input->IsSpacebarPressed() ||
-		UI::ButtonState::ONCLICKED == button->GetButtonState())
+	if (UI::ButtonState::ONCLICKED == button->GetButtonState())
 	{
 		SetSceneEnded();
 		return;
