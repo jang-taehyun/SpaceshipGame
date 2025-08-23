@@ -7,7 +7,7 @@
 
 bool System::GlobalVariableInitializerClass::InputData()
 {
-	std::ifstream FileIn("./data/data.json", std::ios::in);
+	std::ifstream FileIn("./data/data.json");
 	nlohmann::json data;
 
 	IS_TRUE((FileIn.fail()));

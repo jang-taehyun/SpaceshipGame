@@ -5,8 +5,15 @@
 #include "ButtonOnClickedStateClass.h"
 #include "ButtonOnPressedStateClass.h"
 
-UI::ButtonOnPressedStateClass::ButtonOnPressedStateClass()
+UI::ButtonOnPressedStateClass::ButtonOnPressedStateClass(ButtonClass* caller)
 {
+	DirectX::XMFLOAT2 scale;
+	
+	scale = caller->GetScale();
+	scale.x /= ExtendSize;
+	scale.y /= ExtendSize;
+	caller->SetScale(scale);
+
 #ifdef _DEBUG
 	OutputDebugStringA("ON PRESSED\n");
 #endif // _DEBUG
@@ -19,7 +26,7 @@ std::unique_ptr<UI::IButtonStateClass> UI::ButtonOnPressedStateClass::Update(But
 	if (IsInCursor && !input->IsMouseLeftBottunPressed())
 		ret = std::make_unique<ButtonOnClickedStateClass>(caller);
 	else if(!IsInCursor)
-		ret = std::make_unique<ButtonNoneStateClass>(caller);
+		ret = std::make_unique<ButtonNoneStateClass>();
 
 	return ret;
 }

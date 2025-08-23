@@ -7,7 +7,7 @@
 
 UI::ButtonClass::ButtonClass(ID UIID, Graphic::Texture::UITextureID ID) : UIClass(UIID, ID)
 {
-	m_ButtonState = std::make_unique<ButtonNoneStateClass>(this);
+	m_ButtonState = std::make_unique<ButtonNoneStateClass>();
 	assert(m_ButtonState);
 
 	m_OriginScale = GetScale();

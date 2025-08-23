@@ -7,7 +7,7 @@ namespace UI
 	class ButtonOnPressedStateClass : public IButtonStateClass
 	{
 	public:
-		ButtonOnPressedStateClass();
+		ButtonOnPressedStateClass(ButtonClass* caller);
 		virtual ~ButtonOnPressedStateClass() = default;
 
 		virtual ButtonState GetButtonState() const override { return m_ButtonState; }

@@ -6,9 +6,8 @@
 
 UI::ButtonNoneStateClass::ButtonNoneStateClass(ButtonClass* caller)
 {
-	DirectX::XMFLOAT2 scale;
-
-	scale = caller->GetScale();
+	DirectX::XMFLOAT2 scale = caller->GetScale();
+	
 	scale.x /= ExtendSize;
 	scale.y /= ExtendSize;
 	caller->SetScale(scale);
