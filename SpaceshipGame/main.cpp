@@ -11,19 +11,14 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 {
 	// 메모리 누수 감지 활성화
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	_CrtSetBreakAlloc(449);
+	_CrtSetBreakAlloc(444);
 
 	{
-		std::unique_ptr<System::GlobalVariableInitializerClass> init;
-		std::unique_ptr<System::SystemClass> system;
+		std::unique_ptr<System::GlobalVariableInitializerClass> init = nullptr;
+		std::unique_ptr<System::SystemClass> system = nullptr;
 		
 		init = std::make_unique<System::GlobalVariableInitializerClass>();
-		if (!init->InputData())
-		{
-			OutputDebugString(_T("fail to initialize"));
-			return 0;
-		}
-		init.reset();
+		init->InputData();
 
 		system = std::make_unique<System::SystemClass>();
 		assert(system);
@@ -31,9 +26,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		system->Run();
 		system.reset();
 
-		init = std::make_unique<System::GlobalVariableInitializerClass>();
-		if (!init->OutputData())
-			OutputDebugString(_T("fail to save data"));
+		init->OutputData();
 		init.reset();
 	}
 

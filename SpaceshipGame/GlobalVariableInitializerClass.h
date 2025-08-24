@@ -12,26 +12,27 @@ namespace System
 
 		// json 파일 읽기 //
 	public:
-		bool InputData();
+		void InputData();
 
 	private:
-		bool InitializeGlobalVariable(nlohmann::json& data);
+		void InitializeGlobalVariable(nlohmann::json& data);		// json 파일이 있는 경우
+		void InitializeGlobalVariable();							// json 파일이 없는 경우
 
 	private:
-		bool InitializeResolution(nlohmann::json& data);
-		bool InitializeGraphicSetting(nlohmann::json& data);
-		bool InitializeInputSensitivity(nlohmann::json& data);
+		void InitializeResolution(nlohmann::json& data);
+		void InitializeGraphicSetting(nlohmann::json& data);
+		void InitializeInputSensitivity(nlohmann::json& data);
 
 		// json 파일 쓰기 //
 	public:
-		bool OutputData();
+		void OutputData();
 
 	private:
-		bool EditGlobalVariable(nlohmann::json& data);
+		void EditGlobalVariable(nlohmann::json& data);
 
 	private:
-		bool EditResolution(nlohmann::json& data);
-		bool EditGraphicSetting(nlohmann::json& data);
-		bool EditMouseSensitivity(nlohmann::json& data);
+		void EditResolution(nlohmann::json& data);
+		void EditGraphicSetting(nlohmann::json& data);
+		void EditMouseSensitivity(nlohmann::json& data);
 	};
 }
