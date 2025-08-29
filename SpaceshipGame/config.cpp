@@ -15,5 +15,6 @@ float System::MOUSE_SENSITIVITY;
 bool System::RUNNING = true;
 HWND System::hwnd;
 HINSTANCE System::hinst;
+std::function<LRESULT(HWND, UINT, WPARAM, LPARAM)> System::SceneMessageHander = nullptr;
 
 const float UI::ExtendSize = 1.3f;

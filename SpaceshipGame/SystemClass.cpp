@@ -80,7 +80,7 @@ void System::SystemClass::Run()
 
 LRESULT System::SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
-	return DefWindowProc(hwnd, umsg, wparam, lparam);
+	return (SceneMessageHander ? SceneMessageHander(hwnd, umsg, wparam, lparam) : DefWindowProc(hwnd, umsg, wparam, lparam));
 }
 
 void System::SystemClass::Frame()
@@ -224,6 +224,4 @@ static LRESULT CALLBACK System::WndProc(HWND hwnd, UINT umessage, WPARAM wparam,
 	default:
 		return System::ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
 	}
-
-
 }

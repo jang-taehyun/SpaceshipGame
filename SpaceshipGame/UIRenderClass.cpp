@@ -72,7 +72,7 @@ void Graphic::Texture::UIRenderClass::BeginRender(const D3DClass* d3d)
 	d3d->TurnDepthBufferOff();
 	d3d->TurnOnAlphaBlending();
 
-	m_Renderer->Begin(DirectX::DX11::SpriteSortMode_BackToFront);
+	m_Renderer->Begin(DirectX::DX11::SpriteSortMode_FrontToBack);
 }
 
 void Graphic::Texture::UIRenderClass::RenderBackground(ID3D11ShaderResourceView* texture, DirectX::XMFLOAT4 color)

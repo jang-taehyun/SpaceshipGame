@@ -27,6 +27,7 @@ namespace System
 	extern bool RUNNING;
 	extern HWND hwnd;
 	extern HINSTANCE hinst;
+	extern std::function<LRESULT(HWND, UINT, WPARAM, LPARAM)> SceneMessageHander;
 }
 
 // object ฐüทร //

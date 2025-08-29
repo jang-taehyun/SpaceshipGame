@@ -22,18 +22,18 @@ namespace Scene
 		StartSceneClass(ID next, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds);
 		StartSceneClass(const StartSceneClass& other);
 		StartSceneClass(StartSceneClass&& other) noexcept;
-		virtual ~StartSceneClass() = default;
+		virtual ~StartSceneClass();
 
 		StartSceneClass& operator=(const StartSceneClass& other);
 		StartSceneClass& operator=(StartSceneClass&& other) noexcept;
+
+		LRESULT CALLBACK MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
 
 		virtual void Frame(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time) override;
 		virtual std::unique_ptr<ISceneClass> Clone() const override { return std::make_unique<StartSceneClass>(*this); }
 
 	private:
-		void CreateECSPopup(Text::TextManagerClass* texts, UI::UIManagerClass* UIs);
-
-	private:
 		std::map<ObjectID, UINT> m_ObjectList;
+		HWND m_hStartButton = 0;
 	};
 }

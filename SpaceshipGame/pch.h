@@ -27,6 +27,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <functional>
 
 // direct sound 관련 //
 // #include <stdio.h>
