@@ -4,23 +4,33 @@
 #include "ComputeDirectionVectorClass.h"
 #include "CameraClass.h"
 
-Object::CameraClass::CameraClass(std::unique_ptr<IMoveClass> move, std::unique_ptr<IRotateClass> rotate) : m_Move(std::move(move)), m_Rotate(std::move(rotate))
+Object::CameraClass::CameraClass(std::unique_ptr<IMoveClass> move, std::unique_ptr<IRotateClass> rotate)
+	: m_Move(std::move(move)),
+	m_Rotate(std::move(rotate))
 {}
 
-Object::CameraClass::CameraClass(const CameraClass& other) : ObjectClass(other), m_Move(other.m_Move->Clone()), m_Rotate(other.m_Rotate->Clone()), m_Frustum(other.m_Frustum)
+Object::CameraClass::CameraClass(const CameraClass& other)
+	: ObjectClass(other),
+	m_Move(other.m_Move->Clone()),
+	m_Rotate(other.m_Rotate->Clone()),
+	m_Frustum(other.m_Frustum)
 {}
 
-Object::CameraClass::CameraClass(CameraClass && other) noexcept : ObjectClass(std::move(other)), m_Move(std::move(other.m_Move)), m_Rotate(std::move(other.m_Rotate)), m_Frustum(other.m_Frustum)
+Object::CameraClass::CameraClass(CameraClass && other) noexcept
+	: ObjectClass(std::move(other)),
+	m_Move(std::move(other.m_Move)),
+	m_Rotate(std::move(other.m_Rotate)),
+	m_Frustum(other.m_Frustum)
 {}
 
 DirectX::XMFLOAT4X4 Object::CameraClass::Render()
 {
-	DirectX::XMFLOAT4 pos, rot;
-	DirectX::XMVECTOR position, forward, target, up;
-	DirectX::XMFLOAT4 ForwardVector = DirectX::XMFLOAT4(0.f, 0.f, 0.f, 0.f);
-	DirectX::XMFLOAT4 UpVector = DirectX::XMFLOAT4(0.f, 0.f, 0.f, 0.f);
-	DirectX::XMFLOAT4 RightVector = DirectX::XMFLOAT4(0.f, 0.f, 0.f, 0.f);
-	DirectX::XMMATRIX viewMatrix;
+	DirectX::XMFLOAT4 pos = {}, rot = {};
+	DirectX::XMVECTOR position = {}, forward = {}, target = {}, up = {};
+	DirectX::XMFLOAT4 ForwardVector = {};
+	DirectX::XMFLOAT4 UpVector = {};
+	DirectX::XMFLOAT4 RightVector = {};
+	DirectX::XMMATRIX viewMatrix = {};
 
 	// 카메라의 local 좌표계의 축 추출 //
 	rot = GetRotation();
@@ -64,7 +74,7 @@ bool Object::CameraClass::IsRenderModel(DirectX::BoundingOrientedBox ModelOBB, D
 
 bool Object::CameraClass::IsRenderQuadTree(DirectX::XMFLOAT4 point1, DirectX::XMFLOAT4 point2)
 {
-	DirectX::BoundingBox comp;
+	DirectX::BoundingBox comp = {};
 	bool IsContain = false, IsIntersect = false;
 	
 	// Quad Tree에 대한 AABB 박스 생성 //
@@ -139,7 +149,7 @@ void Object::CameraClass::UpdateFrustum(DirectX::XMFLOAT4X4 projection)
 
 void Object::CameraClass::Move(MoveState state, float frame_time, bool IsKeyDown)
 {
-	DirectX::XMFLOAT4 pos;
+	DirectX::XMFLOAT4 pos = {};
 
 	// 최종적으로 계산된 position으로 교체 //
 	// actor 이동
@@ -151,7 +161,7 @@ void Object::CameraClass::Move(MoveState state, float frame_time, bool IsKeyDown
 
 void Object::CameraClass::Rotate(long MouseX, long MouseY, float frame_time, bool IsKeyDown)
 {
-	DirectX::XMFLOAT4 rot;
+	DirectX::XMFLOAT4 rot = {};
 
 	// 최종적으로 계산된 rotation으로 교체 //
 	// actor 회전

@@ -18,7 +18,7 @@ namespace Graphic
 
 			IModelClass* GetModel(ID id);
 
-			void Load(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, UINT ModelMask);
+			void Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, UINT ModelMask);
 
 			void UpdateInstanceBuffers(ID3D11DeviceContext* DeviceContext);
 

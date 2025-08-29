@@ -26,11 +26,5 @@ namespace Scene
 		virtual void Frame(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time) = 0;
 		virtual Object::IObjectClass* GetActiveCamera() = 0;
 		virtual std::unique_ptr<ISceneClass> Clone() const = 0;
-
-	protected:
-		virtual void SetSceneEnded() = 0;
-		virtual void SetNextScene(ID next) = 0;
-		virtual void SetTerrainID(Graphic::Terrain::TerrainID id) = 0;
-		virtual void SetSkyDomeID(Graphic::Terrain::SkyDomeID id) = 0;
 	};
 }

@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "ModelLoaderClass.hpp"
 #include "TypeConverterClass.h"
+#include "TextureClass.h"
 #include "PTN_ModelLoaderClass.h"
 
 std::vector<Graphic::Model::PTN_VertexType> Graphic::Loader::PTN_ModelLoaderClass::LoadVertexData(aiMesh* mesh)

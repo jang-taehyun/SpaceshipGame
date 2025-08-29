@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "TypeConverterClass.h"
+#include "TextureClass.h"
 #include "PTN_DNSR_ModelLoaderClass.h"
 
 std::vector<Graphic::Model::PTN_VertexType> Graphic::Loader::PTN_DNSR_ModelLoaderClass::LoadVertexData(aiMesh* mesh)
@@ -29,7 +30,7 @@ void Graphic::Loader::PTN_DNSR_ModelLoaderClass::LoadMaterial(ID3D11Device* Devi
 	aiMaterial* material = nullptr;												// mesh에 존재하는 material 객체
 	aiString TexturePath;														// texture 경로
 	aiReturn ret = aiReturn_SUCCESS;											// assimp 함수의 리턴값
-	std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> MaterialList;	// material 데이터 리스트
+	std::vector<std::unique_ptr<Texture::TextureClass>> MaterialList;			// material 데이터 리스트
 
 	// texture 데이터 파싱 //
 	for (ULONG i = 0; i < GetMeshCount(); ++i)
@@ -58,6 +59,6 @@ void Graphic::Loader::PTN_DNSR_ModelLoaderClass::LoadMaterial(ID3D11Device* Devi
 			LoadTextureData(Device, DeviceContext, MaterialList, TexturePath, AdditionalPath);
 
 		// 현재 mesh의 material 데이터 저장 //
-		PushMaterialsData(MaterialList);
+		PushMaterialsData(std::move(MaterialList));
 	}
 }

@@ -2,12 +2,14 @@
 #include "ComputeDirectionVectorClass.h"
 #include "MoveClass.h"
 
-Object::MoveClass::MoveClass(float speed) : m_MoveSpeed(speed) {}
+Object::MoveClass::MoveClass(float speed)
+	: m_MoveSpeed(speed)
+{}
 
 DirectX::XMFLOAT4 Object::MoveClass::Move(DirectX::XMFLOAT4 curPosition, DirectX::XMFLOAT4 rotate, MoveState state, float frame_time, bool IsKeyDown)
 {
-	DirectX::XMFLOAT4 ret;
-	DirectX::XMFLOAT4 vector;
+	DirectX::XMFLOAT4 ret = {};
+	DirectX::XMFLOAT4 vector = {};
 	float speed = 0.f;
 
 	// speed 계산 //
@@ -51,7 +53,7 @@ DirectX::XMFLOAT4 Object::MoveClass::MoveLeft(DirectX::XMFLOAT4 curPosition, Dir
 
 	XMVECTOR vector = XMLoadFloat4(&RightVector);
 	XMVECTOR position = XMLoadFloat4(&curPosition);
-	XMFLOAT4 ret;
+	XMFLOAT4 ret = {};
 
 	// 최종 position 계산 및 반환 //
 	position -= (vector * speed);
@@ -66,7 +68,7 @@ DirectX::XMFLOAT4 Object::MoveClass::MoveRight(DirectX::XMFLOAT4 curPosition, Di
 
 	XMVECTOR vector = XMLoadFloat4(&RightVector);
 	XMVECTOR position = XMLoadFloat4(&(curPosition));
-	XMFLOAT4 ret;
+	XMFLOAT4 ret = {};
 
 	// 최종 position 계산 및 반환 //
 	position += (vector * speed);
@@ -81,7 +83,7 @@ DirectX::XMFLOAT4 Object::MoveClass::MoveForward(DirectX::XMFLOAT4 curPosition, 
 
 	XMVECTOR vector = XMLoadFloat4(&ForwardVector);
 	XMVECTOR position = XMLoadFloat4(&(curPosition));
-	XMFLOAT4 ret;
+	XMFLOAT4 ret = {};
 
 	// 최종 position 계산 및 반환 //
 	position += (vector * speed);
@@ -96,7 +98,7 @@ DirectX::XMFLOAT4 Object::MoveClass::MoveBackward(DirectX::XMFLOAT4 curPosition,
 
 	XMVECTOR vector = XMLoadFloat4(&ForwardVector);
 	XMVECTOR position = XMLoadFloat4(&(curPosition));
-	XMFLOAT4 ret;
+	XMFLOAT4 ret = {};
 
 	// 최종 position 계산 및 반환 //
 	position -= (vector * speed);

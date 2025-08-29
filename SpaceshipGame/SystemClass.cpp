@@ -32,10 +32,10 @@ void System::SystemClass::Initialize()
 	InitializeWindows(ScreenWidth, ScreenHeight);
 
 	// 객체 생성 및 초기화 //
-	m_Input = std::make_unique<InputClass>(m_hinstance, m_hwnd, ScreenWidth, ScreenHeight);
+	m_Input = std::make_unique<InputClass>(ScreenWidth, ScreenHeight);
 	assert(m_Input);
 
-	m_Graphics = std::make_unique<Graphic::GraphicsClass>(m_hwnd, ScreenWidth, ScreenHeight);
+	m_Graphics = std::make_unique<Graphic::GraphicsClass>(ScreenWidth, ScreenHeight);
 	assert(m_Graphics);
 
 	m_FPS = std::make_unique<FPSClass>();
@@ -58,7 +58,7 @@ void System::SystemClass::Run()
 	// 메세지 구조체 초기화 //
 	memset(&msg, 0, sizeof(MSG));
 
-	while (1)
+	while (System::RUNNING)
 	{
 		// 윈도우 메세지 처리
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -91,10 +91,10 @@ void System::SystemClass::Frame()
 	m_FPS->Frame();
 	m_CPU->Frame();
 
-	m_Input->Frame(m_hwnd);
+	m_Input->Frame();
 
 	IsLoad = m_SceneManager->Frame(m_Input.get(), m_Timer->GetTime());
-	m_Graphics->Frame(m_hwnd, m_SceneManager.get(), IsLoad
+	m_Graphics->Frame(m_SceneManager.get(), IsLoad
 #ifdef _DEBUG
 		, m_Input.get()
 #endif // _DEBUG
@@ -109,7 +109,7 @@ void System::SystemClass::InitializeWindows(UINT& ScreenWidth, UINT& ScreenHeigh
 	ApplicationHandle = this;
 
 	// 현재 프로그램의 instance를 가져오기
-	m_hinstance = GetModuleHandle(NULL);
+	hinst = GetModuleHandle(NULL);
 
 	// windows 클래스 정보 설정 및 등록
 	m_applicationName = _T("SpaceshipGame");
@@ -119,8 +119,8 @@ void System::SystemClass::InitializeWindows(UINT& ScreenWidth, UINT& ScreenHeigh
 	wc.lpfnWndProc = WndProc;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
-	wc.hInstance = m_hinstance;
-	wc.hIcon = LoadIcon(m_hinstance, MAKEINTRESOURCE(IDI_SPACESHIPGAME));
+	wc.hInstance = hinst;
+	wc.hIcon = LoadIcon(hinst, MAKEINTRESOURCE(IDI_SPACESHIPGAME));
 	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wc.lpszMenuName = NULL;
@@ -166,14 +166,14 @@ void System::SystemClass::InitializeWindows(UINT& ScreenWidth, UINT& ScreenHeigh
 	}
 
 	// 윈도우 생성 및 handle 가지오기
-	m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
+	hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
 		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP | WS_OVERLAPPEDWINDOW,
-		PosX, PosY, width, height, NULL, NULL, m_hinstance, NULL);
+		PosX, PosY, width, height, NULL, NULL, hinst, NULL);
 
 	// 윈도우를 화면에 표시하고 focus를 지정
-	ShowWindow(m_hwnd, SW_SHOW);
-	SetForegroundWindow(m_hwnd);
-	SetFocus(m_hwnd);
+	ShowWindow(hwnd, SW_SHOW);
+	SetForegroundWindow(hwnd);
+	SetFocus(hwnd);
 
 	// 마우스 커서 위치를 중앙으로 초기화 //
 	SetCursorPos(GetSystemMetrics(SM_CXSCREEN) / 2, GetSystemMetrics(SM_CYSCREEN) / 2);
@@ -186,12 +186,12 @@ void System::SystemClass::ShutdownWindows()
 		ChangeDisplaySettings(NULL, 0);
 
 	// 윈도우 제거
-	DestroyWindow(m_hwnd);
-	m_hwnd = NULL;
+	DestroyWindow(hwnd);
+	hwnd = NULL;
 
 	// 프로그램의 instance 제거
-	UnregisterClass(m_applicationName, m_hinstance);
-	m_hinstance = NULL;
+	UnregisterClass(m_applicationName, hinst);
+	hinst = NULL;
 
 	// 외부 pointer 초기화
 	ApplicationHandle = NULL;
@@ -224,4 +224,6 @@ static LRESULT CALLBACK System::WndProc(HWND hwnd, UINT umessage, WPARAM wparam,
 	default:
 		return System::ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
 	}
+
+
 }

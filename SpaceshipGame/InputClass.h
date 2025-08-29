@@ -11,10 +11,10 @@ namespace System
 		};
 
 	public:
-		InputClass(HINSTANCE hinstance, HWND hwnd, int ScreenWidth, int ScreenHeight);
+		InputClass(int ScreenWidth, int ScreenHeight);
 		virtual ~InputClass();
 
-		void Frame(HWND hwnd);
+		void Frame();
 
 		bool IsEscapePressed() const { return m_KeyboardState[DIK_ESCAPE] & 0x80; }
 
@@ -37,12 +37,12 @@ namespace System
 		void GetMouseMoveDelta(long& MouseX, long& MouseY) const { MouseX = m_MouseState.lX; MouseY = m_MouseState.lY; }
 
 	private:
-		HRESULT Initialize(HINSTANCE hinstance, HWND hwnd, int ScreenWidth, int ScreenHeight);
+		HRESULT Initialize(int ScreenWidth, int ScreenHeight);
 		void Shutdown();
 
 		HRESULT ReadKeyboard();
 		HRESULT ReadMouse();
-		void ProcessInput(HWND hwnd);
+		void ProcessInput();
 
 	private:
 		static bool IsInitailize;

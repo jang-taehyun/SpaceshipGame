@@ -5,9 +5,23 @@
 #include "ActorClass.h"
 #include "CameraClass.h"
 
-Object::ActorClass::ActorClass(std::unique_ptr<IMoveClass> move, std::unique_ptr<IRotateClass> rotate, std::unique_ptr<IObjectClass> collision, Graphic::Model::ID ModelID) : GameObjectClass(ModelID, std::move(collision)), m_Move(std::move(move)), m_Rotate(std::move(rotate)) {}
-Object::ActorClass::ActorClass(const ActorClass& other) : GameObjectClass(other), m_Move(other.m_Move->Clone()), m_Rotate(other.m_Rotate->Clone()) {}
-Object::ActorClass::ActorClass(ActorClass&& other) noexcept : GameObjectClass(std::move(other)), m_Move(std::move(other.m_Move)), m_Rotate(std::move(other.m_Rotate)) {}
+Object::ActorClass::ActorClass(std::unique_ptr<IMoveClass> move, std::unique_ptr<IRotateClass> rotate, std::unique_ptr<IObjectClass> collision, Graphic::Model::ID ModelID)
+	: GameObjectClass(ModelID, std::move(collision)),
+	m_Move(std::move(move)),
+	m_Rotate(std::move(rotate))
+{}
+
+Object::ActorClass::ActorClass(const ActorClass& other)
+	: GameObjectClass(other),
+	m_Move(other.m_Move->Clone()),
+	m_Rotate(other.m_Rotate->Clone())
+{}
+
+Object::ActorClass::ActorClass(ActorClass&& other) noexcept
+	: GameObjectClass(std::move(other)),
+	m_Move(std::move(other.m_Move)),
+	m_Rotate(std::move(other.m_Rotate))
+{}
 
 void Object::ActorClass::Move(MoveState state, float frame_time, bool IsKeyDown)
 {

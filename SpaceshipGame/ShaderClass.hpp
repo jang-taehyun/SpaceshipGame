@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pch.h"
+#include "TextureClass.h"
 #include "ShaderClass.h"
 
 template<typename ShaderBuffers>
@@ -62,12 +63,12 @@ Graphic::Shader::ShaderClass<ShaderBuffers>& Graphic::Shader::ShaderClass<Shader
 }
 
 template<typename ShaderBuffers>
-HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::Initialize(HWND hwnd, ID3D11Device* Device, const Loader::ShaderFileInfo& info, const std::vector<std::string>& VertexDataSemantics, bool IsTerrain)
+HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::Initialize(ID3D11Device* Device, const Loader::ShaderFileInfo& info, const std::vector<std::string>& VertexDataSemantics, bool IsTerrain)
 {
 	HRESULT result = S_OK;
 
 	// shader, input layout 초기화
-	result = InitializeShaderInputLayout(hwnd, Device, info, VertexDataSemantics, IsTerrain);
+	result = InitializeShaderInputLayout(Device, info, VertexDataSemantics, IsTerrain);
 	assert(SUCCEEDED(result));
 
 	// shader에서 사용하는 buffer들 생성
@@ -87,19 +88,19 @@ void Graphic::Shader::ShaderClass<ShaderBuffers>::BeginRender(ID3D11DeviceContex
 }
 
 template<typename ShaderBuffers>
-void Graphic::Shader::ShaderClass<ShaderBuffers>::Render(ID3D11DeviceContext* DeviceContext, int IndexCount, int InstanceCount, const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& Material)
+void Graphic::Shader::ShaderClass<ShaderBuffers>::Render(ID3D11DeviceContext* DeviceContext, int IndexCount, int InstanceCount, const std::vector<std::unique_ptr<Texture::TextureClass>>& Material)
 {
 	// pixel shader에서 사용할 shader texture resource(Texture2D) 설정 //
 	// GPU 파이프라인에 텍스처 데이터를 바인드
 	for(int i=0; i<Material.size(); ++i)
-		DeviceContext->PSSetShaderResources(i, 1, Material[i].GetAddressOf());
+		DeviceContext->PSSetShaderResources(i, 1, Material[i]->GetTextureAddress());
 
 	// 렌더링 //
 	DeviceContext->DrawIndexedInstanced(IndexCount, InstanceCount, 0, 0, 0);
 }
 
 template<typename ShaderBuffers>
-HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::InitializeShaderInputLayout(HWND hwnd, ID3D11Device* Device, const Loader::ShaderFileInfo& info, const std::vector<std::string>& VertexDataSemantics, bool IsTerrain)
+HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::InitializeShaderInputLayout(ID3D11Device* Device, const Loader::ShaderFileInfo& info, const std::vector<std::string>& VertexDataSemantics, bool IsTerrain)
 {
 	HRESULT result = S_OK;
 	Microsoft::WRL::ComPtr<ID3D10Blob> ErrorMessage = nullptr;				// shader compile 에러메세지
@@ -116,7 +117,7 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::InitializeShaderInputLayout
 #endif // _DEBUG
 
 	// shader 정보 확인 //
-	assert(Device && hwnd && info.vsFileName != _T("") && info.psFileName != _T("") && info.vsEntryPoint != "" && info.psEntryPoint != "");
+	assert(Device && System::hwnd && info.vsFileName != _T("") && info.psFileName != _T("") && info.vsEntryPoint != "" && info.psEntryPoint != "");
 
 	// vertex shader code 컴파일 //
 	result = D3DCompileFromFile(info.vsFileName.c_str(),
@@ -129,7 +130,7 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::InitializeShaderInputLayout
 	if (FAILED(result))
 	{
 		assert(ErrorMessage);
-		OutputShaderErrorMessage(hwnd, ErrorMessage.Get(), info.vsFileName);
+		OutputShaderErrorMessage(ErrorMessage.Get(), info.vsFileName);
 
 		return result;
 	}
@@ -145,7 +146,7 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::InitializeShaderInputLayout
 	if (FAILED(result))
 	{
 		assert(ErrorMessage);
-		OutputShaderErrorMessage(hwnd, ErrorMessage.Get(), info.psFileName);
+		OutputShaderErrorMessage(ErrorMessage.Get(), info.psFileName);
 
 		return result;
 	}
@@ -265,7 +266,7 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::CreateTextureSamplerState(I
 }
 
 template<typename ShaderBuffers>
-void Graphic::Shader::ShaderClass<ShaderBuffers>::OutputShaderErrorMessage(HWND hwnd, ID3D10Blob* ErrorMessage, const std::wstring& ShaderFileName)
+void Graphic::Shader::ShaderClass<ShaderBuffers>::OutputShaderErrorMessage(ID3D10Blob* ErrorMessage, const std::wstring& ShaderFileName)
 {
 	const char* msg = reinterpret_cast<const char*>(ErrorMessage->GetBufferPointer());
 	int len = static_cast<UINT>(ErrorMessage->GetBufferSize());
@@ -273,7 +274,7 @@ void Graphic::Shader::ShaderClass<ShaderBuffers>::OutputShaderErrorMessage(HWND 
 
 	MultiByteToWideChar(CP_ACP, 0, msg, len, wmsg, sizeof(wmsg));
 
-	MessageBox(hwnd, wmsg, ShaderFileName.c_str(), MB_OK);
+	MessageBox(System::hwnd, wmsg, ShaderFileName.c_str(), MB_OK);
 }
 
 template<typename ShaderBuffers>

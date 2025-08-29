@@ -5,7 +5,7 @@
 
 bool Object::ObjectManagerClass::IsInitialize = false;
 
-Object::ObjectManagerClass::ObjectManagerClass() : m_PlayerIdx(0), m_ModelMask(0)
+Object::ObjectManagerClass::ObjectManagerClass()
 {
 	assert(!IsInitialize);
 

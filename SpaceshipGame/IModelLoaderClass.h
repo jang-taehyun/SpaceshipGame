@@ -4,6 +4,11 @@
 
 namespace Graphic
 {
+	namespace Texture { class TextureClass; }
+}
+
+namespace Graphic
+{
 	namespace Loader
 	{
 		class IModelLoaderClass
@@ -16,7 +21,7 @@ namespace Graphic
 			virtual ULONG GetMeshCount() const = 0;
 			virtual DirectX::BoundingOrientedBox GetModelOBB() const = 0;
 			virtual std::vector<std::vector<ULONG>> MoveIndicesDatas() = 0;
-			virtual std::vector<std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>> MoveMaterialsDatas() = 0;
+			virtual std::vector<std::vector<std::unique_ptr<Texture::TextureClass>>> MoveMaterialsDatas() = 0;
 		};
 	}
 }

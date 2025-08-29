@@ -23,7 +23,7 @@ namespace Graphic
 			virtual ~TextureClass() = default;
 
 			ID3D11ShaderResourceView* GetTexture() const { return m_Texture.Get(); }
-			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> MoveTexture() { return std::move(m_Texture); }
+			ID3D11ShaderResourceView** GetTextureAddress() { return m_Texture.GetAddressOf(); }
 			D3D11_TEXTURE2D_DESC GetTextureInfo() const { return m_TextureInfo; }
 
 			TextureClass& operator=(const TextureClass& other);
@@ -38,7 +38,7 @@ namespace Graphic
 			HRESULT LoadWIC(ID3D11Device* Device, const std::wstring& FileName);
 			HRESULT LoadDDS(ID3D11Device* Device, const std::wstring& FileName);
 
-			std::unique_ptr<char> LoadTargaFile(const std::wstring& FileName, UINT& Height, UINT& Width);
+			std::unique_ptr<char[]> LoadTargaFile(const std::wstring& FileName, UINT& Height, UINT& Width);
 			HRESULT CreateShaderResourceView(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, char* ImageData, UINT Height, UINT Width);
 
 		private:

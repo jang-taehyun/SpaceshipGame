@@ -57,10 +57,12 @@ Scene::ModeChooseSceneClass::ModeChooseSceneClass(ID next, Object::ObjectManager
 	sounds->Play(Sound::ID::BACKGROUND);
 }
 
-Scene::ModeChooseSceneClass::ModeChooseSceneClass(const ModeChooseSceneClass& other) : SceneClass(other)
+Scene::ModeChooseSceneClass::ModeChooseSceneClass(const ModeChooseSceneClass& other)
+	: SceneClass(other)
 {}
 
-Scene::ModeChooseSceneClass::ModeChooseSceneClass(ModeChooseSceneClass&& other) noexcept : SceneClass(std::move(other))
+Scene::ModeChooseSceneClass::ModeChooseSceneClass(ModeChooseSceneClass&& other) noexcept
+	: SceneClass(std::move(other))
 {}
 
 Scene::ModeChooseSceneClass& Scene::ModeChooseSceneClass::operator=(const ModeChooseSceneClass& other)

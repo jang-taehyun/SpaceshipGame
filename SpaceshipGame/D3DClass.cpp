@@ -3,13 +3,11 @@
 
 bool Graphic::D3DClass::IsInitialize = false;
 
-Graphic::D3DClass::D3DClass(HWND hwnd, int ScreenWidth, int ScreenHeight)
+Graphic::D3DClass::D3DClass(int ScreenWidth, int ScreenHeight)
 {
-	HRESULT result = S_OK;
-
 	assert(!IsInitialize);
 
-	result = Initialize(hwnd, ScreenWidth, ScreenHeight);
+	HRESULT result = Initialize(ScreenWidth, ScreenHeight);
 	IsInitialize = true;
 }
 
@@ -19,7 +17,7 @@ Graphic::D3DClass::~D3DClass()
 	IsInitialize = false;
 }
 
-HRESULT Graphic::D3DClass::Initialize(HWND hwnd, int ScreenWidth, int ScreenHeight)
+HRESULT Graphic::D3DClass::Initialize(int ScreenWidth, int ScreenHeight)
 {
 	HRESULT result = S_OK;
 	int Numerator = 0, Denominator = 0;
@@ -29,7 +27,7 @@ HRESULT Graphic::D3DClass::Initialize(HWND hwnd, int ScreenWidth, int ScreenHeig
 	assert(SUCCEEDED(result));
 
 	// 2. Swap chain 설정 및 Swap chain, Device, Device context 생성
-	result = CreateSwapChainDeviceDeviceContext(hwnd, ScreenWidth, ScreenHeight, Numerator, Denominator);
+	result = CreateSwapChainDeviceDeviceContext(ScreenWidth, ScreenHeight, Numerator, Denominator);
 	assert(SUCCEEDED(result));
 
 	// 3. Render target view 생성 및 설정
@@ -176,7 +174,7 @@ HRESULT Graphic::D3DClass::GetRefreshRate(int ScreenWidth, int ScreenHeight, int
 	return result;
 }
 
-HRESULT Graphic::D3DClass::CreateSwapChainDeviceDeviceContext(HWND hwnd, int ScreenWidth, int ScreenHeight, int Numerator, int Denominator)
+HRESULT Graphic::D3DClass::CreateSwapChainDeviceDeviceContext(int ScreenWidth, int ScreenHeight, int Numerator, int Denominator)
 {
 	HRESULT result = S_OK;
 	DXGI_SWAP_CHAIN_DESC SwapChainDesc = {};		// swap chain 설정 정보
@@ -203,7 +201,7 @@ HRESULT Graphic::D3DClass::CreateSwapChainDeviceDeviceContext(HWND hwnd, int Scr
 	}
 
 	SwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;	// back buffer의 용도
-	SwapChainDesc.OutputWindow = hwnd;								// 렌더링에 사용될 윈도우 핸들
+	SwapChainDesc.OutputWindow = System::hwnd;						// 렌더링에 사용될 윈도우 핸들
 
 	SwapChainDesc.SampleDesc.Count = 1;								// 멀티샘플링 설정(OFF)
 	SwapChainDesc.SampleDesc.Quality = 0;

@@ -5,7 +5,7 @@
 
 bool Graphic::Model::ModelManagerClass::IsInitialize = false;
 
-Graphic::Model::ModelManagerClass::ModelManagerClass() : m_CurrentModelMask(0), m_NeedShaderMask(0)
+Graphic::Model::ModelManagerClass::ModelManagerClass()
 {
 	assert(!IsInitialize);
 
@@ -31,7 +31,7 @@ Graphic::Model::IModelClass* Graphic::Model::ModelManagerClass::GetModel(ID key)
 	return iter->second.get();
 }
 
-void Graphic::Model::ModelManagerClass::Load(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, UINT ModelMask)
+void Graphic::Model::ModelManagerClass::Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, UINT ModelMask)
 {
 	bool IsLoad = false, IsExist = false;
 	ID id = ID::NONE;
@@ -50,7 +50,7 @@ void Graphic::Model::ModelManagerClass::Load(HWND hwnd, ID3D11Device* Device, ID
 		if (IsLoad && !IsExist)
 		{
 			// instance 생성
-			model = std::move(m_Factory->Load(hwnd, Device, DeviceContext, id));
+			model = std::move(m_Factory->Load(Device, DeviceContext, id));
 			assert(model);
 
 			// 필요한 shader ID, 현재 로드된 model ID 업데이트

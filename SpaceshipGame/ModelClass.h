@@ -18,7 +18,7 @@ namespace Graphic
 			const ULONG MAX_INSTANCE_COUNT = 5;
 
 		public:
-			ModelClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, ID ModelID, Shader::ID ShaderID, Loader::IModelLoaderClass* loader);
+			ModelClass(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, ID ModelID, Shader::ID ShaderID, Loader::IModelLoaderClass* loader);
 			ModelClass(const ModelClass& other);
 			ModelClass(ModelClass&& other) noexcept;
 			virtual ~ModelClass() = default;
@@ -35,13 +35,13 @@ namespace Graphic
 			virtual Shader::ID GetShaderID() const override { return m_ShaderID; }
 			virtual ULONG GetIndexCount(UINT idx) const override { assert(idx < m_MeshCount); return m_MeshesIndexCount[idx]; }
 			virtual ULONG GetInstanceCount() const override { assert(m_InstanceCount < MAX_INSTANCE_COUNT); return m_InstanceCount; }
-			virtual const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& GetMaterial(UINT idx) const override;
+			virtual const std::vector<std::unique_ptr<Texture::TextureClass>>& GetMaterial(UINT idx) const override;
 			virtual DirectX::BoundingOrientedBox GetModelOBB() const { return m_ModelOBB; }
 
 			virtual ULONG GetVertexCount(UINT idx) const override { assert(idx < m_MeshCount); return m_MeshesVertexCount[idx]; }
 
 		private:
-			HRESULT Initialize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Loader::IModelLoaderClass* loader);
+			HRESULT Initialize(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Loader::IModelLoaderClass* loader);
 			HRESULT InitializeBuffers(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Loader::IModelLoaderClass* loader);
 			void InitializeMaterials(Loader::IModelLoaderClass* loader);
 
@@ -57,8 +57,8 @@ namespace Graphic
 			std::vector<ULONG> m_MeshesVertexCount;													// 각 mesh에 있는 vertex 데이터의 개수
 			std::vector<ULONG> m_MeshesIndexCount;													// 각 mesh에 있는 index 데이터의 개수
 
-			std::vector<std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>> m_Materials;	// 각 mesh에서 사용하는 material 데이터들
-			std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> m_Empty;					// model에 material이 없는 경우 반환 용도
+			std::vector<std::vector<std::unique_ptr<Texture::TextureClass>>> m_Materials;			// 각 mesh에서 사용하는 material 데이터들
+			std::vector<std::unique_ptr<Texture::TextureClass>> m_Empty;							// model에 material이 없는 경우 반환 용도
 
 			UINT m_InstanceCount = 0;
 			std::vector<InstanceBufferType> m_WorldMatrix;											// 각 object의 world matrix 모음

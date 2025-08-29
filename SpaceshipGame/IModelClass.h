@@ -4,6 +4,11 @@
 
 namespace Graphic
 {
+	namespace Texture { class TextureClass; }
+}
+
+namespace Graphic
+{
 	namespace Model
 	{
 		class IModelClass
@@ -20,7 +25,7 @@ namespace Graphic
 			virtual Shader::ID GetShaderID() const = 0;
 			virtual ULONG GetIndexCount(UINT idx) const = 0;
 			virtual ULONG GetInstanceCount() const = 0;
-			virtual const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& GetMaterial(UINT idx) const = 0;
+			virtual const std::vector<std::unique_ptr<Texture::TextureClass>>& GetMaterial(UINT idx) const = 0;
 			virtual DirectX::BoundingOrientedBox GetModelOBB() const = 0;
 
 			virtual ULONG GetVertexCount(UINT idx) const = 0;

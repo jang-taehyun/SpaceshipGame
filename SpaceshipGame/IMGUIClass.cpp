@@ -18,10 +18,10 @@
 
 bool Graphic::IMGUIClass::IsInitialize = false;
 
-Graphic::IMGUIClass::IMGUIClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeivceContext)
+Graphic::IMGUIClass::IMGUIClass(ID3D11Device* Device, ID3D11DeviceContext* DeivceContext)
 {
 	assert(!IsInitialize);
-	Initialize(hwnd, Device, DeivceContext);
+	Initialize(Device, DeivceContext);
 	IsInitialize = true;
 }
 
@@ -31,19 +31,21 @@ Graphic::IMGUIClass::~IMGUIClass()
 	IsInitialize = false;
 }
 
-void Graphic::IMGUIClass::Initialize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeivceContext)
+void Graphic::IMGUIClass::Initialize(ID3D11Device* Device, ID3D11DeviceContext* DeivceContext)
 {
 	ImVec2 cur = {};
 
 	// IMGUI 초기화 //
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	ImGui_ImplWin32_Init(hwnd);
+	ImGui_ImplWin32_Init(System::hwnd);
 	ImGui_ImplDX11_Init(Device, DeivceContext);
 
 	// Font 및 테마 설정 //
 	ImGuiIO& io = ImGui::GetIO();
 	io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\malgun.ttf", 18.f, NULL, io.Fonts->GetGlyphRangesKorean());
+	io.MouseDrawCursor = true;
+	
 	ImGui::StyleColorsDark();
 
 	// IMGUI의 윈도우 크기, 위치 설정 //
@@ -73,7 +75,7 @@ void Graphic::IMGUIClass::Render(Scene::SceneManagerClass* SceneManager, Graphic
 	ImGui_ImplWin32_NewFrame();
 	ImGui_ImplDX11_NewFrame();
 	ImGui::NewFrame();
-
+	
 	SetUI(SceneManager, light, input);
 
 	ImGui::ShowMetricsWindow();

@@ -12,4 +12,8 @@ float System::SCREEN_NEAR;
 
 float System::MOUSE_SENSITIVITY;
 
+bool System::RUNNING = true;
+HWND System::hwnd;
+HINSTANCE System::hinst;
+
 const float UI::ExtendSize = 1.3f;

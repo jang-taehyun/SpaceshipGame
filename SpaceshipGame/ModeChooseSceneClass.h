@@ -13,6 +13,7 @@ namespace Scene
 		ModeChooseSceneClass(ID next, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds);
 		ModeChooseSceneClass(const ModeChooseSceneClass& other);
 		ModeChooseSceneClass(ModeChooseSceneClass&& other) noexcept;
+		virtual ~ModeChooseSceneClass() = default;
 
 		ModeChooseSceneClass& operator=(const ModeChooseSceneClass& other);
 		ModeChooseSceneClass& operator=(ModeChooseSceneClass&& other) noexcept;

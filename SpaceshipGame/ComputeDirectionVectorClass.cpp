@@ -3,9 +3,9 @@
 
 void Object::ComputeDirectionVectorClass::GetDirectionVectors(DirectX::XMFLOAT4 rotate, DirectX::XMFLOAT4& forward, DirectX::XMFLOAT4& right, DirectX::XMFLOAT4& up)
 {
-	float pitch, yaw, roll;
-	DirectX::XMVECTOR f, r, u;
-	DirectX::XMMATRIX RotationMatrix;
+	float pitch = 0.f, yaw = 0.f, roll = 0.f;
+	DirectX::XMVECTOR f = {}, r = {}, u = {};
+	DirectX::XMMATRIX RotationMatrix = {};
 
 	// 해당 물체의 local space의 rotate matrix를 이용해, forward, right, up vector 계산 //
 	// rotate matrix 생성
@@ -28,10 +28,10 @@ void Object::ComputeDirectionVectorClass::GetDirectionVectors(DirectX::XMFLOAT4 
 
 DirectX::XMFLOAT4 Object::ComputeDirectionVectorClass::GetForwardVector(DirectX::XMFLOAT4 rotate)
 {
-	float pitch, yaw, roll;
-	DirectX::XMMATRIX RotationMatrix;
-	DirectX::XMVECTOR forward;
-	DirectX::XMFLOAT4 ret;
+	float pitch = 0.f, yaw = 0.f, roll = 0.f;
+	DirectX::XMMATRIX RotationMatrix = {};
+	DirectX::XMVECTOR forward = {};
+	DirectX::XMFLOAT4 ret = {};
 
 	// 해당 물체의 local space의 rotate matrix를 이용해, forward vector 계산 //
 	// rotate matrix 생성
@@ -50,10 +50,10 @@ DirectX::XMFLOAT4 Object::ComputeDirectionVectorClass::GetForwardVector(DirectX:
 
 DirectX::XMFLOAT4 Object::ComputeDirectionVectorClass::GetRightVector(DirectX::XMFLOAT4 rotate)
 {
-	float pitch, yaw, roll;
-	DirectX::XMMATRIX RotationMatrix;
-	DirectX::XMVECTOR right;
-	DirectX::XMFLOAT4 ret;
+	float pitch = 0.f, yaw = 0.f, roll = 0.f;
+	DirectX::XMMATRIX RotationMatrix = {};
+	DirectX::XMVECTOR right = {};
+	DirectX::XMFLOAT4 ret = {};
 
 	// 해당 물체의 local space의 rotate matrix를 이용해, right vector 계산 //
 	// rotate matrix 생성
@@ -72,10 +72,10 @@ DirectX::XMFLOAT4 Object::ComputeDirectionVectorClass::GetRightVector(DirectX::X
 
 DirectX::XMFLOAT4 Object::ComputeDirectionVectorClass::GetUpVector(DirectX::XMFLOAT4 rotate)
 {
-	float pitch, yaw, roll;
-	DirectX::XMMATRIX RotationMatrix;
-	DirectX::XMVECTOR up;
-	DirectX::XMFLOAT4 ret;
+	float pitch = 0.f, yaw = 0.f, roll = 0.f;
+	DirectX::XMMATRIX RotationMatrix = {};
+	DirectX::XMVECTOR up = {};
+	DirectX::XMFLOAT4 ret = {};
 
 	// 해당 물체의 local space의 rotate matrix를 이용해, up vector 계산 //
 	// rotate matrix 생성

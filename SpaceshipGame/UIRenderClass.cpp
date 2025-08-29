@@ -72,17 +72,17 @@ void Graphic::Texture::UIRenderClass::BeginRender(const D3DClass* d3d)
 	d3d->TurnDepthBufferOff();
 	d3d->TurnOnAlphaBlending();
 
-	m_Renderer->Begin();
+	m_Renderer->Begin(DirectX::DX11::SpriteSortMode_BackToFront);
 }
 
-void Graphic::Texture::UIRenderClass::RenderBackground(HWND hwnd, ID3D11ShaderResourceView* texture, DirectX::XMFLOAT4 color)
+void Graphic::Texture::UIRenderClass::RenderBackground(ID3D11ShaderResourceView* texture, DirectX::XMFLOAT4 color)
 {
 	// 색상 데이터(XMFLOAT4)을 XMVECTOR로 변환 //
 	DirectX::XMVECTOR vColor = DirectX::XMLoadFloat4(&color);
 
 	// texture와 UI의 위치 조정 //
 	RECT rect;
-	GetClientRect(hwnd, &rect);
+	GetClientRect(System::hwnd, &rect);
 
 	// 렌더링 //
 	m_Renderer->Draw(
@@ -93,17 +93,17 @@ void Graphic::Texture::UIRenderClass::RenderBackground(HWND hwnd, ID3D11ShaderRe
 	);
 }
 
-void Graphic::Texture::UIRenderClass::RenderTexture(ID3D11ShaderResourceView* texture, DirectX::XMFLOAT2 pos, DirectX::XMFLOAT4 color, float rot, DirectX::XMFLOAT2 origin, DirectX::XMFLOAT2 scale)
+void Graphic::Texture::UIRenderClass::RenderTexture(ID3D11ShaderResourceView* texture, DirectX::XMFLOAT2 pos, DirectX::XMFLOAT4 color, float rot, DirectX::XMFLOAT2 origin, DirectX::XMFLOAT2 scale, float depth)
 {
 	// 색상 데이터(XMFLOAT4)을 XMVECTOR로 변환 //
-	DirectX::XMVECTOR vColor = DirectX::XMLoadFloat4(&color);
+	DirectX::XMVECTOR vColor(DirectX::XMLoadFloat4(&color));
 	
 	// texture와 UI의 위치 조정 //
 	RECT rect = {
-		static_cast<LONG>(pos.x - scale.x / 2),
-		static_cast<LONG>(pos.y - scale.y / 2),
-		static_cast<LONG>(pos.x + scale.x / 2),
-		static_cast<LONG>(pos.y + scale.y / 2)
+		static_cast<LONG>(pos.x - scale.x * 0.5f),
+		static_cast<LONG>(pos.y - scale.y * 0.5f),
+		static_cast<LONG>(pos.x + scale.x * 0.5f),
+		static_cast<LONG>(pos.y + scale.y * 0.5f)
 	};
 
 	// 렌더링 //
@@ -113,18 +113,20 @@ void Graphic::Texture::UIRenderClass::RenderTexture(ID3D11ShaderResourceView* te
 		nullptr,
 		vColor,
 		rot,
-		origin
+		origin,
+		DirectX::DX11::SpriteEffects_None,
+		depth
 	);
 }
 
-void Graphic::Texture::UIRenderClass::RenderText(const std::wstring& text, Font::ID fontID, DirectX::XMFLOAT2 pos, DirectX::XMFLOAT4 color, float rot, DirectX::XMFLOAT2 origin, DirectX::XMFLOAT2 scale)
+void Graphic::Texture::UIRenderClass::RenderText(const std::wstring& text, Font::ID fontID, DirectX::XMFLOAT2 pos, DirectX::XMFLOAT4 color, float rot, DirectX::XMFLOAT2 origin, DirectX::XMFLOAT2 scale, float depth)
 {
 	std::map<Font::ID, std::unique_ptr<DirectX::SpriteFont>>::iterator iter;
 	DirectX::XMVECTOR size;
 	DirectX::XMFLOAT2 TextOrigin;
 
 	// 색상 데이터(XMFLOAT4)을 XMVECTOR로 변환 //
-	DirectX::XMVECTOR vColor = DirectX::XMLoadFloat4(&color);
+	DirectX::XMVECTOR vColor(DirectX::XMLoadFloat4(&color));
 
 	// font list에서 font를 찾기
 	iter = m_FontList.find(fontID);
@@ -137,7 +139,17 @@ void Graphic::Texture::UIRenderClass::RenderText(const std::wstring& text, Font:
 	TextOrigin.y /= 2;
 
 	// 렌더링
-	iter->second->DrawString(m_Renderer.get(), text.c_str(), pos, vColor, rot, TextOrigin, scale);
+	iter->second->DrawString(
+		m_Renderer.get(),
+		text.c_str(),
+		pos,
+		vColor,
+		rot,
+		TextOrigin,
+		scale,
+		DirectX::DX11::SpriteEffects_None,
+		depth
+	);
 }
 
 void Graphic::Texture::UIRenderClass::EndRender(const D3DClass* d3d)

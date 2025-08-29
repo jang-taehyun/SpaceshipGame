@@ -5,7 +5,7 @@
 
 bool UI::UIManagerClass::IsInitialize = false;
 
-UI::UIManagerClass::UIManagerClass() : m_UITextureMask(0)
+UI::UIManagerClass::UIManagerClass()
 {
 	assert(!IsInitialize);
 
@@ -44,9 +44,11 @@ void UI::UIManagerClass::Release()
 void UI::UIManagerClass::Frame(const System::InputClass* input)
 {
 	std::vector<std::unique_ptr<IUIClass>>::iterator iter;
+	UINT flag = (1 << static_cast<UINT>(UIState::ACTIVE));
 
 	for (iter = m_UIList.begin(); iter != m_UIList.end(); ++iter)
-		iter->get()->Update(input);
+		if (iter->get()->GetUIState() & flag)
+			iter->get()->Update(input);
 }
 
 UI::IUIClass* UI::UIManagerClass::GetUI(UINT idx) const

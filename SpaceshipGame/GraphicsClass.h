@@ -26,19 +26,19 @@ namespace Graphic
 	class GraphicsClass
 	{
 	public:
-		GraphicsClass(HWND hwnd, int ScreenWidth, int ScreenHeight);
+		GraphicsClass(int ScreenWidth, int ScreenHeight);
 		virtual ~GraphicsClass();
 
-		void Frame(HWND hwnd, Scene::SceneManagerClass* SceneManager, bool IsLoad
+		void Frame(Scene::SceneManagerClass* SceneManager, bool IsLoad
 #ifdef _DEBUG
 			, System::InputClass* input
 #endif // _DEBUG
 		);
 
 	private:
-		void Initialize(HWND hwnd, int ScreenWidth, int ScreenHeight);
-		void Load(HWND hwnd, Scene::SceneManagerClass* SceneManager);
-		void Render(HWND hwnd, Scene::SceneManagerClass* SceneManager
+		void Initialize(int ScreenWidth, int ScreenHeight);
+		void Load(Scene::SceneManagerClass* SceneManager);
+		void Render(Scene::SceneManagerClass* SceneManager
 #ifdef _DEBUG
 			, System::InputClass* input
 #endif // _DEBUG

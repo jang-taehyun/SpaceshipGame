@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "RotateClass.h"
 
-Object::RotateClass::RotateClass(float speed) : m_RotateSpeed(speed) {}
+Object::RotateClass::RotateClass(float speed)
+	: m_RotateSpeed(speed)
+{}
 
 DirectX::XMFLOAT4 Object::RotateClass::Rotate(DirectX::XMFLOAT4 rotate, long MouseX, long MouseY, float frame_time, bool IsKeyDown)
 {

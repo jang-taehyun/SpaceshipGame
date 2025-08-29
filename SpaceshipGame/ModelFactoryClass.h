@@ -13,9 +13,9 @@ namespace Graphic
 	{
 
 #ifdef _DEBUG
-		std::unique_ptr<Model::IModelClass> LoadCollision(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::string& ModelFilename, const std::wstring& AdditionalPath);
+		std::unique_ptr<Model::IModelClass> LoadCollision(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::string& ModelFilename, const std::wstring& AdditionalPath);
 #endif
-		std::unique_ptr<Model::IModelClass> LoadDefaultSpaceship(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::string& ModelFilename, const std::wstring& AdditionalPath);
+		std::unique_ptr<Model::IModelClass> LoadDefaultSpaceship(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::string& ModelFilename, const std::wstring& AdditionalPath);
 
 		class ModelFactoryClass
 		{
@@ -38,11 +38,11 @@ namespace Graphic
 			~ModelFactoryClass();
 
 			UINT GetModelIDCount() const { return m_ModelIDCount; }
-			std::unique_ptr<Model::IModelClass> Load(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Model::ID ModelID) const;
+			std::unique_ptr<Model::IModelClass> Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Model::ID ModelID) const;
 
 		private:
 			static bool IsInitialize;
-			std::map<Model::ID, std::function<std::unique_ptr<Model::IModelClass>(HWND, ID3D11Device*, ID3D11DeviceContext*, const std::string&, const std::wstring&)>> m_Creator;
+			std::map<Model::ID, std::function<std::unique_ptr<Model::IModelClass>(ID3D11Device*, ID3D11DeviceContext*, const std::string&, const std::wstring&)>> m_Creator;
 		};
 	}
 }

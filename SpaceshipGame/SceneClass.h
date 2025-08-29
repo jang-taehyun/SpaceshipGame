@@ -21,10 +21,10 @@ namespace Scene
 		virtual std::unique_ptr<ISceneClass> Clone() const override = 0;
 
 	protected:
-		virtual void SetSceneEnded() override { m_IsSceneEnded = true; }
-		virtual void SetNextScene(ID next) override { m_NextSceneState = next; }
-		virtual void SetTerrainID(Graphic::Terrain::TerrainID id) override { m_TerrainID = id; }
-		virtual void SetSkyDomeID(Graphic::Terrain::SkyDomeID id) override { m_SkyDomeID = id; }
+		void SetSceneEnded() { m_IsSceneEnded = true; }
+		void SetNextScene(ID next) { m_NextSceneState = next; }
+		void SetTerrainID(Graphic::Terrain::TerrainID id) { m_TerrainID = id; }
+		void SetSkyDomeID(Graphic::Terrain::SkyDomeID id) { m_SkyDomeID = id; }
 
 	private:
 		ID m_CurrentSceneState = ID::NONE;
@@ -35,5 +35,6 @@ namespace Scene
 
 		bool m_IsSceneEnded = false;
 		bool m_IsShowingCursor = true;
+		bool m_IsECSKeyPressed = false;
 	};
 }

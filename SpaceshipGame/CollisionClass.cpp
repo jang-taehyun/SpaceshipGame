@@ -5,17 +5,21 @@
 DirectX::ContainmentType Object::CollisionClass::GetCollideState(const AffineInfo& affine)
 {
 	// 자신의 OBB 박스 생성 //
-	DirectX::BoundingOrientedBox itself(Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(GetPosition()),
+	DirectX::BoundingOrientedBox itself(
+		Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(GetPosition()),
 		Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(GetScale()),
-		GetRotation());
+		GetRotation()
+	);
 
 	// 충돌 검사 대상의 OBB 박스 생성 //
-	DirectX::BoundingOrientedBox other(Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(affine.position),
+	DirectX::BoundingOrientedBox other(
+		Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(affine.position),
 		Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(affine.scale),
-		affine.rotation);
+		affine.rotation
+	);
 
 	// 충돌 검사 //
-	DirectX::ContainmentType ret = itself.Contains(other);
+	DirectX::ContainmentType ret(itself.Contains(other));
 
 #ifdef _DEBUG
 	// 충돌 검사 후, 결과에 따라 자신의 collision 색상 업데이트 //
@@ -30,12 +34,12 @@ DirectX::ContainmentType Object::CollisionClass::GetCollideState(const AffineInf
 
 DirectX::ContainmentType Object::CollisionClass::GetCollideState(DirectX::XMFLOAT4 position, DirectX::XMFLOAT4 forward)
 {
-	DirectX::BoundingOrientedBox itself;
-	DirectX::XMVECTOR origin;
-	DirectX::XMVECTOR vector;
+	DirectX::BoundingOrientedBox itself = {};
+	DirectX::XMVECTOR origin = {};
+	DirectX::XMVECTOR vector = {};
 	float dist = 0.f;
 	bool result = false;
-	DirectX::ContainmentType ret;
+	DirectX::ContainmentType ret = {};
 
 	// ray의 forward vector 검사
 	vector = DirectX::XMLoadFloat4(&forward);

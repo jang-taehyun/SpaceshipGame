@@ -5,7 +5,7 @@ namespace Graphic
 	class D3DClass
 	{
 	public:
-		D3DClass(HWND hwnd, int ScreenWidth, int ScreenHeight);
+		D3DClass(int ScreenWidth, int ScreenHeight);
 		virtual ~D3DClass();
 
 		// back buffer를 지우는 함수 //
@@ -31,7 +31,7 @@ namespace Graphic
 
 	private:
 		// D3D 객체 초기화 함수 //
-		HRESULT Initialize(HWND hwnd, int ScreenWidth, int ScreenHeight);
+		HRESULT Initialize(int ScreenWidth, int ScreenHeight);
 
 		// D3D 객체 내부 리소스 정리 함수 //
 		void Shutdown();
@@ -40,7 +40,7 @@ namespace Graphic
 		HRESULT GetRefreshRate(int ScreenWidth, int ScreenHeight, int& Numerator, int& Denominator);
 
 		// Swap chain 설정 및 Swap chain, Device, Device context 생성하는 함수
-		HRESULT CreateSwapChainDeviceDeviceContext(HWND hwnd, int ScreenWidth, int ScreenHeight, int Numerator, int Denominator);
+		HRESULT CreateSwapChainDeviceDeviceContext(int ScreenWidth, int ScreenHeight, int Numerator, int Denominator);
 
 		// Render target view 생성 및 설정하는 함수
 		HRESULT SetAndCreateRenderTargetView();

@@ -29,7 +29,7 @@ namespace Graphic
 			virtual ULONG GetMeshCount() const override { return m_MeshCount; }
 			virtual DirectX::BoundingOrientedBox GetModelOBB() const override { return m_ModelOBB; }
 			virtual std::vector<std::vector<ULONG>> MoveIndicesDatas() override { return std::move(m_Indices); }
-			virtual std::vector<std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>> MoveMaterialsDatas() override { return std::move(m_Materials); }
+			virtual std::vector<std::vector<std::unique_ptr<Texture::TextureClass>>> MoveMaterialsDatas() override { return std::move(m_Materials); }
 			std::vector<std::vector<VertexType>> MoveVerticesDatas() { return std::move(m_Vertices); }
 
 		private:
@@ -43,18 +43,18 @@ namespace Graphic
 
 			void PushVerticesData(std::vector<VertexType> vertices) { m_Vertices.push_back(std::move(vertices)); }
 			void PushIndicesData(std::vector<ULONG> indices) { m_Indices.push_back(std::move(indices)); }
-			void PushMaterialsData(std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> materials) { m_Materials.push_back(std::move(materials)); }
+			void PushMaterialsData(std::vector<std::unique_ptr<Texture::TextureClass>> materials) { m_Materials.push_back(std::move(materials)); }
 
-			HRESULT LoadTextureData(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& MaterialList, const aiString& TexturePath, const std::wstring& AdditionalPath);
+			HRESULT LoadTextureData(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, std::vector<std::unique_ptr<Texture::TextureClass>>& MaterialList, const aiString& TexturePath, const std::wstring& AdditionalPath);
 
 		private:
-			ULONG m_MeshCount = 0;																				// mesh 개수
-			std::vector<std::vector<VertexType>> m_Vertices;													// 각 mesh에 있는 vertex 데이터들
-			std::vector<std::vector<ULONG>> m_Indices;															// 각 mesh에 있는 index 데이터들
-			std::vector<std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>> m_Materials;				// 각 mesh에서 사용하는 material 데이터들
+			ULONG m_MeshCount = 0;																		// mesh 개수
+			std::vector<std::vector<VertexType>> m_Vertices;											// 각 mesh에 있는 vertex 데이터들
+			std::vector<std::vector<ULONG>> m_Indices;													// 각 mesh에 있는 index 데이터들
+			std::vector<std::vector<std::unique_ptr<Texture::TextureClass>>> m_Materials;				// 각 mesh에서 사용하는 material 데이터들
 
-			std::vector<DirectX::XMFLOAT3> m_Positions;															// 모든 mesh에 존재하는 position 데이터(Bounding oriented box 생성시 사용)
-			DirectX::BoundingOrientedBox m_ModelOBB;															// frustum culling용 OBB 박스
+			std::vector<DirectX::XMFLOAT3> m_Positions;													// 모든 mesh에 존재하는 position 데이터(Bounding oriented box 생성시 사용)
+			DirectX::BoundingOrientedBox m_ModelOBB;													// frustum culling용 OBB 박스
 
 		public:
 			ModelLoaderClass(const ModelLoaderClass& other) = delete;

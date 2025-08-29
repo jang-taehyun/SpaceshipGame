@@ -55,7 +55,7 @@ void Graphic::Shader::TerrainShaderClass::UpdateShaderBuffers(ID3D11DeviceContex
 	result = UpdateLightBuffer(DeviceContext, ShaderBufferDatas.light);
 }
 
-void Graphic::Shader::TerrainShaderClass::Render(ID3D11DeviceContext* DeviceContext, int IndexCount, int InstanceCount, const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& Material)
+void Graphic::Shader::TerrainShaderClass::Render(ID3D11DeviceContext* DeviceContext, int IndexCount, int InstanceCount, const std::vector<std::unique_ptr<Texture::TextureClass>>& Material)
 {
 	OutputDebugStringW(_T("삭제된 함수입니다. terrain은 index로 렌더링을 합니다.\n"));
 	assert(false);

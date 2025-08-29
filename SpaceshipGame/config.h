@@ -22,6 +22,11 @@ namespace System
 
 	// MOUSE 감도 설정
 	extern float MOUSE_SENSITIVITY;
+	
+	// 프로그램 동작 설정
+	extern bool RUNNING;
+	extern HWND hwnd;
+	extern HINSTANCE hinst;
 }
 
 // object 관련 //
@@ -79,7 +84,7 @@ namespace UI
 	// UI 상태
 	enum class UIState
 	{
-		NONE, ACTIVE, DEACTIVE, DISAPPEAR, 
+		NONE, ACTIVE, APPEAR, 
 	};
 
 	// button 상태

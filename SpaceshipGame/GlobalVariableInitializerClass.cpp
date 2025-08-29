@@ -7,6 +7,10 @@ void System::GlobalVariableInitializerClass::InputData()
 	std::ifstream FileIn("./data/data.json");
 	nlohmann::json data;
 
+	// 전역 변수 중 시스템에서 초기화하는 변수 초기화
+	System::RUNNING = true;
+
+	// 전역 변수 중 data.json 파일을 통해 초기화 하는 변수 초기화
 	if (FileIn.is_open())
 	{
 		FileIn >> data;

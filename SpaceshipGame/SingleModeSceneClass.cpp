@@ -1,4 +1,5 @@
 #include "pch.h"
+#include <algorithm>
 #include "ObjectManagerClass.h"
 #include "TextManagerClass.h"
 #include "UIManagerClass.h"
@@ -26,37 +27,41 @@ Scene::SingleModeSceneClass::SingleModeSceneClass(ID next, Object::ObjectManager
 	std::unique_ptr<Object::IMoveClass> move = std::make_unique<Object::MoveClass>();
 	std::unique_ptr<Object::IRotateClass> rotate = std::make_unique<Object::RotateClass>();
 
+	// 카메라 로드
 	m_Camera = std::make_unique<Object::CameraClass>(std::move(move), std::move(rotate));
 	assert(m_Camera);
 	m_Camera->SetPosition(DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f));
 
+	// 지형 로드
 	SetTerrainID(Graphic::Terrain::TerrainID::DEFAULT);
 	SetSkyDomeID(Graphic::Terrain::SkyDomeID::DEFAULT);
 
-	UI_Idx = UIs->LoadUI(UI::ID::BUTTON, Graphic::Texture::UITextureID::START_BUTTON);
-	UIs->GetUI(UI_Idx)->SetPosition(DirectX::XMFLOAT2(50.f, 30.f));
-	UIs->GetUI(UI_Idx)->SetColor(DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f));
-	UIs->GetUI(UI_Idx)->SetScale(DirectX::XMFLOAT2(50.f, 40.f));
-
-	objectIdx = objects->Load(Object::ID::ACTOR, Graphic::Model::ID::DEFAULT_SPACESHIP);
-	objects->SetPlayerIdx(objectIdx);
-	objects->GetGameObject(objectIdx)->SetPosition(DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f));
-
-	textIdx = texts->Load(Text::ID::DEFAULT, _T("이전 화면으로"), Graphic::Font::ID::DEFAULT);
-	texts->GetTextObject(textIdx)->SetPosition(DirectX::XMFLOAT2(50.f, 30.f));
-	texts->GetTextObject(textIdx)->SetColor(DirectX::XMFLOAT4(0.f, 1.f, 0.f, 1.f));
-	texts->GetTextObject(textIdx)->SetScale(DirectX::XMFLOAT2(1.f, 1.f));
-
+	// 사운드 로드
 	SoundMask |= (1 << static_cast<UINT>(Sound::ID::BACKGROUND));
 	SoundMask |= (1 << static_cast<UINT>(Sound::ID::EFFECT));
 	sounds->Load(SoundMask);
 	sounds->SetLoop(Sound::ID::BACKGROUND, true);
 	sounds->Play(Sound::ID::BACKGROUND);
+
+	// object 로드
+	objectIdx = objects->Load(Object::ID::ACTOR, Graphic::Model::ID::DEFAULT_SPACESHIP);
+	objects->SetPlayerIdx(objectIdx);
+	objects->GetGameObject(objectIdx)->SetPosition(DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f));
 }
 
 
-Scene::SingleModeSceneClass::SingleModeSceneClass(const SingleModeSceneClass& other) : SceneClass(other), m_Camera(std::move(other.m_Camera->Clone())) {}
-Scene::SingleModeSceneClass::SingleModeSceneClass(SingleModeSceneClass&& other) noexcept : SceneClass(std::move(other)), m_Camera(std::move(other.m_Camera)) {}
+Scene::SingleModeSceneClass::SingleModeSceneClass(const SingleModeSceneClass& other)
+	: SceneClass(other),
+	m_Camera(std::move(other.m_Camera->Clone()))
+{
+	m_ObjectList.insert(other.m_ObjectList.begin(), other.m_ObjectList.end());
+}
+
+Scene::SingleModeSceneClass::SingleModeSceneClass(SingleModeSceneClass&& other) noexcept
+	: SceneClass(std::move(other)),
+	m_Camera(std::move(other.m_Camera)),
+	m_ObjectList(std::move(other.m_ObjectList))
+{}
 
 Scene::SingleModeSceneClass& Scene::SingleModeSceneClass::operator=(const SingleModeSceneClass& other)
 {
@@ -64,6 +69,7 @@ Scene::SingleModeSceneClass& Scene::SingleModeSceneClass::operator=(const Single
 		return *this;
 
 	m_Camera = other.m_Camera->Clone();
+	m_ObjectList.insert(other.m_ObjectList.begin(), other.m_ObjectList.end());
 	SceneClass::operator=(other);
 
 	return *this;
@@ -75,6 +81,7 @@ Scene::SingleModeSceneClass& Scene::SingleModeSceneClass::operator=(SingleModeSc
 		return *this;
 
 	m_Camera = std::move(other.m_Camera);
+	m_ObjectList = std::move(other.m_ObjectList);
 	SceneClass::operator=(std::move(other));
 
 	return *this;
@@ -86,12 +93,12 @@ void Scene::SingleModeSceneClass::Frame(const System::InputClass* input, Object:
 	UI::ButtonClass* button = nullptr;
 	long x = 0, y = 0;
 
-	button = static_cast<UI::ButtonClass*>(UIs->GetUI(0));
-	if (UI::ButtonState::ONCLICKED == button->GetButtonState())
-	{
-		SetSceneEnded();
-		return;
-	}
+	// button = static_cast<UI::ButtonClass*>(UIs->GetUI(0));
+	// if (UI::ButtonState::ONCLICKED == button->GetButtonState())
+	// {
+	// 	SetSceneEnded();
+	// 	return;
+	// }
 
 	cam = static_cast<Object::CameraClass*>(m_Camera.get());
 	cam->Move(Object::MoveState::MOVE_FORWARD, frame_time, input->IsWBottunPressed());
@@ -101,4 +108,25 @@ void Scene::SingleModeSceneClass::Frame(const System::InputClass* input, Object:
 
 	input->GetMouseMoveDelta(x, y);
 	cam->Rotate(x, y, frame_time, input->IsMouseCenterBottunPressed());
+}
+
+void Scene::SingleModeSceneClass::CreateECSPopup(Text::TextManagerClass* texts, UI::UIManagerClass* UIs)
+{
+	UINT UI_Idx, textIdx;
+
+	UI_Idx = UIs->LoadUI(UI::ID::BUTTON, Graphic::Texture::UITextureID::START_BUTTON);
+	UIs->GetUI(UI_Idx)->SetPosition(DirectX::XMFLOAT2(50.f, 30.f));
+	UIs->GetUI(UI_Idx)->SetColor(DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f));
+	UIs->GetUI(UI_Idx)->SetScale(DirectX::XMFLOAT2(50.f, 40.f));
+
+	UIs->GetUI(UI_Idx)->SetUIState(UI::UIState::ACTIVE, false);
+	UIs->GetUI(UI_Idx)->SetUIState(UI::UIState::APPEAR, false);
+
+	textIdx = texts->Load(Text::ID::DEFAULT, _T("이전 화면으로"), Graphic::Font::ID::DEFAULT);
+	texts->GetTextObject(textIdx)->SetPosition(DirectX::XMFLOAT2(50.f, 30.f));
+	texts->GetTextObject(textIdx)->SetColor(DirectX::XMFLOAT4(0.f, 1.f, 0.f, 1.f));
+	texts->GetTextObject(textIdx)->SetScale(DirectX::XMFLOAT2(1.f, 1.f));
+
+	texts->GetTextObject(textIdx)->SetTextState(UI::UIState::ACTIVE, false);
+	texts->GetTextObject(textIdx)->SetTextState(UI::UIState::APPEAR, false);
 }

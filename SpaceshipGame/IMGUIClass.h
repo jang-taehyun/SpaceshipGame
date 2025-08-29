@@ -23,13 +23,13 @@ namespace Graphic
 	class IMGUIClass
 	{
 	public:
-		IMGUIClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeivceContext);
+		IMGUIClass(ID3D11Device* Device, ID3D11DeviceContext* DeivceContext);
 		~IMGUIClass();
 
 		void Render(Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light, System::InputClass* input);
 
 	private:
-		void Initialize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeivceContext);
+		void Initialize(ID3D11Device* Device, ID3D11DeviceContext* DeivceContext);
 		void Shutdown();
 
 		void SetUI(Scene::SceneManagerClass* SceneManager, Graphic::LightClass* light, System::InputClass* input);

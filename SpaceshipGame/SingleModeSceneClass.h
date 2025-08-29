@@ -6,6 +6,12 @@ namespace Scene
 {
 	class SingleModeSceneClass : public SceneClass
 	{
+	private:
+		enum class ObjectID
+		{
+			PREVIOUS_UI_ID, PREVIOUS_TEXT_ID, 
+		};
+
 	public:
 		SingleModeSceneClass(ID next, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds);
 		SingleModeSceneClass(const SingleModeSceneClass& other);
@@ -20,7 +26,11 @@ namespace Scene
 		virtual std::unique_ptr<ISceneClass> Clone() const override { return std::make_unique<SingleModeSceneClass>(*this); }
 
 	private:
+		void CreateECSPopup(Text::TextManagerClass* texts, UI::UIManagerClass* UIs);
+
+	private:
 		std::unique_ptr<Object::IObjectClass> m_Camera = nullptr;
+		std::map<ObjectID, INT> m_ObjectList;
 	};
 };
 

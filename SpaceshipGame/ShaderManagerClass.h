@@ -22,7 +22,7 @@ namespace Graphic
 
 			IShaderClass* GetShader(ID key) const;
 
-			void Load(HWND hwnd, ID3D11Device* Device, UINT ShaderMask);
+			void Load(ID3D11Device* Device, UINT ShaderMask);
 			void UpdateBuffer(ID3D11DeviceContext* DeviceContext, const BuffersData& data);
 
 			UINT GetShaderMask() const { return m_CurrentShaderMask; }

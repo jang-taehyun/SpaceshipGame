@@ -33,10 +33,10 @@
 
 bool Graphic::GraphicsClass::IsInitialize = false;
 
-Graphic::GraphicsClass::GraphicsClass(HWND hwnd, int ScreenWidth, int ScreenHeight)
+Graphic::GraphicsClass::GraphicsClass(int ScreenWidth, int ScreenHeight)
 {
 	assert(!IsInitialize);
-	Initialize(hwnd, ScreenWidth, ScreenHeight);
+	Initialize(ScreenWidth, ScreenHeight);
 	IsInitialize = true;
 }
 
@@ -45,7 +45,7 @@ Graphic::GraphicsClass::~GraphicsClass()
 	IsInitialize = false;
 }
 
-void Graphic::GraphicsClass::Frame(HWND hwnd, Scene::SceneManagerClass* SceneManager, bool IsLoad
+void Graphic::GraphicsClass::Frame(Scene::SceneManagerClass* SceneManager, bool IsLoad
 #ifdef _DEBUG
 	, System::InputClass* input
 #endif // _DEBUG
@@ -66,7 +66,7 @@ void Graphic::GraphicsClass::Frame(HWND hwnd, Scene::SceneManagerClass* SceneMan
 
 	if (IsLoad)
 	{
-		Load(hwnd, SceneManager);
+		Load(SceneManager);
 		return;
 	}
 
@@ -137,14 +137,14 @@ void Graphic::GraphicsClass::Frame(HWND hwnd, Scene::SceneManagerClass* SceneMan
 	}
 
 	// ·»´õ¸µ //
-	Render(hwnd, SceneManager
+	Render(SceneManager
 #ifdef _DEBUG
 		, input
 #endif // _DEBUG
 	);
 }
 
-void Graphic::GraphicsClass::Initialize(HWND hwnd, int ScreenWidth, int ScreenHeight)
+void Graphic::GraphicsClass::Initialize(int ScreenWidth, int ScreenHeight)
 {
 	DirectX::XMFLOAT4 AmbientColor = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);
 	DirectX::XMFLOAT4 DiffuseColor = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);
@@ -153,7 +153,7 @@ void Graphic::GraphicsClass::Initialize(HWND hwnd, int ScreenWidth, int ScreenHe
 	float SpecularPower = 64.f;
 
 	// Direct3D °´Ã¼ »ý¼º ¹× ÃÊ±âÈ­ //
-	m_D3D = std::make_unique<D3DClass>(hwnd, ScreenWidth, ScreenHeight);
+	m_D3D = std::make_unique<D3DClass>(ScreenWidth, ScreenHeight);
 	assert(m_D3D);
 
 	// Light °´Ã¼ »ý¼º //
@@ -182,16 +182,16 @@ void Graphic::GraphicsClass::Initialize(HWND hwnd, int ScreenWidth, int ScreenHe
 
 #ifdef _DEBUG
 	// IMGUI °´Ã¼ »ý¼º //
-	m_IMGUI = std::make_unique<IMGUIClass>(hwnd, m_D3D->GetDevice(), m_D3D->GetDeviceContext());
+	m_IMGUI = std::make_unique<IMGUIClass>(m_D3D->GetDevice(), m_D3D->GetDeviceContext());
 	assert(m_IMGUI);
 #endif // DEBUG
 }
 
-void Graphic::GraphicsClass::Load(HWND hwnd, Scene::SceneManagerClass* SceneManager)
+void Graphic::GraphicsClass::Load(Scene::SceneManagerClass* SceneManager)
 {
 	UINT ShaderMask = 0;
 
-	m_ModelManager->Load(hwnd, m_D3D->GetDevice(), m_D3D->GetDeviceContext(), SceneManager->GetObjectManager()->GetModelMask());
+	m_ModelManager->Load(m_D3D->GetDevice(), m_D3D->GetDeviceContext(), SceneManager->GetObjectManager()->GetModelMask());
 	m_UITextureManager->Load(m_D3D->GetDevice(), m_D3D->GetDeviceContext(), SceneManager->GetUIManager()->GetUITextureMask());
 	m_UIRender->LoadFont(m_D3D->GetDevice(), SceneManager->GetTextManager()->GetFontMask());
 	m_Terrain->Load(m_D3D->GetDevice(), m_D3D->GetDeviceContext(), SceneManager->GetTerrainID(), SceneManager->GetSkyDomeID());
@@ -199,10 +199,10 @@ void Graphic::GraphicsClass::Load(HWND hwnd, Scene::SceneManagerClass* SceneMana
 	ShaderMask = m_ModelManager->GetNeedShaderMask();
 	if (SceneManager->GetTerrainID() != Graphic::Terrain::TerrainID::NONE)
 		ShaderMask |= (1 << static_cast<UINT>(m_Terrain->GetShaderID()));
-	m_ShaderManager->Load(hwnd, m_D3D->GetDevice(), ShaderMask);
+	m_ShaderManager->Load(m_D3D->GetDevice(), ShaderMask);
 }
 
-void Graphic::GraphicsClass::Render(HWND hwnd, Scene::SceneManagerClass* SceneManager
+void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager
 #ifdef _DEBUG
 	, System::InputClass* input
 #endif // _DEBUG
@@ -256,7 +256,7 @@ void Graphic::GraphicsClass::Render(HWND hwnd, Scene::SceneManagerClass* SceneMa
 	for (UINT i = 0; i < SceneManager->GetUIManager()->GetUICount(); ++i)
 	{
 		ui = SceneManager->GetUIManager()->GetUI(i);
-		if (UI::UIState::ACTIVE == ui->GetUIState())
+		if (ui->GetUIState() & (1 << static_cast<UINT>(UI::UIState::APPEAR)))
 		{
 			// background¸¦ Á¦¿ÜÇÑ ¸ðµç UI ·»´õ¸µ
 			if (UI::ID::BACKGROUND != ui->GetUIID())
@@ -267,12 +267,13 @@ void Graphic::GraphicsClass::Render(HWND hwnd, Scene::SceneManagerClass* SceneMa
 					ui->GetColor(),
 					ui->GetRotation(),
 					ui->GetOrigin(),
-					ui->GetScale()
+					ui->GetScale(),
+					ui->GetDepth()
 				);
 			}
 			// background ·»´õ¸µ
 			else
-				m_UIRender->RenderBackground(hwnd, m_UITextureManager->GetTexture(ui->GetUITextureID()), ui->GetColor());
+				m_UIRender->RenderBackground(m_UITextureManager->GetTexture(ui->GetUITextureID()), ui->GetColor());
 		}
 	}
 
@@ -287,7 +288,8 @@ void Graphic::GraphicsClass::Render(HWND hwnd, Scene::SceneManagerClass* SceneMa
 			text->GetColor(),
 			text->GetRotation(),
 			text->GetOrigin(),
-			text->GetScale()
+			text->GetScale(),
+			text->GetDepth()
 		);
 	}
 

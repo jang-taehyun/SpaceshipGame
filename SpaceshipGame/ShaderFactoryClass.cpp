@@ -29,17 +29,17 @@ Graphic::Loader::ShaderFactoryClass::~ShaderFactoryClass()
 	m_Creator.clear();
 }
 
-std::unique_ptr<Graphic::Shader::IShaderClass> Graphic::Loader::ShaderFactoryClass::Load(HWND hwnd, ID3D11Device* Device, Shader::ID id) const
+std::unique_ptr<Graphic::Shader::IShaderClass> Graphic::Loader::ShaderFactoryClass::Load(ID3D11Device* Device, Shader::ID id) const
 {
-	std::map<Shader::ID, std::function<std::unique_ptr<Shader::IShaderClass>(HWND, ID3D11Device*, Shader::ID)>>::const_iterator iter;
+	std::map<Shader::ID, std::function<std::unique_ptr<Shader::IShaderClass>(ID3D11Device*, Shader::ID)>>::const_iterator iter;
 
 	iter = m_Creator.find(id);
 	assert(m_Creator.end() != iter);
 
-	return iter->second(hwnd, Device, id);
+	return iter->second(Device, id);
 }
 
-std::unique_ptr<Graphic::Shader::IShaderClass> Graphic::Loader::CreateDefaultSpaceshipShader(HWND hwnd, ID3D11Device* Device, Shader::ID id)
+std::unique_ptr<Graphic::Shader::IShaderClass> Graphic::Loader::CreateDefaultSpaceshipShader(ID3D11Device* Device, Shader::ID id)
 {
 	// shader 정보 설정
 	const ShaderFileInfo info =
@@ -63,12 +63,12 @@ std::unique_ptr<Graphic::Shader::IShaderClass> Graphic::Loader::CreateDefaultSpa
 	assert(shader);
 
 	// instance 초기화
-	shader->Initialize(hwnd, Device, info, semantics);
+	shader->Initialize(Device, info, semantics);
 
 	return shader;
 }
 
-std::unique_ptr<Graphic::Shader::IShaderClass> Graphic::Loader::CreateDefaultTerrainShader(HWND hwnd, ID3D11Device* Device, Shader::ID id)
+std::unique_ptr<Graphic::Shader::IShaderClass> Graphic::Loader::CreateDefaultTerrainShader(ID3D11Device* Device, Shader::ID id)
 {
 	// shader 정보 설정
 	const ShaderFileInfo info =
@@ -92,14 +92,14 @@ std::unique_ptr<Graphic::Shader::IShaderClass> Graphic::Loader::CreateDefaultTer
 	assert(shader);
 
 	// instance 초기화
-	shader->Initialize(hwnd, Device, info, semantics, true);
+	shader->Initialize(Device, info, semantics, true);
 
 	return shader;
 }
 
 #ifdef _DEBUG
 
-std::unique_ptr<Graphic::Shader::IShaderClass> Graphic::Loader::CreateCubeShader(HWND hwnd, ID3D11Device* Device, Shader::ID id)
+std::unique_ptr<Graphic::Shader::IShaderClass> Graphic::Loader::CreateCubeShader(ID3D11Device* Device, Shader::ID id)
 {
 	// shader 정보 설정
 	const ShaderFileInfo info =
@@ -121,7 +121,7 @@ std::unique_ptr<Graphic::Shader::IShaderClass> Graphic::Loader::CreateCubeShader
 	assert(shader);
 
 	// instance 초기화
-	shader->Initialize(hwnd, Device, info, semantics);
+	shader->Initialize(Device, info, semantics);
 
 	return shader;
 }

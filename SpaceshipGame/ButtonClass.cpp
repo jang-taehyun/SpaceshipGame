@@ -57,7 +57,7 @@ void UI::ButtonClass::Update(const System::InputClass* input)
 	bool IsInCursor = false;
 	std::unique_ptr<IButtonStateClass> ret = nullptr;
 	
-	if (GetUIState() == UIState::ACTIVE)
+	if (GetUIState() & (1 << static_cast<UINT>(UIState::ACTIVE)))
 	{
 		input->GetMouseLocation(x, y);
 		IsInCursor = IsInUI(x, y);

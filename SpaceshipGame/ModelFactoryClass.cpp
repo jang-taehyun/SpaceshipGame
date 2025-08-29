@@ -24,9 +24,9 @@ Graphic::Loader::ModelFactoryClass::~ModelFactoryClass()
 	m_Creator.clear();
 }
 
-std::unique_ptr<Graphic::Model::IModelClass> Graphic::Loader::ModelFactoryClass::Load(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Model::ID ModelID) const
+std::unique_ptr<Graphic::Model::IModelClass> Graphic::Loader::ModelFactoryClass::Load(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Model::ID ModelID) const
 {
-	std::map<Model::ID, std::function<std::unique_ptr<Model::IModelClass>(HWND, ID3D11Device*, ID3D11DeviceContext*, const std::string&, const std::wstring&)>>::const_iterator iter;
+	std::map<Model::ID, std::function<std::unique_ptr<Model::IModelClass>(ID3D11Device*, ID3D11DeviceContext*, const std::string&, const std::wstring&)>>::const_iterator iter;
 	std::map<Model::ID, const std::string>::const_iterator ModelFileIter;
 	std::map<Model::ID, const std::wstring>::const_iterator AdditionalTexturePathIter;
 
@@ -42,10 +42,10 @@ std::unique_ptr<Graphic::Model::IModelClass> Graphic::Loader::ModelFactoryClass:
 	iter = m_Creator.find(ModelID);
 	assert(m_Creator.end() != iter);
 
-	return iter->second(hwnd, Device, DeviceContext, ModelFileIter->second, AdditionalTexturePathIter->second);
+	return iter->second(Device, DeviceContext, ModelFileIter->second, AdditionalTexturePathIter->second);
 }
 
-std::unique_ptr<Graphic::Model::IModelClass> Graphic::Loader::LoadDefaultSpaceship(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::string& ModelFilename, const std::wstring& AdditionalPath)
+std::unique_ptr<Graphic::Model::IModelClass> Graphic::Loader::LoadDefaultSpaceship(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::string& ModelFilename, const std::wstring& AdditionalPath)
 {
 	std::unique_ptr<Model::IModelClass> model = nullptr;
 	std::unique_ptr<Loader::IModelLoaderClass> loader = nullptr;
@@ -54,7 +54,7 @@ std::unique_ptr<Graphic::Model::IModelClass> Graphic::Loader::LoadDefaultSpacesh
 	assert(loader);
 	loader->Load(Device, DeviceContext, ModelFilename, AdditionalPath);
 
-	model = std::make_unique<Model::ModelClass<Model::PTN_VertexType>>(hwnd, Device, DeviceContext, Model::ID::DEFAULT_SPACESHIP, Shader::ID::DEFAULT_SPACESHIP, loader.get());
+	model = std::make_unique<Model::ModelClass<Model::PTN_VertexType>>(Device, DeviceContext, Model::ID::DEFAULT_SPACESHIP, Shader::ID::DEFAULT_SPACESHIP, loader.get());
 	assert(model);
 
 	return model;
@@ -62,7 +62,7 @@ std::unique_ptr<Graphic::Model::IModelClass> Graphic::Loader::LoadDefaultSpacesh
 
 #ifdef _DEBUG
 
-std::unique_ptr<Graphic::Model::IModelClass> Graphic::Loader::LoadCollision(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::string& ModelFilename, const std::wstring& AdditionalPath)
+std::unique_ptr<Graphic::Model::IModelClass> Graphic::Loader::LoadCollision(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::string& ModelFilename, const std::wstring& AdditionalPath)
 {
 	std::unique_ptr<Model::IModelClass> model = nullptr;
 	std::unique_ptr<Loader::IModelLoaderClass> loader = nullptr;
@@ -71,7 +71,7 @@ std::unique_ptr<Graphic::Model::IModelClass> Graphic::Loader::LoadCollision(HWND
 	assert(loader);
 	loader->Load(Device, DeviceContext, ModelFilename, AdditionalPath);
 
-	model = std::make_unique<Model::ModelClass<Model::PTN_VertexType>>(hwnd, Device, DeviceContext, Model::ID::COLLISION, Shader::ID::CUBE, loader.get());
+	model = std::make_unique<Model::ModelClass<Model::PTN_VertexType>>(Device, DeviceContext, Model::ID::COLLISION, Shader::ID::CUBE, loader.get());
 	assert(model);
 
 	return model;

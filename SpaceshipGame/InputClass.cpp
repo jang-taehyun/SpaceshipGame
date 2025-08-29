@@ -3,13 +3,13 @@
 
 bool System::InputClass::IsInitailize = false;
 
-System::InputClass::InputClass(HINSTANCE hinstance, HWND hwnd, int ScreenWidth, int ScreenHeight)
+System::InputClass::InputClass(int ScreenWidth, int ScreenHeight)
 {
 	HRESULT result = S_OK;
 	
 	assert(!IsInitailize);
 
-	result = Initialize(hinstance, hwnd, ScreenWidth, ScreenHeight);
+	result = Initialize(ScreenWidth, ScreenHeight);
 	IsInitailize = true;
 }
 
@@ -19,12 +19,17 @@ System::InputClass::~InputClass()
 	IsInitailize = false;
 }
 
-HRESULT System::InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int ScreenWidth, int ScreenHeight)
+HRESULT System::InputClass::Initialize(int ScreenWidth, int ScreenHeight)
 {
 	HRESULT result = S_OK;
 
 	// Direct input interface 초기화 //
-	result = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)m_DirectInput.GetAddressOf(), NULL);
+	result = DirectInput8Create(
+		hinst,
+		DIRECTINPUT_VERSION,
+		IID_IDirectInput8,
+		reinterpret_cast<void**>(m_DirectInput.GetAddressOf()),
+		NULL);
 	assert(SUCCEEDED(result));
 
 	// 키보드의 Direct input interface 초기화 //
@@ -73,7 +78,7 @@ void System::InputClass::Shutdown()
 		m_Keyboard->Unacquire();
 }
 
-void System::InputClass::Frame(HWND hwnd)
+void System::InputClass::Frame()
 {
 	HRESULT result = S_OK;
 
@@ -83,7 +88,7 @@ void System::InputClass::Frame(HWND hwnd)
 	// 마우스의 상태 읽기 //
 	result = ReadMouse();
 
-	ProcessInput(hwnd);
+	ProcessInput();
 }
 
 HRESULT System::InputClass::ReadKeyboard()
@@ -91,7 +96,10 @@ HRESULT System::InputClass::ReadKeyboard()
 	HRESULT result = S_OK;
 
 	// 키보드의 상태 가져오기 //
-	result = m_Keyboard->GetDeviceState(sizeof(m_KeyboardState), (LPVOID)&m_KeyboardState);
+	result = m_Keyboard->GetDeviceState(
+		sizeof(m_KeyboardState),
+		reinterpret_cast<LPVOID>(&m_KeyboardState)
+	);
 	if (FAILED(result))
 	{
 		if (DIERR_INPUTLOST == result || DIERR_NOTACQUIRED == result)
@@ -110,7 +118,10 @@ HRESULT System::InputClass::ReadMouse()
 	HRESULT result = S_OK;
 
 	// 마우스의 상태 가져오기 //
-	result = m_Mouse->GetDeviceState(sizeof(m_MouseState), (LPVOID)&m_MouseState);
+	result = m_Mouse->GetDeviceState(
+		sizeof(m_MouseState),
+		reinterpret_cast<LPVOID>(&m_MouseState)
+	);
 	if (FAILED(result))
 	{
 		if (DIERR_INPUTLOST == result || DIERR_NOTACQUIRED == result)
@@ -124,11 +135,8 @@ HRESULT System::InputClass::ReadMouse()
 	return result;
 }
 
-void System::InputClass::ProcessInput(HWND hwnd)
+void System::InputClass::ProcessInput()
 {
 	// 화면 상의 마우스 좌표 가져오기
 	GetCursorPos(&m_MousePos);
-
-	// 가져온 마우스 좌표를 윈도우 영역 기준으로 변환
-	ScreenToClient(hwnd, &m_MousePos);
 }

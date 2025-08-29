@@ -2,12 +2,16 @@
 
 #include "pch.h"
 #include "ModelLoaderClass.h"
+#include "TextureClass.h"
 #include "ModelClass.h"
 
 template<typename VertexType>
-Graphic::Model::ModelClass<VertexType>::ModelClass(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, ID ModelID, Shader::ID ShaderID, Loader::IModelLoaderClass* loader) : m_ModelID(ModelID), m_ShaderID(ShaderID)
+Graphic::Model::ModelClass<VertexType>::ModelClass(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, ID ModelID, Shader::ID ShaderID, Loader::IModelLoaderClass* loader)
+	: m_ModelID(ModelID),
+	m_ShaderID(ShaderID)
 {
-	HRESULT result = Initialize(hwnd, Device, DeviceContext, loader);
+	HRESULT result = Initialize(Device, DeviceContext, loader);
+	assert(SUCCEEDED(result));
 }
 
 template<typename VertexType>
@@ -15,7 +19,8 @@ Graphic::Model::ModelClass<VertexType>::ModelClass(const ModelClass& other)
 	: m_ModelID(other.m_ModelID), m_ShaderID(other.m_ShaderID), m_MeshCount(other.m_MeshCount),
 	m_VertexBuffer(other.m_VertexBuffer), m_IndexBuffer(other.m_IndexBuffer),
 	m_MeshesVertexCount(other.m_MeshesVertexCount), m_MeshesIndexCount(other.m_MeshesIndexCount),
-	m_Materials(other.m_Materials), m_WorldMatrix(other.m_WorldMatrix), m_ModelOBB(other.m_ModelOBB)
+	m_Materials(other.m_Materials), m_WorldMatrix(other.m_WorldMatrix),
+	m_ModelOBB(other.m_ModelOBB)
 {
 	// instance buffer บนป็
 	other.m_InstanceBuffer.CopyTo(m_InstanceBuffer.GetAddressOf());
@@ -26,7 +31,8 @@ Graphic::Model::ModelClass<VertexType>::ModelClass(ModelClass&& other) noexcept
 	: m_ModelID(other.m_ModelID), m_ShaderID(other.m_ShaderID), m_MeshCount(other.m_MeshCount),
 	m_VertexBuffer(std::move(other.m_VertexBuffer)), m_IndexBuffer(std::move(other.m_IndexBuffer)),
 	m_MeshesVertexCount(std::move(other.m_MeshesVertexCount)), m_MeshesIndexCount(std::move(other.m_MeshesIndexCount)),
-	m_Materials(std::move(other.m_Materials)), m_WorldMatrix(std::move(other.m_WorldMatrix)), m_ModelOBB(other.m_ModelOBB),
+	m_Materials(std::move(other.m_Materials)), m_WorldMatrix(std::move(other.m_WorldMatrix)),
+	m_ModelOBB(other.m_ModelOBB),
 	m_InstanceBuffer(std::move(other.m_InstanceBuffer))
 {}
 
@@ -100,7 +106,7 @@ Graphic::Model::ModelClass<VertexType>& Graphic::Model::ModelClass<VertexType>::
 }
 
 template<typename VertexType>
-HRESULT Graphic::Model::ModelClass<VertexType>::Initialize(HWND hwnd, ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Loader::IModelLoaderClass* loader)
+HRESULT Graphic::Model::ModelClass<VertexType>::Initialize(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, Loader::IModelLoaderClass* loader)
 {
 	HRESULT result = S_OK;
 
@@ -201,7 +207,7 @@ HRESULT Graphic::Model::ModelClass<VertexType>::InitializeBuffers(ID3D11Device* 
 template<typename VertexType>
 void Graphic::Model::ModelClass<VertexType>::InitializeMaterials(Loader::IModelLoaderClass* loader)
 {
-	m_Materials = loader->MoveMaterialsDatas();
+	m_Materials = std::move(loader->MoveMaterialsDatas());
 }
 
 template<typename VertexType>
@@ -251,7 +257,7 @@ void Graphic::Model::ModelClass<VertexType>::RenderMesh(ID3D11DeviceContext* Dev
 }
 
 template<typename VertexType>
-const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& Graphic::Model::ModelClass<VertexType>::GetMaterial(UINT idx) const
+const std::vector<std::unique_ptr<Graphic::Texture::TextureClass>>& Graphic::Model::ModelClass<VertexType>::GetMaterial(UINT idx) const
 {
 	if (idx >= m_MeshCount || m_Materials.empty())
 		return m_Empty;

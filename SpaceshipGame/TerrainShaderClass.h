@@ -27,7 +27,7 @@ namespace Graphic
 			// shader 내부에 들어갈 데이터들 업데이트하는 함수 //
 			virtual void UpdateShaderBuffers(ID3D11DeviceContext* DeviceContext, const ML_ShaderBuffers& ShaderBufferDatas) override;
 
-			void Render(ID3D11DeviceContext* DeviceContext, int IndexCount, int InstanceCount, const std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& Material) override;
+			void Render(ID3D11DeviceContext* DeviceContext, int IndexCount, int InstanceCount, const std::vector<std::unique_ptr<Texture::TextureClass>>& Material) override;
 			void Render(ID3D11DeviceContext* DeviceContext, int IndexCount, ID3D11ShaderResourceView* texture);
 
 		private:

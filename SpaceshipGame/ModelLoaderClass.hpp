@@ -62,7 +62,7 @@ void Graphic::Loader::ModelLoaderClass<VertexType>::LoadVertex(const aiScene* sc
 }
 
 template<typename VertexType>
-HRESULT Graphic::Loader::ModelLoaderClass<VertexType>::LoadTextureData(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>& MaterialList, const aiString& TexturePath, const std::wstring& AdditionalPath)
+HRESULT Graphic::Loader::ModelLoaderClass<VertexType>::LoadTextureData(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, std::vector<std::unique_ptr<Texture::TextureClass>>& MaterialList, const aiString& TexturePath, const std::wstring& AdditionalPath)
 {
 	HRESULT result = S_OK;
 	std::string path;
@@ -78,7 +78,7 @@ HRESULT Graphic::Loader::ModelLoaderClass<VertexType>::LoadTextureData(ID3D11Dev
 
 	// texture 생성 및 저장
 	texture = std::make_unique<Texture::TextureClass>(Device, DeviceContext, wpath);
-	MaterialList.push_back(texture->MoveTexture());
+	MaterialList.push_back(std::move(texture));
 
 	return result;
 }

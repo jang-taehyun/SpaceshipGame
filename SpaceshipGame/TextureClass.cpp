@@ -26,8 +26,7 @@ Graphic::Texture::TextureClass& Graphic::Texture::TextureClass::operator=(const 
 	if (this == &other)
 		return *this;
 
-	other.m_Texture.CopyTo(this->m_Texture.ReleaseAndGetAddressOf());
-
+	other.m_Texture.CopyTo(m_Texture.ReleaseAndGetAddressOf());
 	m_TextureInfo = other.m_TextureInfo;
 
 	return *this;
@@ -85,7 +84,7 @@ HRESULT Graphic::Texture::TextureClass::Load(ID3D11Device* Device, ID3D11DeviceC
 HRESULT Graphic::Texture::TextureClass::LoadTarga(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const std::wstring& FileName)
 {
 	HRESULT result = S_OK;
-	std::unique_ptr<char> image = nullptr;
+	std::unique_ptr<char[]> image = nullptr;
 	UINT width = 0, height = 0;
 
 	// TGA 파일을 메모리에 load //
@@ -146,14 +145,14 @@ HRESULT Graphic::Texture::TextureClass::LoadDDS(ID3D11Device* Device, const std:
 	return result;
 }
 
-std::unique_ptr<char> Graphic::Texture::TextureClass::LoadTargaFile(const std::wstring& FileName, UINT& Height, UINT& Width)
+std::unique_ptr<char[]> Graphic::Texture::TextureClass::LoadTargaFile(const std::wstring& FileName, UINT& Height, UINT& Width)
 {
 	HRESULT result = S_OK;
 	std::ifstream FileIn;
 	TargaHeader TargaFileHeader = {};				// targa 파일의 header 정보
 	int bpp = 0;									// targa 파일의 색상 bit 수(32bit 또는 24bit)
 	int ImageSize = 0;								// targa 이미지의 크기
-	std::unique_ptr<char> TargaImage = nullptr;		// targa 이미지 데이터
+	std::unique_ptr<char[]> TargaImage = nullptr;		// targa 이미지 데이터
 
 	// targa 파일을 binary 모드로 열기 //
 	FileIn.open(FileName, std::ios::in | std::ios::binary);
@@ -173,7 +172,7 @@ std::unique_ptr<char> Graphic::Texture::TextureClass::LoadTargaFile(const std::w
 	ImageSize = TargaFileHeader.width * TargaFileHeader.height * 4;
 
 	// targa 이미지 데이터용 메모리 할당 및 targa 이미지 데이터 읽기 //
-	TargaImage = std::make_unique<char>(ImageSize);
+	TargaImage = std::make_unique<char[]>(ImageSize);
 	FileIn.read(TargaImage.get(), ImageSize);
 	assert(static_cast<unsigned int>(FileIn.gcount()) == ImageSize);
 

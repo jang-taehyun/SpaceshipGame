@@ -6,7 +6,7 @@
 
 bool Graphic::Shader::ShaderManagerClass::IsInitialize = false;
 
-Graphic::Shader::ShaderManagerClass::ShaderManagerClass() : m_CurrentShaderMask(0)
+Graphic::Shader::ShaderManagerClass::ShaderManagerClass()
 {
 	assert(!IsInitialize);
 
@@ -35,7 +35,7 @@ Graphic::Shader::IShaderClass* Graphic::Shader::ShaderManagerClass::GetShader(ID
 	return iter->second.get();
 }
 
-void Graphic::Shader::ShaderManagerClass::Load(HWND hwnd, ID3D11Device* Device, UINT ShaderMask)
+void Graphic::Shader::ShaderManagerClass::Load(ID3D11Device* Device, UINT ShaderMask)
 {
 	bool IsLoad = false, IsExist = false;
 	ID id = ID::NONE;
@@ -54,7 +54,7 @@ void Graphic::Shader::ShaderManagerClass::Load(HWND hwnd, ID3D11Device* Device, 
 		if (IsLoad && !IsExist)
 		{
 			// instance 생성
-			shader = std::move(m_Factory->Load(hwnd, Device, id));
+			shader = std::move(m_Factory->Load(Device, id));
 			assert(shader);
 
 			// 현재 로드된 shader ID 업데이트

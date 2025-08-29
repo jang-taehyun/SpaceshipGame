@@ -33,8 +33,6 @@ namespace System
 		static bool IsInitialize;
 
 		LPCWSTR m_applicationName = _T("");
-		HINSTANCE m_hinstance = 0;
-		HWND m_hwnd = 0;
 
 		std::unique_ptr<System::FPSClass> m_FPS = nullptr;
 		std::unique_ptr<System::CPUClass> m_CPU = nullptr;
