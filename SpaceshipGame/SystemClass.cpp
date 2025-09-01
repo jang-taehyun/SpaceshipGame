@@ -160,7 +160,7 @@ void System::SystemClass::InitializeWindows(UINT& ScreenWidth, UINT& ScreenHeigh
 
 	// 윈도우 생성 및 handle 가지오기
 	hWnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
-		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_OVERLAPPEDWINDOW,
+		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_OVERLAPPED | WS_SYSMENU,
 		PosX, PosY, width, height, NULL, NULL, hInst, NULL);
 
 	// width, height를 client size로 변경
