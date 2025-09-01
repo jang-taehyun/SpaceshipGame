@@ -9,20 +9,15 @@ Scene::SceneClass::SceneClass(ID current, ID next)
 
 Scene::SceneClass::~SceneClass()
 {
-	// 마우스 커서를 보이게 하기 //
-	if (!m_IsShowingCursor)
-		ShowCursor(true);
-}
+	CURSORINFO cursorInfo = {};
+	cursorInfo.cbSize = sizeof(cursorInfo);
 
-LRESULT Scene::SceneClass::MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
-{
-	return DefWindowProc(hwnd, umessage, wparam, lparam);
-}
-
-static LRESULT CALLBACK Scene::SceneWndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
-{
-	if (SceneHandler)
-		return reinterpret_cast<ISceneClass*>(SceneHandler)->MessageHandler(hwnd, umessage, wparam, lparam);
-
-	return DefWindowProc(hwnd, umessage, wparam, lparam);
+	// 현재 마우스 커서가 보이지 않는다면 보이게 하기 //
+	if (GetCursorInfo(&cursorInfo))
+	{
+		if (!cursorInfo.flags)
+			ShowCursor(true);
+	}
+	else
+		assert(false);
 }

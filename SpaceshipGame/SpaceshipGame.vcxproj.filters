@@ -718,12 +718,6 @@
     <Image Include="SpaceshipGame.ico">
       <Filter>Default\리소스 파일</Filter>
     </Image>
-    <Image Include="bitmap1.bmp">
-      <Filter>Default\리소스 파일</Filter>
-    </Image>
-    <Image Include="resource\button-icon-png-2105_imresizer_100x100.bmp">
-      <Filter>Default\리소스 파일</Filter>
-    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

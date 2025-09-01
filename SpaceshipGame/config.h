@@ -69,8 +69,6 @@ namespace Scene
 	{
 		NONE, START, LOADING, LOGIN, MATCH, INGAME, MODE_CHOOSE, SINGLE_MODE, 
 	};
-
-	extern void* SceneHandler;
 }
 
 

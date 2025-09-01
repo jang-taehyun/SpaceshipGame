@@ -18,6 +18,4 @@ bool System::RUNNING = true;
 HWND System::hWnd;
 HINSTANCE System::hInst;
 
-void* Scene::SceneHandler = nullptr;
-
-const float UI::ExtendSize = 1.3f;
+const float UI::ExtendSize = 1.1f;

@@ -314,8 +314,6 @@
     <ResourceCompile Include="SpaceshipGame.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="bitmap1.bmp" />
-    <Image Include="resource\button-icon-png-2105_imresizer_100x100.bmp" />
     <Image Include="small.ico" />
     <Image Include="SpaceshipGame.ico" />
   </ItemGroup>

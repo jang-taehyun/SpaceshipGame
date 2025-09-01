@@ -83,16 +83,6 @@ BEGIN
     DEFPUSHBUTTON   "확인",IDOK,113,41,50,14,WS_GROUP
 END
 
-IDD_DIALOG_EndGame DIALOGEX 0, 0, 133, 68
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Dialog"
-FONT 8, "MS Shell Dlg", 400, 0, 0x1
-BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,7,47,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,76,47,50,14
-    CTEXT           "게임을 끝내시겠습니까?",IDC_STATIC,7,7,119,28,SS_CENTERIMAGE
-END
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -108,14 +98,6 @@ BEGIN
         RIGHTMARGIN, 163
         TOPMARGIN, 7
         BOTTOMMARGIN, 55
-    END
-
-    IDD_DIALOG_EndGame, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 126
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 61
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -150,14 +132,6 @@ BEGIN
 END
 
 #endif    // APSTUDIO_INVOKED
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Bitmap
-//
-
-IDB_START_BUTTON        BITMAP                  "resource\\button-icon-png-2105_imresizer_100x100.bmp"
 
 
 /////////////////////////////////////////////////////////////////////////////

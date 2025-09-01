@@ -78,14 +78,6 @@ void System::SystemClass::Run()
 	}
 }
 
-LRESULT System::SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
-{
-	if (Scene::SceneHandler)
-		return reinterpret_cast<Scene::ISceneClass*>(Scene::SceneHandler)->MessageHandler(hwnd, umsg, wparam, lparam);
-
-	return DefWindowProc(hwnd, umsg, wparam, lparam);
-}
-
 void System::SystemClass::Frame()
 {
 	bool IsLoad = false;
@@ -108,9 +100,6 @@ void System::SystemClass::InitializeWindows(UINT& ScreenWidth, UINT& ScreenHeigh
 {
 	int width = 0, height = 0, PosX = 0, PosY = 0;
 	RECT rc = {};
-
-	// 외부 pointer를 현재 instance를 가르키도록 한다.
-	ApplicationHandle = this;
 
 	// 현재 프로그램의 instance를 가져오기
 	hInst = GetModuleHandle(NULL);
@@ -204,9 +193,6 @@ void System::SystemClass::ShutdownWindows()
 	// 프로그램의 instance 제거
 	UnregisterClass(m_applicationName, hInst);
 	hInst = NULL;
-
-	// 외부 pointer 초기화
-	ApplicationHandle = NULL;
 }
 
 #ifdef _DEBUG
@@ -234,6 +220,6 @@ static LRESULT CALLBACK System::WndProc(HWND hwnd, UINT umessage, WPARAM wparam,
 		return 0;
 	}
 	default:
-		return System::ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
+		return DefWindowProc(hwnd, umessage, wparam, lparam);
 	}
 }

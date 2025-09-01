@@ -20,8 +20,6 @@ namespace System
 
 		void Run();
 
-		LRESULT CALLBACK MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
-
 	private:
 		void Initialize();
 
@@ -51,7 +49,4 @@ namespace System
 
 	// 윈도우 종료 또는 닫히는 메세지 처리
 	static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
-
-	// 외부 포인터
-	static SystemClass* ApplicationHandle = nullptr;
 }
