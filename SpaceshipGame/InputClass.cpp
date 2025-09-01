@@ -139,4 +139,7 @@ void System::InputClass::ProcessInput()
 {
 	// 화면 상의 마우스 좌표 가져오기
 	GetCursorPos(&m_MousePos);
+
+	// 마우스 좌표를 client size 기준으로 변환
+	ScreenToClient(System::hWnd, &m_MousePos);
 }

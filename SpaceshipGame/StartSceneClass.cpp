@@ -41,15 +41,15 @@ Scene::StartSceneClass::StartSceneClass(ID next, Object::ObjectManagerClass* obj
 
 	// 시작 버튼 로드
 	m_hStartButton = CreateWindow(
-		L"BUTTON",															// Predefined class; Unicode assumed 
-		NULL,																// Button text 
-		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP | BS_FLAT,		// Styles 
-		500,																// x position 
-		500,																// y position 
-		100,																// Button width
-		100,																// Button height
-		System::hWnd,														// Parent window
-		reinterpret_cast<HMENU>(100),										// No menu.
+		L"BUTTON",
+		L"START",
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP | BS_FLAT | BS_TEXT | BS_VCENTER | BS_MULTILINE,
+		500,
+		500,
+		100,
+		100,
+		System::hWnd,
+		reinterpret_cast<HMENU>(ObjectID::UI_START_BUTTON),
 		System::hInst,
 		NULL
 	);
@@ -59,14 +59,16 @@ Scene::StartSceneClass::StartSceneClass(ID next, Object::ObjectManagerClass* obj
 }
 
 Scene::StartSceneClass::StartSceneClass(const StartSceneClass& other)
-	: SceneClass(other)
+	: SceneClass(other),
+	m_hStartButton(other.m_hStartButton)
 {
 	m_ObjectList.insert(other.m_ObjectList.begin(), other.m_ObjectList.end());
 }
 
 Scene::StartSceneClass::StartSceneClass(StartSceneClass&& other) noexcept
 	: SceneClass(std::move(other)),
-	m_ObjectList(std::move(other.m_ObjectList))
+	m_ObjectList(std::move(other.m_ObjectList)),
+	m_hStartButton(other.m_hStartButton)
 {}
 
 Scene::StartSceneClass::~StartSceneClass()
@@ -80,6 +82,10 @@ Scene::StartSceneClass& Scene::StartSceneClass::operator=(const StartSceneClass&
 	if (this == &other)
 		return *this;
 
+	if(m_hStartButton)
+		DestroyWindow(m_hStartButton);
+
+	m_hStartButton = other.m_hStartButton;
 	m_ObjectList.insert(other.m_ObjectList.begin(), other.m_ObjectList.end());
 	SceneClass::operator=(other);
 
@@ -91,6 +97,10 @@ Scene::StartSceneClass& Scene::StartSceneClass::operator=(StartSceneClass&& othe
 	if (this == &other)
 		return *this;
 
+	if (m_hStartButton)
+		DestroyWindow(m_hStartButton);
+
+	m_hStartButton = other.m_hStartButton;
 	m_ObjectList = std::move(other.m_ObjectList);
 	SceneClass::operator=(std::move(other));
 
@@ -99,14 +109,7 @@ Scene::StartSceneClass& Scene::StartSceneClass::operator=(StartSceneClass&& othe
 
 void Scene::StartSceneClass::Frame(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time)
 {
-	// UI::ButtonClass* button(
-	// 	static_cast<UI::ButtonClass*>(
-	// 		UIs->GetUI(m_ObjectList.find(ObjectID::UI_START_BUTTON)->second)
-	// 		)
-	// );
-	// 
-	// if (UI::ButtonState::ONCLICKED == button->GetButtonState())
-	// 	SetSceneEnded();
+	
 }
 
 LRESULT CALLBACK Scene::StartSceneClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
@@ -115,18 +118,17 @@ LRESULT CALLBACK Scene::StartSceneClass::MessageHandler(HWND hwnd, UINT umsg, WP
 	{
 	case WM_COMMAND:
 	{
-		switch(HIWORD(wparam))
+		switch (LOWORD(wparam))
 		{
-		case BN_CLICKED:
+		case static_cast<int>(ObjectID::UI_START_BUTTON):
 		{
-			switch (LOWORD(wparam))
+			switch (HIWORD(wparam))
 			{
-			case 0:
-				MessageBox(System::hWnd, _T("button1이 눌림"), _T("clicked event"), MB_OK);
-				return 0;
-			case 100:
-				MessageBox(System::hWnd, _T("button2이 눌림"), _T("clicked event"), MB_OK);
-				return 0;
+			case BN_CLICKED:
+			{
+				SetSceneEnded();
+				return 1;
+			}
 			default:
 				return DefWindowProc(hwnd, umsg, wparam, lparam);
 			}
@@ -134,16 +136,6 @@ LRESULT CALLBACK Scene::StartSceneClass::MessageHandler(HWND hwnd, UINT umsg, WP
 		default:
 			return DefWindowProc(hwnd, umsg, wparam, lparam);
 		}
-	}
-	case WM_DESTROY:
-	{
-		PostQuitMessage(0);
-		return 0;
-	}
-	case WM_CLOSE:
-	{
-		PostQuitMessage(0);
-		return 0;
 	}
 	default:
 		return DefWindowProc(hwnd, umsg, wparam, lparam);

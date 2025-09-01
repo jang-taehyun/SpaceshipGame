@@ -12,10 +12,9 @@ namespace Scene
 	private:
 		enum class ObjectID
 		{
-			UI_SCENE_BACKGROUND,
 			UI_START_BUTTON,
-			TEXT_START_STRING,
-			UI_POPUP_BACKGROUND,
+			TEXT_START_BUTTON,
+			UI_SCENE_BACKGROUND, 
 		};
 
 	public:

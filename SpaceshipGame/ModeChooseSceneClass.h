@@ -18,8 +18,6 @@ namespace Scene
 		ModeChooseSceneClass& operator=(const ModeChooseSceneClass& other);
 		ModeChooseSceneClass& operator=(ModeChooseSceneClass&& other) noexcept;
 
-		virtual LRESULT CALLBACK MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam) override;
-
 		virtual void Frame(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time) override;
 		virtual std::unique_ptr<ISceneClass> Clone() const override { return std::make_unique<ModeChooseSceneClass>(*this); }
 

@@ -87,11 +87,6 @@ Scene::SingleModeSceneClass& Scene::SingleModeSceneClass::operator=(SingleModeSc
 	return *this;
 }
 
-LRESULT Scene::SingleModeSceneClass::MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
-{
-	return DefWindowProc(hwnd, umessage, wparam, lparam);
-}
-
 void Scene::SingleModeSceneClass::Frame(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time)
 {
 	Object::CameraClass* cam = nullptr;

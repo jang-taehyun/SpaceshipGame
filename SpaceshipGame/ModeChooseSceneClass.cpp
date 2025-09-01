@@ -85,11 +85,6 @@ Scene::ModeChooseSceneClass& Scene::ModeChooseSceneClass::operator=(ModeChooseSc
 	return *this;
 }
 
-LRESULT Scene::ModeChooseSceneClass::MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
-{
-	return DefWindowProc(hwnd, umessage, wparam, lparam);
-}
-
 void Scene::ModeChooseSceneClass::Frame(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time)
 {
 	UI::ButtonClass* singlebutton = static_cast<UI::ButtonClass*>(UIs->GetUI(m_SingleModeButtonIdx));
