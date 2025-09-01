@@ -82,7 +82,7 @@ void Graphic::Texture::UIRenderClass::RenderBackground(ID3D11ShaderResourceView*
 
 	// texture와 UI의 위치 조정 //
 	RECT rect;
-	GetClientRect(System::hwnd, &rect);
+	GetClientRect(System::hWnd, &rect);
 
 	// 렌더링 //
 	m_Renderer->Draw(

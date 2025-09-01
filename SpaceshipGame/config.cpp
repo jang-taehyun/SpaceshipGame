@@ -1,3 +1,5 @@
+#pragma once
+
 #include "pch.h"
 #include "config.h"
 
@@ -13,8 +15,9 @@ float System::SCREEN_NEAR;
 float System::MOUSE_SENSITIVITY;
 
 bool System::RUNNING = true;
-HWND System::hwnd;
-HINSTANCE System::hinst;
-std::function<LRESULT(HWND, UINT, WPARAM, LPARAM)> System::SceneMessageHander = nullptr;
+HWND System::hWnd;
+HINSTANCE System::hInst;
+
+void* Scene::SceneHandler = nullptr;
 
 const float UI::ExtendSize = 1.3f;

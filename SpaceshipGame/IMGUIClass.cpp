@@ -38,14 +38,13 @@ void Graphic::IMGUIClass::Initialize(ID3D11Device* Device, ID3D11DeviceContext* 
 	// IMGUI 초기화 //
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	ImGui_ImplWin32_Init(System::hwnd);
+	ImGui_ImplWin32_Init(System::hWnd);
 	ImGui_ImplDX11_Init(Device, DeivceContext);
 
 	// Font 및 테마 설정 //
 	ImGuiIO& io = ImGui::GetIO();
 	io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\malgun.ttf", 18.f, NULL, io.Fonts->GetGlyphRangesKorean());
-	io.MouseDrawCursor = true;
-	
+
 	ImGui::StyleColorsDark();
 
 	// IMGUI의 윈도우 크기, 위치 설정 //

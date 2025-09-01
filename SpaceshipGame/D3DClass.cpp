@@ -201,7 +201,7 @@ HRESULT Graphic::D3DClass::CreateSwapChainDeviceDeviceContext(int ScreenWidth, i
 	}
 
 	SwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;	// back buffer의 용도
-	SwapChainDesc.OutputWindow = System::hwnd;						// 렌더링에 사용될 윈도우 핸들
+	SwapChainDesc.OutputWindow = System::hWnd;						// 렌더링에 사용될 윈도우 핸들
 
 	SwapChainDesc.SampleDesc.Count = 1;								// 멀티샘플링 설정(OFF)
 	SwapChainDesc.SampleDesc.Quality = 0;

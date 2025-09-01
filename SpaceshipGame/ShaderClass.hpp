@@ -117,7 +117,7 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::InitializeShaderInputLayout
 #endif // _DEBUG
 
 	// shader 정보 확인 //
-	assert(Device && System::hwnd && info.vsFileName != _T("") && info.psFileName != _T("") && info.vsEntryPoint != "" && info.psEntryPoint != "");
+	assert(Device && System::hWnd && info.vsFileName != _T("") && info.psFileName != _T("") && info.vsEntryPoint != "" && info.psEntryPoint != "");
 
 	// vertex shader code 컴파일 //
 	result = D3DCompileFromFile(info.vsFileName.c_str(),
@@ -274,7 +274,7 @@ void Graphic::Shader::ShaderClass<ShaderBuffers>::OutputShaderErrorMessage(ID3D1
 
 	MultiByteToWideChar(CP_ACP, 0, msg, len, wmsg, sizeof(wmsg));
 
-	MessageBox(System::hwnd, wmsg, ShaderFileName.c_str(), MB_OK);
+	MessageBox(System::hWnd, wmsg, ShaderFileName.c_str(), MB_OK);
 }
 
 template<typename ShaderBuffers>

@@ -13,3 +13,16 @@ Scene::SceneClass::~SceneClass()
 	if (!m_IsShowingCursor)
 		ShowCursor(true);
 }
+
+LRESULT Scene::SceneClass::MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
+{
+	return DefWindowProc(hwnd, umessage, wparam, lparam);
+}
+
+static LRESULT CALLBACK Scene::SceneWndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
+{
+	if (SceneHandler)
+		return reinterpret_cast<ISceneClass*>(SceneHandler)->MessageHandler(hwnd, umessage, wparam, lparam);
+
+	return DefWindowProc(hwnd, umessage, wparam, lparam);
+}

@@ -25,7 +25,7 @@ HRESULT System::InputClass::Initialize(int ScreenWidth, int ScreenHeight)
 
 	// Direct input interface 초기화 //
 	result = DirectInput8Create(
-		hinst,
+		hInst,
 		DIRECTINPUT_VERSION,
 		IID_IDirectInput8,
 		reinterpret_cast<void**>(m_DirectInput.GetAddressOf()),
@@ -42,7 +42,7 @@ HRESULT System::InputClass::Initialize(int ScreenWidth, int ScreenHeight)
 	assert(SUCCEEDED(result));
 
 	// 키보드의 Direct input interface에 대한 Cooperative level 설정
-	result = m_Keyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
+	result = m_Keyboard->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
 	assert(SUCCEEDED(result));
 
 	// 키보드의 Direct input에 대한 접근 권한 취득
@@ -59,7 +59,7 @@ HRESULT System::InputClass::Initialize(int ScreenWidth, int ScreenHeight)
 	assert(SUCCEEDED(result));
 
 	// 마우스의 Direct input interface에 대한 Cooperative level 설정
-	result = m_Mouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+	result = m_Mouse->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 	assert(SUCCEEDED(result));
 
 	// 마우스의 Direct input에 대한 접근 권한 취득

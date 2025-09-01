@@ -25,9 +25,8 @@ namespace System
 	
 	// 프로그램 동작 설정
 	extern bool RUNNING;
-	extern HWND hwnd;
-	extern HINSTANCE hinst;
-	extern std::function<LRESULT(HWND, UINT, WPARAM, LPARAM)> SceneMessageHander;
+	extern HWND hWnd;
+	extern HINSTANCE hInst;
 }
 
 // object 관련 //
@@ -70,6 +69,8 @@ namespace Scene
 	{
 		NONE, START, LOADING, LOGIN, MATCH, INGAME, MODE_CHOOSE, SINGLE_MODE, 
 	};
+
+	extern void* SceneHandler;
 }
 
 

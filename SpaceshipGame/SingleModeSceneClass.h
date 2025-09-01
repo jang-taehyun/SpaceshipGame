@@ -21,6 +21,8 @@ namespace Scene
 		SingleModeSceneClass& operator=(const SingleModeSceneClass& other);
 		SingleModeSceneClass& operator=(SingleModeSceneClass&& other) noexcept;
 
+		virtual LRESULT CALLBACK MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam) override;
+
 		virtual void Frame(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time) override;
 		virtual Object::IObjectClass* GetActiveCamera() override { return m_Camera.get(); }
 		virtual std::unique_ptr<ISceneClass> Clone() const override { return std::make_unique<SingleModeSceneClass>(*this); }

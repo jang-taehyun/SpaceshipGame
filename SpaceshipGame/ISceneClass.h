@@ -22,6 +22,9 @@ namespace Scene
 		virtual Graphic::Terrain::TerrainID GetTerrainID() const = 0;
 		virtual Graphic::Terrain::SkyDomeID GetSkyDomeID() const = 0;
 		virtual bool IsSceneEnded() const = 0;
+
+		virtual HWND GetSceneWindowHandle() const = 0;
+		virtual LRESULT CALLBACK MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam) = 0;
 		
 		virtual void Frame(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time) = 0;
 		virtual Object::IObjectClass* GetActiveCamera() = 0;
