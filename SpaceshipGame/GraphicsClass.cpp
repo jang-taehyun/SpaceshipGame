@@ -258,7 +258,7 @@ void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager
 		ui = SceneManager->GetUIManager()->GetUI(i);
 		if (ui->GetUIState() & (1 << static_cast<UINT>(UI::UIState::APPEAR)))
 		{
-			// background를 제외한 모든 UI 렌더링
+			// background를 제외한 보이는 모든 UI 렌더링
 			if (UI::ID::BACKGROUND != ui->GetUIID())
 			{
 				m_UIRender->RenderTexture(
@@ -273,7 +273,7 @@ void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager
 			}
 			// background 렌더링
 			else
-				m_UIRender->RenderBackground(m_UITextureManager->GetTexture(ui->GetUITextureID()), ui->GetColor());
+				m_UIRender->RenderBackground(m_UITextureManager->GetTexture(ui->GetUITextureID()), ui->GetColor(), ui->GetDepth());
 		}
 	}
 
@@ -281,16 +281,17 @@ void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager
 	for (UINT i = 0; i < SceneManager->GetTextManager()->GetTextCount(); ++i)
 	{
 		text = SceneManager->GetTextManager()->GetTextObject(i);
-		m_UIRender->RenderText(
-			text->GetText(),
-			text->GetFontID(),
-			text->GetPosition(),
-			text->GetColor(),
-			text->GetRotation(),
-			text->GetOrigin(),
-			text->GetScale(),
-			text->GetDepth()
-		);
+		if(text->GetTextState() & (1 << static_cast<UINT>(UI::UIState::APPEAR)))
+			m_UIRender->RenderText(
+				text->GetText(),
+				text->GetFontID(),
+				text->GetPosition(),
+				text->GetColor(),
+				text->GetRotation(),
+				text->GetOrigin(),
+				text->GetScale(),
+				text->GetDepth()
+			);
 	}
 
 	m_UIRender->EndRender(m_D3D.get());

@@ -7,5 +7,8 @@ https://www.cgtrader.com/items/3862208/download-page
 // 시작 버튼
 https://www.freeiconspng.com/img/21058#google_vignette
 
-// sky dome 텍스처
+// 시작 scene의 백그라운드
+https://www.freepik.com/free-ai-image/ultra-detailed-nebula-abstract-wallpaper-4_39994508.htm
+
+// sky dome 텍스처, logo, 팝업창
 ChatGPT로 생성

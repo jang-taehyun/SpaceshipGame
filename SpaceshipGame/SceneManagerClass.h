@@ -38,7 +38,7 @@ namespace Scene
 
 	private:
 		void Release();
-		void ChangeScene();
+		void ChangeScene(ID next);
 
 	private:
 		static bool IsInitialize;

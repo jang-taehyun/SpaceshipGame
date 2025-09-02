@@ -5,20 +5,21 @@
 #include "ButtonNoneStateClass.h"
 #include "ButtonClass.h"
 
-UI::ButtonClass::ButtonClass(ID UIID, Graphic::Texture::UITextureID ID) : UIClass(UIID, ID)
+UI::ButtonClass::ButtonClass(ID UIID, Graphic::Texture::UITextureID ID)
+	: UIClass(UIID, ID)
 {
 	m_ButtonState = std::make_unique<ButtonNoneStateClass>();
 	assert(m_ButtonState);
-
-	m_OriginScale = GetScale();
 }
 
-UI::ButtonClass::ButtonClass(const ButtonClass& other) : UIClass(other)
+UI::ButtonClass::ButtonClass(const ButtonClass& other)
+	: UIClass(other)
 {
 	m_ButtonState = std::move(other.m_ButtonState->Clone());
 }
 
-UI::ButtonClass::ButtonClass(ButtonClass&& other) noexcept : UIClass(other)
+UI::ButtonClass::ButtonClass(ButtonClass&& other) noexcept
+	: UIClass(other)
 {
 	m_ButtonState = std::move(other.m_ButtonState);
 }
@@ -46,7 +47,7 @@ UI::ButtonClass& UI::ButtonClass::operator=(ButtonClass&& other) noexcept
 		m_ButtonState.reset();
 	m_ButtonState = std::move(other.m_ButtonState);
 
-	UIClass::operator=(std::move(other));
+	UIClass::operator=(other);
 
 	return *this;
 }

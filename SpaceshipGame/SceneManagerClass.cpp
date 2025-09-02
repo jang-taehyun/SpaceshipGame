@@ -38,19 +38,16 @@ Scene::SceneManagerClass::~SceneManagerClass()
 
 bool Scene::SceneManagerClass::Frame(const System::InputClass* input, float frame_time)
 {
-	if (!m_Scene || m_Scene->IsSceneEnded())
+	if (!m_Scene)
 	{
-		if (!m_Scene)
-		{
-			m_Scene = std::move(m_Loader->CreateScene(ID::START, m_ObjectManager.get(), m_TextManager.get(), m_UIManager.get(), m_SoundManager.get()));
-			assert(m_Scene);
-		}
-		else
-		{
-			m_SoundManager->AllStop();
-			ChangeScene();
-		}
+		m_Scene = std::move(m_Loader->CreateScene(ID::START, m_ObjectManager.get(), m_TextManager.get(), m_UIManager.get(), m_SoundManager.get()));
+		assert(m_Scene);
+		return true;
+	}
 
+	if (m_Scene->IsSceneEnded())
+	{
+		ChangeScene(m_Scene->GetNextSceneID());
 		return true;
 	}
 	
@@ -72,15 +69,13 @@ void Scene::SceneManagerClass::Release()
 	m_UIManager->Release();
 }
 
-void Scene::SceneManagerClass::ChangeScene()
+void Scene::SceneManagerClass::ChangeScene(ID next)
 {
-	ID next = ID::NONE;
-
 	// 이전 scene에서 사용한 객체 소멸
+	m_SoundManager->AllStop();
 	Release();
+	m_Scene.reset();
 
 	// 다음 scene의 ID를 통해 scene 생성
-	next = m_Scene->GetNextSceneState();
-	m_Scene.reset();
 	m_Scene = std::move(m_Loader->CreateScene(next, m_ObjectManager.get(), m_TextManager.get(), m_UIManager.get(), m_SoundManager.get()));
 }

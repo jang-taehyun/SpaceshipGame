@@ -75,7 +75,7 @@ void Graphic::Texture::UIRenderClass::BeginRender(const D3DClass* d3d)
 	m_Renderer->Begin(DirectX::DX11::SpriteSortMode_FrontToBack);
 }
 
-void Graphic::Texture::UIRenderClass::RenderBackground(ID3D11ShaderResourceView* texture, DirectX::XMFLOAT4 color)
+void Graphic::Texture::UIRenderClass::RenderBackground(ID3D11ShaderResourceView* texture, DirectX::XMFLOAT4 color, float depth)
 {
 	// 색상 데이터(XMFLOAT4)을 XMVECTOR로 변환 //
 	DirectX::XMVECTOR vColor = DirectX::XMLoadFloat4(&color);
@@ -89,7 +89,11 @@ void Graphic::Texture::UIRenderClass::RenderBackground(ID3D11ShaderResourceView*
 		texture,
 		rect,
 		nullptr,
-		vColor
+		vColor,
+		0.f,
+		DirectX::XMFLOAT2(0.f, 0.f),
+		DirectX::DX11::SpriteEffects_None,
+		depth
 	);
 }
 

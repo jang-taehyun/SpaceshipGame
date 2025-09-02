@@ -12,11 +12,14 @@ namespace Graphic
 		class UITextureManagerClass
 		{
 		private:
-			const UINT m_UITextureIDCount = 3;
+			const UINT m_UITextureIDCount = 6;
 			std::map<UITextureID, const std::wstring> m_UITextureFileList =
 			{
+				{ UITextureID::LOGO, _T("./resource/logo.png")},
 				{ UITextureID::START_BACKGROUND, _T("./resource/StartBackground.jpg") },
 				{ UITextureID::START_BUTTON, _T("./resource/button-icon-png-21058.png") },
+				{ UITextureID::ECS_POPUP_BACKGROUND, _T("./resource/Popup-Background.png")},
+				{ UITextureID::ECS_POPUP, _T("./resource/PopUp.png")},
 			};
 
 		public:

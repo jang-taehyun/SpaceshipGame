@@ -72,9 +72,6 @@ void System::SystemClass::Run()
 		// frame Ã³¸®
 		else
 			Frame();
-
-		if (m_Input->IsEscapePressed())
-			break;
 	}
 }
 
@@ -204,18 +201,20 @@ static LRESULT CALLBACK System::WndProc(HWND hwnd, UINT umessage, WPARAM wparam,
 {
 #ifdef _DEBUG
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, umessage, wparam, lparam))
-		return 1;
+		return 0;
 #endif
 
 	switch (umessage)
 	{
 	case WM_DESTROY:
 	{
+		System::RUNNING = false;
 		PostQuitMessage(0);
 		return 0;
 	}
 	case WM_CLOSE:
 	{
+		System::RUNNING = false;
 		PostQuitMessage(0);
 		return 0;
 	}

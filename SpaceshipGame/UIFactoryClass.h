@@ -6,7 +6,7 @@ namespace UI { class IUIClass; }
 
 namespace UI
 {
-	std::unique_ptr<IUIClass> CreateDefault(ID UIID, Graphic::Texture::UITextureID TextureID);
+	std::unique_ptr<IUIClass> CreateStatic(ID UIID, Graphic::Texture::UITextureID TextureID);
 	std::unique_ptr<IUIClass> CreateButton(ID UIID, Graphic::Texture::UITextureID TextureID);
 
 	class UIFactoryClass

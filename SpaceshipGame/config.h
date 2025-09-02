@@ -67,7 +67,7 @@ namespace Scene
 {
 	enum class ID
 	{
-		NONE, START, LOADING, LOGIN, MATCH, INGAME, MODE_CHOOSE, SINGLE_MODE, 
+		NONE, START, LOADING, MODE_CHOOSE, SINGLE_MODE, 
 	};
 }
 
@@ -78,7 +78,7 @@ namespace UI
 	// UI의 종류 ID
 	enum class ID
 	{
-		NONE, DEFAULT, BACKGROUND, BUTTON,
+		NONE, STATIC, BACKGROUND, BUTTON,
 	};
 
 	// UI 상태
@@ -168,7 +168,7 @@ namespace Graphic
 	{
 		enum class UITextureID
 		{
-			NONE, START_BACKGROUND, START_BUTTON,
+			NONE, LOGO, START_BACKGROUND, START_BUTTON, ECS_POPUP_BACKGROUND, ECS_POPUP,
 		};
 	}
 

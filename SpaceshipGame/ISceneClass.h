@@ -2,8 +2,12 @@
 
 namespace System { class InputClass; }
 namespace Text { class TextManagerClass; }
-namespace UI { class UIManagerClass; }
 namespace Sound { class SoundManagerClass; }
+namespace UI
+{
+	class IUIClass;
+	class UIManagerClass;
+}
 namespace Object
 {
 	class ObjectManagerClass;
@@ -17,8 +21,8 @@ namespace Scene
 	public:
 		virtual ~ISceneClass() = default;
 
-		virtual ID GetCurrentSceneState() const = 0;
-		virtual ID GetNextSceneState() const = 0;
+		virtual ID GetCurrentSceneID() const = 0;
+		virtual ID GetNextSceneID() const = 0;
 		virtual Graphic::Terrain::TerrainID GetTerrainID() const = 0;
 		virtual Graphic::Terrain::SkyDomeID GetSkyDomeID() const = 0;
 		virtual bool IsSceneEnded() const = 0;
