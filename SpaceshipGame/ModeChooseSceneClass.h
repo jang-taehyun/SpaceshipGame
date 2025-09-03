@@ -2,9 +2,6 @@
 
 #include "SceneClass.h"
 
-namespace System { class InputClass; }
-namespace Object { class IObjectClass; }
-
 namespace Scene
 {
 	class ModeChooseSceneClass : public SceneClass

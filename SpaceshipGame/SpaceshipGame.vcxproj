@@ -201,7 +201,7 @@
     <ClInclude Include="ModelManagerClass.h" />
     <ClInclude Include="PTN_DNSR_ModelLoaderClass.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="PTN_ModelLoaderClass.h" />
+    <ClInclude Include="P_ModelLoaderClass.h" />
     <ClInclude Include="RotateClass.h" />
     <ClInclude Include="SceneFactoryClass.h" />
     <ClInclude Include="SceneManagerClass.h" />
@@ -282,7 +282,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="PTN_ModelLoaderClass.cpp" />
+    <ClCompile Include="P_ModelLoaderClass.cpp" />
     <ClCompile Include="RotateClass.cpp" />
     <ClCompile Include="SceneFactoryClass.cpp" />
     <ClCompile Include="SceneManagerClass.cpp" />

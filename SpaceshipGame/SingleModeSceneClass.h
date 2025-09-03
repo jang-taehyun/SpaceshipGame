@@ -48,5 +48,3 @@ namespace Scene
 		std::map<ObjectID, UINT> m_ObjectList;
 	};
 };
-
-

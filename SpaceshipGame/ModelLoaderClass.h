@@ -43,7 +43,7 @@ namespace Graphic
 
 			void PushVerticesData(std::vector<VertexType> vertices) { m_Vertices.push_back(std::move(vertices)); }
 			void PushIndicesData(std::vector<ULONG> indices) { m_Indices.push_back(std::move(indices)); }
-			void PushMaterialsData(std::vector<std::unique_ptr<Texture::TextureClass>> materials) { m_Materials.push_back(std::move(materials)); }
+			void PushMaterialsData(std::vector<std::unique_ptr<Texture::TextureClass>>& materials) { m_Materials.push_back(std::move(materials)); }
 
 			HRESULT LoadTextureData(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, std::vector<std::unique_ptr<Texture::TextureClass>>& MaterialList, const aiString& TexturePath, const std::wstring& AdditionalPath);
 

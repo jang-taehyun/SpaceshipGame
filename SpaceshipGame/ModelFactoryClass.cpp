@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ModelClass.hpp"
 #include "PTN_DNSR_ModelLoaderClass.h"
-#include "PTN_ModelLoaderClass.h"
+#include "P_ModelLoaderClass.h"
 #include "ModelFactoryClass.h"
 
 bool Graphic::Loader::ModelFactoryClass::IsInitialize = false;
@@ -67,11 +67,11 @@ std::unique_ptr<Graphic::Model::IModelClass> Graphic::Loader::LoadCollision(ID3D
 	std::unique_ptr<Model::IModelClass> model = nullptr;
 	std::unique_ptr<Loader::IModelLoaderClass> loader = nullptr;
 
-	loader = std::make_unique<Loader::PTN_ModelLoaderClass>();
+	loader = std::make_unique<Loader::P_ModelLoaderClass>();
 	assert(loader);
 	loader->Load(Device, DeviceContext, ModelFilename, AdditionalPath);
 
-	model = std::make_unique<Model::ModelClass<Model::PTN_VertexType>>(Device, DeviceContext, Model::ID::COLLISION, Shader::ID::CUBE, loader.get());
+	model = std::make_unique<Model::ModelClass<Model::P_VertexType>>(Device, DeviceContext, Model::ID::COLLISION, Shader::ID::CUBE, loader.get());
 	assert(model);
 
 	return model;

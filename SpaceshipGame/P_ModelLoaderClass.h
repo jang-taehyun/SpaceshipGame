@@ -6,14 +6,14 @@ namespace Graphic
 {
 	namespace Loader
 	{
-		class PTN_ModelLoaderClass : public ModelLoaderClass<Graphic::Model::PTN_VertexType>
+		class P_ModelLoaderClass : public ModelLoaderClass<Graphic::Model::P_VertexType>
 		{
 		public:
-			PTN_ModelLoaderClass() = default;
-			virtual ~PTN_ModelLoaderClass() = default;
+			P_ModelLoaderClass() = default;
+			virtual ~P_ModelLoaderClass() = default;
 
 		private:
-			virtual std::vector<Graphic::Model::PTN_VertexType> LoadVertexData(aiMesh* mesh) override;
+			virtual std::vector<Graphic::Model::P_VertexType> LoadVertexData(aiMesh* mesh) override;
 			virtual void LoadMaterial(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const aiScene* scene, const std::wstring& AdditionalPath) override;
 		};
 	}

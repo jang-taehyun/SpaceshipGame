@@ -42,7 +42,7 @@ void Graphic::Loader::ModelLoaderClass<VertexType>::LoadVertex(const aiScene* sc
 	VertexType vertex = {};					// vertex 데이터
 
 	// 메쉬 개수를 가져와서 가져온 메쉬 개수만큼 데이터(vertex, index, texture) 파싱 //
-	for (ULONG i = 0; i < GetMeshCount(); ++i)
+	for (UINT i = 0; i < GetMeshCount(); ++i)
 	{
 		mesh = scene->mMeshes[i];
 

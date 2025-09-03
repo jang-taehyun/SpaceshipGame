@@ -1,14 +1,18 @@
 #include "pch.h"
 #include "Cube_ShaderClass.h"
 
-Graphic::Shader::Cube_ShaderClass::Cube_ShaderClass(ID ShaderID) : ShaderClass<M_ShaderBuffer>(ShaderID) {}
+Graphic::Shader::Cube_ShaderClass::Cube_ShaderClass(ID ShaderID)
+	: ShaderClass<M_ShaderBuffer>(ShaderID)
+{}
 
-Graphic::Shader::Cube_ShaderClass::Cube_ShaderClass(const Cube_ShaderClass& other) : ShaderClass<M_ShaderBuffer>(other)
+Graphic::Shader::Cube_ShaderClass::Cube_ShaderClass(const Cube_ShaderClass& other)
+	: ShaderClass<M_ShaderBuffer>(other)
 {
 	other.m_MatrixBuffer.CopyTo(m_MatrixBuffer.GetAddressOf());
 }
 
-Graphic::Shader::Cube_ShaderClass::Cube_ShaderClass(Cube_ShaderClass&& other) noexcept : ShaderClass<M_ShaderBuffer>(other)
+Graphic::Shader::Cube_ShaderClass::Cube_ShaderClass(Cube_ShaderClass&& other) noexcept
+	: ShaderClass<M_ShaderBuffer>(other)
 {
 	m_MatrixBuffer = std::move(other.m_MatrixBuffer);
 }

@@ -134,10 +134,7 @@ namespace Graphic
 		struct InstanceBufferType
 		{
 			DirectX::XMFLOAT4X4 world = {};
-
-#ifdef _DEBUG
-			DirectX::XMFLOAT4 color = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);
-#endif // DEBUG
+			DirectX::XMFLOAT4 color = {};
 		};
 
 		// PTN vertex type
@@ -146,6 +143,12 @@ namespace Graphic
 			DirectX::XMFLOAT4 position = {};
 			DirectX::XMFLOAT2 texture = {};
 			DirectX::XMFLOAT3 normal = {};
+		};
+
+		// P vertex type
+		struct P_VertexType
+		{
+			DirectX::XMFLOAT4 position = {};
 		};
 	}
 

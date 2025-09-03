@@ -143,9 +143,6 @@
     <Filter Include="Model\ModelLoader\1. ModelLoaderClass">
       <UniqueIdentifier>{dbdff2af-ae92-4b91-b2e6-aeac7c3519a1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Model\ModelLoader\PTN_ModelLoaderClass">
-      <UniqueIdentifier>{fe3904ce-729d-450a-80a9-d238b278dbd3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shader">
       <UniqueIdentifier>{3cb280fe-6c0a-49f4-b5f8-76497f04f653}</UniqueIdentifier>
     </Filter>
@@ -265,6 +262,9 @@
     </Filter>
     <Filter Include="UI\Button\1. ButtonState\ButtonOnClickedStateClass">
       <UniqueIdentifier>{68c47f60-dd4f-4fae-aab0-800706256807}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\ModelLoader\P_ModelLoaderClass">
+      <UniqueIdentifier>{fe3904ce-729d-450a-80a9-d238b278dbd3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -409,8 +409,8 @@
     <ClInclude Include="IModelLoaderClass.h">
       <Filter>Model\ModelLoader\0. IModelLoaderClass</Filter>
     </ClInclude>
-    <ClInclude Include="PTN_ModelLoaderClass.h">
-      <Filter>Model\ModelLoader\PTN_ModelLoaderClass</Filter>
+    <ClInclude Include="P_ModelLoaderClass.h">
+      <Filter>Model\ModelLoader\P_ModelLoaderClass</Filter>
     </ClInclude>
     <ClInclude Include="IShaderClass.h">
       <Filter>Shader\0. IShaderClass</Filter>
@@ -621,8 +621,8 @@
     <ClCompile Include="IModelLoaderClass.cpp">
       <Filter>Model\ModelLoader\0. IModelLoaderClass</Filter>
     </ClCompile>
-    <ClCompile Include="PTN_ModelLoaderClass.cpp">
-      <Filter>Model\ModelLoader\PTN_ModelLoaderClass</Filter>
+    <ClCompile Include="P_ModelLoaderClass.cpp">
+      <Filter>Model\ModelLoader\P_ModelLoaderClass</Filter>
     </ClCompile>
     <ClCompile Include="IShaderClass.cpp">
       <Filter>Shader\0. IShaderClass</Filter>

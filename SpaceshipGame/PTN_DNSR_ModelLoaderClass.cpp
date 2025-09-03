@@ -59,6 +59,6 @@ void Graphic::Loader::PTN_DNSR_ModelLoaderClass::LoadMaterial(ID3D11Device* Devi
 			LoadTextureData(Device, DeviceContext, MaterialList, TexturePath, AdditionalPath);
 
 		// 현재 mesh의 material 데이터 저장 //
-		PushMaterialsData(std::move(MaterialList));
+		PushMaterialsData(MaterialList);
 	}
 }

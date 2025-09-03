@@ -19,6 +19,7 @@ namespace Object
 		virtual DirectX::XMFLOAT4 GetPosition() const = 0;						// position 반환
 		virtual DirectX::XMFLOAT4 GetRotation() const = 0;						// rotation 반환
 		virtual DirectX::XMFLOAT4 GetScale() const = 0;							// scale 반환
+		virtual DirectX::XMFLOAT4 GetColor() const = 0;							// color 반환
 
 		virtual void SetPosition(DirectX::XMFLOAT4 pos) = 0;					// position 대입
 		virtual void SetPosition(float x, float y, float z) = 0;				// position 대입
@@ -28,6 +29,9 @@ namespace Object
 			    
 		virtual void SetScale(DirectX::XMFLOAT4 scale) = 0;						// scale 대입
 		virtual void SetScale(float x, float y, float z) = 0;					// scale 대입
+
+		virtual void SetColor(DirectX::XMFLOAT4 color) = 0;						// color 대입
+		virtual void SetColor(float r, float g, float b, float a) = 0;			// color 대입
 			    
 		virtual std::unique_ptr<IObjectClass> Clone() const = 0;
 	};

@@ -15,7 +15,7 @@ namespace Graphic
 		class ModelClass : public IModelClass
 		{
 		private:
-			const ULONG MAX_INSTANCE_COUNT = 5;
+			const ULONG MAX_INSTANCE_COUNT = 30;
 
 		public:
 			ModelClass(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, ID ModelID, Shader::ID ShaderID, Loader::IModelLoaderClass* loader);
@@ -26,7 +26,7 @@ namespace Graphic
 			ModelClass<VertexType>& operator=(const ModelClass& other);
 			ModelClass<VertexType>& operator=(ModelClass&& other) noexcept;
 
-			virtual void AddWorldMatrix(const InstanceBufferType& world) override { m_WorldMatrix.push_back(world); }
+			virtual void AddWorldMatrix(const InstanceBufferType& world) override { m_WorldMatrixAndColor.push_back(world); }
 
 			virtual void UpdateInstanceBuffer(ID3D11DeviceContext* DeviceContext) override;
 			virtual void RenderMesh(ID3D11DeviceContext* DeviceContext, UINT MeshIdx) override;
@@ -61,7 +61,7 @@ namespace Graphic
 			std::vector<std::unique_ptr<Texture::TextureClass>> m_Empty;							// model에 material이 없는 경우 반환 용도
 
 			UINT m_InstanceCount = 0;
-			std::vector<InstanceBufferType> m_WorldMatrix;											// 각 object의 world matrix 모음
+			std::vector<InstanceBufferType> m_WorldMatrixAndColor;									// 각 object의 world matrix, Color 모음
 
 			DirectX::BoundingOrientedBox m_ModelOBB;
 		};

@@ -58,7 +58,8 @@ void Graphic::GraphicsClass::Frame(Scene::SceneManagerClass* SceneManager, bool 
 	Model::InstanceBufferType instance = {};
 	Shader::BuffersData BufferData = {};
 	Object::GameObjectClass* obj = nullptr;
-	Object::CameraClass* cam = static_cast<Object::CameraClass*>(SceneManager->GetCamera());
+	Object::CameraClass* cam = nullptr;
+	Model::IModelClass* model = nullptr;
 
 #ifdef _DEBUG
 	Object::CollisionClass* col = nullptr;
@@ -70,50 +71,62 @@ void Graphic::GraphicsClass::Frame(Scene::SceneManagerClass* SceneManager, bool 
 		return;
 	}
 
+	// 카메라 가져오기
+	cam = static_cast<Object::CameraClass*>(SceneManager->GetCamera());
+
 	// frustum culling //
-	// 카메라 업데이트
 	if (cam)
 	{
+		// 카메라 렌더링을 통해 view matrix 업데이트
 		view = cam->Render();
+
+		// view matrix, projection matrix를 이용해 frustum 업데이트
 		cam->UpdateFrustum(m_D3D->GetProjectionMatrix());
 
 		// scene에 존재하는 object에 대해 frustum culling 진행
 		cnt = SceneManager->GetObjectManager()->GetObjectCount();
 		for (UINT i = 0; i < cnt; ++i)
 		{
+			// object 가져오기
 			obj = static_cast<Object::GameObjectClass*>(SceneManager->GetObjectManager()->GetGameObject(i));
 			assert(obj);
 
-			IsRender = cam->IsRenderModel(
-				m_ModelManager->GetModel(obj->GetModelID())->GetModelOBB(),
-				obj->GetAffineMatrix()
-			);
+			// object의 model 가져오기
+			model = m_ModelManager->GetModel(obj->GetModelID());
+			assert(model);
 
+			// frustum culling 진행
+			IsRender = cam->IsRenderModel(model->GetModelOBB(), obj->GetAffineMatrix());
+
+			// frustum 내에 있다면 object의 affine을 해당 instance buffer에 넣기
 			if (IsRender)
 			{
 				instance.world = obj->GetAffineMatrix();
-				m_ModelManager->GetModel(obj->GetModelID())->AddWorldMatrix(instance);
+				instance.color = obj->GetColor();
+				model->AddWorldMatrix(instance);
 			}
 
 #ifdef _DEBUG
-			// Collision
+			// Collision 가져오기
 			col = static_cast<Object::CollisionClass*>(obj->GetCollision());
-			assert(col);
 
-			IsRender = cam->IsRenderModel(
-				m_ModelManager->GetModel(obj->GetModelID())->GetModelOBB(),
-				col->GetAffineMatrix()
-			);
-
-			if (IsRender)
+			if (col)
 			{
-				instance.world = col->GetAffineMatrix();
-				instance.color = col->GetColor();
-				m_ModelManager->GetModel(col->GetModelID())->AddWorldMatrix(instance);
+				// collision의 model 가져오기
+				model = m_ModelManager->GetModel(col->GetModelID());
+				assert(model);
 
-				instance.color = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);
+				// frustum culling 진행
+				IsRender = cam->IsRenderModel(model->GetModelOBB(), col->GetAffineMatrix());
+
+				// frustum 내에 있다면 object의 affine을 해당 instance buffer에 넣기
+				if (IsRender)
+				{
+					instance.world = col->GetAffineMatrix();
+					instance.color = col->GetColor();
+					model->AddWorldMatrix(instance);
+				}
 			}
-
 #endif // DEBUG
 		}
 

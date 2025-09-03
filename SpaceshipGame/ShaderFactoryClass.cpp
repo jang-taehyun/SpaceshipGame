@@ -113,7 +113,7 @@ std::unique_ptr<Graphic::Shader::IShaderClass> Graphic::Loader::CreateCubeShader
 	// semantic 정보 설정
 	std::vector<std::string> semantics =
 	{
-		"POSITION",
+		"POSITION"
 	};
 
 	// instance 생성
