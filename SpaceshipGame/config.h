@@ -67,7 +67,7 @@ namespace Scene
 {
 	enum class ID
 	{
-		NONE, START, LOADING, MODE_CHOOSE, SINGLE_MODE, 
+		NONE, START, LOADING, MODE_CHOOSE, SINGLE_MODE, MULTI_MODE, 
 	};
 }
 

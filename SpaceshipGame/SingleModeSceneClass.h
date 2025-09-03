@@ -9,7 +9,8 @@ namespace Scene
 	private:
 		enum class ObjectID
 		{
-			PREVIOUS_UI_ID, PREVIOUS_TEXT_ID, 
+			POPUP_BUTTON_UI_PREVIOUS,
+			POPUP_BUTTON_TEXT_PREVIOUS,
 		};
 
 	public:
@@ -21,16 +22,30 @@ namespace Scene
 		SingleModeSceneClass& operator=(const SingleModeSceneClass& other);
 		SingleModeSceneClass& operator=(SingleModeSceneClass&& other) noexcept;
 
-		virtual void Frame(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time) override;
 		virtual Object::IObjectClass* GetActiveCamera() override { return m_Camera.get(); }
 		virtual std::unique_ptr<ISceneClass> Clone() const override { return std::make_unique<SingleModeSceneClass>(*this); }
 
 	private:
-		void CreateECSPopup(Text::TextManagerClass* texts, UI::UIManagerClass* UIs);
+		virtual void LoadESCPopupWindow(Text::TextManagerClass* texts, UI::UIManagerClass* UIs) override;
+		virtual bool ProcessESCPopUp(const System::InputClass* input, Text::TextManagerClass* texts, UI::UIManagerClass* UIs) override;
+		virtual void ActiveESCPopup(Text::TextManagerClass* texts, UI::UIManagerClass* UIs) override;
+		virtual void DeactiveESCPopup(Text::TextManagerClass* texts, UI::UIManagerClass* UIs) override;
+
+		virtual void ActiveChildSceneUI(Text::TextManagerClass* texts, UI::UIManagerClass* UIs) override;
+		virtual void DeactiveChildSceneUI(Text::TextManagerClass* texts, UI::UIManagerClass* UIs) override;
+		virtual bool ProcessChildScene(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time) override;
+
+	private:
+		void LoadSound(Sound::SoundManagerClass* sounds);
+		void LoadCamera();
+		void LoadTerrain();
+		void LoadObject(Object::ObjectManagerClass* objects);
+
+		bool ProcessCamera(const System::InputClass* input, float frame_time);
 
 	private:
 		std::unique_ptr<Object::IObjectClass> m_Camera = nullptr;
-		std::map<ObjectID, INT> m_ObjectList;
+		std::map<ObjectID, UINT> m_ObjectList;
 	};
 };
 
