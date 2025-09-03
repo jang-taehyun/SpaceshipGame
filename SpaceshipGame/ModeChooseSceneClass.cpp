@@ -38,6 +38,8 @@ Scene::ModeChooseSceneClass& Scene::ModeChooseSceneClass::operator=(const ModeCh
 	if (this == &other)
 		return *this;
 
+	m_ObjectList.clear();
+
 	m_ObjectList.insert(other.m_ObjectList.begin(), other.m_ObjectList.end());
 	SceneClass::operator=(other);
 
@@ -48,6 +50,8 @@ Scene::ModeChooseSceneClass& Scene::ModeChooseSceneClass::operator=(ModeChooseSc
 {
 	if (this == &other)
 		return *this;
+
+	m_ObjectList.clear();
 
 	m_ObjectList = std::move(other.m_ObjectList);
 	SceneClass::operator=(std::move(other));

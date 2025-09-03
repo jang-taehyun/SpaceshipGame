@@ -217,9 +217,9 @@ void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager
 	// front buffer ÃÊ±âÈ­ //
 	m_D3D->BeginScene(DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f));
 
-	// terrain ·»´õ¸µ //
 	if (SceneManager->GetCamera())
 	{
+		// terrain ·»´õ¸µ //
 		shader = m_ShaderManager->GetShader(m_Terrain->GetShaderID());
 		m_Terrain->Render(m_D3D->GetDeviceContext(), m_D3D.get(), shader, SceneManager->GetCamera(), m_D3D->GetProjectionMatrix());
 
