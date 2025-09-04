@@ -105,27 +105,16 @@ bool Scene::SceneClass::GetIsShowMouseCursor() const
 
 void Scene::SceneClass::SetShowMouseCursor(bool IsShow)
 {
-	CURSORINFO cursorInfo = {};
-	cursorInfo.cbSize = sizeof(cursorInfo);
+	// 현재 마우스 커서가 보이지 않는다면 보이게 하기 //
+	if (!GetIsShowMouseCursor() && IsShow)
+		ShowCursor(true);
 
-	if (GetCursorInfo(&cursorInfo))
+	// 현재 마우스 커서가 보인다면 안 보이게 하기 //
+	else if (GetIsShowMouseCursor() && !IsShow)
 	{
-		// 현재 마우스 커서가 보이지 않는다면 보이게 하기 //
-		if (!cursorInfo.flags && IsShow)
-			ShowCursor(true);
-
-		// 현재 마우스 커서가 보인다면 안 보이게 하기 //
-		else if (cursorInfo.flags && !IsShow)
-		{
-			while (cursorInfo.flags)
-			{
-				ShowCursor(false);
-				GetCursorInfo(&cursorInfo);
-			}
-		}
+		while (GetIsShowMouseCursor())
+			ShowCursor(false);
 	}
-	else
-		assert(false);
 }
 
 
@@ -291,11 +280,13 @@ void Scene::SceneClass::DeactiveESCPopup(Text::TextManagerClass* texts, UI::UIMa
 bool Scene::SceneClass::ProcessESCPopUp(const System::InputClass* input, Text::TextManagerClass* texts, UI::UIManagerClass* UIs)
 {
 	UI::ButtonClass* b = nullptr;
+	UINT idx = 0;
+	UINT ActiveFlag = (1 << static_cast<UINT>(UI::UIState::ACTIVE));
 	UINT uiState = 0;
 	bool IsActive = false;
 
 	// ESC 키가 눌리면 팝업창을 활성화하거나 비활성화
-	if (input->IsEscapePressed())
+	if (System::KEYSTATE::AWAY == input->GetKeyState(System::KEY::ESC))
 	{
 		if (!m_ESCPopupActive)
 		{
@@ -315,11 +306,10 @@ bool Scene::SceneClass::ProcessESCPopUp(const System::InputClass* input, Text::T
 	if (m_ESCPopupActive)
 	{
 		// OK 버튼이 눌렸는지 검사
-		b = static_cast<UI::ButtonClass*>(
-			UIs->GetUI(m_ObjectList.find(ObjectID::POPUP_BUTTON_UI_OK)->second)
-			);
+		idx = m_ObjectList.find(ObjectID::POPUP_BUTTON_UI_OK)->second;
+		b = static_cast<UI::ButtonClass*>(UIs->GetUI(idx));
 		uiState = b->GetUIState();
-		IsActive = uiState & (1 << static_cast<UINT>(UI::UIState::ACTIVE));
+		IsActive = uiState & ActiveFlag;
 
 		// 버튼이 눌리면 프로그램 종료
 		if (IsActive && UI::ButtonState::ONCLICKED == b->GetButtonState())
@@ -329,11 +319,10 @@ bool Scene::SceneClass::ProcessESCPopUp(const System::InputClass* input, Text::T
 		}
 
 		// CANCEL 버튼이 눌렸는지 검사
-		b = static_cast<UI::ButtonClass*>(
-			UIs->GetUI(m_ObjectList.find(ObjectID::POPUP_BUTTON_UI_CANCEL)->second)
-			);
+		idx = m_ObjectList.find(ObjectID::POPUP_BUTTON_UI_CANCEL)->second;
+		b = static_cast<UI::ButtonClass*>(UIs->GetUI(idx));
 		uiState = b->GetUIState();
-		IsActive = uiState & (1 << static_cast<UINT>(UI::UIState::ACTIVE));
+		IsActive = uiState & ActiveFlag;
 
 		// 버튼이 눌리면 팝업창 비활성화
 		if (IsActive && UI::ButtonState::ONCLICKED == b->GetButtonState())

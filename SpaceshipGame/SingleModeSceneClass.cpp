@@ -240,27 +240,62 @@ bool Scene::SingleModeSceneClass::ProcessCamera(const System::InputClass* input,
 {
 	Object::CameraClass* cam = static_cast<Object::CameraClass*>(m_Camera.get());
 	long x = 0, y = 0;
+	System::KEYSTATE state = System::KEYSTATE::NONE;
+	bool IsKeyDown = false;
 	bool ret = false;
 
 	// 카메라 이동
-	cam->Move(Object::MoveState::MOVE_FORWARD, frame_time, input->IsWBottunPressed());
-	cam->Move(Object::MoveState::MOVE_BACKWARD, frame_time, input->IsSBottunPressed());
-	cam->Move(Object::MoveState::MOVE_LEFT, frame_time, input->IsABottunPressed());
-	cam->Move(Object::MoveState::MOVE_RIGHT, frame_time, input->IsDBottunPressed());
+	state = input->GetKeyState(System::KEY::W);
+	IsKeyDown = (System::KEYSTATE::TAP == state || System::KEYSTATE::HOLD == state);
+	cam->Move(
+		Object::MoveState::MOVE_FORWARD,
+		frame_time,
+		IsKeyDown
+	);
+	if (IsKeyDown)
+		ret = true;
+
+	state = input->GetKeyState(System::KEY::S);
+	IsKeyDown = (System::KEYSTATE::TAP == state || System::KEYSTATE::HOLD == state);
+	cam->Move(
+		Object::MoveState::MOVE_BACKWARD,
+		frame_time,
+		IsKeyDown
+	);
+	if (IsKeyDown)
+		ret = true;
+
+	state = input->GetKeyState(System::KEY::A);
+	IsKeyDown = (System::KEYSTATE::TAP == state || System::KEYSTATE::HOLD == state);
+	cam->Move(
+		Object::MoveState::MOVE_LEFT,
+		frame_time,
+		IsKeyDown
+	);
+	if (IsKeyDown)
+		ret = true;
+
+	state = input->GetKeyState(System::KEY::D);
+	IsKeyDown = (System::KEYSTATE::TAP == state || System::KEYSTATE::HOLD == state);
+	cam->Move(
+		Object::MoveState::MOVE_RIGHT,
+		frame_time,
+		IsKeyDown
+	);
+	if (IsKeyDown)
+		ret = true;
 
 	// 카메라 회전
 	input->GetMouseMoveDelta(x, y);
-	cam->Rotate(x, y, frame_time, input->IsMouseCenterBottunPressed());
-
-	if (input->IsWBottunPressed())
-		ret = true;
-	if (input->IsSBottunPressed())
-		ret = true;
-	if (input->IsABottunPressed())
-		ret = true;
-	if (input->IsDBottunPressed())
-		ret = true;
-	if (input->IsMouseCenterBottunPressed())
+	state = input->GetKeyState(System::KEY::MOUSE_CENTER);
+	IsKeyDown = (System::KEYSTATE::TAP == state || System::KEYSTATE::HOLD == state);
+	cam->Rotate(
+		x,
+		y,
+		frame_time,
+		IsKeyDown
+	);
+	if (IsKeyDown)
 		ret = true;
 
 	return ret;

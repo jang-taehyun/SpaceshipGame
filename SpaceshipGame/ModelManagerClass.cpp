@@ -40,13 +40,17 @@ void Graphic::Model::ModelManagerClass::Load(ID3D11Device* Device, ID3D11DeviceC
 	std::map<ID, std::unique_ptr<IModelClass>>::iterator iter;
 	UINT cnt = m_Factory->GetModelIDCount();
 
-	for (UINT i = 0; i < cnt; ++i)
+	// 현재 로드된 model ID를 모두 제거
+	m_CurrentLoadedModelIDList.clear();
+
+	// 필요한 model 로드
+	for (UINT i = 1; i < cnt; ++i)
 	{
 		IsLoad = (ModelMask & (1 << i));
 		IsExist = (m_CurrentModelMask & (1 << i));
 		id = static_cast<ID>(i);
 
-		// 로드를 해야하는데 map에 없는 경우
+		// 로드 해야하는데 map에 없는 경우
 		if (IsLoad && !IsExist)
 		{
 			// instance 생성
@@ -57,8 +61,17 @@ void Graphic::Model::ModelManagerClass::Load(ID3D11Device* Device, ID3D11DeviceC
 			m_NeedShaderMask |= (1 << static_cast<UINT>(model->GetShaderID()));
 			m_CurrentModelMask |= (1 << i);
 
-			// map에 저장
+			// map에 model의 포인터 저장
 			m_ModelList.insert(std::make_pair(id, std::move(model)));
+
+			// vector에 model ID 저장
+			m_CurrentLoadedModelIDList.push_back(id);
+		}
+		// 로드 해야 하는데 map에 있는 경우
+		else if (IsLoad && !IsExist)
+		{
+			// vector에 model ID 저장
+			m_CurrentLoadedModelIDList.push_back(id);
 		}
 		// 해제해야 하는데 map에 있는 경우
 		else if (!IsLoad && IsExist)
@@ -94,4 +107,10 @@ void Graphic::Model::ModelManagerClass::UpdateInstanceBuffers(ID3D11DeviceContex
 UINT Graphic::Model::ModelManagerClass::GetModelIDCount() const
 {
 	return m_Factory->GetModelIDCount();
+}
+
+Graphic::Model::ID Graphic::Model::ModelManagerClass::GetModelID(int idx) const
+{
+	assert(m_CurrentLoadedModelIDList.size() >= idx);
+	return m_CurrentLoadedModelIDList[idx];
 }

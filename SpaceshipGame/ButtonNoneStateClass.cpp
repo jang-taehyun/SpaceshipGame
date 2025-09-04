@@ -21,7 +21,7 @@ std::unique_ptr<UI::IButtonStateClass> UI::ButtonNoneStateClass::Update(ButtonCl
 {
 	std::unique_ptr<IButtonStateClass> ret = nullptr;
 	
-	if (IsInCursor)
+	if (IsInCursor && System::KEYSTATE::NONE == input->GetKeyState(System::KEY::MOUSE_LEFT))
 		ret = std::make_unique<ButtonHoverStateClass>(caller);
 
 	return ret;

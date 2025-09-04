@@ -27,6 +27,37 @@ namespace System
 	extern bool RUNNING;
 	extern HWND hWnd;
 	extern HINSTANCE hInst;
+
+	// input 관련
+	enum class KEYSTATE
+	{
+		NONE,
+		TAP,
+		HOLD,
+		AWAY,
+	};
+
+	enum class KEY
+	{
+		W,
+		A,
+		S,
+		D,
+
+		UP_ARROW,
+		LEFT_ARROW,
+		DOWN_ARROW,
+		RIGHT_ARROW,
+
+		ESC,
+		SPACEBAR,
+
+		MOUSE_LEFT,
+		MOUSE_RIGHT,
+		MOUSE_CENTER,
+
+		LAST
+	};
 }
 
 // object 관련 //

@@ -207,10 +207,7 @@ HRESULT Graphic::D3DClass::CreateSwapChainDeviceDeviceContext(int ScreenWidth, i
 	SwapChainDesc.SampleDesc.Quality = 0;
 
 	// swap chain의 디스플레이 모드 설정
-	if (System::FULL_SCREEN)
-		SwapChainDesc.Windowed = false;
-	else
-		SwapChainDesc.Windowed = true;
+	SwapChainDesc.Windowed = !System::FULL_SCREEN;
 
 	// swap chain의 스캔 라인 설정
 	SwapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
@@ -226,7 +223,20 @@ HRESULT Graphic::D3DClass::CreateSwapChainDeviceDeviceContext(int ScreenWidth, i
 	FeatureLevel = D3D_FEATURE_LEVEL_11_0;
 
 	// swap chain, device, device context 생성 //
-	result = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &FeatureLevel, 1, D3D11_SDK_VERSION, &SwapChainDesc, m_SwapChain.GetAddressOf(), m_Device.GetAddressOf(), NULL, m_DeviceContext.GetAddressOf());
+	result = D3D11CreateDeviceAndSwapChain(
+		NULL,
+		D3D_DRIVER_TYPE_HARDWARE,
+		NULL,
+		0,
+		&FeatureLevel,
+		1,
+		D3D11_SDK_VERSION,
+		&SwapChainDesc,
+		m_SwapChain.GetAddressOf(),
+		m_Device.GetAddressOf(),
+		NULL,
+		m_DeviceContext.GetAddressOf()
+	);
 	assert(SUCCEEDED(result));
 
 	return result;

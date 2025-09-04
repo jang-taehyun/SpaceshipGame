@@ -5,9 +5,11 @@ namespace System
 	class InputClass
 	{
 	private:
-		enum MOUSEBUTTON
+
+		struct KeyState
 		{
-			MOUSE_LEFT = 0, MOUSE_RIGHT = 1, MOUSE_CENTER = 2,
+			KEYSTATE CurrentState = KEYSTATE::NONE;
+			bool PreviousPush = false;
 		};
 
 	public:
@@ -16,22 +18,7 @@ namespace System
 
 		void Frame();
 
-		bool IsEscapePressed() const { return m_KeyboardState[DIK_ESCAPE] & 0x80; }
-
-		bool IsLeftArrowPressed() const { return m_KeyboardState[DIK_LEFTARROW] & 0x80; }
-		bool IsRightArrowPressed() const { return m_KeyboardState[DIK_RIGHTARROW] & 0x80; }
-		bool IsUpArrowPressed() const { return m_KeyboardState[DIK_UPARROW] & 0x80; }
-		bool IsDownArrowPressed() const { return m_KeyboardState[DIK_DOWNARROW] & 0x80; }
-
-		bool IsABottunPressed() const { return m_KeyboardState[DIK_A] & 0x80; }
-		bool IsSBottunPressed() const { return m_KeyboardState[DIK_S] & 0x80; }
-		bool IsWBottunPressed() const { return m_KeyboardState[DIK_W] & 0x80; }
-		bool IsDBottunPressed() const { return m_KeyboardState[DIK_D] & 0x80; }
-
-		bool IsSpacebarPressed() const { return m_KeyboardState[DIK_SPACE] & 0x80; }
-
-		bool IsMouseCenterBottunPressed() const { return m_MouseState.rgbButtons[MOUSEBUTTON::MOUSE_CENTER] & 0x80; }
-		bool IsMouseLeftBottunPressed() const { return m_MouseState.rgbButtons[MOUSEBUTTON::MOUSE_LEFT] & 0x80; }
+		KEYSTATE GetKeyState(KEY key) const;
 
 		void GetMouseLocation(int& MouseX, int& MouseY) const { MouseX = m_MousePos.x; MouseY = m_MousePos.y; }
 		void GetMouseMoveDelta(long& MouseX, long& MouseY) const { MouseX = m_MouseState.lX; MouseY = m_MouseState.lY; }
@@ -44,6 +31,9 @@ namespace System
 		HRESULT ReadMouse();
 		void ProcessInput();
 
+		void UpdateMouseButton(UINT idx);
+		void UpdateKeyboardButton(UINT idx);
+
 	private:
 		static bool IsInitailize;
 
@@ -54,6 +44,7 @@ namespace System
 		unsigned char m_KeyboardState[256] = { 0, };
 		DIMOUSESTATE m_MouseState = {};
 
+		KeyState m_State[static_cast<UINT>(System::KEY::LAST)] = {};
 		POINT m_MousePos = {};
 
 	public:

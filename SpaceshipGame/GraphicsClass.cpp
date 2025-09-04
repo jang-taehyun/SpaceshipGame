@@ -225,7 +225,8 @@ void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager
 	Shader::IShaderClass* shader = nullptr;
 	UI::IUIClass* ui = nullptr;
 	Text::ITextClass* text = nullptr;
-	UINT cnt = m_ModelManager->GetModelIDCount();
+	Model::ID id = Model::ID::NONE;
+	UINT icnt = 0, jcnt = 0;
 
 	// front buffer 초기화 //
 	m_D3D->BeginScene(DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f));
@@ -237,27 +238,28 @@ void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager
 		m_Terrain->Render(m_D3D->GetDeviceContext(), m_D3D.get(), shader, SceneManager->GetCamera(), m_D3D->GetProjectionMatrix());
 
 		// 3D 물체 렌더링 //
-		for (UINT i = 0; i < cnt; ++i)
+		icnt = m_ModelManager->GetCurrentLoadedModelIDCount();
+		for (UINT i = 0; i < icnt; ++i)
 		{
-			model = m_ModelManager->GetModel(static_cast<Model::ID>(i));
+			// model 가져오기
+			id = m_ModelManager->GetModelID(i);
+			model = m_ModelManager->GetModel(id);
+			assert(model);
 
-			// 해당 model이 있다면 렌더링
-			if (model)
+			// shader, input layout 세팅
+			shader = m_ShaderManager->GetShader(model->GetShaderID());
+			shader->BeginRender(m_D3D->GetDeviceContext());
+
+			jcnt = model->GetMeshCount();
+			for (UINT j = 0; j < jcnt; ++j)
 			{
-				// shader, input layout 세팅
-				shader = m_ShaderManager->GetShader(model->GetShaderID());
-				shader->BeginRender(m_D3D->GetDeviceContext());
-
-				for (UINT j = 0; j < model->GetMeshCount(); ++j)
-				{
-					model->RenderMesh(m_D3D->GetDeviceContext(), j);
-					shader->Render(
-						m_D3D->GetDeviceContext(),
-						model->GetIndexCount(j),
-						model->GetInstanceCount(),
-						model->GetMaterial(j)
-					);
-				}
+				model->RenderMesh(m_D3D->GetDeviceContext(), j);
+				shader->Render(
+					m_D3D->GetDeviceContext(),
+					model->GetIndexCount(j),
+					model->GetInstanceCount(),
+					model->GetMaterial(j)
+				);
 			}
 		}
 	}
@@ -266,9 +268,14 @@ void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager
 	m_UIRender->BeginRender(m_D3D.get());
 
 	// 2D UI 렌더링
-	for (UINT i = 0; i < SceneManager->GetUIManager()->GetUICount(); ++i)
+	icnt = SceneManager->GetUIManager()->GetUICount();
+	for (UINT i = 0; i < icnt; ++i)
 	{
+		// UI 가져오기
 		ui = SceneManager->GetUIManager()->GetUI(i);
+		assert(ui);
+		
+		// 현재 UI가 보인다면 렌더링
 		if (ui->GetUIState() & (1 << static_cast<UINT>(UI::UIState::APPEAR)))
 		{
 			// background를 제외한 보이는 모든 UI 렌더링
@@ -291,9 +298,14 @@ void Graphic::GraphicsClass::Render(Scene::SceneManagerClass* SceneManager
 	}
 
 	// text 렌더링
-	for (UINT i = 0; i < SceneManager->GetTextManager()->GetTextCount(); ++i)
+	icnt = SceneManager->GetTextManager()->GetTextCount();
+	for (UINT i = 0; i < icnt; ++i)
 	{
+		// text 가져오기
 		text = SceneManager->GetTextManager()->GetTextObject(i);
+		assert(text);
+
+		// 현재 text가 보인다면 렌더링
 		if(text->GetTextState() & (1 << static_cast<UINT>(UI::UIState::APPEAR)))
 			m_UIRender->RenderText(
 				text->GetText(),

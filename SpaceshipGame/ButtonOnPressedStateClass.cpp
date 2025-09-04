@@ -23,7 +23,7 @@ std::unique_ptr<UI::IButtonStateClass> UI::ButtonOnPressedStateClass::Update(But
 {
 	std::unique_ptr<IButtonStateClass> ret = nullptr;
 
-	if (IsInCursor && !input->IsMouseLeftBottunPressed())
+	if (IsInCursor && System::KEYSTATE::AWAY == input->GetKeyState(System::KEY::MOUSE_LEFT))
 		ret = std::make_unique<ButtonOnClickedStateClass>(caller);
 	else if(!IsInCursor)
 		ret = std::make_unique<ButtonNoneStateClass>();

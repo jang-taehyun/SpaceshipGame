@@ -24,11 +24,14 @@ namespace Graphic
 
 			UINT GetNeedShaderMask() const { return m_NeedShaderMask; }
 			UINT GetModelIDCount() const;
+			UINT GetCurrentLoadedModelIDCount() const { return static_cast<UINT>(m_CurrentLoadedModelIDList.size()); }
+			ID GetModelID(int idx) const;
 
 		private:
 			static bool IsInitialize;
 
 			std::map<ID, std::unique_ptr<IModelClass>> m_ModelList;
+			std::vector<ID> m_CurrentLoadedModelIDList;
 			std::unique_ptr<Loader::ModelFactoryClass> m_Factory = nullptr;
 			UINT m_CurrentModelMask = 0;
 			UINT m_NeedShaderMask = 0;

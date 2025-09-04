@@ -3,6 +3,29 @@
 
 bool System::InputClass::IsInitailize = false;
 
+static const UINT OriginKey[static_cast<UINT>(System::KEY::LAST)] =
+{
+	DIK_W,					// W
+	DIK_A,					// A
+	DIK_S,					// S
+	DIK_D,					// D
+	
+	DIK_UPARROW,			// UP_ARROW
+	DIK_LEFTARROW,			// LEFT_ARROW
+	DIK_DOWNARROW,			// DOWN_ARROW
+	DIK_RIGHTARROW,			// RIGHT_ARROW
+	
+	DIK_ESCAPE,				// ESC
+	DIK_SPACE,				// SPACEBAR
+	
+	0,						// MOUSE_LEFT
+	1,						// MOUSE_RIGHT
+	2,						// MOUSE_CENTER
+	
+	
+	// LAST
+};
+
 System::InputClass::InputClass(int ScreenWidth, int ScreenHeight)
 {
 	HRESULT result = S_OK;
@@ -91,11 +114,17 @@ void System::InputClass::Frame()
 	ProcessInput();
 }
 
+System::KEYSTATE System::InputClass::GetKeyState(KEY key) const
+{
+	assert(static_cast<UINT>(KEY::LAST) > static_cast<UINT>(key));
+	return m_State[static_cast<UINT>(key)].CurrentState;
+}
+
 HRESULT System::InputClass::ReadKeyboard()
 {
 	HRESULT result = S_OK;
 
-	// 키보드의 상태 가져오기 //
+	// 키보드의 현재 상태 가져오기 //
 	result = m_Keyboard->GetDeviceState(
 		sizeof(m_KeyboardState),
 		reinterpret_cast<LPVOID>(&m_KeyboardState)
@@ -137,9 +166,88 @@ HRESULT System::InputClass::ReadMouse()
 
 void System::InputClass::ProcessInput()
 {
+	UINT cnt = static_cast<UINT>(KEY::LAST);
+	KEY key = KEY::LAST;
+
+	// 키 상태 업데이트
+	for (UINT i = 0; i < cnt; ++i)
+	{
+		key = static_cast<KEY>(i);
+
+		// mouse button 업데이트
+		if (KEY::MOUSE_LEFT == key || KEY::MOUSE_CENTER == key || KEY::MOUSE_RIGHT == key)
+			UpdateMouseButton(i);
+
+		// keyboard button 업데이트
+		else
+			UpdateKeyboardButton(i);
+	}
+
 	// 화면 상의 마우스 좌표 가져오기
 	GetCursorPos(&m_MousePos);
 
 	// 마우스 좌표를 client size 기준으로 변환
 	ScreenToClient(System::hWnd, &m_MousePos);
+}
+
+void System::InputClass::UpdateMouseButton(UINT idx)
+{
+	// 키가 눌렸을 때
+	if (m_MouseState.rgbButtons[OriginKey[idx]] & 0x80)
+	{
+		// 이전에도 키를 눌렀을 때
+		if (m_State[idx].PreviousPush)
+			m_State[idx].CurrentState = KEYSTATE::HOLD;
+
+		// 이전에는 키를 누르지 않았을 때
+		else
+			m_State[idx].CurrentState = KEYSTATE::TAP;
+
+		m_State[idx].PreviousPush = true;
+	}
+
+	// 키가 안눌렸을 때
+	else
+	{
+		// 이전에 키를 눌렀을 때
+		if (m_State[idx].PreviousPush)
+			m_State[idx].CurrentState = KEYSTATE::AWAY;
+
+		// 이전에는 키를 누르지 않았을 때
+		else
+			m_State[idx].CurrentState = KEYSTATE::NONE;
+
+		m_State[idx].PreviousPush = false;
+	}
+}
+
+void System::InputClass::UpdateKeyboardButton(UINT idx)
+{
+	// 키가 눌렸을 때
+	if (m_KeyboardState[OriginKey[idx]] & 0x80)
+	{
+		// 이전에도 키를 눌렀을 때
+		if (m_State[idx].PreviousPush)
+			m_State[idx].CurrentState = KEYSTATE::HOLD;
+
+		// 이전에는 키를 누르지 않았을 때
+		else
+			m_State[idx].CurrentState = KEYSTATE::TAP;
+
+		m_State[idx].PreviousPush = true;
+	}
+
+	// 키가 안눌렸을 때
+	else
+	{
+		// 이전에 키를 눌렀을 때
+		if (m_State[idx].PreviousPush)
+			m_State[idx].CurrentState = KEYSTATE::AWAY;
+
+		// 이전에는 키를 누르지 않았을 때
+		else
+			m_State[idx].CurrentState = KEYSTATE::NONE;
+
+		m_State[idx].PreviousPush = false;
+	}
 }
