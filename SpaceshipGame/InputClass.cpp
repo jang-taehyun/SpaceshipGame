@@ -3,7 +3,7 @@
 
 bool System::InputClass::IsInitailize = false;
 
-static const UINT OriginKey[static_cast<UINT>(System::KEY::LAST)] =
+const UINT System::InputClass::OriginKey[static_cast<UINT>(System::KEY::LAST)] =
 {
 	DIK_W,					// W
 	DIK_A,					// A
@@ -111,13 +111,17 @@ void System::InputClass::Frame()
 	// 마우스의 상태 읽기 //
 	result = ReadMouse();
 
+	// 키보드, 마우스 버튼 상태 업데이트 //
 	ProcessInput();
 }
 
 System::KEYSTATE System::InputClass::GetKeyState(KEY key) const
 {
-	assert(static_cast<UINT>(KEY::LAST) > static_cast<UINT>(key));
-	return m_State[static_cast<UINT>(key)].CurrentState;
+	UINT idx = static_cast<UINT>(key);
+	UINT last = static_cast<UINT>(KEY::LAST);
+
+	assert(last > idx);
+	return m_State[idx].CurrentState;
 }
 
 HRESULT System::InputClass::ReadKeyboard()

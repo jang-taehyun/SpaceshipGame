@@ -5,7 +5,6 @@ namespace System
 	class InputClass
 	{
 	private:
-
 		struct KeyState
 		{
 			KEYSTATE CurrentState = KEYSTATE::NONE;
@@ -36,6 +35,7 @@ namespace System
 
 	private:
 		static bool IsInitailize;
+		static const UINT OriginKey[static_cast<UINT>(System::KEY::LAST)];
 
 		Microsoft::WRL::ComPtr<IDirectInput8> m_DirectInput = nullptr;
 		Microsoft::WRL::ComPtr<IDirectInputDevice8> m_Keyboard = nullptr;
