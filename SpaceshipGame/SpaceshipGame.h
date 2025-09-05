@@ -2,11 +2,6 @@
 
 #include "resource.h"
 
-/*
-* TODO: scene 추가
-* TODO: 멀티쓰레드 도입
-*/
-
 /**
 * CODE 규칙
 * 

@@ -12,7 +12,7 @@ bool System::VSYNC_ENABLED;
 float System::SCREEN_DEPTH;
 float System::SCREEN_NEAR;
 
-float System::MOUSE_SENSITIVITY;
+float System::INTERPOLATION_MOUSE_SPEED;
 
 bool System::RUNNING = true;
 HWND System::hWnd;

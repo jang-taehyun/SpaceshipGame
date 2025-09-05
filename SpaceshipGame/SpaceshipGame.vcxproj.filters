@@ -266,6 +266,9 @@
     <Filter Include="Model\ModelLoader\P_ModelLoaderClass">
       <UniqueIdentifier>{fe3904ce-729d-450a-80a9-d238b278dbd3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\PlayerClass">
+      <UniqueIdentifier>{e8c1ef2f-c3d4-4939-8bb1-d7c3c26c2dd2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemClass.h">
@@ -490,6 +493,9 @@
     <ClInclude Include="SingleModeSceneClass.h">
       <Filter>Scene\SingleModeSceneClass</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerClass.h">
+      <Filter>Object\PlayerClass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -704,6 +710,9 @@
     </ClCompile>
     <ClCompile Include="SingleModeSceneClass.cpp">
       <Filter>Scene\SingleModeSceneClass</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerClass.cpp">
+      <Filter>Object\PlayerClass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

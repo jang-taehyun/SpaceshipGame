@@ -21,7 +21,7 @@ namespace System
 	extern float SCREEN_NEAR;
 
 	// MOUSE 감도 설정
-	extern float MOUSE_SENSITIVITY;
+	extern float INTERPOLATION_MOUSE_SPEED;
 	
 	// 프로그램 동작 설정
 	extern bool RUNNING;
@@ -70,6 +70,7 @@ namespace Object
 		ACTOR,
 		COLLISION,
 		CAMERA,
+		PLAYER,
 	};
 
 	// 이동 상태 정보

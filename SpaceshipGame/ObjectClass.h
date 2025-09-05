@@ -36,7 +36,7 @@ namespace Object
 		virtual void SetColor(DirectX::XMFLOAT4 color) override { m_Color = color; }													// color 대입
 		virtual void SetColor(float r, float g, float b, float a) override { m_Color = DirectX::XMFLOAT4(r, g, b, a); }					// color 대입
 
-		virtual void Update(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, Sound::SoundManagerClass* sounds, float frame_time, bool IsESCPopupWindowActivated) override;
+		virtual bool Update(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, Sound::SoundManagerClass* sounds, float frame_time, bool IsESCPopupWindowActivated) override;
 
 		virtual std::unique_ptr<IObjectClass> Clone() const override = 0;
 

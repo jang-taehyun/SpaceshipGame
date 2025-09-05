@@ -11,6 +11,7 @@ const DirectX::XMFLOAT4X4 Object::ObjectClass::GetAffineMatrix() const
 	return ret;
 }
 
-void Object::ObjectClass::Update(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, Sound::SoundManagerClass* sounds, float frame_time, bool IsESCPopupWindowActivated)
+bool Object::ObjectClass::Update(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, Sound::SoundManagerClass* sounds, float frame_time, bool IsESCPopupWindowActivated)
 {
+	return false;
 }

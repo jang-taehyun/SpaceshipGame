@@ -23,7 +23,7 @@ namespace Object
 		virtual ~ActorClass() = default;
 
 		virtual void Move(MoveState state, float frame_time, bool IsKeyDown);
-		virtual void Rotate(long MouseX, long MouseY, float frame_time, bool IsKeyDown);
+		virtual void Rotate(long MouseDeltaX, long MouseDeltaY, float frame_time);
 
 		ActorClass& operator=(const ActorClass& other);
 		ActorClass& operator=(ActorClass&& other) noexcept;

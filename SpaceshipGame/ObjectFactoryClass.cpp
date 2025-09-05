@@ -1,9 +1,10 @@
 #include "pch.h"
+#include "MoveClass.h"
+#include "RotateClass.h"
 #include "ActorClass.h"
 #include "CollisionClass.h"
 #include "CameraClass.h"
-#include "MoveClass.h"
-#include "RotateClass.h"
+#include "PlayerClass.h"
 #include "ObjectFactoryClass.h"
 
 bool Object::ObjectFactoryClass::IsInitialize = false;
@@ -16,6 +17,7 @@ Object::ObjectFactoryClass::ObjectFactoryClass()
 	m_Creator.insert(std::make_pair(ID::ACTOR, CreateActor));
 	m_Creator.insert(std::make_pair(ID::COLLISION, CreateCollision));
 	m_Creator.insert(std::make_pair(ID::CAMERA, CreateCamera));
+	m_Creator.insert(std::make_pair(ID::PLAYER, CreatePlayer));
 }
 
 Object::ObjectFactoryClass::~ObjectFactoryClass()
@@ -71,6 +73,20 @@ std::unique_ptr<Object::IObjectClass> Object::CreateCamera(Graphic::Model::ID Mo
 	assert(rotate);
 
 	std::unique_ptr<IObjectClass> obj = std::make_unique<CameraClass>(std::move(move), std::move(rotate));
+	assert(obj);
+
+	return obj;
+}
+
+std::unique_ptr<Object::IObjectClass> Object::CreatePlayer(Graphic::Model::ID ModelID)
+{
+	std::unique_ptr<IMoveClass> move = std::make_unique<MoveClass>();
+	assert(move);
+
+	std::unique_ptr<IRotateClass> rotate = std::make_unique<RotateClass>();
+	assert(rotate);
+
+	std::unique_ptr<IObjectClass> obj = std::make_unique<PlayerClass>(std::move(move), std::move(rotate));
 	assert(obj);
 
 	return obj;

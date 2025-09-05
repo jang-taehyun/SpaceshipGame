@@ -9,14 +9,14 @@ Object::GameObjectClass::GameObjectClass(Graphic::Model::ID ModelID, std::unique
 
 Object::GameObjectClass::GameObjectClass(const GameObjectClass& other)
 	: ObjectClass(other),
-	m_ModelID(other.m_ModelID),
-	m_Collision(other.m_Collision->Clone())
+	m_Collision(other.m_Collision->Clone()),
+	m_ModelID(other.m_ModelID)
 {}
 
 Object::GameObjectClass::GameObjectClass(GameObjectClass&& other) noexcept
 	: ObjectClass(std::move(other)),
-	m_ModelID(other.m_ModelID),
-	m_Collision(std::move(other.m_Collision))
+	m_Collision(std::move(other.m_Collision)),
+	m_ModelID(other.m_ModelID)
 {}
 
 Object::GameObjectClass& Object::GameObjectClass::operator=(const GameObjectClass& other)
@@ -27,9 +27,9 @@ Object::GameObjectClass& Object::GameObjectClass::operator=(const GameObjectClas
 	if (m_Collision)
 		m_Collision.reset();
 
-	m_ModelID = other.m_ModelID;
 	m_Collision = other.m_Collision->Clone();
-
+	m_ModelID = other.m_ModelID;
+	
 	ObjectClass::operator=(other);
 
 	return *this;
@@ -43,8 +43,8 @@ Object::GameObjectClass& Object::GameObjectClass::operator=(GameObjectClass&& ot
 	if (m_Collision)
 		m_Collision.reset();
 
-	m_ModelID = other.m_ModelID;
 	m_Collision = std::move(other.m_Collision);
+	m_ModelID = other.m_ModelID;
 
 	ObjectClass::operator=(std::move(other));
 

@@ -137,14 +137,14 @@ Object::CameraClass& Object::CameraClass::operator=(CameraClass&& other) noexcep
 	return *this;
 }
 
-void Object::CameraClass::Update(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, Sound::SoundManagerClass* sounds, float frame_time, bool IsESCPopupWindowActivated)
+bool Object::CameraClass::Update(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, Sound::SoundManagerClass* sounds, float frame_time, bool IsESCPopupWindowActivated)
 {
 	long x = 0, y = 0;
 	System::KEYSTATE state = System::KEYSTATE::NONE;
 	bool IsKeyDown = false;
 
 	if (IsESCPopupWindowActivated)
-		return;
+		return false;
 
 	// 카메라 이동
 	state = input->GetKeyState(System::KEY::W);
@@ -186,9 +186,10 @@ void Object::CameraClass::Update(const System::InputClass* input, Object::Object
 	Rotate(
 		x,
 		y,
-		frame_time,
-		IsKeyDown
+		frame_time
 	);
+
+	return true;
 }
 
 void Object::CameraClass::UpdateFrustum(DirectX::XMFLOAT4X4 projection)
@@ -217,7 +218,7 @@ void Object::CameraClass::Move(MoveState state, float frame_time, bool IsKeyDown
 	SetPosition(pos);
 }
 
-void Object::CameraClass::Rotate(long MouseX, long MouseY, float frame_time, bool IsKeyDown)
+void Object::CameraClass::Rotate(long MouseDeltaX, long MouseDeltaY, float frame_time)
 {
 	DirectX::XMFLOAT4 rot = {};
 
@@ -225,6 +226,26 @@ void Object::CameraClass::Rotate(long MouseX, long MouseY, float frame_time, boo
 	// actor 회전
 	if (!m_Rotate)
 		return;
-	rot = m_Rotate->Rotate(GetRotation(), MouseX, MouseY, frame_time, IsKeyDown);
+	rot = m_Rotate->Rotate(GetRotation(), MouseDeltaX, MouseDeltaY, frame_time);
 	SetRotation(rot);
+}
+
+float Object::CameraClass::GetMoveSpeed() const
+{
+	return m_Move->GetMoveSpeed();
+}
+
+float Object::CameraClass::GetRotateSpeed() const
+{
+	return m_Rotate->GetRoteteSpeed();
+}
+
+void Object::CameraClass::SetMoveSpeed(float speed)
+{
+	return m_Move->SetMoveSpeed(speed);
+}
+
+void Object::CameraClass::SetRotateSpeed(float speed)
+{
+	return m_Rotate->SetRoteteSpeed(speed);
 }

@@ -9,6 +9,7 @@ void System::GlobalVariableInitializerClass::InputData()
 
 	// 전역 변수 중 시스템에서 초기화하는 변수 초기화
 	System::RUNNING = true;
+	System::INTERPOLATION_MOUSE_SPEED = 0.00015f;
 
 	// 전역 변수 중 data.json 파일을 통해 초기화 하는 변수 초기화
 	if (FileIn.is_open())
@@ -25,7 +26,6 @@ void System::GlobalVariableInitializerClass::InitializeGlobalVariable(nlohmann::
 {
 	InitializeResolution(data);
 	InitializeGraphicSetting(data);
-	InitializeInputSensitivity(data);
 }
 
 void System::GlobalVariableInitializerClass::InitializeGlobalVariable()
@@ -39,8 +39,6 @@ void System::GlobalVariableInitializerClass::InitializeGlobalVariable()
 	System::VSYNC_ENABLED = true;
 	System::SCREEN_DEPTH = 1000.f;
 	System::SCREEN_NEAR = 0.1f;
-
-	System::MOUSE_SENSITIVITY = 0.0015f;
 }
 
 void System::GlobalVariableInitializerClass::InitializeResolution(nlohmann::json& data)
@@ -75,12 +73,6 @@ void System::GlobalVariableInitializerClass::InitializeGraphicSetting(nlohmann::
 	SCREEN_NEAR = data["screen near"];
 }
 
-void System::GlobalVariableInitializerClass::InitializeInputSensitivity(nlohmann::json& data)
-{
-	assert(!data["mouse sensitivity"].empty());
-	MOUSE_SENSITIVITY = data["mouse sensitivity"];
-}
-
 void System::GlobalVariableInitializerClass::OutputData()
 {
 	std::ofstream FileOut;
@@ -98,7 +90,6 @@ void System::GlobalVariableInitializerClass::EditGlobalVariable(nlohmann::json& 
 {
 	EditResolution(data);
 	EditGraphicSetting(data);
-	EditMouseSensitivity(data);
 }
 
 void System::GlobalVariableInitializerClass::EditResolution(nlohmann::json& data)
@@ -119,9 +110,4 @@ void System::GlobalVariableInitializerClass::EditGraphicSetting(nlohmann::json& 
 	data["VSYNC"] = (VSYNC_ENABLED ? "true" : "false");
 	data["screen depth"] = SCREEN_DEPTH;
 	data["screen near"] = SCREEN_NEAR;
-}
-
-void System::GlobalVariableInitializerClass::EditMouseSensitivity(nlohmann::json& data)
-{
-	data["mouse sensitivity"] = MOUSE_SENSITIVITY;
 }

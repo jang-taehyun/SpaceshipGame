@@ -39,7 +39,7 @@ void Object::ActorClass::Move(MoveState state, float frame_time, bool IsKeyDown)
 		GetCollision()->SetPosition(pos);
 }
 
-void Object::ActorClass::Rotate(long MouseX, long MouseY, float frame_time, bool IsKeyDown)
+void Object::ActorClass::Rotate(long MouseDeltaX, long MouseDeltaY, float frame_time)
 {
 	DirectX::XMFLOAT4 rot;
 
@@ -47,7 +47,7 @@ void Object::ActorClass::Rotate(long MouseX, long MouseY, float frame_time, bool
 	// actor 회전
 	if (!m_Rotate)
 		return;
-	rot = m_Rotate->Rotate(GetRotation(), MouseX, MouseY, frame_time, IsKeyDown);
+	rot = m_Rotate->Rotate(GetRotation(), MouseDeltaX, MouseDeltaY, frame_time);
 	SetRotation(rot);
 
 	// collision 회전

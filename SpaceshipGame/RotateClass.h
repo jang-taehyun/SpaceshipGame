@@ -15,18 +15,14 @@ namespace Object
 		explicit RotateClass(float speed = 1.f);
 		virtual ~RotateClass() = default;
 
-		DirectX::XMFLOAT4 Rotate(DirectX::XMFLOAT4 rotate, long MouseX, long MouseY, float frame_time, bool IsKeyDown) override;
+		virtual DirectX::XMFLOAT4 Rotate(DirectX::XMFLOAT4 rotate, long MouseDeltaX, long MouseDeltaY, float frame_time) override;
 
-		float GetRoteteSpeed() const override { return m_RotateSpeed; }
-		void SetRoteteSpeed(float value) override { m_RotateSpeed = value; }
+		virtual float GetRoteteSpeed() const override { return m_RotateSpeed; }
+		virtual void SetRoteteSpeed(float value) override { m_RotateSpeed = value; }
 
 		virtual std::unique_ptr<IRotateClass> Clone() const override;
 
 	private:
-		float ComputeRotateSpeed(float frame_time, bool IsKeyDown) override;
-
-	private:
 		float m_RotateSpeed = 1.f;
-		float m_PrevRotateSpeed = 0.f;
 	};
 }

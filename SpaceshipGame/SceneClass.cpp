@@ -20,7 +20,7 @@ Scene::SceneClass::SceneClass(const SceneClass & other)
 	m_IsSceneEnded(other.m_IsSceneEnded),
 	m_ESCPopupActive(other.m_ESCPopupActive)
 {
-	m_ObjectList.insert(other.m_ObjectList.begin(), other.m_ObjectList.end());
+	m_UIIdxList.insert(other.m_UIIdxList.begin(), other.m_UIIdxList.end());
 }
 
 Scene::SceneClass::SceneClass(SceneClass&& other) noexcept
@@ -30,7 +30,7 @@ Scene::SceneClass::SceneClass(SceneClass&& other) noexcept
 	m_SkyDomeID(other.m_SkyDomeID),
 	m_IsSceneEnded(other.m_IsSceneEnded),
 	m_ESCPopupActive(other.m_ESCPopupActive),
-	m_ObjectList(std::move(other.m_ObjectList))
+	m_UIIdxList(std::move(other.m_UIIdxList))
 {}
 
 Scene::SceneClass::~SceneClass()
@@ -43,7 +43,7 @@ Scene::SceneClass& Scene::SceneClass::operator=(const SceneClass& other)
 	if (this == &other)
 		return *this;
 
-	m_ObjectList.clear();
+	m_UIIdxList.clear();
 
 	m_CurrentSceneID = other.m_CurrentSceneID;
 	m_NextSceneID = other.m_NextSceneID;
@@ -51,7 +51,7 @@ Scene::SceneClass& Scene::SceneClass::operator=(const SceneClass& other)
 	m_SkyDomeID = other.m_SkyDomeID;
 	m_IsSceneEnded = other.m_IsSceneEnded;
 	m_ESCPopupActive = other.m_ESCPopupActive;
-	m_ObjectList.insert(other.m_ObjectList.begin(), other.m_ObjectList.end());
+	m_UIIdxList.insert(other.m_UIIdxList.begin(), other.m_UIIdxList.end());
 
 	return *this;
 }
@@ -61,7 +61,7 @@ Scene::SceneClass& Scene::SceneClass::operator=(SceneClass&& other) noexcept
 	if (this == &other)
 		return *this;
 
-	m_ObjectList.clear();
+	m_UIIdxList.clear();
 
 	m_CurrentSceneID = other.m_CurrentSceneID;
 	m_NextSceneID = other.m_NextSceneID;
@@ -69,7 +69,7 @@ Scene::SceneClass& Scene::SceneClass::operator=(SceneClass&& other) noexcept
 	m_SkyDomeID = other.m_SkyDomeID;
 	m_IsSceneEnded = other.m_IsSceneEnded;
 	m_ESCPopupActive = other.m_ESCPopupActive;
-	m_ObjectList = std::move(m_ObjectList);
+	m_UIIdxList = std::move(m_UIIdxList);
 
 	return *this;
 }
@@ -136,28 +136,29 @@ void Scene::SceneClass::LoadESCPopupWindow(Text::TextManagerClass* texts, UI::UI
 	UIs->GetUI(idx)->SetDepth(depth);
 	UIs->GetUI(idx)->SetUIState(UI::UIState::ACTIVE, false);
 	UIs->GetUI(idx)->SetUIState(UI::UIState::APPEAR, false);
-	m_ObjectList.insert(std::make_pair(ObjectID::POPUP_BACKGROUND, idx));
+	m_UIIdxList.insert(std::make_pair(ObjectID::POPUP_BACKGROUND, idx));
 
 	// 팝업창 UI 로드
+	depth = 0.21f;
 	idx = UIs->LoadUI(UI::ID::STATIC, Graphic::Texture::UITextureID::ECS_POPUP);
 	UIs->GetUI(idx)->SetPosition(pos);
-	UIs->GetUI(idx)->SetColor(DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f));
 	UIs->GetUI(idx)->SetScale(DirectX::XMFLOAT2(300.f, 300.f));
 	UIs->GetUI(idx)->SetDepth(depth);
 	UIs->GetUI(idx)->SetUIState(UI::UIState::ACTIVE, false);
 	UIs->GetUI(idx)->SetUIState(UI::UIState::APPEAR, false);
-	m_ObjectList.insert(std::make_pair(ObjectID::POPUP_UI, idx));
+	m_UIIdxList.insert(std::make_pair(ObjectID::POPUP_UI, idx));
 
 	// 팝업창 text 로드
+	depth = 0.22f;
 	pos.y -= 60.f;
 	idx = texts->Load(Text::ID::DEFAULT, _T("게임을 끝내시겠습니까?"), Graphic::Font::ID::DEFAULT);
 	texts->GetTextObject(idx)->SetPosition(pos);
-	texts->GetTextObject(idx)->SetColor(textColor);
+	texts->GetTextObject(idx)->SetColor(DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f));
 	texts->GetTextObject(idx)->SetScale(DirectX::XMFLOAT2(1.f, 1.f));
-	texts->GetTextObject(idx)->SetDepth(depth + 0.01f);
+	texts->GetTextObject(idx)->SetDepth(depth);
 	texts->GetTextObject(idx)->SetTextState(UI::UIState::ACTIVE, false);
 	texts->GetTextObject(idx)->SetTextState(UI::UIState::APPEAR, false);
-	m_ObjectList.insert(std::make_pair(ObjectID::POPUP_UI_TEXT, idx));
+	m_UIIdxList.insert(std::make_pair(ObjectID::POPUP_UI_TEXT, idx));
 	pos.y += 60.f;
 
 	// 팝업창의 OK 버튼 UI 로드
@@ -169,7 +170,7 @@ void Scene::SceneClass::LoadESCPopupWindow(Text::TextManagerClass* texts, UI::UI
 	UIs->GetUI(idx)->SetDepth(depth);
 	UIs->GetUI(idx)->SetUIState(UI::UIState::ACTIVE, false);
 	UIs->GetUI(idx)->SetUIState(UI::UIState::APPEAR, false);
-	m_ObjectList.insert(std::make_pair(ObjectID::POPUP_BUTTON_UI_OK, idx));
+	m_UIIdxList.insert(std::make_pair(ObjectID::POPUP_BUTTON_UI_OK, idx));
 
 	// 팝업창의 OK 버튼의 text 로드
 	idx = texts->Load(Text::ID::DEFAULT, _T("OK"), Graphic::Font::ID::DEFAULT);
@@ -179,7 +180,7 @@ void Scene::SceneClass::LoadESCPopupWindow(Text::TextManagerClass* texts, UI::UI
 	texts->GetTextObject(idx)->SetDepth(depth + 0.01f);
 	texts->GetTextObject(idx)->SetTextState(UI::UIState::ACTIVE, false);
 	texts->GetTextObject(idx)->SetTextState(UI::UIState::APPEAR, false);
-	m_ObjectList.insert(std::make_pair(ObjectID::POPUP_BUTTON_TEXT_OK, idx));
+	m_UIIdxList.insert(std::make_pair(ObjectID::POPUP_BUTTON_TEXT_OK, idx));
 	pos.y -= 10.f;
 	pos.x += 60.f;
 
@@ -192,7 +193,7 @@ void Scene::SceneClass::LoadESCPopupWindow(Text::TextManagerClass* texts, UI::UI
 	UIs->GetUI(idx)->SetDepth(depth);
 	UIs->GetUI(idx)->SetUIState(UI::UIState::ACTIVE, false);
 	UIs->GetUI(idx)->SetUIState(UI::UIState::APPEAR, false);
-	m_ObjectList.insert(std::make_pair(ObjectID::POPUP_BUTTON_UI_CANCEL, idx));
+	m_UIIdxList.insert(std::make_pair(ObjectID::POPUP_BUTTON_UI_CANCEL, idx));
 
 	// 팝업창의 CANCEL 버튼의 text 로드
 	idx = texts->Load(Text::ID::DEFAULT, _T("CANCEL"), Graphic::Font::ID::DEFAULT);
@@ -202,7 +203,7 @@ void Scene::SceneClass::LoadESCPopupWindow(Text::TextManagerClass* texts, UI::UI
 	texts->GetTextObject(idx)->SetDepth(depth + 0.01f);
 	texts->GetTextObject(idx)->SetTextState(UI::UIState::ACTIVE, false);
 	texts->GetTextObject(idx)->SetTextState(UI::UIState::APPEAR, false);
-	m_ObjectList.insert(std::make_pair(ObjectID::POPUP_BUTTON_TEXT_CANCEL, idx));
+	m_UIIdxList.insert(std::make_pair(ObjectID::POPUP_BUTTON_TEXT_CANCEL, idx));
 	pos.y += 10.f;
 	pos.x -= 60.f;
 }
@@ -210,8 +211,8 @@ void Scene::SceneClass::LoadESCPopupWindow(Text::TextManagerClass* texts, UI::UI
 
 void Scene::SceneClass::ActiveESCPopup(Text::TextManagerClass* texts, UI::UIManagerClass* UIs)
 {
-	std::map<ObjectID, UINT>::iterator iter = m_ObjectList.begin();
-	for (; iter != m_ObjectList.end(); ++iter)
+	std::map<ObjectID, UINT>::iterator iter = m_UIIdxList.begin();
+	for (; iter != m_UIIdxList.end(); ++iter)
 	{
 		switch (iter->first)
 		{
@@ -243,8 +244,8 @@ void Scene::SceneClass::ActiveESCPopup(Text::TextManagerClass* texts, UI::UIMana
 
 void Scene::SceneClass::DeactiveESCPopup(Text::TextManagerClass* texts, UI::UIManagerClass* UIs)
 {
-	std::map<ObjectID, UINT>::iterator iter = m_ObjectList.begin();
-	for (; iter != m_ObjectList.end(); ++iter)
+	std::map<ObjectID, UINT>::iterator iter = m_UIIdxList.begin();
+	for (; iter != m_UIIdxList.end(); ++iter)
 	{
 		switch (iter->first)
 		{
@@ -283,7 +284,7 @@ bool Scene::SceneClass::ProcessESCPopUp(const System::InputClass* input, Text::T
 	UINT uiState = 0;
 	bool IsActive = false;
 
-	// ESC 키가 눌리면 팝업창을 활성화하거나 비활성화
+	// ESC 키가 눌렸다가 떼어졌을 때 팝업창을 활성화하거나 비활성화
 	if (System::KEYSTATE::AWAY == input->GetKeyState(System::KEY::ESC))
 	{
 		if (!m_ESCPopupActive)
@@ -304,7 +305,7 @@ bool Scene::SceneClass::ProcessESCPopUp(const System::InputClass* input, Text::T
 	if (m_ESCPopupActive)
 	{
 		// OK 버튼이 눌렸는지 검사
-		idx = m_ObjectList.find(ObjectID::POPUP_BUTTON_UI_OK)->second;
+		idx = m_UIIdxList.find(ObjectID::POPUP_BUTTON_UI_OK)->second;
 		b = static_cast<UI::ButtonClass*>(UIs->GetUI(idx));
 		uiState = b->GetUIState();
 		IsActive = uiState & ActiveFlag;
@@ -317,7 +318,7 @@ bool Scene::SceneClass::ProcessESCPopUp(const System::InputClass* input, Text::T
 		}
 
 		// CANCEL 버튼이 눌렸는지 검사
-		idx = m_ObjectList.find(ObjectID::POPUP_BUTTON_UI_CANCEL)->second;
+		idx = m_UIIdxList.find(ObjectID::POPUP_BUTTON_UI_CANCEL)->second;
 		b = static_cast<UI::ButtonClass*>(UIs->GetUI(idx));
 		uiState = b->GetUIState();
 		IsActive = uiState & ActiveFlag;

@@ -21,7 +21,6 @@ namespace System
 	private:
 		void InitializeResolution(nlohmann::json& data);
 		void InitializeGraphicSetting(nlohmann::json& data);
-		void InitializeInputSensitivity(nlohmann::json& data);
 
 		// json 파일 쓰기 //
 	public:
@@ -33,6 +32,5 @@ namespace System
 	private:
 		void EditResolution(nlohmann::json& data);
 		void EditGraphicSetting(nlohmann::json& data);
-		void EditMouseSensitivity(nlohmann::json& data);
 	};
 }

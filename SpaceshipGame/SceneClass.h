@@ -65,6 +65,6 @@ namespace Scene
 
 		bool m_IsSceneEnded = false;
 		bool m_ESCPopupActive = false;
-		std::map<ObjectID, UINT> m_ObjectList;
+		std::map<ObjectID, UINT> m_UIIdxList;
 	};
 }

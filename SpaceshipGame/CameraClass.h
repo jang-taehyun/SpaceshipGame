@@ -32,12 +32,17 @@ namespace Object
 		bool IsRenderQuadTree(DirectX::XMFLOAT4 point1, DirectX::XMFLOAT4 point2);
 
 		void Move(MoveState state, float frame_time, bool IsKeyDown);
-		void Rotate(long MouseX, long MouseY, float frame_time, bool IsKeyDown);
+		void Rotate(long MouseDeltaX, long MouseDeltaY, float frame_time);
+
+		float GetMoveSpeed() const;
+		float GetRotateSpeed() const;
+		void SetMoveSpeed(float speed);
+		void SetRotateSpeed(float speed);
 
 		CameraClass& operator=(const CameraClass& other);
 		CameraClass& operator=(CameraClass&& other) noexcept;
 
-		virtual void Update(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, Sound::SoundManagerClass* sounds, float frame_time, bool IsESCPopupWindowActivated) override;
+		virtual bool Update(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, Sound::SoundManagerClass* sounds, float frame_time, bool IsESCPopupWindowActivated) override;
 
 		virtual std::unique_ptr<IObjectClass> Clone() const override { return std::make_unique<CameraClass>(*this); }
 
