@@ -8,6 +8,7 @@ namespace Object
 {
 	std::unique_ptr<IObjectClass> CreateActor(Graphic::Model::ID ModelID);
 	std::unique_ptr<IObjectClass> CreateCollision(Graphic::Model::ID ModelID);
+	std::unique_ptr<IObjectClass> CreateCamera(Graphic::Model::ID ModelID);
 
 	class ObjectFactoryClass
 	{

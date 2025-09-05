@@ -28,7 +28,6 @@ namespace Scene
 		virtual bool IsSceneEnded() const = 0;
 		
 		virtual void Frame(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time) = 0;
-		virtual Object::IObjectClass* GetActiveCamera() = 0;
 		virtual std::unique_ptr<ISceneClass> Clone() const = 0;
 	};
 }

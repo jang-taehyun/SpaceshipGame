@@ -57,11 +57,6 @@ bool Scene::SceneManagerClass::Frame(const System::InputClass* input, float fram
 	return false;
 }
 
-Object::IObjectClass* Scene::SceneManagerClass::GetCamera()
-{
-	return m_Scene->GetActiveCamera();
-}
-
 void Scene::SceneManagerClass::Release()
 {
 	m_ObjectManager->Release();

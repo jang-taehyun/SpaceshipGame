@@ -2,12 +2,16 @@
 #include "IMoveClass.h"
 #include "IRotateClass.h"
 #include "ComputeDirectionVectorClass.h"
+#include "InputClass.h"
 #include "CameraClass.h"
 
 Object::CameraClass::CameraClass(std::unique_ptr<IMoveClass> move, std::unique_ptr<IRotateClass> rotate)
 	: m_Move(std::move(move)),
 	m_Rotate(std::move(rotate))
-{}
+{
+	assert(m_Move);
+	assert(m_Rotate);
+}
 
 Object::CameraClass::CameraClass(const CameraClass& other)
 	: ObjectClass(other),
@@ -131,6 +135,60 @@ Object::CameraClass& Object::CameraClass::operator=(CameraClass&& other) noexcep
 	ObjectClass::operator=(std::move(other));
 
 	return *this;
+}
+
+void Object::CameraClass::Update(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, Sound::SoundManagerClass* sounds, float frame_time, bool IsESCPopupWindowActivated)
+{
+	long x = 0, y = 0;
+	System::KEYSTATE state = System::KEYSTATE::NONE;
+	bool IsKeyDown = false;
+
+	if (IsESCPopupWindowActivated)
+		return;
+
+	// 카메라 이동
+	state = input->GetKeyState(System::KEY::W);
+	IsKeyDown = (System::KEYSTATE::TAP == state || System::KEYSTATE::HOLD == state);
+	Move(
+		Object::MoveState::MOVE_FORWARD,
+		frame_time,
+		IsKeyDown
+	);
+
+	state = input->GetKeyState(System::KEY::S);
+	IsKeyDown = (System::KEYSTATE::TAP == state || System::KEYSTATE::HOLD == state);
+	Move(
+		Object::MoveState::MOVE_BACKWARD,
+		frame_time,
+		IsKeyDown
+	);
+
+	state = input->GetKeyState(System::KEY::A);
+	IsKeyDown = (System::KEYSTATE::TAP == state || System::KEYSTATE::HOLD == state);
+	Move(
+		Object::MoveState::MOVE_LEFT,
+		frame_time,
+		IsKeyDown
+	);
+
+	state = input->GetKeyState(System::KEY::D);
+	IsKeyDown = (System::KEYSTATE::TAP == state || System::KEYSTATE::HOLD == state);
+	Move(
+		Object::MoveState::MOVE_RIGHT,
+		frame_time,
+		IsKeyDown
+	);
+
+	// 카메라 회전
+	input->GetMouseMoveDelta(x, y);
+	state = input->GetKeyState(System::KEY::MOUSE_CENTER);
+	IsKeyDown = (System::KEYSTATE::TAP == state || System::KEYSTATE::HOLD == state);
+	Rotate(
+		x,
+		y,
+		frame_time,
+		IsKeyDown
+	);
 }
 
 void Object::CameraClass::UpdateFrustum(DirectX::XMFLOAT4X4 projection)

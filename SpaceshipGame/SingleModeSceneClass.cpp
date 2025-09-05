@@ -22,21 +22,18 @@ Scene::SingleModeSceneClass::SingleModeSceneClass(ID next, Object::ObjectManager
 {
 	LoadESCPopupWindow(texts, UIs);
 	LoadSound(sounds);
-	LoadCamera();
 	LoadTerrain();
 	LoadObject(objects);
 }
 
 Scene::SingleModeSceneClass::SingleModeSceneClass(const SingleModeSceneClass& other)
-	: SceneClass(other),
-	m_Camera(std::move(other.m_Camera->Clone()))
+	: SceneClass(other)
 {
 	m_ObjectList.insert(other.m_ObjectList.begin(), other.m_ObjectList.end());
 }
 
 Scene::SingleModeSceneClass::SingleModeSceneClass(SingleModeSceneClass&& other) noexcept
 	: SceneClass(std::move(other)),
-	m_Camera(std::move(other.m_Camera)),
 	m_ObjectList(std::move(other.m_ObjectList))
 {}
 
@@ -45,11 +42,8 @@ Scene::SingleModeSceneClass& Scene::SingleModeSceneClass::operator=(const Single
 	if (this == &other)
 		return *this;
 
-	if (m_Camera)
-		m_Camera.reset();
 	m_ObjectList.clear();
 
-	m_Camera = other.m_Camera->Clone();
 	m_ObjectList.insert(other.m_ObjectList.begin(), other.m_ObjectList.end());
 	SceneClass::operator=(other);
 
@@ -61,11 +55,8 @@ Scene::SingleModeSceneClass& Scene::SingleModeSceneClass::operator=(SingleModeSc
 	if (this == &other)
 		return *this;
 
-	if (m_Camera)
-		m_Camera.reset();
 	m_ObjectList.clear();
 
-	m_Camera = std::move(other.m_Camera);
 	m_ObjectList = std::move(other.m_ObjectList);
 	SceneClass::operator=(std::move(other));
 
@@ -173,7 +164,7 @@ void Scene::SingleModeSceneClass::DeactiveESCPopup(Text::TextManagerClass* texts
 	// 부모 클래스의 DeactiveESCPopup() 함수 호출
 	SceneClass::DeactiveESCPopup(texts, UIs);
 
-	// PRVIOUS 버튼 활성화
+	// PRVIOUS 버튼 비활성화
 	idx = m_ObjectList.find(ObjectID::POPUP_BUTTON_UI_PREVIOUS)->second;
 	UIs->GetUI(idx)->SetUIState(UI::UIState::ACTIVE, false);
 	UIs->GetUI(idx)->SetUIState(UI::UIState::APPEAR, false);
@@ -191,12 +182,9 @@ void Scene::SingleModeSceneClass::DeactiveChildSceneUI(Text::TextManagerClass* t
 {
 }
 
-bool Scene::SingleModeSceneClass::ProcessChildScene(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time)
+void Scene::SingleModeSceneClass::ProcessChildScene(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time)
 {
-	if (ProcessCamera(input, frame_time))
-		return true;
-
-	return false;
+	objects->Frame(input, texts, sounds, frame_time, GetIsESCPopupActive());
 }
 
 void Scene::SingleModeSceneClass::LoadSound(Sound::SoundManagerClass* sounds)
@@ -210,17 +198,6 @@ void Scene::SingleModeSceneClass::LoadSound(Sound::SoundManagerClass* sounds)
 	sounds->Play(Sound::ID::BACKGROUND);
 }
 
-void Scene::SingleModeSceneClass::LoadCamera()
-{
-	std::unique_ptr<Object::IMoveClass> move = std::make_unique<Object::MoveClass>();
-	std::unique_ptr<Object::IRotateClass> rotate = std::make_unique<Object::RotateClass>();
-
-	// 카메라 로드
-	m_Camera = std::make_unique<Object::CameraClass>(std::move(move), std::move(rotate));
-	assert(m_Camera);
-	m_Camera->SetPosition(DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f));
-}
-
 void Scene::SingleModeSceneClass::LoadTerrain()
 {
 	// 지형 로드
@@ -230,73 +207,12 @@ void Scene::SingleModeSceneClass::LoadTerrain()
 
 void Scene::SingleModeSceneClass::LoadObject(Object::ObjectManagerClass* objects)
 {
-	// object 로드
-	UINT idx = objects->Load(Object::ID::ACTOR, Graphic::Model::ID::DEFAULT_SPACESHIP);
-	objects->SetPlayerIdx(idx);
+	// 카메라 로드
+	UINT idx = objects->Load(Object::ID::CAMERA, Graphic::Model::ID::NONE);
+	objects->SetCameraIdx(idx);
 	objects->GetGameObject(idx)->SetPosition(DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f));
-}
 
-bool Scene::SingleModeSceneClass::ProcessCamera(const System::InputClass* input, float frame_time)
-{
-	Object::CameraClass* cam = static_cast<Object::CameraClass*>(m_Camera.get());
-	long x = 0, y = 0;
-	System::KEYSTATE state = System::KEYSTATE::NONE;
-	bool IsKeyDown = false;
-	bool ret = false;
-
-	// 카메라 이동
-	state = input->GetKeyState(System::KEY::W);
-	IsKeyDown = (System::KEYSTATE::TAP == state || System::KEYSTATE::HOLD == state);
-	cam->Move(
-		Object::MoveState::MOVE_FORWARD,
-		frame_time,
-		IsKeyDown
-	);
-	if (IsKeyDown)
-		ret = true;
-
-	state = input->GetKeyState(System::KEY::S);
-	IsKeyDown = (System::KEYSTATE::TAP == state || System::KEYSTATE::HOLD == state);
-	cam->Move(
-		Object::MoveState::MOVE_BACKWARD,
-		frame_time,
-		IsKeyDown
-	);
-	if (IsKeyDown)
-		ret = true;
-
-	state = input->GetKeyState(System::KEY::A);
-	IsKeyDown = (System::KEYSTATE::TAP == state || System::KEYSTATE::HOLD == state);
-	cam->Move(
-		Object::MoveState::MOVE_LEFT,
-		frame_time,
-		IsKeyDown
-	);
-	if (IsKeyDown)
-		ret = true;
-
-	state = input->GetKeyState(System::KEY::D);
-	IsKeyDown = (System::KEYSTATE::TAP == state || System::KEYSTATE::HOLD == state);
-	cam->Move(
-		Object::MoveState::MOVE_RIGHT,
-		frame_time,
-		IsKeyDown
-	);
-	if (IsKeyDown)
-		ret = true;
-
-	// 카메라 회전
-	input->GetMouseMoveDelta(x, y);
-	state = input->GetKeyState(System::KEY::MOUSE_CENTER);
-	IsKeyDown = (System::KEYSTATE::TAP == state || System::KEYSTATE::HOLD == state);
-	cam->Rotate(
-		x,
-		y,
-		frame_time,
-		IsKeyDown
-	);
-	if (IsKeyDown)
-		ret = true;
-
-	return ret;
+	// object 로드
+	idx = objects->Load(Object::ID::ACTOR, Graphic::Model::ID::DEFAULT_SPACESHIP);
+	objects->GetGameObject(idx)->SetPosition(DirectX::XMFLOAT4(0.f, 0.f, 0.f, 1.f));
 }

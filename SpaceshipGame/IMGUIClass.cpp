@@ -94,27 +94,24 @@ void Graphic::IMGUIClass::SetUI(Scene::SceneManagerClass* SceneManager, Graphic:
 	title = u8"사운드 재생 조정";
 	SetSoundInfo(title, 2, SceneManager->GetSoundManager());
 
-	if (SceneManager->GetCamera())
+	if (SceneManager->GetObjectManager()->GetCamera())
 	{
 		title = u8"카메라 위치, 회전";
-		SetCameraInfo(title, 1, SceneManager->GetCamera());
+		SetCameraInfo(title, 1, SceneManager->GetObjectManager()->GetCamera());
 
 		title = u8"광원 정보(ambient, diffuse, direction, specular color, specular power)";
 		SetLightInfo(title, 3, light);
 
 		for (UINT i = 0; i < SceneManager->GetObjectManager()->GetObjectCount(); ++i)
 		{
-			obj = static_cast<Object::GameObjectClass*>(SceneManager->GetObjectManager()->GetGameObject(i));
-
-			if (i != SceneManager->GetObjectManager()->GetPlayerIdx())
+			if (SceneManager->GetObjectManager()->GetCameraIdx() != i)
 			{
+				obj = static_cast<Object::GameObjectClass*>(SceneManager->GetObjectManager()->GetGameObject(i));
 				title = u8"번째 other의 affine(position, rotate, scale), collision(center, rotate, extends)";
 				title = std::to_string(i + 1) + title;
-			}
-			else
-				title = u8"player의 affine(position, rotate, scale), collision(center, rotate, extends)";
 
-			SetObjectInfo(title, i + 4, obj);
+				SetObjectInfo(title, i + 4, obj);
+			}
 		}
 	}
 }

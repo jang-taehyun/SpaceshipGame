@@ -69,6 +69,7 @@ namespace Object
 		NONE,
 		ACTOR,
 		COLLISION,
+		CAMERA,
 	};
 
 	// 이동 상태 정보
@@ -86,9 +87,9 @@ namespace Object
 	// affine 데이터(이동, 회전, 스케일) 관련
 	struct AffineInfo
 	{
-		DirectX::XMFLOAT4 position;
-		DirectX::XMFLOAT4 rotation;
-		DirectX::XMFLOAT4 scale;
+		DirectX::XMFLOAT4 position = {};
+		DirectX::XMFLOAT4 rotation = {};
+		DirectX::XMFLOAT4 scale = {};
 	};
 }
 

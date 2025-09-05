@@ -113,15 +113,13 @@ void Scene::ModeChooseSceneClass::DeactiveChildSceneUI(Text::TextManagerClass* t
 	}
 }
 
-bool Scene::ModeChooseSceneClass::ProcessChildScene(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time)
+void Scene::ModeChooseSceneClass::ProcessChildScene(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time)
 {
 	if (ProcessSingleModeButton(UIs->GetUI(m_ObjectList.find(ObjectID::SCENE_BUTTON_UI_SINGLEMODE)->second)))
-		return true;
+		return;
 
 	if (ProcessMultiModeButton(UIs->GetUI(m_ObjectList.find(ObjectID::SCENE_BUTTON_UI_MULTIMODE)->second)))
-		return true;
-
-	return false;
+		return;
 }
 
 void Scene::ModeChooseSceneClass::LoadSound(Sound::SoundManagerClass* sounds)

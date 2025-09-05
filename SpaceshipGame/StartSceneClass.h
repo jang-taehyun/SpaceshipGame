@@ -27,7 +27,7 @@ namespace Scene
 		virtual std::unique_ptr<ISceneClass> Clone() const override { return std::make_unique<StartSceneClass>(*this); }
 
 	private:
-		virtual bool ProcessChildScene(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time) override;
+		virtual void ProcessChildScene(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time) override;
 		virtual void ActiveChildSceneUI(Text::TextManagerClass* texts, UI::UIManagerClass* UIs) override;
 		virtual void DeactiveChildSceneUI(Text::TextManagerClass* texts, UI::UIManagerClass* UIs) override;
 
@@ -37,7 +37,7 @@ namespace Scene
 		void Load2DBackground(UI::UIManagerClass* UIs);
 		void LoadGameStartButton(Text::TextManagerClass* texts, UI::UIManagerClass* UIs);
 
-		bool ProcessStartButton(UI::IUIClass* button);
+		void ProcessStartButton(UI::IUIClass* button);
 
 	private:
 		std::map<ObjectID, UINT> m_ObjectList;

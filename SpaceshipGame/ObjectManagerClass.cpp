@@ -26,6 +26,13 @@ Object::IObjectClass* Object::ObjectManagerClass::GetGameObject(UINT idx) const
 	return m_ObjectList[idx].get();
 }
 
+void Object::ObjectManagerClass::Frame(const System::InputClass* input, Text::TextManagerClass* texts, Sound::SoundManagerClass* sounds, float frame_time, bool IsESCPopupWindowActivated)
+{
+	UINT cnt = static_cast<UINT>(m_ObjectList.size());
+	for (UINT i = 0; i < cnt; ++i)
+		m_ObjectList[i]->Update(input, this, texts, sounds, frame_time, IsESCPopupWindowActivated);
+}
+
 UINT Object::ObjectManagerClass::Load(ID ObjectID, Graphic::Model::ID ModelID)
 {
 	std::unique_ptr<IObjectClass> obj = std::move(m_Loader->Load(ObjectID, ModelID));
@@ -45,6 +52,6 @@ UINT Object::ObjectManagerClass::Load(ID ObjectID, Graphic::Model::ID ModelID)
 void Object::ObjectManagerClass::Release()
 {
 	m_ModelMask = 0;
-	m_PlayerIdx = 0;
+	m_CameraIdx = 0;
 	m_ObjectList.clear();
 }

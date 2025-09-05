@@ -31,7 +31,6 @@ namespace Scene
 		UI::UIManagerClass* GetUIManager() const { return m_UIManager.get(); }
 		Object::ObjectManagerClass* GetObjectManager() { return m_ObjectManager.get(); }
 		Sound::SoundManagerClass* GetSoundManager() const { return m_SoundManager.get(); }
-		Object::IObjectClass* GetCamera();
 
 		Graphic::Terrain::TerrainID GetTerrainID() const { return m_Scene->GetTerrainID(); }
 		Graphic::Terrain::SkyDomeID GetSkyDomeID() const { return m_Scene->GetSkyDomeID(); }

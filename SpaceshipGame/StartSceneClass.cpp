@@ -59,12 +59,9 @@ Scene::StartSceneClass& Scene::StartSceneClass::operator=(StartSceneClass&& othe
 	return *this;
 }
 
-bool Scene::StartSceneClass::ProcessChildScene(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time)
+void Scene::StartSceneClass::ProcessChildScene(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time)
 {
-	if (ProcessStartButton(UIs->GetUI(m_ObjectList.find(ObjectID::SCENE_BUTTON_UI_START)->second)))
-		return true;
-
-	return false;
+	ProcessStartButton(UIs->GetUI(m_ObjectList.find(ObjectID::SCENE_BUTTON_UI_START)->second));
 }
 
 void Scene::StartSceneClass::ActiveChildSceneUI(Text::TextManagerClass* texts, UI::UIManagerClass* UIs)
@@ -183,7 +180,7 @@ void Scene::StartSceneClass::LoadGameStartButton(Text::TextManagerClass* texts, 
 	m_ObjectList.insert(std::make_pair(ObjectID::SCENE_BUTTON_TEXT_START, idx));
 }
 
-bool Scene::StartSceneClass::ProcessStartButton(UI::IUIClass* button)
+void Scene::StartSceneClass::ProcessStartButton(UI::IUIClass* button)
 {
 	// button UI 가져오기
 	UI::ButtonClass* b = static_cast<UI::ButtonClass*>(button);
@@ -197,11 +194,6 @@ bool Scene::StartSceneClass::ProcessStartButton(UI::IUIClass* button)
 
 	// 버튼이 눌리면 다음 scene으로 전환
 	if (IsActive && UI::ButtonState::ONCLICKED == b->GetButtonState())
-	{
 		SetSceneEnded();
-		return true;
-	}
-		
-	return false;
 }
 

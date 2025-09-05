@@ -10,3 +10,7 @@ const DirectX::XMFLOAT4X4 Object::ObjectClass::GetAffineMatrix() const
 	ret = Utility::TypeConverterClass::XMFLOAT4toXMFLOAT4X4(m_Affine.position, m_Affine.rotation, m_Affine.scale);
 	return ret;
 }
+
+void Object::ObjectClass::Update(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, Sound::SoundManagerClass* sounds, float frame_time, bool IsESCPopupWindowActivated)
+{
+}

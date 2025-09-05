@@ -1,9 +1,5 @@
 #pragma once
 
-/**
-* CollisionClass °³¿ä
-*/
-
 #include <DirectXCollision.h>
 #include "ObjectClass.h"
 

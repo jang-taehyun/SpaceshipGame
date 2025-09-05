@@ -34,7 +34,6 @@ namespace Scene
 		virtual bool IsSceneEnded() const override { return m_IsSceneEnded; }
 
 		virtual void Frame(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time) override;
-		virtual Object::IObjectClass* GetActiveCamera() override { return nullptr; }
 
 		virtual std::unique_ptr<ISceneClass> Clone() const override = 0;
 
@@ -55,7 +54,7 @@ namespace Scene
 
 		virtual void ActiveChildSceneUI(Text::TextManagerClass* texts, UI::UIManagerClass* UIs) = 0;
 		virtual void DeactiveChildSceneUI(Text::TextManagerClass* texts, UI::UIManagerClass* UIs) = 0;
-		virtual bool ProcessChildScene(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time) = 0;
+		virtual void ProcessChildScene(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time) = 0;
 
 	private:
 		ID m_CurrentSceneID = ID::NONE;

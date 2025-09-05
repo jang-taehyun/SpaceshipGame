@@ -76,11 +76,10 @@ Scene::SceneClass& Scene::SceneClass::operator=(SceneClass&& other) noexcept
 
 void Scene::SceneClass::Frame(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time)
 {
-	if (ProcessESCPopUp(input, texts, UIs) || m_ESCPopupActive)
+	if (ProcessESCPopUp(input, texts, UIs))
 		return;
 
-	if (ProcessChildScene(input, objects, texts, UIs, sounds, frame_time))
-		return;
+	ProcessChildScene(input, objects, texts, UIs, sounds, frame_time);
 }
 
 bool Scene::SceneClass::GetIsShowMouseCursor() const
@@ -116,7 +115,6 @@ void Scene::SceneClass::SetShowMouseCursor(bool IsShow)
 			ShowCursor(false);
 	}
 }
-
 
 void Scene::SceneClass::LoadESCPopupWindow(Text::TextManagerClass* texts, UI::UIManagerClass* UIs)
 {

@@ -37,6 +37,8 @@ namespace Object
 		CameraClass& operator=(const CameraClass& other);
 		CameraClass& operator=(CameraClass&& other) noexcept;
 
+		virtual void Update(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, Sound::SoundManagerClass* sounds, float frame_time, bool IsESCPopupWindowActivated) override;
+
 		virtual std::unique_ptr<IObjectClass> Clone() const override { return std::make_unique<CameraClass>(*this); }
 
 	private:

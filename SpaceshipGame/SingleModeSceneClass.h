@@ -22,7 +22,6 @@ namespace Scene
 		SingleModeSceneClass& operator=(const SingleModeSceneClass& other);
 		SingleModeSceneClass& operator=(SingleModeSceneClass&& other) noexcept;
 
-		virtual Object::IObjectClass* GetActiveCamera() override { return m_Camera.get(); }
 		virtual std::unique_ptr<ISceneClass> Clone() const override { return std::make_unique<SingleModeSceneClass>(*this); }
 
 	private:
@@ -33,18 +32,14 @@ namespace Scene
 
 		virtual void ActiveChildSceneUI(Text::TextManagerClass* texts, UI::UIManagerClass* UIs) override;
 		virtual void DeactiveChildSceneUI(Text::TextManagerClass* texts, UI::UIManagerClass* UIs) override;
-		virtual bool ProcessChildScene(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time) override;
+		virtual void ProcessChildScene(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds, float frame_time) override;
 
 	private:
 		void LoadSound(Sound::SoundManagerClass* sounds);
-		void LoadCamera();
 		void LoadTerrain();
 		void LoadObject(Object::ObjectManagerClass* objects);
 
-		bool ProcessCamera(const System::InputClass* input, float frame_time);
-
 	private:
-		std::unique_ptr<Object::IObjectClass> m_Camera = nullptr;
 		std::map<ObjectID, UINT> m_ObjectList;
 	};
 };

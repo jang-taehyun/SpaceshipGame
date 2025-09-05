@@ -1,10 +1,9 @@
 #pragma once
 
-/**
-* IObjectClass 개요
-* - GameObjectClass의 interface
-* - GameObjectClass 내의 공통 기능 선언
-*/
+namespace System { class InputClass; }
+namespace Object { class ObjectManagerClass; }
+namespace Sound { class SoundManagerClass; }
+namespace Text { class TextManagerClass; }
 
 namespace Object
 {
@@ -13,7 +12,7 @@ namespace Object
 	public:
 		virtual ~IObjectClass() = default;
 
-		virtual const DirectX::XMFLOAT4X4 GetAffineMatrix() const = 0;			// affine matrxi(world matrix) 반환
+		virtual const DirectX::XMFLOAT4X4 GetAffineMatrix() const = 0;			// affine matrix(world matrix) 반환
 		virtual const AffineInfo& GetAffine() const = 0;						// affine 데이터 반환
 
 		virtual DirectX::XMFLOAT4 GetPosition() const = 0;						// position 반환
@@ -32,6 +31,8 @@ namespace Object
 
 		virtual void SetColor(DirectX::XMFLOAT4 color) = 0;						// color 대입
 		virtual void SetColor(float r, float g, float b, float a) = 0;			// color 대입
+
+		virtual void Update(const System::InputClass* input, Object::ObjectManagerClass* objects, Text::TextManagerClass* texts, Sound::SoundManagerClass* sounds, float frame_time, bool IsESCPopupWindowActivated) = 0;
 			    
 		virtual std::unique_ptr<IObjectClass> Clone() const = 0;
 	};

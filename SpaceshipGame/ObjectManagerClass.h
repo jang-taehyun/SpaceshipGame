@@ -1,8 +1,8 @@
 #pragma once
 
-/**
-* ActorManagerClass °³¿ä
-*/
+namespace System { class InputClass; }
+namespace Text { class TextManagerClass; }
+namespace Sound { class SoundManagerClass; }
 
 namespace Object
 { 
@@ -18,14 +18,16 @@ namespace Object
 		ObjectManagerClass();
 		virtual ~ObjectManagerClass();
 
-		UINT GetPlayerIdx() const { return (m_ObjectList.size() ? m_PlayerIdx : 0); }
+		IObjectClass* GetCamera() const { return (m_ObjectList.size() ? m_ObjectList[m_CameraIdx].get() : nullptr); }
 
-		void SetPlayerIdx(UINT idx) { m_PlayerIdx = idx; }
+		UINT GetCameraIdx() const { return m_CameraIdx; }
+		void SetCameraIdx(UINT idx) { m_CameraIdx = idx; }
 		UINT GetObjectCount() const { return static_cast<UINT>(m_ObjectList.size()); }
 
 		IObjectClass* GetGameObject(UINT idx) const;
 		UINT GetModelMask() const { return m_ModelMask; }
 
+		void Frame(const System::InputClass* input, Text::TextManagerClass* texts, Sound::SoundManagerClass* sounds, float frame_time, bool IsESCPopupWindowActivated);
 		UINT Load(ID ObjectID, Graphic::Model::ID ModelID);
 		void Release();
 
@@ -35,7 +37,7 @@ namespace Object
 		std::vector<std::unique_ptr<IObjectClass>> m_ObjectList;
 		std::unique_ptr<ObjectFactoryClass> m_Loader = nullptr;
 
-		UINT m_PlayerIdx = 0;
+		UINT m_CameraIdx = 0;
 		UINT m_ModelMask = 0;
 
 	public:
