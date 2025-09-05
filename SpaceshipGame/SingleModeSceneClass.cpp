@@ -32,8 +32,8 @@ Scene::SingleModeSceneClass::SingleModeSceneClass(ID next, Object::ObjectManager
 
 	// 마우스 커서 위치를 정가운데로 초기화하고 안보이게 하기 
 	GetClientRect(System::hWnd, &rt);
-	p.x = (rt.right - rt.left) * 0.5f;
-	p.y = (rt.bottom - rt.top) * 0.5f;
+	p.x = static_cast<LONG>((rt.right - rt.left) * 0.5f);
+	p.y = static_cast<LONG>((rt.bottom - rt.top) * 0.5f);
 	SetCursorPos(p.x, p.y);
 	SetShowMouseCursor(false);
 
