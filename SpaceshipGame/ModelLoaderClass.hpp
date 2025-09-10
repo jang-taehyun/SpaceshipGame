@@ -47,7 +47,8 @@ void Graphic::Loader::ModelLoaderClass<VertexType>::LoadVertex(const aiScene* sc
 		mesh = scene->mMeshes[i];
 
 		// vertex 单捞磐 颇教 //
-		PushVerticesData(std::move(LoadVertexData(mesh)));
+		LoadVertexData(mesh, vertices);
+		PushVerticesData(vertices);
 
 		// index 单捞磐 颇教 //
 		for (UINT j = 0; j < mesh->mNumFaces; ++j)

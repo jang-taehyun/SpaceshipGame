@@ -28,21 +28,21 @@ namespace Graphic
 
 			virtual ULONG GetMeshCount() const override { return m_MeshCount; }
 			virtual DirectX::BoundingOrientedBox GetModelOBB() const override { return m_ModelOBB; }
-			virtual std::vector<std::vector<ULONG>> MoveIndicesDatas() override { return std::move(m_Indices); }
-			virtual std::vector<std::vector<std::unique_ptr<Texture::TextureClass>>> MoveMaterialsDatas() override { return std::move(m_Materials); }
-			std::vector<std::vector<VertexType>> MoveVerticesDatas() { return std::move(m_Vertices); }
+			virtual void MoveIndicesDataToModelInstance(std::vector<std::vector<ULONG>>& indices) override { indices = std::move(m_Indices); }
+			virtual void MoveMaterialsDataToModelInstance(std::vector<std::vector<std::unique_ptr<Texture::TextureClass>>>& materials) override { materials = std::move(m_Materials); }
+			void MoveVerticesDataToModelInstance(std::vector<std::vector<VertexType>>& vertices) { vertices = std::move(m_Vertices); }
 
 		private:
 			void LoadVertex(const aiScene* scene);
 
-			virtual std::vector<VertexType> LoadVertexData(aiMesh* mesh) = 0;
+			virtual void LoadVertexData(aiMesh* mesh, std::vector<VertexType>& vertices) = 0;
 			virtual void LoadMaterial(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const aiScene* scene, const std::wstring& AdditionalPath) = 0;
 
 		protected:
 			void PushPositionData(DirectX::XMFLOAT3 pos) { m_Positions.push_back(pos); }
 
-			void PushVerticesData(std::vector<VertexType> vertices) { m_Vertices.push_back(std::move(vertices)); }
-			void PushIndicesData(std::vector<ULONG> indices) { m_Indices.push_back(std::move(indices)); }
+			void PushVerticesData(std::vector<VertexType>& vertices) { m_Vertices.push_back(std::move(vertices)); }
+			void PushIndicesData(std::vector<ULONG>& indices) { m_Indices.push_back(std::move(indices)); }
 			void PushMaterialsData(std::vector<std::unique_ptr<Texture::TextureClass>>& materials) { m_Materials.push_back(std::move(materials)); }
 
 			HRESULT LoadTextureData(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, std::vector<std::unique_ptr<Texture::TextureClass>>& MaterialList, const aiString& TexturePath, const std::wstring& AdditionalPath);

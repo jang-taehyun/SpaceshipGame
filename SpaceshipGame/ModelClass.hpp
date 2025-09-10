@@ -149,8 +149,8 @@ HRESULT Graphic::Model::ModelClass<VertexType>::InitializeBuffers(ID3D11Device* 
 
 	// loader에서 로드한 데이터들 가져오기 //
 	m_MeshCount = loader->GetMeshCount();
-	VerticeDatas = static_cast<Loader::ModelLoaderClass<VertexType>*>(loader)->MoveVerticesDatas();
-	IndicesDatas = loader->MoveIndicesDatas();
+	static_cast<Loader::ModelLoaderClass<VertexType>*>(loader)->MoveVerticesDataToModelInstance(VerticeDatas);
+	loader->MoveIndicesDataToModelInstance(IndicesDatas);
 	m_ModelOBB = loader->GetModelOBB();
 
 	//  vertex 데이터, index 데이터를 이용해 vertex buffer, index buffer 생성 //
@@ -217,7 +217,7 @@ HRESULT Graphic::Model::ModelClass<VertexType>::InitializeBuffers(ID3D11Device* 
 template<typename VertexType>
 void Graphic::Model::ModelClass<VertexType>::InitializeMaterials(Loader::IModelLoaderClass* loader)
 {
-	m_Materials = std::move(loader->MoveMaterialsDatas());
+	loader->MoveMaterialsDataToModelInstance(m_Materials);
 }
 
 template<typename VertexType>

@@ -20,8 +20,8 @@ namespace Graphic
 
 			virtual ULONG GetMeshCount() const = 0;
 			virtual DirectX::BoundingOrientedBox GetModelOBB() const = 0;
-			virtual std::vector<std::vector<ULONG>> MoveIndicesDatas() = 0;
-			virtual std::vector<std::vector<std::unique_ptr<Texture::TextureClass>>> MoveMaterialsDatas() = 0;
+			virtual void MoveIndicesDataToModelInstance(std::vector<std::vector<ULONG>>& indices) = 0;
+			virtual void MoveMaterialsDataToModelInstance(std::vector<std::vector<std::unique_ptr<Texture::TextureClass>>>& materials) = 0;
 		};
 	}
 }

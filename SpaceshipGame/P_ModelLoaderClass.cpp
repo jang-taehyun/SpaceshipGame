@@ -3,10 +3,9 @@
 #include "TextureClass.h"
 #include "P_ModelLoaderClass.h"
 
-std::vector<Graphic::Model::P_VertexType> Graphic::Loader::P_ModelLoaderClass::LoadVertexData(aiMesh* mesh)
+void Graphic::Loader::P_ModelLoaderClass::LoadVertexData(aiMesh* mesh, std::vector<Model::P_VertexType>& vertices)
 {
 	Model::P_VertexType vertex = {};
-	std::vector<Model::P_VertexType> vertices;					// mesh의 vertex 데이터들
 
 	for (UINT i = 0; i < mesh->mNumVertices; ++i)
 	{
@@ -17,8 +16,6 @@ std::vector<Graphic::Model::P_VertexType> Graphic::Loader::P_ModelLoaderClass::L
 		// OBB 박스를 만들때 사용할 position 데이터 파싱
 		PushPositionData(Utility::TypeConverterClass::XMFLOAT4toXMFLOAT3(vertex.position));
 	}
-
-	return vertices;
 }
 
 void Graphic::Loader::P_ModelLoaderClass::LoadMaterial(ID3D11Device* Device, ID3D11DeviceContext* DeviceContext, const aiScene* scene, const std::wstring& AdditionalPath)
