@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "ModelClass.hpp"
+#include "ModelClass.cpp"
 #include "PTN_DNSR_ModelLoaderClass.h"
 #include "P_ModelLoaderClass.h"
 #include "ModelFactoryClass.h"

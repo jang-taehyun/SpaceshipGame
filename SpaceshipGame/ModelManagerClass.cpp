@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "ModelClass.hpp"
+#include "ModelClass.cpp"
 #include "ModelFactoryClass.h"
 #include "ModelManagerClass.h"
 

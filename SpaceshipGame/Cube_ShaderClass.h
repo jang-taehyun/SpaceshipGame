@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ShaderClass.hpp"
+#include "ShaderClass.cpp"
 
 namespace Graphic
 {
@@ -17,7 +17,7 @@ namespace Graphic
             Cube_ShaderClass& operator=(const Cube_ShaderClass& other);
             Cube_ShaderClass& operator=(Cube_ShaderClass&& other) noexcept;
 
-            // shader 내부에 들어갈 데이터들 업데이트하는 함수 //
+            // shader 내부에 들어갈 buffer들을 업데이트하는 함수 //
             virtual void UpdateShaderBuffers(ID3D11DeviceContext* DeviceContext, const M_ShaderBuffer& ShaderBufferDatas) override;
 
         private:

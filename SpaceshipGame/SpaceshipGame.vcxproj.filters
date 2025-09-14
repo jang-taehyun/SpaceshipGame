@@ -528,7 +528,7 @@
     <ClCompile Include="CameraClass.cpp">
       <Filter>Object\CameraClass</Filter>
     </ClCompile>
-    <ClCompile Include="ModelClass.hpp">
+    <ClCompile Include="ModelClass.cpp">
       <Filter>Model\ModelClass</Filter>
     </ClCompile>
     <ClCompile Include="IMGUIClass.cpp">
@@ -540,7 +540,7 @@
     <ClCompile Include="ModelManagerClass.cpp">
       <Filter>Model\ModelManager</Filter>
     </ClCompile>
-    <ClCompile Include="ShaderClass.hpp">
+    <ClCompile Include="ShaderClass.cpp">
       <Filter>Shader\1. ShaderClass</Filter>
     </ClCompile>
     <ClCompile Include="TextureClass.cpp">
@@ -612,7 +612,7 @@
     <ClCompile Include="UIManagerClass.cpp">
       <Filter>UI\UIManager</Filter>
     </ClCompile>
-    <ClCompile Include="ModelLoaderClass.hpp">
+    <ClCompile Include="ModelLoaderClass.cpp">
       <Filter>Model\ModelLoader\1. ModelLoaderClass</Filter>
     </ClCompile>
     <ClCompile Include="PTN_DNSR_ModelLoaderClass.cpp">

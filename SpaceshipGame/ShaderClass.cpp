@@ -68,14 +68,14 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::Initialize(ID3D11Device* De
 	HRESULT result = S_OK;
 
 	// shader, input layout 초기화
-	result = InitializeShaderInputLayout(Device, info, VertexDataSemantics, IsTerrain);
-	assert(SUCCEEDED(result));
+	InitializeShaderInputLayout(Device, info, VertexDataSemantics, IsTerrain);
 
 	// shader에서 사용하는 buffer들 생성
 	result = CreateBuffers(Device);
+	assert(SUCCEEDED(result));
 
 	// texture sampler state 생성
-	result = CreateTextureSamplerState(Device);
+	CreateTextureSamplerState(Device);
 
 	return result;
 }
@@ -100,7 +100,7 @@ void Graphic::Shader::ShaderClass<ShaderBuffers>::Render(ID3D11DeviceContext* De
 }
 
 template<typename ShaderBuffers>
-HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::InitializeShaderInputLayout(ID3D11Device* Device, const Loader::ShaderFileInfo& info, const std::vector<std::string>& VertexDataSemantics, bool IsTerrain)
+void Graphic::Shader::ShaderClass<ShaderBuffers>::InitializeShaderInputLayout(ID3D11Device* Device, const Loader::ShaderFileInfo& info, const std::vector<std::string>& VertexDataSemantics, bool IsTerrain)
 {
 	HRESULT result = S_OK;
 	Microsoft::WRL::ComPtr<ID3D10Blob> ErrorMessage = nullptr;				// shader compile 에러메세지
@@ -126,8 +126,7 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::InitializeShaderInputLayout
 	{
 		assert(ErrorMessage);
 		OutputShaderErrorMessage(ErrorMessage.Get(), info.vsFileName);
-
-		return result;
+		assert(SUCCEEDED(result));
 	}
 
 	// pixel shader code 컴파일 //
@@ -146,8 +145,7 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::InitializeShaderInputLayout
 	{
 		assert(ErrorMessage);
 		OutputShaderErrorMessage(ErrorMessage.Get(), info.psFileName);
-
-		return result;
+		assert(SUCCEEDED(result));
 	}
 
 	// vertex shader 생성 //
@@ -167,13 +165,11 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::InitializeShaderInputLayout
 	assert(SUCCEEDED(result));
 
 	// input layout 생성
-	result = CreateInputLayout(Device, VertexShaderBuffer.Get(), VertexDataSemantics, IsTerrain);
-
-	return result;
+	CreateInputLayout(Device, VertexShaderBuffer.Get(), VertexDataSemantics, IsTerrain);
 }
 
 template<typename ShaderBuffers>
-HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::CreateInputLayout(ID3D11Device* Device, ID3D10Blob* VertexShaderBuffer, const std::vector<std::string>& VertexDataSemantics, bool IsTerrain)
+void Graphic::Shader::ShaderClass<ShaderBuffers>::CreateInputLayout(ID3D11Device* Device, ID3D10Blob* VertexShaderBuffer, const std::vector<std::string>& VertexDataSemantics, bool IsTerrain)
 {
 	HRESULT result = S_OK;
 	std::vector<D3D11_INPUT_ELEMENT_DESC> LayoutDesc;
@@ -245,12 +241,10 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::CreateInputLayout(ID3D11Dev
 		m_Layout.GetAddressOf()
 	);
 	assert(SUCCEEDED(result));
-
-	return result;
 }
 
 template<typename ShaderBuffers>
-HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::CreateTextureSamplerState(ID3D11Device* Device)
+void Graphic::Shader::ShaderClass<ShaderBuffers>::CreateTextureSamplerState(ID3D11Device* Device)
 {
 	HRESULT result = S_OK;
 	D3D11_SAMPLER_DESC SamplerDesc = {};								// texture sampler state 설정 정보
@@ -274,8 +268,6 @@ HRESULT Graphic::Shader::ShaderClass<ShaderBuffers>::CreateTextureSamplerState(I
 	// texture sampler state 생성
 	result = Device->CreateSamplerState(&SamplerDesc, m_SampleState.GetAddressOf());
 	assert(SUCCEEDED(result));
-
-	return result;
 }
 
 template<typename ShaderBuffers>

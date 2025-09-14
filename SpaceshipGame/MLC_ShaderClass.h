@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ShaderClass.hpp"
+#include "ShaderClass.cpp"
 
 namespace Graphic
 {

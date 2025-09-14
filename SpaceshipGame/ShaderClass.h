@@ -24,7 +24,7 @@ namespace Graphic
 
 			// 렌더링 함수들 //
 
-			// shader 내부에 들어갈 데이터들 업데이트하는 함수 //
+			// shader 내부에 들어갈 buffer들을 업데이트하는 함수 //
 			virtual void UpdateShaderBuffers(ID3D11DeviceContext* DeviceContext, const ShaderBuffers& ShaderBufferDatas) = 0;
 
 			// vertex shader, pixel shader, input layout 바인딩하는 함수
@@ -37,28 +37,28 @@ namespace Graphic
 			// 초기화 관련 함수들 //
 		private:
 			// shader 컴파일 및 생성 함수
-			virtual HRESULT InitializeShaderInputLayout(ID3D11Device* Device, const Loader::ShaderFileInfo& info, const std::vector<std::string>& VertexDataSemantics, bool IsTerrain) override;
+			void InitializeShaderInputLayout(ID3D11Device* Device, const Loader::ShaderFileInfo& info, const std::vector<std::string>& VertexDataSemantics, bool IsTerrain);
 
 			// input layout 생성 함수
-			virtual HRESULT CreateInputLayout(ID3D11Device* Device, ID3D10Blob* VertexShaderBuffer, const std::vector<std::string>& VertexDataSemantics, bool IsTerrain) override;
+			void CreateInputLayout(ID3D11Device* Device, ID3D10Blob* VertexShaderBuffer, const std::vector<std::string>& VertexDataSemantics, bool IsTerrain);
 
 			// texture sampler state 생성 함수
-			virtual HRESULT CreateTextureSamplerState(ID3D11Device* Device) override;
+			void CreateTextureSamplerState(ID3D11Device* Device);
 
 			// shader에서 사용하는 buffer들을 생성하는 함수
-			virtual HRESULT CreateBuffers(ID3D11Device* Device) override = 0;
+			virtual HRESULT CreateBuffers(ID3D11Device* Device) = 0;
 
 			// shader 디버깅 함수 //
-			virtual void OutputShaderErrorMessage(ID3D10Blob* ErrorMessage, const std::wstring& ShaderFileName) override;
+			virtual void OutputShaderErrorMessage(ID3D10Blob* ErrorMessage, const std::wstring& ShaderFileName);
 
 		protected:
 			// Constant buffer 생성 함수
-			virtual HRESULT CreateConstantBuffer(ID3D11Device* Device, ID3D11Buffer** Buffer, UINT BufferSize) override;
+			HRESULT CreateConstantBuffer(ID3D11Device* Device, ID3D11Buffer** Buffer, UINT BufferSize);
 
 			// 렌더링 관련 함수들 //
 		private:
-			virtual void BindShaderAndInputLayout(ID3D11DeviceContext* DeviceContext) override;
-			virtual void SetShaderBuffers(ID3D11DeviceContext* DeviceContext) override = 0;
+			void BindShaderAndInputLayout(ID3D11DeviceContext* DeviceContext);
+			virtual void SetShaderBuffers(ID3D11DeviceContext* DeviceContext) = 0;
 
 		private:
 			ID m_ShaderID = ID::DEFAULT;

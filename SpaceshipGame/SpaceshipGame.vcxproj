@@ -271,10 +271,10 @@
     <ClCompile Include="ITextClass.cpp" />
     <ClCompile Include="IUIClass.cpp" />
     <ClCompile Include="MLC_ShaderClass.cpp" />
-    <ClCompile Include="ModelLoaderClass.hpp" />
+    <ClCompile Include="ModelLoaderClass.cpp" />
     <ClCompile Include="MoveClass.cpp" />
     <ClCompile Include="LightClass.cpp" />
-    <ClCompile Include="ModelClass.hpp" />
+    <ClCompile Include="ModelClass.cpp" />
     <ClCompile Include="ModelManagerClass.cpp" />
     <ClCompile Include="PTN_DNSR_ModelLoaderClass.cpp" />
     <ClCompile Include="pch.cpp">
@@ -289,7 +289,7 @@
     <ClCompile Include="SceneFactoryClass.cpp" />
     <ClCompile Include="SceneManagerClass.cpp" />
     <ClCompile Include="ShaderBufferUpdaterClass.cpp" />
-    <ClCompile Include="ShaderClass.hpp" />
+    <ClCompile Include="ShaderClass.cpp" />
     <ClCompile Include="ShaderFactoryClass.cpp" />
     <ClCompile Include="ShaderManagerClass.cpp" />
     <ClCompile Include="SingleModeSceneClass.cpp" />
