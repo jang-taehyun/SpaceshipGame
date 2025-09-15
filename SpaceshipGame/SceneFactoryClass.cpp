@@ -21,9 +21,19 @@ Scene::SceneFactoryClass::~SceneFactoryClass()
 	IsInitailize = false;
 }
 
-std::unique_ptr<Scene::ISceneClass> Scene::SceneFactoryClass::CreateScene(ID current, Object::ObjectManagerClass* actors, Text::TextManagerClass* texts, UI::UIManagerClass* UIs, Sound::SoundManagerClass* sounds)
+std::unique_ptr<Scene::ISceneClass> Scene::SceneFactoryClass::CreateScene(
+	ID current,
+	Object::ObjectManagerClass* actors,
+	Text::TextManagerClass* texts,
+	UI::UIManagerClass* UIs,
+	Sound::SoundManagerClass* sounds
+)
 {
-	std::map<ID, std::function<std::unique_ptr<ISceneClass>(Object::ObjectManagerClass*, Text::TextManagerClass*, UI::UIManagerClass*, Sound::SoundManagerClass*)>>::iterator iter;
+	std::map<ID, std::function<std::unique_ptr<ISceneClass>(
+		Object::ObjectManagerClass*,
+		Text::TextManagerClass*,
+		UI::UIManagerClass*,
+		Sound::SoundManagerClass*)>>::iterator iter;
 
 	iter = m_Creator.find(current);
 	assert(m_Creator.end() != iter);

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "pch.h"
-#include "ModelLoaderClass.h"
+#include "ModelLoaderClass.cpp"
 #include "TextureClass.h"
 #include "ModelClass.h"
 
